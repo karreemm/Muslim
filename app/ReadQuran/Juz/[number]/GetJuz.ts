@@ -19,7 +19,7 @@ interface ApiResponse {
 
 export default async function GetJuzAyahs(juzNumber: number | string): Promise<Ayah[] | null> {
   try {
-    const response = await fetch(`http://api.alquran.cloud/v1/juz/${juzNumber}/${edition}`);
+    const response = await fetch(`https://api.alquran.cloud/v1/juz/${juzNumber}/${edition}`);
     
     if (!response.ok) {
       throw new Error(`Error fetching Juz: ${response.statusText}`);
