@@ -183,33 +183,54 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
 
   const handleDownload = async () => {
     if (surah) {
+      console.log('Downloading Surah:', surah.name);
+      console.log('surahNumber:', surahNumber);
+      console.log('reciterId:', reciterId);
       try {
         const audioBlobs = await Promise.all(
           surah.ayahs.map(async (ayah) => {
-            const response = await fetch(`/api/proxy?surahNumber=${surahNumber}&ayahNumber=${ayah.number}&reciterId=${reciterId}`);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch ${ayah.audio}`);
+            try {
+              console.log('surahNumber:', surahNumber);
+              console.log('reciterId:', reciterId);
+              console.log('ayahNumber:', ayah.number);
+              const response = await fetch(`/api/proxy?surahNumber=${surahNumber}&ayahNumber=${ayah.number}&reciterId=${reciterId}`);
+              if (!response.ok) {
+                console.error(`Failed to fetch audio for ayah ${ayah.number}: ${response.statusText}`);
+                return null; // Return null for this ayah
+              }
+              return await response.blob();
+            } catch (error) {
+              console.error(`Error fetching audio for ayah ${ayah.number}:`, error);
+              return null; // Return null for this ayah
             }
-            return await response.blob();
           })
         );
-
-        const combinedBlob = new Blob(audioBlobs, { type: 'audio/mpeg' });
+  
+        // Filter out any null values from failed fetches
+        const validBlobs = audioBlobs.filter(blob => blob !== null);
+  
+        if (validBlobs.length === 0) {
+          throw new Error('Failed to fetch audio for all Ayahs.');
+        }
+  
+        const combinedBlob = new Blob(validBlobs, { type: 'audio/mpeg' });
         const downloadUrl = URL.createObjectURL(combinedBlob);
         const a = document.createElement('a');
         a.href = downloadUrl;
         a.download = `${surah.name}.mp3`;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(downloadUrl);
-
+  
         setShowSuccessAlert(true);
       } catch (error) {
         console.error('Error downloading Surah:', error);
-
         setShowFailAlert(true);
       }
     }
   };
+  
 
   const Restart: TranslationPair = {
     ar: 'إعادة تشغيل',
@@ -268,7 +289,6 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
           </div>
           <div className='flex items-center gap-2 mt-10'>
             <button onClick={handleRestart} className='bg-teal-500 flex justify-center w-32 py-2 rounded-lg text-white font-bold hover:opacity-80 dark:hover:opacity-90'>{Restart[language]}</button>
-            <button onClick={handleDownload} className='bg-teal-500 flex justify-center w-32 py-2 rounded-lg text-white font-bold hover:opacity-80 dark:hover:opacity-90'>{Download[language]}</button>
           </div>
         </div>
       ) : (
