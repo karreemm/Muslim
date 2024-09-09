@@ -35,26 +35,26 @@ export default function Header() {
 
     const ThirdItem: TranslationPair = {
         en: "Read the Hadiths of the Prophet from the books of Sunnah",
-        ar: "قراءة الأحاديث النبوية من كتب السنة"
+        ar: "قراءة الأحاديث النبوية الشريفة من كتب السنة"
     }
 
 
     return (
         <>
         <div className="w-full flex justify-center">
-            <div className="mt-24 md:mt-0 min-h-screen w-[90%] flex flex-col items-center gap-14 md:flex md:flex-row md:justify-between md:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-teal-500">
+            <div className="mt-32 md:mt-0 min-h-screen w-[90%] flex flex-col items-center gap-14 md:flex md:flex-row md:justify-between md:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-teal-500">
                 <div className="md:w-1/2 flex flex-col gap-5">
                     <h1 className="text-2xl md:text-4xl font-bold">{Welcome[language]}</h1>
                     <h1 className="md:text-2xl text-lg">{Desc[language]}</h1>
                     <ul className="mt-5 list-disc list-inside text-lg md:text-2xl space-y-3">
                         <li>
-                             <Link href="" className="hover:opacity-70">{FirstItem[language]}</Link>
+                             <Link href="/ReadQuran" className="hover:opacity-70">{FirstItem[language]}</Link>
                         </li>
                         <li>
-                            <Link href="" className="hover:opacity-70">{SecondItem[language]}</Link>
+                            <Link href="/ListenQuran" className="hover:opacity-70">{SecondItem[language]}</Link>
                         </li>
                         <li>
-                            <Link href="" className="hover:opacity-70">{ThirdItem[language]}</Link>
+                            <Link href="/ReadHadith" className="hover:opacity-70">{ThirdItem[language]}</Link>
                         </li>
                     </ul>
                 </div>

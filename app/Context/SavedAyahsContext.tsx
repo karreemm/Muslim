@@ -8,7 +8,7 @@ interface SavedAyah {
   ayahNumberEn: number | null;
   ayahNumberAr: number | null | string;
   text: string;
-  SurahNumber: number | string;
+  SurahNumber: number | string | null;
 }
 
 interface SavedAyahsContextProps {

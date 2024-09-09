@@ -2,6 +2,7 @@
 
 import Navbar from "../Components/Navbar";
 import ReadQuran from "./ReadQuran";
+import Footer from "../Components/Footer";
 
 export default function Home() {
 
@@ -11,6 +12,8 @@ export default function Home() {
       <Navbar />
       <ReadQuran />
     </main>
+    <Footer />
+
     </>
   );
 }

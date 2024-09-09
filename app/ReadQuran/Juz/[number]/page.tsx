@@ -11,6 +11,7 @@ import Navbar from '@/app/Components/Navbar';
 import GetJuzAyahs from "./GetJuz";
 import { toArabicNumber, showPopover, hidePopover } from "../../../Lib/Helpers";
 import { RenderJuzText } from "./RenderQuranText";
+import Footer from "@/app/Components/Footer";
 
 export default function JuzPage() {
   const pathname = usePathname();
@@ -131,7 +132,7 @@ export default function JuzPage() {
               {juzNames.find(s => s.number.toString() === number)?.name[language as keyof typeof juzNames[0]['name']]}
             </h1>
             <p className="md:text-2xl text-xl flex items-center">
-              {Surahs[language]}: {language === "ar" ? toArabicNumber(juzNames[currentJuzNumber].surahs) : juzNames[currentJuzNumber].surahs}
+              {Surahs[language]}: {language === "ar" ? toArabicNumber(juzNames[currentJuzNumber-1]?.surahs) : juzNames[currentJuzNumber-1]?.surahs}
             </p>
           </div>
 
@@ -140,17 +141,18 @@ export default function JuzPage() {
           </div>
 
           <div dir={language === "ar" ? "rtl" : "ltr"} className='mt-5 flex gap-5'>
-            <button onClick={() => handleFontSizeChange(true)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-500 text-white font-bold">
+            <button onClick={() => handleFontSizeChange(true)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold">
               <FontAwesomeIcon icon={faPlus} />
               {Size[language]}
             </button>
-            <button onClick={() => handleFontSizeChange(false)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-500 text-white font-bold">
+            <button onClick={() => handleFontSizeChange(false)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold">
               <FontAwesomeIcon icon={faMinus} />
               {Size[language]}
             </button>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

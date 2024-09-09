@@ -1,3 +1,36 @@
+import AboBakr from "../Assets/Reciters/AboBakr.png";
+import AhmedAgamy from "../Assets/Reciters/AhmedAgamy.png";
+import Ali from "../Assets/Reciters/Ali.png";
+import Besfer from "../Assets/Reciters/Besfer.png";
+import HanyRefay from "../Assets/Reciters/HanyRefay.png";
+import Husary from "../Assets/Reciters/Husary.png";
+import Ibrahim from "../Assets/Reciters/Ibrahim.png";
+import MaherMeaqly from "../Assets/Reciters/MaherMeaqly.png";
+import Mashary from "../Assets/Reciters/Mashary.png";
+import Menshawy from "../Assets/Reciters/Menshawy.png";
+import MuhammedGebril from "../Assets/Reciters/MuhammedGebril.png";
+import MuhammedIob from "../Assets/Reciters/MuhammedIob.png";
+import Shorem from "../Assets/Reciters/Shorem.png";
+import Sodes from "../Assets/Reciters/Sodes.png";
+
+import aboDawod from "../Assets/Books/aboDawod.png"
+import bukhari from "../Assets/Books/bukhari.png"
+import daremi from "../Assets/Books/daremi.png"
+import ibnMajah from "../Assets/Books/ibnMajah.png"
+import malik from "../Assets/Books/malik.png"
+import muslim from "../Assets/Books/muslim.png"
+import nasai from "../Assets/Books/nasai.png"
+import termezei from "../Assets/Books/termezei.png"
+
+import beads from "../Assets/Azkar/beads.png"
+import moon from "../Assets/Azkar/moon.png"
+import mosque from "../Assets/Azkar/mosque.png"
+import praying from "../Assets/Azkar/praying.png"
+import quran from "../Assets/Azkar/quran.png"
+import sleep from "../Assets/Azkar/sleep.png"
+import sunny from "../Assets/Azkar/sunny.png"
+import wakeUp from "../Assets/Azkar/wake-up.png"
+
 export const surahNames = [
     { number: 1, en: "Al-Fatiha", ar: "الفاتحة", ayahs: 7 },
     { number: 2, en: "Al-Baqarah", ar: "البقرة", ayahs: 286 },
@@ -117,34 +150,123 @@ export const surahNames = [
 
 
 export const juzNames = [
-  { number: 1, name: { en: "Juz' 1", ar: "الجزء 1" }, surahs: 2 },    // Al-Fatihah, Al-Baqarah (first part)
-  { number: 2, name: { en: "Juz' 2", ar: "الجزء 2" }, surahs: 1 },    // Al-Baqarah (second part), Al-Imran (first part)
-  { number: 3, name: { en: "Juz' 3", ar: "الجزء 3" }, surahs: 2 },    // Al-Imran (second part), An-Nisa (first part)
-  { number: 4, name: { en: "Juz' 4", ar: "الجزء 4" }, surahs: 2 },    // An-Nisa (second part), Al-Ma'idah (first part)
-  { number: 5, name: { en: "Juz' 5", ar: "الجزء 5" }, surahs: 2 },    // Al-Ma'idah (second part), Al-An'am (first part)
-  { number: 6, name: { en: "Juz' 6", ar: "الجزء 6" }, surahs: 2 },    // Al-An'am (second part), Al-A'raf (first part)
-  { number: 7, name: { en: "Juz' 7", ar: "الجزء 7" }, surahs: 2 },    // Al-A'raf (second part), Al-Anfal
-  { number: 8, name: { en: "Juz' 8", ar: "الجزء 8" }, surahs: 2 },    // At-Tawbah, Yunus
-  { number: 9, name: { en: "Juz' 9", ar: "الجزء 9" }, surahs: 2 },    // Hud, Yusuf
-  { number: 10, name: { en: "Juz' 10", ar: "الجزء 10" }, surahs: 2 },  // Ar-Ra'd, Ibrahim
-  { number: 11, name: { en: "Juz' 11", ar: "الجزء 11" }, surahs: 2 },  // Al-Hijr, An-Nahl (first part)
-  { number: 12, name: { en: "Juz' 12", ar: "الجزء 12" }, surahs: 2 },  // An-Nahl (second part), Al-Isra
-  { number: 13, name: { en: "Juz' 13", ar: "الجزء 13" }, surahs: 2 },  // Al-Kahf, Maryam
-  { number: 14, name: { en: "Juz' 14", ar: "الجزء 14" }, surahs: 2 },  // Ta-Ha, Al-Anbiya
-  { number: 15, name: { en: "Juz' 15", ar: "الجزء 15" }, surahs: 2 },  // Al-Hajj, Al-Mu'minun
-  { number: 16, name: { en: "Juz' 16", ar: "الجزء 16" }, surahs: 2 },  // An-Nur, Al-Furqan
-  { number: 17, name: { en: "Juz' 17", ar: "الجزء 17" }, surahs: 2 },  // Ash-Shu'ara, An-Naml
-  { number: 18, name: { en: "Juz' 18", ar: "الجزء 18" }, surahs: 2 },  // Al-Ankabut, Ar-Rum
-  { number: 19, name: { en: "Juz' 19", ar: "الجزء 19" }, surahs: 2 },  // Luqman, As-Sajda
-  { number: 20, name: { en: "Juz' 20", ar: "الجزء 20" }, surahs: 2 },  // Al-Ahzab, Ya-Sin
-  { number: 21, name: { en: "Juz' 21", ar: "الجزء 21" }, surahs: 3 },  // As-Saffat, Sad, Az-Zumar
-  { number: 22, name: { en: "Juz' 22", ar: "الجزء 22" }, surahs: 3 },  // Az-Zumar (continued), Fussilat, Ash-Shura
-  { number: 23, name: { en: "Juz' 23", ar: "الجزء 23" }, surahs: 3 },  // Az-Zukhruf, Ad-Dukhan, Al-Jathiya
-  { number: 24, name: { en: "Juz' 24", ar: "الجزء 24" }, surahs: 3 },  // Al-Ahqaf, Muhammad, Al-Fath
-  { number: 25, name: { en: "Juz' 25", ar: "الجزء 25" }, surahs: 3 },  // Al-Hujurat, Qaf, Adh-Dhariyat
-  { number: 26, name: { en: "Juz' 26", ar: "الجزء 26" }, surahs: 3 },  // At-Tur, An-Najm, Al-Qamar
-  { number: 27, name: { en: "Juz' 27", ar: "الجزء 27" }, surahs: 3 },  // Ar-Rahman, Al-Waqia, Al-Hadid
-  { number: 28, name: { en: "Juz' 28", ar: "الجزء 28" }, surahs: 3 },  // Al-Mujadila, Al-Hashr, Al-Mumtahina
-  { number: 29, name: { en: "Juz' 29", ar: "الجزء 29" }, surahs: 11 }, // An-Naba, An-Naziat, Abasa, At-Takwir, Al-Infitar, Al-Mutaffifin, Al-Inshiqaq, Al-Buruj, At-Tariq, Al-Ala, Al-Ghashiya, Al-Fajr, Al-Balad, Ash-Shams, Al-Lail, Ad-Duha, Ash-Sharh, At-Tin, Al-Alaq, Al-Qadr, Al-Bayyina, Az-Zalzala, Al-Adiyat, Al-Qaria, At-Takathur, Al-Asr, Al-Humaza, Al-Fil, Quraish, Al-Maun, Al-Kawthar, Al-Kafiroon, An-Nasr, Al-Masad, Al-Ikhlas, Al-Falaq, An-Nas
-  { number: 30, name: { en: "Juz' 30", ar: "الجزء 30" }, surahs: 37 }  // Surahs from An-Naba to An-Nas
+  { number: 1, name: { en: "Juz' 1", ar: "الجزء 1" }, surahs: 2 },    
+  { number: 2, name: { en: "Juz' 2", ar: "الجزء 2" }, surahs: 1 },    
+  { number: 3, name: { en: "Juz' 3", ar: "الجزء 3" }, surahs: 2 },    
+  { number: 4, name: { en: "Juz' 4", ar: "الجزء 4" }, surahs: 2 },    
+  { number: 5, name: { en: "Juz' 5", ar: "الجزء 5" }, surahs: 2 },    
+  { number: 6, name: { en: "Juz' 6", ar: "الجزء 6" }, surahs: 2 },    
+  { number: 7, name: { en: "Juz' 7", ar: "الجزء 7" }, surahs: 2 },    
+  { number: 8, name: { en: "Juz' 8", ar: "الجزء 8" }, surahs: 2 },    
+  { number: 9, name: { en: "Juz' 9", ar: "الجزء 9" }, surahs: 2 },    
+  { number: 10, name: { en: "Juz' 10", ar: "الجزء 10" }, surahs: 2 }, 
+  { number: 11, name: { en: "Juz' 11", ar: "الجزء 11" }, surahs: 2 }, 
+  { number: 12, name: { en: "Juz' 12", ar: "الجزء 12" }, surahs: 2 }, 
+  { number: 13, name: { en: "Juz' 13", ar: "الجزء 13" }, surahs: 2 }, 
+  { number: 14, name: { en: "Juz' 14", ar: "الجزء 14" }, surahs: 2 }, 
+  { number: 15, name: { en: "Juz' 15", ar: "الجزء 15" }, surahs: 2 }, 
+  { number: 16, name: { en: "Juz' 16", ar: "الجزء 16" }, surahs: 2 }, 
+  { number: 17, name: { en: "Juz' 17", ar: "الجزء 17" }, surahs: 2 }, 
+  { number: 18, name: { en: "Juz' 18", ar: "الجزء 18" }, surahs: 2 }, 
+  { number: 19, name: { en: "Juz' 19", ar: "الجزء 19" }, surahs: 2 }, 
+  { number: 20, name: { en: "Juz' 20", ar: "الجزء 20" }, surahs: 2 }, 
+  { number: 21, name: { en: "Juz' 21", ar: "الجزء 21" }, surahs: 3 }, 
+  { number: 22, name: { en: "Juz' 22", ar: "الجزء 22" }, surahs: 3 }, 
+  { number: 23, name: { en: "Juz' 23", ar: "الجزء 23" }, surahs: 3 }, 
+  { number: 24, name: { en: "Juz' 24", ar: "الجزء 24" }, surahs: 3 }, 
+  { number: 25, name: { en: "Juz' 25", ar: "الجزء 25" }, surahs: 3 }, 
+  { number: 26, name: { en: "Juz' 26", ar: "الجزء 26" }, surahs: 3 }, 
+  { number: 27, name: { en: "Juz' 27", ar: "الجزء 27" }, surahs: 3 }, 
+  { number: 28, name: { en: "Juz' 28", ar: "الجزء 28" }, surahs: 3 }, 
+  { number: 29, name: { en: "Juz' 29", ar: "الجزء 29" }, surahs: 11 },
+  { number: 30, name: { en: "Juz' 30", ar: "الجزء 30" }, surahs: 37 } 
 ];
+
+export const reciters = [
+  { id: "ar.abdullahbasfar", NameEn: "Abdullah Basfar", NameAr: "عبد الله بصفر", image: Besfer },
+  { id: "ar.abdurrahmaansudais", NameEn: "Abdurrahman Al-Sudais", NameAr: "عبدالرحمن السديس", image: Sodes },
+  { id: "ar.shaatree", NameEn: "Abu Bakr Ash-Shaatree", NameAr: "أبو بكر الشاطري", image: AboBakr },
+  { id: "ar.ahmedajamy", NameEn: "Ahmed Al-Ajamy", NameAr: "أحمد العجمي", image: AhmedAgamy },
+  { id: "ar.alafasy", NameEn: "Mishary Alafasy", NameAr: "مشاري العفاسي", image: Mashary },
+  { id: "ar.hanirifai", NameEn: "Hani Rifai", NameAr: "هاني الرفاعي", image: HanyRefay },
+  { id: "ar.husarymujawwad", NameEn: "Mahmoud Al-Husary (Mujawwad)", NameAr: "محمود الحصري (المجود)", image: Husary },
+  { id: "ar.hudhaify", NameEn: "Ali Al-Hudhaify", NameAr: "علي الحذيفي", image: Ali },
+  { id: "ar.ibrahimakhbar", NameEn: "Ibrahim Akhdar", NameAr: "إبراهيم الأخضر", image: Ibrahim },
+  { id: "ar.mahermuaiqly", NameEn: "Maher Al Muaiqly", NameAr: "ماهر المعيقلي", image: MaherMeaqly },
+  { id: "ar.muhammadayyoub", NameEn: "Muhammad Ayyoub", NameAr: "محمد أيوب", image: MuhammedIob },
+  { id: "ar.muhammadjibreel", NameEn: "Muhammad Jibreel", NameAr: "محمد جبريل", image: MuhammedGebril },
+  { id: "ar.saoodshuraym", NameEn: "Saood bin Ibraaheem Ash-Shuraym", NameAr: "سعود الشريم", image: Shorem },
+  {id:"ar.minshawi", NameEn: "Mohamed El-Minshawi", NameAr: "محمد المنشاوي", image: Menshawy}
+];
+
+export const hadithBooks = [
+  {
+      id: 'muslim',
+      name_en: 'Muslim',
+      name_ar: 'مسلم',
+      image: muslim,
+      number: 800
+  },
+  {
+      id: 'bukhari',
+      name_en: 'Bukhari',
+      name_ar: 'البخاري',
+      image: bukhari,
+      number: 590
+  },
+  {
+      id: 'tirmidzi',
+      name_en: 'Tirmidhi',
+      name_ar: 'الترمذي',
+      image: termezei,
+      number: 770     
+  },
+  {
+      id: 'nasai',
+      name_en: 'Nasai',
+      name_ar: 'النسائي',
+      image: nasai,
+      number: 800
+  },
+  {
+      id: 'abu-daud',
+      name_en: 'Abu Daud',
+      name_ar: 'أبو داود',
+      image: aboDawod,
+      number: 780
+  },
+  {
+      id: 'ibnu-majah',
+      name_en: 'Ibnu Majah',
+      name_ar: 'ابن ماجه',
+      image: ibnMajah,
+      number: 800
+  },
+  {
+      id: 'darimi',
+      name_en: 'Darimi',
+      name_ar: 'الدارمي',
+      image: daremi,
+      number: 660
+  },
+  {
+      id: 'malik',
+      name_en: 'Malik',
+      name_ar: 'مالك',
+      image: malik,
+      number: 300
+  }
+];
+
+export const AzkarCategories = [
+    { id: 'morning_azkar', ar: 'أذكار الصباح', en: 'Morning Azkar', number: 25, image: sunny },
+    { id: 'evening_azkar', ar: 'أذكار المساء', en: 'Evening Azkar', number: 25, image: moon },
+    { id: 'post_salah_azkar', ar: 'أذكار بعد السلام من الصلاة المفروضة', en: 'Post-Salah Azkar', number: 9, image: praying },
+    { id: 'tasbeeh', ar: 'تسابيح', en: 'Tasbeeh', number: 16, image: beads },
+    { id: 'sleep_azkar', ar: 'أذكار النوم', en: 'Sleep Azkar', number: 10, image: sleep },
+    { id: 'wake_up_azkar', ar: 'أذكار الاستيقاظ', en: 'Wake Up Azkar', number: 3, image: wakeUp },
+    { id: 'quranic_duas', ar: 'أدعية قرآنية', en: 'Quranic Duas', number: 26, image: quran },
+    { id: 'prophets_duas', ar: 'أدعية الأنبياء', en: 'Prophets\' Duas', number: 13, image: mosque }
+  ];
+
+

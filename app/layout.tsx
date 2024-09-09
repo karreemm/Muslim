@@ -4,6 +4,9 @@ import "./globals.css";
 import ThemeContextProvider from './Context/ThemeContext'; 
 import LanguageContextProvider from "./Context/LanguageContext";
 import { SavedAyahsProvider } from "./Context/SavedAyahsContext";
+import { FavoriteSurahsProvider } from "./Context/FavoriteSurahsContext";
+import { FavoriteHadithsProvider } from "./Context/FavoriteHadithsContext";
+import { FavoriteAzkarProvider } from "./Context/FavoriteAzkarContext";
 
 
 export const metadata: Metadata = {
@@ -17,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar">
+    <html lang="ar" dir="rtl" className="dark:bg-slate-900 bg-[#FFF5E4]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -25,11 +28,17 @@ export default function RootLayout({
       </head>
       <body className="fontAmiri dark:bg-slate-900 bg-[#FFF5E4]">
         <LanguageContextProvider>
-        <ThemeContextProvider>
-        <SavedAyahsProvider>
-          {children}
-        </SavedAyahsProvider>
-        </ThemeContextProvider>
+          <ThemeContextProvider>
+            <SavedAyahsProvider>
+              <FavoriteSurahsProvider>
+                <FavoriteHadithsProvider>
+                  <FavoriteAzkarProvider>
+                {children}
+                  </FavoriteAzkarProvider>
+                </FavoriteHadithsProvider>
+              </FavoriteSurahsProvider>
+            </SavedAyahsProvider>
+          </ThemeContextProvider>
         </LanguageContextProvider>
       </body>
     </html>

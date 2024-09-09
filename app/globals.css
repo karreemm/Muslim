@@ -6,7 +6,83 @@
   font-family: 'Amiri', serif;
 }
 
-.width{
-  width: fit-content !important;
+::-webkit-scrollbar {
+  width: 8px; 
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF5E4; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0d9488; 
+  border-radius: 10px; 
+  border: 2px solid #FFF5E4; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0e7b72; 
+}
+
+/* Dark mode scrollbar styles */
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a; 
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #14b8a6;
+  border-radius: 10px;
+  border: 2px solid #0f172a; 
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #12b7a9; 
+}
+
+html{
+  background-color: #FFF5E4;
+}
+
+.dark {
+  background-color: #0f172a;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.heart-beat {
+  animation: heartBeat 0.8s ease-in-out;
+}
+
+@keyframes vibrate {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+.vibrate {
+  animation: vibrate 2s linear infinite;
+}
+
+.vibrate-active {
+  animation-delay: 1s;
+  animation-iteration-count: infinite;
 }
 
