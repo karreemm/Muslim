@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones } from '@fortawesome/free-solid-svg-icons';
+import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from "../Context/ThemeContext";
 import { useLanguage } from '../Context/LanguageContext';
 import TranslationPair from '../Lib/Types';
@@ -60,6 +60,11 @@ export default function Navbar() {
         en: "Saved Ayahs"
     };
 
+    const Home: TranslationPair = { 
+        ar: "الرئيسية",
+        en: "Home"
+    };
+
     const handleLanguageChange = (lang: string) => {
         if (lang !== language) {
             toggleLanguage();
@@ -103,6 +108,11 @@ export default function Navbar() {
             </div>
 
             <div className='hidden md:flex items-center gap-14 text-xl font-semibold'>
+
+                <Link href="/">
+                    {Home[language]}
+                </Link>
+
                 <div className="relative">
                     <button
                         ref={quranButtonRef}
@@ -186,7 +196,7 @@ export default function Navbar() {
 
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="flex items-center justify-center w-10 h-10 transition-colors duration-200 md:hidden"
+                    className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 md:hidden ${isMobileMenuOpen ? 'rotate-90' : 'rotate-0'}`}
                 >
                     <FontAwesomeIcon icon={isMobileMenuOpen ? faX : faBars} size="lg" />
                 </button>
@@ -195,30 +205,44 @@ export default function Navbar() {
 
             {isMobileMenuOpen && (
                 <div className={`absolute top-16 px-5 py-2 border-b border-black dark:border-white left-0 w-full bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md md:hidden ${language === "ar"? `text-right` : `text-left`}`}>
+
+                    <Link href="/" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+                        <FontAwesomeIcon icon={faHouse} className="" />
+                        {Home[language]}
+                    </Link>
+
                     <Link href="/ReadQuran" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faBookOpen} className="" />
                         {ReadQuran[language]}
                     </Link>
+
                     <Link href="/ListenQuran" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faHeadphones} className="" />
                         {ListenQuran[language]}
                     </Link>
+
                     <Link href="/ReadHadith" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faBookOpen} className="" />                  
                         {Hadith[language]}
                     </Link>
+
                     <Link href="/Azkar" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faBookOpen} className="" />
                         {Azkar[language]}
                     </Link>
-                    <hr className='border border-gray-500 dark:border-gray-400 w-full my-4'/>                    <Link href="/SavedAyahs" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+
+                    <hr className='border border-gray-500 dark:border-gray-400 w-full my-4'/> 
+
+                    <Link href="/SavedAyahs" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faBookmark} className="" />
                         {SavedAyahs[language]}
                     </Link>
+
                     <Link href="/Favourites" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faHeart} className="" />
                         {Favourites[language]}
                     </Link>
+                    
                 </div>
             )}
         </div>

@@ -38,6 +38,11 @@ export default function Header() {
         ar: "قراءة الأحاديث النبوية الشريفة من كتب السنة"
     }
 
+    const FourthItem: TranslationPair = {
+        en: "Read and Learn Azkar and Duaa",
+        ar: "قراءة الأذكار والأدعية والتعلم منها"
+    }
+
 
     return (
         <>
@@ -55,6 +60,9 @@ export default function Header() {
                         </li>
                         <li>
                             <Link href="/ReadHadith" className="hover:opacity-70">{ThirdItem[language]}</Link>
+                        </li>
+                        <li>
+                            <Link href="/Azkar" className="hover:opacity-70">{FourthItem[language]}</Link>
                         </li>
                     </ul>
                 </div>
