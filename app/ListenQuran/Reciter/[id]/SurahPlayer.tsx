@@ -112,7 +112,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
     const fetchSurah = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`);
+        const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
