@@ -74,8 +74,13 @@ export default function BookPage() {
   };
 
   const handleSearch = async () => {
-    const englishNumberString = toEnglishNumber(searchQuery);
-    const hadithNumber = englishNumberString;
+
+  const englishNumberString = toEnglishNumber(searchQuery);
+  console.log(`Converted search query to English number string: ${englishNumberString}`);
+
+  const hadithNumber = parseInt(englishNumberString, 10);
+  console.log(`Parsed hadith number: ${hadithNumber}`);
+  console.log(`Original search query: ${searchQuery}`);
 
     if (
       !isNaN(hadithNumber) &&

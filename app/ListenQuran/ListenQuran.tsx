@@ -10,8 +10,8 @@ export default function ListenQuranPage() {
     const { language } = useLanguage();
 
     const Title: TranslationPair = {
-        en: "Listen & Download Quran by your favourite reciters",
-        ar: "استمع وحمل القرآن الكريم بصوت قراءك المفضلين",
+        en: "Listen to the Holy Quran by your favourite reciters",
+        ar: "استمع الى القرآن الكريم بصوت قراءك المفضلين",
     };
 
     const Rec: TranslationPair = {

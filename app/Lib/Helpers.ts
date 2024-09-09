@@ -6,21 +6,11 @@ export function toArabicNumber(number: number | undefined): string {
     return number.toString().split('').map(digit => arabicNumbers[parseInt(digit)]).join('');
   }
   
-  export function toEnglishNumber(number: string | undefined | number): number {
-    if (number === undefined) {
-        return 0;
-    }
-
-    const arabicToEnglishMap: { [key: string]: string } = {
-        '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
-    };
-
-    const englishNumberString = number.toString().split('').map(digit => {
-        return arabicToEnglishMap[digit] || digit;
-    }).join('');
-
-    return parseInt(englishNumberString, 10);
-}
+ export const toEnglishNumber = (str: string) => {
+    const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return str.replace(/[۰-۹]/g, (d) => persianNumbers.indexOf(d).toString()).replace(/[٠-٩]/g, (d) => arabicNumbers.indexOf(d).toString());
+  };
 
   export function showPopover(id: string): void {
     const popover = document.getElementById(id);
