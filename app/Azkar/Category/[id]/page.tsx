@@ -88,7 +88,7 @@ export default function CategoryPage() {
           ) : zekrNumberEn !== null ? (
             <DisplayZekr zekrNumber={zekrNumberEn} categoryId={categoryNameAr} />
           ) : (
-            <DisplayAzkar startingNumber={(currentPage - 1) * 5 + 1} categoryId={categoryNameAr} />
+            <DisplayAzkar startingNumber={(currentPage - 1) * 3 + 1} categoryId={categoryNameAr} />
           )}
         </div>
         <div className="w-full">
