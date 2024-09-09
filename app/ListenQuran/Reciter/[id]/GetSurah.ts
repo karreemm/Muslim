@@ -7,13 +7,13 @@ interface Surah {
 
 export const fetchSurahByNumber = async (surahNumber: number, reciterId: string): Promise<Surah | null> => {
     try {
-        const response = await fetch(`https://api.alquran.cloud/v1/quran/${reciterId}`);
+        const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${reciterId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
         console.log('API Response:', data); 
-        const surah = data.data.surahs.find((s: Surah) => s.number === surahNumber);
+        const surah = data.data;
         console.log('Fetched Surah:', surah); 
         return surah || null;
     } catch (error) {
