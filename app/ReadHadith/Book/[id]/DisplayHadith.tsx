@@ -8,6 +8,7 @@ import { faHeart as notLoved } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as loved } from '@fortawesome/free-solid-svg-icons';
 import { useFavoriteHadiths } from "@/app/Context/FavoriteHadithsContext";
 import { hadithBooks } from "@/app/Lib/Constants";
+import ShareButtons from "@/app/Components/ShareButtons";
 import "../../../globals.css";
 
 
@@ -99,7 +100,12 @@ export default function SingleHadith({ hadithNumber, bookId }: { hadithNumber: n
                                 className={`text-red-500 hover:text-red-600 absolute ${language === "ar"? `top-4 left-4` : `top-4 right-4`} `}
                                 >
                                 <FontAwesomeIcon icon={isFavorite ? loved : notLoved} className={!isFavorite ? 'vibrate text-xl md:text-2xl' : 'text-xl md:text-2xl'} />
-                            </button>                            
+                            </button> 
+
+                            <div className={`absolute top-4 ${language === "ar" ? 'md:left-14 left-14' : 'md:right-14 right-14'}`}>
+                                <ShareButtons url={`https://muslim-one.vercel.app/ReadHadith/Book/${bookId}?hadith=${hadith.numberEn}`} />
+                            </div>
+
                             <h1 className="text-3xl font-bold text-center flex gap-1">
                                 {HadithNumber[language]} {language === 'en' ? hadith.numberEn : hadith.numberAr}
                             </h1>

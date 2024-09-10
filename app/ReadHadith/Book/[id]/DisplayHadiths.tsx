@@ -8,11 +8,14 @@ import { faHeart as notLoved } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as loved } from '@fortawesome/free-solid-svg-icons';
 import { useFavoriteHadiths } from "@/app/Context/FavoriteHadithsContext";
 import { hadithBooks } from "@/app/Lib/Constants";
+import ShareButtons from "@/app/Components/ShareButtons";
 import "../../../globals.css";
 
 export default function BookPage({ startingNumber, bookId }: { startingNumber: number, bookId: string }) {
 
     const { language } = useLanguage();
+
+
     const [hadiths, setHadiths] = useState<{ numberAr: string, numberEn: number, arabic: string }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -89,6 +92,11 @@ export default function BookPage({ startingNumber, bookId }: { startingNumber: n
                             >
                                 <FontAwesomeIcon icon={isFavorite(hadith.numberEn) ? loved : notLoved} className={!isFavorite(hadith.numberEn) ? 'vibrate text-xl md:text-2xl' : 'text-xl md:text-2xl'} />
                             </button>
+
+                            <div className={`absolute top-4 ${language === "ar" ? 'md:left-14 left-14' : 'md:right-14 right-14'}`}>
+                                <ShareButtons url={`https://muslim-one.vercel.app/ReadHadith/Book/${bookId}?hadith=${hadith.numberEn}`} />
+                            </div>
+
                             <h1 className="text-3xl font-bold text-center flex gap-1">
                                 {HadithNumber[language]} {language === 'en' ? hadith.numberEn : hadith.numberAr}
                             </h1>

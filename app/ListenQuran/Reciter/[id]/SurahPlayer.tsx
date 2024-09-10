@@ -11,6 +11,7 @@ import { faHeart as loved } from '@fortawesome/free-solid-svg-icons';
 import "../../../globals.css";
 import SuccessAlert from '@/app/Components/SuccessAlert';
 import FailAlert from '@/app/Components/FailAlert';
+import ShareButtons from "@/app/Components/ShareButtons";
 import { ClipLoader } from 'react-spinners';
 
 type Ayah = {
@@ -196,17 +197,16 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
               const response = await fetch(`/api/proxy?surahNumber=${surahNumber}&ayahNumber=${ayah.number}&reciterId=${reciterId}`);
               if (!response.ok) {
                 console.error(`Failed to fetch audio for ayah ${ayah.number}: ${response.statusText}`);
-                return null; // Return null for this ayah
+                return null; 
               }
               return await response.blob();
             } catch (error) {
               console.error(`Error fetching audio for ayah ${ayah.number}:`, error);
-              return null; // Return null for this ayah
+              return null; 
             }
           })
         );
   
-        // Filter out any null values from failed fetches
         const validBlobs = audioBlobs.filter(blob => blob !== null);
   
         if (validBlobs.length === 0) {
@@ -252,6 +252,11 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
     ar: "تم حفظ هذه السورة في قائمتك المفضلة!"
   }
 
+  const Share: TranslationPair = {
+    en: "Share It With Your Loved Ones",
+    ar: "شاركها مع أحبائك"
+  }
+
   return (
     <div>
       {loading ? (
@@ -272,9 +277,11 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
               onClose={() => setShowFailAlert(false)}
             />
           </div>
+
           <div className='flex items-center gap-2'>
             <audio ref={audioPlayer} controls />
           </div>
+
           <div className='flex items-center gap-3 mt-5'>
             <h1 className='text-xl md:text-3xl'>
               {isFavorite ? Saved[language] : LoveIt[language]}
@@ -287,6 +294,16 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({ reciterId, surahNum
               <FontAwesomeIcon icon={isFavorite ? loved : notLoved} className={!isFavorite ? 'vibrate text-lg md:text-2xl' : 'text-lg md:text-2xl'} />
             </button>
           </div>
+
+          <div className='flex items-center gap-3 mt-5'>
+            <h1 className='text-xl md:text-3xl'>
+              {Share[language]}
+            </h1>
+
+            <ShareButtons url={`https://muslim-one.vercel.app/ListenQuran/Reciter/${reciterId}?surah=${surahNumber}`} />
+
+          </div>
+
           <div className='flex items-center gap-2 mt-10'>
             <button onClick={handleRestart} className='bg-teal-500 flex justify-center w-32 py-2 rounded-lg text-white font-bold hover:opacity-80 dark:hover:opacity-90'>{Restart[language]}</button>
           </div>

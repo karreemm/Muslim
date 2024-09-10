@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faLocationArrow, faHeartCircleMinus } from "@fortawesome/free-solid-svg-icons";
 import { AzkarCategories } from "../Lib/Constants";
 import { ClipLoader } from 'react-spinners';
+import ShareModal from "../Components/ShareModal";
 
 export default function HadithTable() {
 
@@ -103,11 +104,12 @@ export default function HadithTable() {
                 <td dir="rtl" className="px-6 py-4 hidden md:table-cell leading-8">{item.content}</td>
                 <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                   <button
-                    className="text-teal-600 dark:text-teal-500 hover:opacity-80"
+                    className="text-blue-600 dark:text-blue-500 hover:opacity-80"
                     onClick={() => handleGoToZekr(item)}
                   >
                     <FontAwesomeIcon icon={faLocationArrow} />
                   </button>
+                  <ShareModal url={`https://muslim-one.vercel.app/Azkar/Category/${zekr?.id}?zekr=${item.number}`} />
                   <button
                     className="text-red-600 dark:text-red-500 hover:opacity-80"
                     onClick={() => removeFavoriteAzkar(item?.number ?? 0, item.category)}

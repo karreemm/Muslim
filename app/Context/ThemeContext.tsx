@@ -23,7 +23,6 @@ export const ThemeContext = createContext<ThemeContextType | null>(null);
 const ThemeContextProvider = ({ children }: IProps) => {
   const [theme, setTheme] = useState<boolean>(false);
 
-  // Check if we are on the client side before accessing localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme");

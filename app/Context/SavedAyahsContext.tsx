@@ -39,7 +39,7 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const clearSavedAyahs = () => {
     localStorage.removeItem('savedAyahs');
-    setSavedAyahs([]); // Clear the state after removing from localStorage
+    setSavedAyahs([]); 
   };
 
   const removeAyah = (ayah: SavedAyah) => {
@@ -54,7 +54,6 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
   };
 
-  // Update localStorage whenever savedAyahs changes
   useEffect(() => {
     localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
   }, [savedAyahs]);

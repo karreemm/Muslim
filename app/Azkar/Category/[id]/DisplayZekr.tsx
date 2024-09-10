@@ -9,10 +9,15 @@ import { useFavoriteAzkar } from "@/app/Context/FavoriteAzkarContext";
 import TranslationPair from "@/app/Lib/Types";
 import "../../../globals.css";
 import { AzkarCategories } from "@/app/Lib/Constants";
+import ShareButtons from "@/app/Components/ShareButtons";
+import useMediaQuery from "@/app/Lib/CustomHooks";
 
 export default function SingleZekr({ zekrNumber, categoryId }: { zekrNumber: number, categoryId: string }) {
   const { language } = useLanguage();
+  const isMdOrLarger = useMediaQuery('(min-width: 768px)');
+
   const [zekr, setZekr] = useState<AzkarItem | null>(null);
+  const [zekrData, setZekrData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [categoryNameEn, setCategoryNameEn] = useState<string>("");
@@ -48,6 +53,8 @@ export default function SingleZekr({ zekrNumber, categoryId }: { zekrNumber: num
 
   useEffect(() => {
     if (zekr) {
+      const zekrr = AzkarCategories.find(b => b.ar === zekr.category);
+      setZekrData(zekrr);
       const isFav = favoriteAzkar.some(fav => fav.number === zekr.number && fav.categoryId === categoryId);
       setIsFavorite(isFav);
     }
@@ -90,6 +97,11 @@ export default function SingleZekr({ zekrNumber, categoryId }: { zekrNumber: num
               >
                 <FontAwesomeIcon icon={isFavorite ? loved : notLoved} className={!isFavorite ? 'vibrate text-xl md:text-2xl' : 'text-xl md:text-2xl'} />
               </button>
+
+              <div className={`absolute ${language === "ar" ? 'left-14 md:bottom-4 md:left-4' : 'right-14 md:bottom-4 md:left-4'} ${isMdOrLarger ? '' : 'top-4'}`}>
+               <ShareButtons url={`https://muslim-one.vercel.app/Azkar/Category/${zekrData?.id}?zekr=${zekr.number}`} />
+              </div>
+
               <h1 className="text-3xl font-bold text-center flex gap-1">
                 {ZekrNumber[language]} {language === 'en' ? zekr.number : zekr.number}
               </h1>

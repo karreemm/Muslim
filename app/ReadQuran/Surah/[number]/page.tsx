@@ -12,6 +12,7 @@ import GetSurah from "./GetSurah"
 import {toArabicNumber, showPopover, hidePopover} from "../../../Lib/Helpers";
 import  { RenderQuranText }  from "./RenderQuranText";
 import Footer from "@/app/Components/Footer";
+import ShareButtons from "@/app/Components/ShareButtons";
 
 export default function SurahPage() {
     
@@ -141,15 +142,18 @@ export default function SurahPage() {
             {RenderQuranText( surahData, fontSize, lineHeight, SurahNameAr, SurahNameEn, currentSurahNumber)}
           </div>
 
-          <div  dir={language === "ar" ? "rtl" : "ltr"} className='mt-5 flex gap-5'>
+          <div  dir={language === "ar" ? "rtl" : "ltr"} className='mt-5 flex items-center gap-5'>
             <button onClick={() => handleFontSizeChange(true)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold">
                 <FontAwesomeIcon icon={faPlus} />
                 {Size[language]}
             </button>
+
             <button onClick={() => handleFontSizeChange(false)} className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold">
                 <FontAwesomeIcon icon={faMinus} />
                 {Size[language]}
             </button>
+
+            <ShareButtons url={`https://muslim-one.vercel.app/ReadQuran/Surah/${currentSurahNumber}`} />
           </div>
         </div>
     </div>
