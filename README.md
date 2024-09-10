@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Muslim Website
 
-## Getting Started
+**Muslim** is a website created as a continuous charity (Sadaqah Jariyah). The goal is to help everyone grow closer to Allah by offering easy access to Reading & Listening to the Holy Quran, Reading & Learning from the Prophet's Hadith, and Reading Azkar.
 
-First, run the development server:
+## Main Features
+- **Read the Holy Quran** by Surah or Juz.
+- **Listen to the Holy Quran** recited by 16 different reciters.
+- **Read the Prophet's Hadith** from 8 authentic Sunnah Books.
+- **Access 8 different types of Azkar** for daily spiritual practice.
+- **Save Ayahs** from any Surah to resume reading later.
+- **Add any Surah, Hadith, or Zekr to your Favorites** for quick access.
+- **Share Surahs, Hadiths, and Azkar** on social media (Facebook, LinkedIn, WhatsApp, Telegram).
+- **Responsive Design** for a seamless experience on all devices.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Statistics
+- **1,800 Surahs** available to listen to.
+- **27,000 Hadiths** accessible for reading.
+- **80 Azkar** to enrich your spiritual life.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies
+The website is built using **Next.js** and **Tailwind CSS**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Demo
+Feel free to explore the website through this link: [Muslim Website Demo](https://muslim-one.vercel.app/).
