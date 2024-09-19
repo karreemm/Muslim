@@ -21,7 +21,7 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({ message, show, onClose }) =
     if (show) {
       const timer = setTimeout(() => {
         onClose();
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [show, onClose]);

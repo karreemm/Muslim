@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones, faHouse, faListOl, faClock } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from "../Context/ThemeContext";
 import { useLanguage } from '../Context/LanguageContext';
 import TranslationPair from '../Lib/Types';
@@ -63,6 +63,16 @@ export default function Navbar() {
     const Home: TranslationPair = { 
         ar: "الرئيسية",
         en: "Home"
+    };
+
+    const Tasbeeh: TranslationPair = {
+        ar: "تسبيح",
+        en: "Tasbeeh"
+    };
+
+    const PrayerTimes: TranslationPair = {
+        ar: "مواقيت الصلاة",
+        en: "Prayer Times"
     };
 
     const handleLanguageChange = (lang: string) => {
@@ -142,6 +152,14 @@ export default function Navbar() {
 
                 <Link href="/Azkar">
                     {Azkar[language]}
+                </Link>
+
+                <Link href="/Tasbeeh">
+                    {Tasbeeh[language]}
+                </Link>
+
+                <Link href="/PrayerTimes">
+                    {PrayerTimes[language]}
                 </Link>
 
             </div>
@@ -229,6 +247,16 @@ export default function Navbar() {
                     <Link href="/Azkar" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faBookOpen} className="" />
                         {Azkar[language]}
+                    </Link>
+
+                    <Link href="/Tasbeeh" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+                        <FontAwesomeIcon icon={faListOl} className="" />
+                        {Tasbeeh[language]}
+                    </Link>
+
+                    <Link href="/PrayerTimes" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+                        <FontAwesomeIcon icon={faClock} className="" />
+                        {PrayerTimes[language]}
                     </Link>
 
                     <hr className='border border-gray-500 dark:border-gray-400 w-full my-4'/> 

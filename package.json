@@ -14,13 +14,17 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.7",
+    "moment-hijri": "^2.30.0",
     "next": "14.2.7",
+    "qs": "^6.13.0",
     "react": "^18",
     "react-dom": "^18",
     "react-spinners": "^0.14.1"
   },
   "devDependencies": {
+    "@types/moment-hijri": "^2.1.4",
     "@types/node": "^20",
+    "@types/qs": "^6.9.16",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

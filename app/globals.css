@@ -89,3 +89,34 @@
   transform: translateY(0);
 }
 
+.Big{
+  font-size: 10rem;
+}
+
+@keyframes moveRightAndBack {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px); 
+  }
+}
+
+.arrow-right {
+  display: inline-block;
+  animation: moveRightAndBack 1.5s infinite;
+}
+
+@keyframes moveLeftAndBack {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-10px); 
+  }
+}
+
+.arrow-left {
+  display: inline-block;
+  animation: moveLeftAndBack 1.5s infinite;
+}

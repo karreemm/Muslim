@@ -35,6 +35,8 @@ export default function ListenQuranPage() {
                             <div className="flex gap-5 items-center">
                                 <div className="w-[65px] h-[65px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">
                                     <img
+                                        loading="lazy"
+                                        decoding="async"
                                         src={book.image?.src}
                                         alt={book.name_en}
                                         className="w-[50px] h-[50px] rounded-full"
