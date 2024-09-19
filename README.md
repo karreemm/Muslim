@@ -10,6 +10,8 @@
 - **Save Ayahs** from any Surah to resume reading later.
 - **Add any Surah, Hadith, or Zekr to your Favorites** for quick access.
 - **Share Surahs, Hadiths, and Azkar** on social media (Facebook, LinkedIn, WhatsApp, Telegram).
+- **Tasabeeh Counter** to do your daily tasabeeh.
+- **Prayer Times** to view accurate prayer times based on your location.
 - **Responsive Design** for a seamless experience on all devices.
 
 ## Statistics
