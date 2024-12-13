@@ -168,6 +168,7 @@ export default function Navbar() {
                 <button
                     onClick={toggleTheme}
                     className="flex items-center justify-center w-10 h-10 transition-colors duration-200"
+                    aria-label="Toggle Theme"
                 >
                     {theme ? (
                         <FontAwesomeIcon icon={faSun} size="lg" />
@@ -180,6 +181,7 @@ export default function Navbar() {
                         ref={buttonRef}
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         className="flex items-center justify-center w-10 h-10 transition-colors duration-200"
+                        aria-label="Change Language"
                     >
                         <FontAwesomeIcon icon={faEarthAfrica} size="lg" />
                     </button>
@@ -215,6 +217,7 @@ export default function Navbar() {
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 md:hidden ${isMobileMenuOpen ? 'rotate-90' : 'rotate-0'}`}
+                    aria-label="Toggle Mobile Menu"
                 >
                     <FontAwesomeIcon icon={isMobileMenuOpen ? faX : faBars} size="lg" />
                 </button>

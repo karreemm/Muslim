@@ -29,22 +29,6 @@ const prayerNames = {
 };
 
 const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-const amPmArabic = { AM: "ص", PM: "م" };
-
-const toArabicNumerals = (time: string): string => {
-  return time.split('').map(char => {
-    const num = parseInt(char, 10);
-    return isNaN(num) ? char : arabicNumbers[num];
-  }).join('');
-};
-
-const convertToArabicTime = (time: string): string => {
-  const [hour, minute, period] = time.split(/[:\s]/);
-  const hourInArabic = toArabicNumerals(hour);
-  const minuteInArabic = toArabicNumerals(minute);
-  const periodInArabic = amPmArabic[period.toUpperCase() as 'AM' | 'PM'];
-  return `${minuteInArabic}:${hourInArabic} ${periodInArabic}`;
-};
 
 const PrayerTimes: React.FC = () => {
   const { language } = useLanguage() as { language: "en" | "ar" };
@@ -189,14 +173,14 @@ const PrayerTimes: React.FC = () => {
             <div className="mt-10 w-full flex flex-col items-center md:flex md:flex-row md:items-baseline md:justify-center gap-5 md:gap-10">
               {prayerNames[language].map((prayer, index) => {
                 const time = prayerTimes[["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"][index]];
-                const timeInArabic = convertToArabicTime(time);
+                const timeInArabic = time;
                 return (
                   <div
                     key={prayer}
                     className="w-[90%] md:w-[15%] rounded-lg bg-[#FFF5E4] dark:bg-slate-900 shadow-md py-6 px-3 flex flex-col justify-center items-center gap-2"
                   >
                     <p className="text-xl font-bold">{prayer} :</p>
-                    <p className="text-xl">{language==="ar"? timeInArabic : time}</p>
+                    <p dir="ltr" className="text-xl">{language==="ar"? timeInArabic : time}</p>
                   </div>
                 );
               })}

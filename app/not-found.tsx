@@ -1,6 +1,6 @@
 "use client";
 
-import NotFoundLight from "./Assets/notFoundLight.png";
+import NotFoundLight from "./Assets/notFoundLight.webp";
 import TranslationPair from "./Lib/Types";
 import { useLanguage } from "./Context/LanguageContext";
 

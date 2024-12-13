@@ -1,4 +1,4 @@
-import install from "../Assets/Installation.png"
+import install from "../Assets/Installation.webp"
 import TranslationPair from "../Lib/Types"
 import { useLanguage } from "../Context/LanguageContext"
 

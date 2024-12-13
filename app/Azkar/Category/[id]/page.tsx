@@ -35,7 +35,7 @@ export default function CategoryPage() {
     if (id) {
       setCategoryId(id);
       const total = AzkarCategories.find((b) => b.id === id)?.number || 0;
-      setTotalPages(Math.ceil(total / 5)); // Assuming 5 items per page
+      setTotalPages(Math.ceil(total / 5)); 
     } else {
       setCategoryId("morning_azkar");
     }

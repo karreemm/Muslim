@@ -1,9 +1,9 @@
 "use client";
 
 import TranslationPair from "../Lib/Types";
-import ImgLight from "../Assets/bg2.jpg";
-import ImgDark from "../Assets/bg8.png";
-import install from "../Assets/Installation.png"
+import ImgLight from "../Assets/bg2.webp";
+import ImgDark from "../Assets/bg8.webp";
+import install from "../Assets/Installation.webp";
 import { useLanguage } from "../Context/LanguageContext";
 import Link from "next/link";
 

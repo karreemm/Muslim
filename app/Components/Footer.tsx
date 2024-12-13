@@ -5,6 +5,7 @@ import { useLanguage } from "../Context/LanguageContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMosque } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import React from "react";
 
 
 export default function Footer() {
@@ -62,11 +63,11 @@ export default function Footer() {
                     </a>
 
                     <div className="flex gap-3">
-                        <a className="md:text-2xl hover:opacity-80" href="https://github.com/karreemm">
+                        <a className="md:text-2xl hover:opacity-80" href="https://github.com/karreemm" aria-label="Github Profile">
                             <FontAwesomeIcon icon={faGithub} />
                         </a>
 
-                        <a className="md:text-2xl hover:opacity-80" href="www.linkedin.com/in/k-abdelnabii">
+                        <a className="md:text-2xl hover:opacity-80" href="www.linkedin.com/in/k-abdelnabii" aria-label="Linkedin Profile">
                             <FontAwesomeIcon icon={faLinkedin} />
                         </a>
                     </div>

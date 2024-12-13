@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { toArabicNumber } from "../Lib/Helpers";
 import useMediaQuery from "../Lib/CustomHooks";
+import React from "react";
 
 interface PaginationProps {
   totalPages: number;
@@ -15,7 +16,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => {
   const { language } = useLanguage();
-  const isMdOrLarger = useMediaQuery('(min-width: 768px)'); // Check if the screen is md or larger
+  const isMdOrLarger = useMediaQuery('(min-width: 768px)'); 
 
   const Next: TranslationPair = {
     ar: "التالي",
@@ -34,8 +35,8 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => 
     onPageChange(page);
   };
 
-  const generatePages = () => {
-    const pages = [];
+  const generatePages = (): (number | string)[] => {
+    const pages: (number | string)[] = [];
 
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
