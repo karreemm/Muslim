@@ -17,6 +17,7 @@ export default function DeceasedPersonsTable() {
   const [isMounted, setIsMounted] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [shareableUrls, setShareableUrls] = useState<{ [key: string]: string }>({});
   const { language } = useLanguage();
   const router = useRouter();
 
@@ -54,13 +55,25 @@ export default function DeceasedPersonsTable() {
     setIsEmpty(deceasedPersons.length === 0);
   }, [deceasedPersons]);
 
-  const getShareableUrl = (slug: string) => {
+  const shortenURL = async (url: string) => {
+    try {
+      const response = await fetch(`https://tinyurl.com/api-create.php?url=${url}`);
+      const shortUrl = await response.text();
+      console.log('Short URL:', shortUrl);
+      return shortUrl;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const getShareableUrl = async (slug: string) => {
     const person = getDeceasedPerson(slug);
     if (person) {
       const encodedData = safeEncode(person);
-      return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`;
+      const shortenedUrl = await shortenURL(`'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`);
+      return shortenedUrl || "";
     }
-    return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
+    return `'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
   };
 
   const handleNavigation = (slug: string) => {
@@ -72,6 +85,21 @@ export default function DeceasedPersonsTable() {
       router.push(`/SadaqaGarya/${slug}`);
     }
   };
+
+  useEffect(() => {
+    const fetchShareableUrls = async () => {
+      const urls: { [key: string]: string } = {};
+      for (const person of deceasedPersons) {
+        const url = await getShareableUrl(person.slug);
+        urls[person.slug] = url;
+      }
+      setShareableUrls(urls);
+    };
+
+    if (!isEmpty) {
+      fetchShareableUrls();
+    }
+  }, [deceasedPersons]);
 
   if (!isMounted || loading) {
     return (
@@ -108,7 +136,7 @@ export default function DeceasedPersonsTable() {
                     >
                       <FontAwesomeIcon icon={faLocationArrow} />
                     </button>
-                    <ShareModal url={getShareableUrl(person.slug)} />
+                    {shareableUrls[person.slug] && <ShareModal url={shareableUrls[person.slug]} />}
                     <button
                       className="text-red-600 dark:text-red-500 hover:opacity-80"
                       onClick={() => removeDeceasedPerson(person.id)}
