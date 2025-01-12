@@ -70,10 +70,10 @@ export default function DeceasedPersonsTable() {
     const person = getDeceasedPerson(slug);
     if (person) {
       const encodedData = safeEncode(person);
-      const shortenedUrl = await shortenURL(`'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`);
+      const shortenedUrl = await shortenURL(`https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`);
       return shortenedUrl || "";
     }
-    return `'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
+    return `https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
   };
 
   const handleNavigation = (slug: string) => {
