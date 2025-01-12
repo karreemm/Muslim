@@ -7,6 +7,7 @@ import { useSadaqaGarya } from "../Context/SadaqatContext";
 import { slugify } from "../Lib/Helpers";
 import { DeceasedPerson } from "../Lib/Types";
 import TranslationPair from "../Lib/Types";
+import { safeEncode } from "../Lib/Encoding";
 
 export default function SadaqaGaryaPage() {
 
@@ -21,6 +22,7 @@ export default function SadaqaGaryaPage() {
   const [messageAr, setMessageAr] = useState(
     "هذه صفحة صدقة جارية للمتوفى. نسأل الله أن يرفع درجته في الجنة ويجعل قبره روضة من رياض الجنة. آمين."
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const translations: { [key: string]: TranslationPair } = {
     title: {
@@ -49,35 +51,42 @@ export default function SadaqaGaryaPage() {
     },
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      if (!nameEn || !nameAr || isSubmitting) return;
+      
+      setIsSubmitting(true);
+      
+      try {
+        const timestamp = new Date().getTime();
+        const baseSlug = slugify(nameEn);
+        const uniqueSlug = `${baseSlug}-${timestamp}`;
 
-    if (!nameEn || !nameAr) return;
+        const deceased: DeceasedPerson = {
+          id: uniqueSlug,
+          nameEn,
+          nameAr,
+          messageEn,
+          messageAr,
+          slug: uniqueSlug,
+          createdAt: new Date().toISOString(),
+        };
 
-    const timestamp = new Date().getTime();
-    const baseSlug = slugify(nameEn);
-    const uniqueSlug = `${baseSlug}-${timestamp}`;
+        // Add deceased person using context
+        await addDeceasedPerson(deceased);
 
-    const deceased: DeceasedPerson = {
-      id: uniqueSlug,
-      nameEn,
-      nameAr,
-      messageEn,
-      messageAr,
-      slug: uniqueSlug,
-      createdAt: new Date().toISOString(),
+        // Encode the data for URL sharing
+        const encodedData = safeEncode(deceased);
+        
+        // Use push with await to ensure navigation happens
+        await router.push(`/SadaqaGarya/${uniqueSlug}?data=${encodedData}`);
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
     };
-
-    // Add deceased person using context
-    addDeceasedPerson(deceased);
-
-    // Encode the data for URL sharing
-    const encodedData = btoa(JSON.stringify(deceased));
-    
-    // Navigate to the newly created page with encoded data
-    router.push(`/SadaqaGarya/${uniqueSlug}?data=${encodedData}`);
-
-  };
 
   const validateForm = () => {
     return nameEn.trim() !== "" && nameAr.trim() !== "";
@@ -148,10 +157,11 @@ export default function SadaqaGaryaPage() {
           <button
             type="submit"
             disabled={!validateForm()}
-            className="w-full bg-teal-600 text-white p-3 rounded-md hover:bg-teal-700 transition"
-            onClick={handleSubmit}
+            className={`w-full bg-teal-600 text-white p-3 rounded-md transition ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-teal-700'
+            }`}
           >
-            {translations.generate[language]}
+            {isSubmitting ? 'Processing...' : translations.generate[language]}
           </button>
           <div className="h-10"></div>
         </form>

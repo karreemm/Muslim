@@ -9,6 +9,7 @@ import { duas, DiedSurahs } from '../../Lib/Constants';
 import Navbar from '@/app/Components/Navbar';
 import Footer from '@/app/Components/Footer';
 import { ClipLoader } from "react-spinners";
+import { safeDecode } from '@/app/Lib/Encoding';
 
 
 export default function DeceasedPage() {
@@ -19,7 +20,6 @@ export default function DeceasedPage() {
     const [deceased, setDeceased] = useState<DeceasedPerson | null>(null);
     const [expandedSurah, setExpandedSurah] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-
 
     const translations: {[key: string]: TranslationPair} = {
         title: {
@@ -55,7 +55,7 @@ export default function DeceasedPage() {
             
             if (encodedData) {
                 try {
-                    const decodedData = JSON.parse(atob(encodedData));
+                    const decodedData = safeDecode(encodedData);
                     setDeceased(decodedData);
                     setLoading(false);
                     return;

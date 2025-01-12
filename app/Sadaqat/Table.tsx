@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ClipLoader } from 'react-spinners';
 import { useLanguage } from "../Context/LanguageContext";
 import TranslationPair from "../Lib/Types";
+import { safeEncode } from "../Lib/Encoding";
 
 export default function DeceasedPersonsTable() {
 
@@ -56,7 +57,7 @@ export default function DeceasedPersonsTable() {
   const getShareableUrl = (slug: string) => {
     const person = getDeceasedPerson(slug);
     if (person) {
-      const encodedData = btoa(JSON.stringify(person));
+      const encodedData = safeEncode(person);
       return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`;
     }
     return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
@@ -65,7 +66,7 @@ export default function DeceasedPersonsTable() {
   const handleNavigation = (slug: string) => {
     const person = getDeceasedPerson(slug);
     if (person) {
-      const encodedData = btoa(JSON.stringify(person));
+      const encodedData = safeEncode(person);
       router.push(`/SadaqaGarya/${slug}?data=${encodedData}`);
     } else {
       router.push(`/SadaqaGarya/${slug}`);
