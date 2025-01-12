@@ -156,14 +156,12 @@ export const RenderJuzText = (
 
   const displayBasmala = surahNumber !== 9 && firstAyahText?.includes('بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ');
 
-  // Remove basmala from the first Ayah if necessary
   if (displayBasmala) {
     ayahs[0].text = firstAyahText.replace('بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', '').trim();
   }
 
   return (
-    <div dir="rtl" className="flex flex-col items-center">
-      {/* Display Basmala or Ta'awwudh (for Surah 9) */}
+    <div dir="rtl" className="fontAmiri flex flex-col items-center">
       <div className="basmala text-xl md:text-3xl text-center my-4">
         {surahNumber === 9 ? (
           <p>أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</p>
@@ -217,7 +215,7 @@ export const RenderJuzText = (
               <div
                 dir={language === 'ar' ? 'rtl' : 'ltr'}
                 ref={popoverRef}
-                className='z-40 absolute bg-white w-64 p-2 flex flex-col rounded shadow-lg top-0'
+                className='dynamic-font z-40 absolute bg-white w-64 p-2 flex flex-col rounded shadow-lg top-0'
                 style={{ [language === 'ar' ? 'left' : 'right']: 0 }}
                 onClick={(e) => e.stopPropagation()}
               >

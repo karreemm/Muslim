@@ -18,7 +18,7 @@ export default function Footer() {
     }
 
     const firstText: TranslationPair = {
-        en: "This website is designed as a continuous charity (Sadaqah Jariyah). I hope to make it easier for everyone to read and listen to the Quran and learn from the Hadiths.",
+        en: "This website is designed as a continuous charity (Sadaqa Garya). I hope to make it easier for everyone to read and listen to the Quran and learn from the Hadiths.",
         ar: "تم تصميم هذا الموقع ليكون صدقة جارية. اتمنى أن ايسر على الجميع قراءة القرآن الكريم والاستماع إليه وتعلم الأحاديث النبوية الشريفة."
     }
 
@@ -29,7 +29,7 @@ export default function Footer() {
 
     const Madeby: TranslationPair = {
         en: "Kareem Abdel Nabi",
-        ar: "كريم عبد النبي"
+        ar: "كريم عبدالنبي"
     }
     
 

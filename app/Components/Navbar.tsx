@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones, faHouse, faListOl, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faMosque, faSun, faMoon, faEarthAfrica, faBookmark, faHeart, faBars, faX, faBookOpen, faHeadphones, faHouse, faListOl, faClock, faSeedling } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from "../Context/ThemeContext";
 import { useLanguage } from '../Context/LanguageContext';
 import TranslationPair from '../Lib/Types';
@@ -74,6 +74,16 @@ export default function Navbar() {
         ar: "مواقيت الصلاة",
         en: "Prayer Times"
     };
+
+    const SadaqaGarya: TranslationPair = {
+        ar: "صدقة جارية",
+        en: "Sadaqa Garya"
+    }
+
+    const YourSadaqat: TranslationPair = {
+        ar: "صدقاتك",
+        en: "Your Sadaqat"
+    }
 
     const handleLanguageChange = (lang: string) => {
         if (lang !== language) {
@@ -162,6 +172,10 @@ export default function Navbar() {
                     {PrayerTimes[language]}
                 </Link>
 
+                <Link href="/SadaqaGarya">
+                    {SadaqaGarya[language]}
+                </Link>
+
             </div>
 
             <div className="flex items-center gap-2 relative">
@@ -214,6 +228,10 @@ export default function Navbar() {
                     <FontAwesomeIcon icon={faHeart} size="lg" />
                 </Link>
 
+                <Link href="/Sadaqat" className="hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200">
+                    <FontAwesomeIcon icon={faSeedling} size="lg" />
+                </Link>
+
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 md:hidden ${isMobileMenuOpen ? 'rotate-90' : 'rotate-0'}`}
@@ -262,6 +280,11 @@ export default function Navbar() {
                         {PrayerTimes[language]}
                     </Link>
 
+                    <Link href="/SadaqaGarya" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+                        <FontAwesomeIcon icon={faSeedling} className="" />
+                        {SadaqaGarya[language]}
+                    </Link>
+
                     <hr className='border border-gray-500 dark:border-gray-400 w-full my-4'/> 
 
                     <Link href="/SavedAyahs" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
@@ -272,6 +295,11 @@ export default function Navbar() {
                     <Link href="/Favourites" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                         <FontAwesomeIcon icon={faHeart} className="" />
                         {Favourites[language]}
+                    </Link>
+
+                    <Link href="/Sadaqat" className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800">
+                        <FontAwesomeIcon icon={faSeedling} className="" />
+                        {YourSadaqat[language]}
                     </Link>
                     
                 </div>

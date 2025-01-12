@@ -27,3 +27,10 @@ export function toArabicNumber(number: number | undefined): string {
       popover.classList.add('invisible', 'opacity-0');
     }
   }
+
+  export function slugify(text: string): string {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+}

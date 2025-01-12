@@ -14,8 +14,6 @@ import "../../../globals.css";
 export default function BookPage({ startingNumber, bookId }: { startingNumber: number, bookId: string }) {
 
     const { language } = useLanguage();
-
-
     const [hadiths, setHadiths] = useState<{ numberAr: string, numberEn: number, arabic: string }[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -76,7 +74,7 @@ export default function BookPage({ startingNumber, bookId }: { startingNumber: n
     };
 
     return (
-        <div className="w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900">
+        <div className="fontAmiri w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900">
             <div className="w-[95%] flex flex-col items-center gap-10">
                 {loading ? (
                     <div className="flex justify-center items-center h-64">

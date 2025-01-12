@@ -7,7 +7,7 @@ import { SavedAyahsProvider } from "./Context/SavedAyahsContext";
 import { FavoriteSurahsProvider } from "./Context/FavoriteSurahsContext";
 import { FavoriteHadithsProvider } from "./Context/FavoriteHadithsContext";
 import { FavoriteAzkarProvider } from "./Context/FavoriteAzkarContext";
-
+import {SadaqaGaryaProvider} from "./Context/SadaqatContext";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -26,14 +26,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
-      <body className="fontAmiri dark:bg-slate-900 bg-[#FFF5E4]">
+      <body className="dynamic-font dark:bg-slate-900 bg-[#FFF5E4]">
         <LanguageContextProvider>
           <ThemeContextProvider>
             <SavedAyahsProvider>
               <FavoriteSurahsProvider>
                 <FavoriteHadithsProvider>
                   <FavoriteAzkarProvider>
-                {children}
+                    <SadaqaGaryaProvider>
+                      {children}
+                    </SadaqaGaryaProvider>
                   </FavoriteAzkarProvider>
                 </FavoriteHadithsProvider>
               </FavoriteSurahsProvider>

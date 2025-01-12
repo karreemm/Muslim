@@ -108,8 +108,8 @@ export const RenderQuranText = (surahData: any, fontSize: number, lineHeight: nu
   }
 
   return (
-    <div dir='rtl' className='flex flex-col items-center'>
-      <div dir='rtl' className='basmala text-xl md:text-3xl text-center my-4'>
+    <div dir='rtl' className='fontAmiri flex flex-col items-center'>
+      <div dir='rtl' className='fontAmiri basmala text-xl md:text-3xl text-center my-4'>
         {surahData.number === 9 ? (
           <p>أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</p>
         ) : (
@@ -123,7 +123,7 @@ export const RenderQuranText = (surahData: any, fontSize: number, lineHeight: nu
             ref={(el: HTMLDivElement | null) => { 
               ayahRefs.current[ayah.numberInSurah] = el; 
             }}
-            className={`flex items-center relative ${highlightedAyahNumber === ayah.numberInSurah ? 'bg-yellow-200 rounded-lg' : ''}`}
+            className={`fontAmiri flex items-center relative ${highlightedAyahNumber === ayah.numberInSurah ? 'bg-yellow-200 rounded-lg' : ''}`}
             style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
             onClick={() => handleAyahClick(ayah.numberInSurah)}
             id={`ayah-${ayah.numberInSurah}`}
@@ -146,7 +146,7 @@ export const RenderQuranText = (surahData: any, fontSize: number, lineHeight: nu
               <div
                 dir = {language === 'ar' ? 'rtl' : 'ltr'}
                 ref={popoverRef}
-                className=' z-40 absolute bg-white  w-64 p-2 flex flex-col rounded shadow-lg top-0'
+                className='dynamic-font z-40 absolute bg-white  w-64 p-2 flex flex-col rounded shadow-lg top-0'
                 style={{ [language === 'ar' ? 'left' : 'right']: 0 }}
                 onClick={(e) => e.stopPropagation()} 
               >

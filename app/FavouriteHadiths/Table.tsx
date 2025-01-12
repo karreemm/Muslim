@@ -99,7 +99,7 @@ export default function HadithTable() {
               <tr key={idx}>
                 <td className="px-6 py-4 whitespace-nowrap text-center">{language === "ar" ? item.numberAr : item.numberEn}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">{language === "ar" ? book?.name_ar : book?.name_en }</td>
-                <td dir="rtl" className="px-6 py-4 hidden md:table-cell leading-8">{item.text}</td>
+                <td dir="rtl" className="fontAmiri px-6 py-4 hidden md:table-cell leading-8">{item.text}</td>
                 <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                   <button
                     className="text-blue-600 dark:text-blue-400 hover:opacity-80"

@@ -6,6 +6,14 @@
   font-family: 'Amiri', serif;
 }
 
+[dir="rtl"] .dynamic-font {
+  font-family: 'Amiri', serif;
+}
+
+[dir="ltr"] .dynamic-font {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
 ::-webkit-scrollbar {
   width: 8px; 
 }

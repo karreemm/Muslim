@@ -18,7 +18,6 @@ const LanguageContextProvider = ({ children }: IProps) => {
   const [language, setLanguage] = useState<string>("ar");
   const [dir, setDir] = useState<string>("rtl");
 
-  // Load language from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedLanguage = localStorage.getItem("language");

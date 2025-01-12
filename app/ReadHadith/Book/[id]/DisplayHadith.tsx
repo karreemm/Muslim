@@ -85,7 +85,7 @@ export default function SingleHadith({ hadithNumber, bookId }: { hadithNumber: n
     }
 
     return (
-        <div className="w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900">
+        <div className="fontAmiri w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900">
             <div className="w-[95%] flex flex-col items-center gap-10">
                 {loading ? (
                     <div className="flex justify-center items-center h-64">

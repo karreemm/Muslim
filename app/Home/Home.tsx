@@ -33,7 +33,7 @@ export default function Header() {
     }
 
     const ThirdItem: TranslationPair = {
-        en: "Read the Hadiths of the Prophet from the books of Sunnah",
+        en: "Read the Hadiths of the Prophet from Sunnah Books",
         ar: "قراءة الأحاديث النبوية الشريفة من كتب السنة"
     }
 
@@ -70,18 +70,18 @@ export default function Header() {
                     <div className="md:w-1/2 flex flex-col gap-5">
                         <h1 className="text-2xl md:text-4xl font-bold">{Welcome[language]}</h1>
                         <h1 className="md:text-2xl text-lg">{Desc[language]}</h1>
-                        <ul className="mt-5 list-disc list-inside text-lg md:text-2xl space-y-3">
+                        <ul className={`flex flex-col list-disc list-outside text-lg md:text-2xl gap-5 mt-5 md:mt-10 relative ${language === "en" ? "pl-5" : "pr-5"}`}>
                             <li>
-                                <Link href="/ReadQuran" className="hover:opacity-70">{FirstItem[language]}</Link>
+                                <Link href="/ReadQuran" className={`before:absolute ${language === "en" ? "before:left-0" : "before:right-0"} before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}>{FirstItem[language]}</Link>
                             </li>
                             <li>
-                                <Link href="/ListenQuran" className="hover:opacity-70">{SecondItem[language]}</Link>
+                                <Link href="/ListenQuran" className={`before:absolute ${language === "en" ? "before:left-0" : "before:right-0"} before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}>{SecondItem[language]}</Link>
                             </li>
                             <li>
-                                <Link href="/ReadHadith" className="hover:opacity-70">{ThirdItem[language]}</Link>
+                                <Link href="/ReadHadith" className={`before:absolute ${language === "en" ? "before:left-0" : "before:right-0"} before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}>{ThirdItem[language]}</Link>
                             </li>
                             <li>
-                                <Link href="/Azkar" className="hover:opacity-70">{FourthItem[language]}</Link>
+                                <Link href="/Azkar" className={`before:absolute ${language === "en" ? "before:left-0" : "before:right-0"} before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}>{FourthItem[language]}</Link>
                             </li>
                         </ul>
                     </div>

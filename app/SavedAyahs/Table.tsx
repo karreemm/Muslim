@@ -101,7 +101,7 @@ export default function AyahsTable() {
               <tr key={idx}>
                 <td className="px-6 py-4 whitespace-nowrap">{language === "ar" ? item.surahNameAr : item.surahNameEn}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">{language === "ar" ? item.ayahNumberAr : item.ayahNumberEn}</td>
-                <td dir="rtl" className="px-6 py-4 whitespace-normal leading-8 hidden md:table-cell">{item.text}</td>
+                <td dir="rtl" className="fontAmiri px-6 py-4 whitespace-normal leading-8 hidden md:table-cell">{item.text}</td>
                 <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                   <button
                     className="text-blue-600 dark:text-blue-400 hover:opacity-80"
