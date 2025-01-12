@@ -149,6 +149,7 @@ export default function SadaqaGaryaPage() {
             type="submit"
             disabled={!validateForm()}
             className="w-full bg-teal-600 text-white p-3 rounded-md hover:bg-teal-700 transition"
+            onClick={handleSubmit}
           >
             {translations.generate[language]}
           </button>
