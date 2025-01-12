@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useLanguage } from '../../Context/LanguageContext';
 import { DeceasedPerson } from '../../Lib/Types';
 import TranslationPair from '../../Lib/Types';
@@ -14,6 +14,7 @@ import { ClipLoader } from "react-spinners";
 export default function DeceasedPage() {
 
     const { slug } = useParams();
+    const router = useRouter();
     const { language } = useLanguage();
     const [deceased, setDeceased] = useState<DeceasedPerson | null>(null);
     const [expandedSurah, setExpandedSurah] = useState<number | null>(null);
@@ -48,22 +49,46 @@ export default function DeceasedPage() {
     };
 
     useEffect(() => {
-        const existingData = localStorage.getItem('sadaqaGarya');
-        if (existingData) {
-            const allDeceased = JSON.parse(existingData);
-            const found = allDeceased.find((d: DeceasedPerson) => d.slug === slug);
-            if (found) {
-                setDeceased(found);
-                setLoading(false);
+        const loadDeceasedData = () => {
+            const params = new URLSearchParams(window.location.search);
+            const encodedData = params.get('data');
+            
+            if (encodedData) {
+                try {
+                    const decodedData = JSON.parse(atob(encodedData));
+                    setDeceased(decodedData);
+                    setLoading(false);
+                    return;
+                } catch (error) {
+                    console.error('Error decoding URL data:', error);
+                }
             }
-        }
+            setLoading(false);
+        };
+        loadDeceasedData();
     }, [slug]);
 
-    if (loading || !deceased) {
+    if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-            <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
-          </div>
+                <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+            </div>
+        );
+    }
+
+    if (!deceased) {
+        return (
+            <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 p-8 flex justify-center items-center">
+                <div className="text-center text-[#134B70] dark:text-white">
+                    <h1 className="text-2xl mb-4">Person not found</h1>
+                    <button 
+                        onClick={() => router.push('/')}
+                        className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+                    >
+                        Return Home
+                    </button>
+                </div>
+            </div>
         );
     }
 

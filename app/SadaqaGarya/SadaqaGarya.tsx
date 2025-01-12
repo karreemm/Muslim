@@ -9,6 +9,7 @@ import { DeceasedPerson } from "../Lib/Types";
 import TranslationPair from "../Lib/Types";
 
 export default function SadaqaGaryaPage() {
+
   const router = useRouter();
   const { language } = useLanguage();
   const { addDeceasedPerson } = useSadaqaGarya();
@@ -70,8 +71,16 @@ export default function SadaqaGaryaPage() {
     // Add deceased person using context
     addDeceasedPerson(deceased);
 
-    // Navigate to the newly created page
-    router.push(`/SadaqaGarya/${uniqueSlug}`);
+    // Encode the data for URL sharing
+    const encodedData = btoa(JSON.stringify(deceased));
+    
+    // Navigate to the newly created page with encoded data
+    router.push(`/SadaqaGarya/${uniqueSlug}?data=${encodedData}`);
+
+  };
+
+  const validateForm = () => {
+    return nameEn.trim() !== "" && nameAr.trim() !== "";
   };
 
   return (
@@ -138,6 +147,7 @@ export default function SadaqaGaryaPage() {
 
           <button
             type="submit"
+            disabled={!validateForm()}
             className="w-full bg-teal-600 text-white p-3 rounded-md hover:bg-teal-700 transition"
           >
             {translations.generate[language]}

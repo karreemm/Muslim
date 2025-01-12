@@ -11,7 +11,8 @@ import { useLanguage } from "../Context/LanguageContext";
 import TranslationPair from "../Lib/Types";
 
 export default function DeceasedPersonsTable() {
-  const { deceasedPersons, removeDeceasedPerson, clearAllDeceasedPersons } = useSadaqaGarya();
+
+  const { deceasedPersons, removeDeceasedPerson, clearAllDeceasedPersons, getDeceasedPerson } = useSadaqaGarya();
   const [isMounted, setIsMounted] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,25 @@ export default function DeceasedPersonsTable() {
     setIsEmpty(deceasedPersons.length === 0);
   }, [deceasedPersons]);
 
+  const getShareableUrl = (slug: string) => {
+    const person = getDeceasedPerson(slug);
+    if (person) {
+      const encodedData = btoa(JSON.stringify(person));
+      return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}?data=${encodedData}`;
+    }
+    return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muslim-one.vercel.app'}/SadaqaGarya/${slug}`;
+  };
+
+  const handleNavigation = (slug: string) => {
+    const person = getDeceasedPerson(slug);
+    if (person) {
+      const encodedData = btoa(JSON.stringify(person));
+      router.push(`/SadaqaGarya/${slug}?data=${encodedData}`);
+    } else {
+      router.push(`/SadaqaGarya/${slug}`);
+    }
+  };
+
   if (!isMounted || loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -59,10 +79,6 @@ export default function DeceasedPersonsTable() {
       </div>
     );
   }
-
-  const handleNavigation = (slug: string) => {
-    router.push(`/SadaqaGarya/${slug}`);
-  };
 
   return (
     <div className="mt-24 w-[90%] min-h-screen mx-auto px-4 md:px-8">
@@ -91,7 +107,7 @@ export default function DeceasedPersonsTable() {
                     >
                       <FontAwesomeIcon icon={faLocationArrow} />
                     </button>
-                    <ShareModal url={`https://muslim-one.vercel.app/SadaqaGarya/${person.slug}`} />
+                    <ShareModal url={getShareableUrl(person.slug)} />
                     <button
                       className="text-red-600 dark:text-red-500 hover:opacity-80"
                       onClick={() => removeDeceasedPerson(person.id)}
