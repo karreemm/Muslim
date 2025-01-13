@@ -23,8 +23,8 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className="dark:bg-slate-900 bg-[#FFF5E4]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cabin+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="dynamic-font dark:bg-slate-900 bg-[#FFF5E4]">
         <LanguageContextProvider>

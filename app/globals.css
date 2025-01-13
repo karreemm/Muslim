@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cabin+Condensed:wght@400;500;600;700&display=swap');
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,43 +11,34 @@
 }
 
 [dir="ltr"] .dynamic-font {
-  /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif */
   font-family: 'Cabin Condensed', sans-serif;
-
 }
 
 ::-webkit-scrollbar {
   width: 8px; 
 }
-
 ::-webkit-scrollbar-track {
   background: #FFF5E4; 
 }
-
 ::-webkit-scrollbar-thumb {
   background-color: #0d9488; 
   border-radius: 10px; 
   border: 2px solid #FFF5E4; 
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #0e7b72; 
 }
-
 .dark ::-webkit-scrollbar-track {
   background: #0f172a; 
 }
-
 .dark ::-webkit-scrollbar-thumb {
   background-color: #14b8a6;
   border-radius: 10px;
   border: 2px solid #0f172a; 
 }
-
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #12b7a9; 
 }
-
 
 @keyframes heartBeat {
   0% {
@@ -96,40 +84,10 @@
   opacity: 0;
   transform: translateY(-10px);
 }
-
 .share-menu.open {
   opacity: 1;
   transform: translateY(0);
 }
-
 .Big{
   font-size: 10rem;
-}
-
-@keyframes moveRightAndBack {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(10px); 
-  }
-}
-
-.arrow-right {
-  display: inline-block;
-  animation: moveRightAndBack 1.5s infinite;
-}
-
-@keyframes moveLeftAndBack {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-10px); 
-  }
-}
-
-.arrow-left {
-  display: inline-block;
-  animation: moveLeftAndBack 1.5s infinite;
 }
