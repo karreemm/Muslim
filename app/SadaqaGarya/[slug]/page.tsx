@@ -9,17 +9,20 @@ import { duas, DiedSurahs } from '../../Lib/Constants';
 import Navbar from '@/app/Components/Navbar';
 import Footer from '@/app/Components/Footer';
 import { ClipLoader } from "react-spinners";
-import { safeDecode } from '@/app/Lib/Encoding';
-
+import { safeDecode, safeEncode } from '@/app/Lib/Encoding';
+import { useSadaqaGarya } from '@/app/Context/SadaqatContext';
+import ShareModal from '../../Components/ShareModal';
 
 export default function DeceasedPage() {
 
     const { slug } = useParams();
     const router = useRouter();
     const { language } = useLanguage();
+    const { getDeceasedPerson } = useSadaqaGarya();
     const [deceased, setDeceased] = useState<DeceasedPerson | null>(null);
     const [expandedSurah, setExpandedSurah] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [shareableUrl, setShareableUrl] = useState<string>('');
 
     const translations: {[key: string]: TranslationPair} = {
         title: {
@@ -45,8 +48,41 @@ export default function DeceasedPage() {
         suraha: {
             en: "Surah ",
             ar: "سورة "
+        },
+        shareit:{
+            en:"Share it and make it a continuous charity in your good deeds and his good deeds inshallah",
+            ar:"شاركها واجعلها صدقة جارية في ميزان حسناتك وحسناته ان شاء الله"
         }
     };
+
+    const shortenURL = async (url: string) => {
+        try {
+        const response = await fetch(`https://tinyurl.com/api-create.php?url=${url}`);
+        const shortUrl = await response.text();
+        console.log('Short URL:', shortUrl);
+        return shortUrl;
+        } catch (error) {
+        console.error('Error:', error);
+        }
+    };
+
+    const getShareableUrl = async (slug: string) => {
+        const person = getDeceasedPerson(slug);
+        if (person) {
+        const encodedData = safeEncode(person);
+        const shortenedUrl = await shortenURL(`https://muslim-one.vercel.app/SadaqaGarya/${slug}?data=${encodedData}`);
+        return shortenedUrl || "";
+        }
+        return `https://muslim-one.vercel.app/SadaqaGarya/${slug}`;
+    };
+
+    useEffect(() => {
+        const fetchShareableUrl = async () => {
+            const url = await getShareableUrl(slug.toString());
+            setShareableUrl(url);
+        };
+        fetchShareableUrl();
+    }, []);
 
     useEffect(() => {
         const loadDeceasedData = () => {
@@ -99,16 +135,21 @@ export default function DeceasedPage() {
                 <div className="w-[90%] mx-auto mt-20">
                     <h1 className={`${language === 'ar' ? 'leading-10' : ''} flex flex-col justify-center text-3xl mb-4 text-center text-[#134B70] dark:text-white`}>
                         {translations.title[language]} 
-                        <p>
+                        <p className={`text-5xl font-semibold mb-5 mt-8`}>
                             {language === 'en' ? deceased.nameEn : deceased.nameAr}
                         </p>
                         
                     </h1>
 
                     {/* Custom Message */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-8 mt-5">
-                        <p className="text-center text-lg text-[#134B70] dark:text-white mb-4">
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-8 mt-5 flex flex-col items-center">
+                        <p className="text-center text-lg md:text-2xl text-[#134B70] dark:text-white mb-4">
                             {language === 'en' ? deceased.messageEn : deceased.messageAr}
+                        </p>
+
+                        <p className="text-center text-lg md:text-2xl text-[#134B70] dark:text-white mb-4 flex items-center gap-4">
+                            {translations.shareit[language]}
+                            <ShareModal url={shareableUrl} size='2xl' />
                         </p>
                     </div>
                     

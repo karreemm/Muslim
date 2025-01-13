@@ -9,13 +9,15 @@ import TranslationPair from '../Lib/Types';
 
 interface ShareButtonsProps {
   url: string;
+  size?: string;
 }
 
-export default function ShareButtons({ url }: ShareButtonsProps) {
+export default function ShareButtons({ url, size }: ShareButtonsProps) {
   const { language } = useLanguage();
   const [copied, setCopied] = useState<boolean>(false);
   const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const iconSize = size || 'lg';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(url);
@@ -69,7 +71,7 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
 
   return (
     <>
-      <button onClick={handleShare} className="block text-lg">
+      <button onClick={handleShare} className={`block text-${iconSize}`}>
         <FontAwesomeIcon icon={faShareNodes} className='text-teal-600 hover:opacity-80 cursor-pointer' />
       </button>
 
