@@ -13,6 +13,7 @@
 - **Tasabeeh Counter** to do your daily tasabeeh.
 - **Prayer Times** to view accurate prayer times based on your location.
 - **Responsive Design** for a seamless experience on all devices.
+- **Sadaqa Garya** for the deceased
 
 ## Statistics
 - **1,800 Surahs** available to listen to.
@@ -20,7 +21,7 @@
 - **80 Azkar** to enrich your spiritual life.
 
 ## Technologies
-The website is built using **Next.js** and **Tailwind CSS**.
+The website is built using **Next JS**, **Typescript**, and **Tailwind CSS**.
 
 ## Demo
 Feel free to explore the website through this link: [Muslim Website Demo](https://muslim-one.vercel.app/).
