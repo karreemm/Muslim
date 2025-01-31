@@ -119,7 +119,7 @@ export default function Navbar() {
     }, []);
 
     return (
-        <div className="z-50 fixed flex w-full items-center justify-between px-4 py-3 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-teal-500 shadow-md">
+        <div className="z-50 fixed flex w-full items-center justify-between px-4 py-3 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md">
             <div className="flex gap-2 text-xl">
                 <FontAwesomeIcon icon={faMosque} className={language === 'ar' ? 'mt-2' : 'mt-1'} />
                 <span className="text-2xl font-semibold">
@@ -129,11 +129,11 @@ export default function Navbar() {
 
             <div className='hidden md:flex items-center gap-14 text-xl font-semibold'>
 
-                <Link href="/">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/">
                     {Home[language]}
                 </Link>
 
-                <div className="relative">
+                <div className='relative no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300'>
                     <button
                         ref={quranButtonRef}
                         onClick={() => setIsQuranDropdownOpen(!isQuranDropdownOpen)}
@@ -144,7 +144,7 @@ export default function Navbar() {
                     {isQuranDropdownOpen && (
                         <div
                             ref={quranDropdownRef}
-                            className={`absolute ${language === 'ar' ? 'left-0 text-right w-36' : 'right-0 text-left w-36'} mt-2 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-teal-500 border-teal-600 dark:border-teal-500 rounded shadow-lg`}
+                            className={`absolute ${language === 'ar' ? 'left-0 text-right w-36' : 'right-0 text-left w-36'} mt-2 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded shadow-lg`}
                         >
                             <Link href="/ReadQuran" className="text-lg block w-full px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800">
                                 {ReadQuran[language]}
@@ -156,23 +156,23 @@ export default function Navbar() {
                     )}
                 </div>
 
-                <Link href="/ReadHadith">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/ReadHadith">
                     {Hadith[language]}
                 </Link>
 
-                <Link href="/Azkar">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/Azkar">
                     {Azkar[language]}
                 </Link>
 
-                <Link href="/Tasbeeh">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/Tasbeeh">
                     {Tasbeeh[language]}
                 </Link>
 
-                <Link href="/PrayerTimes">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/PrayerTimes">
                     {PrayerTimes[language]}
                 </Link>
 
-                <Link href="/SadaqaGarya">
+                <Link className='no-underline hover:underline hover:underline-offset-[15px] transition-all duration-300' href="/SadaqaGarya">
                     {SadaqaGarya[language]}
                 </Link>
 
@@ -202,7 +202,7 @@ export default function Navbar() {
                     {isDropdownOpen && (
                         <div
                             ref={dropdownRef}
-                            className={`absolute ${language === 'ar' ? 'left-0' : 'right-0'} mt-2 w-32 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-teal-500 border-teal-600 dark:border-teal-500 rounded shadow-lg`}
+                            className={`absolute ${language === 'ar' ? 'left-0' : 'right-0'} mt-2 w-32 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded shadow-lg`}
                         >
                             <button
                                 onClick={() => handleLanguageChange('ar')}

@@ -125,7 +125,7 @@ export default function DeceasedPersonsTable() {
             </thead>
             <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
               {deceasedPersons.map((person, idx) => (
-                <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                <tr key={idx} className="">
                   <td className="px-6 py-4 text-center">
                     {language === "ar" ? person.nameAr : person.nameEn}
                   </td>

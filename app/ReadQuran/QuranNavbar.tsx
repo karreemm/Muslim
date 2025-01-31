@@ -6,11 +6,22 @@ import TranslationPair from "../Lib/Types";
 import { useState } from "react";
 import { useLanguage } from "../Context/LanguageContext";
 
-export default function QuranNavbar({ onTabChange, searchTerm, setSearchTerm }: { onTabChange: (tabName: string) => void, searchTerm: string, setSearchTerm: (term: string) => void }) {
+export default function QuranNavbar({
+  onTabChange,
+  searchTerm,
+  setSearchTerm,
+}: {
+  onTabChange: (tabName: string) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+}) {
   const [activeTab, setActiveTab] = useState<string>("Surahs");
   const { language } = useLanguage();
 
-  const SearchPlaceholder: TranslationPair = { en: "Search for a surah / Juz", ar: "ابحث عن سورة / جزء" };
+  const SearchPlaceholder: TranslationPair = {
+    en: "Search for a surah / Juz",
+    ar: "ابحث عن سورة / جزء",
+  };
   const Surahs: TranslationPair = { en: "Surahs", ar: "السور" };
   const Juzs: TranslationPair = { en: "Juzs", ar: "الاجزاء" };
 
@@ -20,7 +31,7 @@ export default function QuranNavbar({ onTabChange, searchTerm, setSearchTerm }: 
   };
 
   return (
-    <div className="bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 border-b-2 border-teal-600 w-full flex justify-center">
+    <div className="bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white border-b-2 border-teal-600 w-full flex justify-center">
       <div className="w-[90%] md:w-[80%] flex flex-col gap-10 items-center justify-normal md:flex-row md:items-center md:justify-between px-10 py-5">
         <div className="w-full md:w-[50%] flex flex-row gap-10">
           <input
@@ -31,14 +42,31 @@ export default function QuranNavbar({ onTabChange, searchTerm, setSearchTerm }: 
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button>
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-2xl text-teal-600 dark:text-teal-500" />
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              className="text-2xl text-teal-600 dark:text-white"
+            />
           </button>
         </div>
         <div className="flex gap-10 text-xl md:text-2xl">
-          <button onClick={() => handleTabClick("Surahs")} className={`${activeTab === "Surahs" ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black" : ""} px-3 py-1 rounded-md`}>
+          <button
+            onClick={() => handleTabClick("Surahs")}
+            className={`${
+              activeTab === "Surahs"
+                ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black"
+                : ""
+            } px-3 py-1 rounded-md`}
+          >
             {Surahs[language]}
           </button>
-          <button onClick={() => handleTabClick("Juzs")} className={`${activeTab === "Juzs" ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black" : ""} px-3 py-1 rounded-md`}>
+          <button
+            onClick={() => handleTabClick("Juzs")}
+            className={`${
+              activeTab === "Juzs"
+                ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black"
+                : ""
+            } px-3 py-1 rounded-md`}
+          >
             {Juzs[language]}
           </button>
         </div>

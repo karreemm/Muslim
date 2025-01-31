@@ -138,11 +138,10 @@ export default function DeceasedPage() {
                         <p className={`text-5xl font-semibold mb-5 mt-8`}>
                             {language === 'en' ? deceased.nameEn : deceased.nameAr}
                         </p>
-                        
                     </h1>
 
                     {/* Custom Message */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-8 mt-5 flex flex-col items-center">
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-8 mt-5 flex flex-col gap-3 items-center">
                         <p className="text-center text-lg md:text-2xl text-[#134B70] dark:text-white mb-4">
                             {language === 'en' ? deceased.messageEn : deceased.messageAr}
                         </p>
@@ -180,7 +179,7 @@ export default function DeceasedPage() {
                                     {expandedSurah === index && (
                                         <div className="mt-4">
                                             <div dir="rtl" className="fontAmiri text-lg font-arabic leading-10 text-[#134B70] dark:text-white whitespace-pre-line">
-                                                <p className='fontAmiri text-center text-xl font-bold mb-6'>
+                                                <p className='fontAmiri text-center text-2xl md:text-3xl font-semibold mt-10 md:mt-5'>
                                                      بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ        
                                                 </p>
                                                 {surah.content}

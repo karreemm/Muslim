@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useLanguage } from "../Context/LanguageContext";
-import TranslationPair from "../Lib/Types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { toArabicNumber } from "../Lib/Helpers";
-import useMediaQuery from "../Lib/CustomHooks";
 import React from "react";
 
 interface PaginationProps {
@@ -15,17 +13,17 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => {
-  const { language } = useLanguage();
-  const isMdOrLarger = useMediaQuery('(min-width: 768px)'); 
-
-  const Next: TranslationPair = {
-    ar: "التالي",
-    en: "Next"
-  };
-
-  const Previous: TranslationPair = {
-    ar: "السابق",
-    en: "Previous"
+  const { language } = useLanguage() as { language: 'ar' | 'en' };
+  
+  const translations = {
+    next: {
+      ar: "التالي",
+      en: "Next"
+    },
+    previous: {
+      ar: "السابق",
+      en: "Prev"
+    }
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,85 +35,94 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => 
 
   const generatePages = (): (number | string)[] => {
     const pages: (number | string)[] = [];
-
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (isMdOrLarger) {
-        pages.push(1, 2);
-
-        if (currentPage > 3) {
-          pages.push("...");
-        }
-
-        if (currentPage > 2 && currentPage < totalPages - 1) {
-          pages.push(currentPage);
-        }
-
-        if (currentPage < totalPages - 2) {
-          pages.push("...");
-        }
-
-        pages.push(totalPages - 1, totalPages);
-      } else {
-        pages.push(1);
-
-        if (currentPage > 2) {
-          pages.push("...");
-        }
-
-        if (currentPage < totalPages - 1) {
-          pages.push("...");
-        }
-
-        pages.push(totalPages);
-      }
+    
+    pages.push(1);
+    
+    if (currentPage > 3) {
+      pages.push("...");
     }
-
+    
+    if (currentPage !== 1 && currentPage !== totalPages) {
+      pages.push(currentPage);
+    }
+    
+    if (currentPage < totalPages - 2) {
+      pages.push("...");
+    }
+    
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+    
     return pages;
   };
 
   return (
-    <div className="mx-auto mt-12 px-0 text-teal-600 dark:text-white md:px-8">
-      <div className="flex items-center justify-between" aria-label="Pagination">
-        <button
-          onClick={() => handlePageClick(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="hover:opacity-80 md:text-xl font-semibold flex items-center gap-x-2"
-        >
-          <FontAwesomeIcon className="hidden md:inline-block" icon={language === "en" ? faArrowLeft : faArrowRight} />
-          {Previous[language]}
-        </button>
-        <ul className="flex items-center gap-1">
-          {generatePages().map((item, idx) => (
-            <li key={idx} className="text-sm">
-              {item === "..." ? (
-                <div>{item}</div>
-              ) : (
-                <button
-                  onClick={() => handlePageClick(Number(item))}
-                  aria-current={currentPage === item ? "page" : undefined}
-                  className={`px-3 py-1 rounded-lg font-semibold duration-150 hover:opacity-90 ${
-                    currentPage === item ? "bg-teal-600 W-[49px] h-[28px] flex justify-center items-center text-white font-semibold" : ""
-                  }`}
-                >
-                  {typeof item === "number" && language === "ar" ? toArabicNumber(item) : item}
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={() => handlePageClick(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="hover:opacity-80 md:text-xl font-semibold flex items-center gap-x-2"
-        >
-          {Next[language]}
-          <FontAwesomeIcon className="hidden md:inline-block" icon={language === "en" ? faArrowRight : faArrowLeft} />
-        </button>
+    <div className="mx-auto mt-8 flex items-center justify-center gap-2 px-4">
+      <button
+        onClick={() => handlePageClick(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
+                 transition-all duration-200 ease-in-out
+                 bg-white text-gray-700 hover:bg-gray-100
+                 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 border border-gray-200 dark:border-gray-700
+                 shadow-sm hover:shadow-md"
+      >
+        <FontAwesomeIcon 
+          icon={language === "en" ? faArrowLeft : faArrowRight} 
+          className="h-4 w-4"
+        />
+        <span className="hidden sm:inline">
+          {translations.previous[language]}
+        </span>
+      </button>
+
+      <div className="flex items-center gap-2">
+        {generatePages().map((item, idx) => (
+          <div key={idx}>
+            {item === "..." ? (
+              <span className="px-2 text-gray-400 dark:text-gray-500">•••</span>
+            ) : (
+              <button
+                onClick={() => handlePageClick(Number(item))}
+                aria-current={currentPage === item ? "page" : undefined}
+                className={`
+                  flex h-10 w-10 items-center justify-center rounded-full
+                  font-medium transition-all duration-200 ease-in-out
+                  ${currentPage === item 
+                    ? "bg-teal-600 text-white scale-110 shadow-lg hover:bg-teal-600"
+                    : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm hover:shadow-md dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700"
+                  }
+                `}
+              >
+                {language === "ar" ? toArabicNumber(Number(item)) : item}
+              </button>
+            )}
+          </div>
+        ))}
       </div>
+
+      <button
+        onClick={() => handlePageClick(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
+                 transition-all duration-200 ease-in-out
+                 bg-white text-gray-700 hover:bg-gray-100
+                 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 border border-gray-200 dark:border-gray-700
+                 shadow-sm hover:shadow-md"
+      >
+        <span className="hidden sm:inline">
+          {translations.next[language]}
+        </span>
+        <FontAwesomeIcon 
+          icon={language === "en" ? faArrowRight : faArrowLeft} 
+          className="h-4 w-4"
+        />
+      </button>
     </div>
   );
 };

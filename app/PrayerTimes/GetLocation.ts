@@ -27,6 +27,7 @@ export const getLocation = async () => {
 
     const cityInArabic = await translateToArabic(city);
     const countryInArabic = await translateToArabic(country);
+    console.log('Location:', city, country, cityInArabic, countryInArabic); 
 
     return {
       city: { en: city, ar: cityInArabic },
