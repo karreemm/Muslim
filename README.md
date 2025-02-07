@@ -1,27 +1,50 @@
-# Muslim Website
+# 🌙 Muslim Website
 
-**Muslim** is a website created as a continuous charity (Sadaqah Jariyah). The goal is to help everyone grow closer to Allah by offering easy access to Reading & Listening to the Holy Quran, Reading & Learning from the Prophet's Hadith, and Reading Azkar.
+A continuous charity (Sadaqah Jariyah) website helping users connect with Allah through Quran, Hadith, and Azkar.
 
-## Main Features
-- **Read the Holy Quran** by Surah or Juz.
-- **Listen to the Holy Quran** recited by 16 different reciters.
-- **Read the Prophet's Hadith** from 8 authentic Sunnah Books.
-- **Access 8 different types of Azkar** for daily spiritual practice.
-- **Save Ayahs** from any Surah to resume reading later.
-- **Add any Surah, Hadith, or Zekr to your Favorites** for quick access.
-- **Share Surahs, Hadiths, and Azkar** on social media (Facebook, LinkedIn, WhatsApp, Telegram).
-- **Tasabeeh Counter** to do your daily tasabeeh.
-- **Prayer Times** to view accurate prayer times based on your location.
-- **Responsive Design** for a seamless experience on all devices.
-- **Sadaqa Garya** for the deceased
+## ✨ Features
 
-## Statistics
-- **1,800 Surahs** available to listen to.
-- **27,000 Hadiths** accessible for reading.
-- **80 Azkar** to enrich your spiritual life.
+### 📖 Read the Holy Quran
+Read the Quran by Surah or Juz.
+![Read Quran](Assets/Read-Quran.gif)
 
-## Technologies
-The website is built using **Next JS**, **Typescript**, and **Tailwind CSS**.
+### 🎧 Listen to the Holy Quran
+Choose from 16 different reciters.
+![Listen Quran](Assets/Listen-Quran.gif)
 
-## Demo
+### 📜 Read the Prophet's Hadith
+Access 8 authentic Sunnah Books.
+![Read Hadith](Assets/Read-Hadith.gif)
+
+### 🕋 Read Azkar
+Access 8 different types of Azkar.
+![Read Azkar](Assets/Read-Azkar.gif)
+
+### ⭐ Save & Continue Reading
+Save Ayahs and continue reading later.
+![Favorites](Assets/Favourite-and-Saved.gif)
+
+### 🕌 Prayer Times
+View accurate prayer times based on location.
+![Prayer Times](Assets/Prayer-Times.gif)
+
+### 💖 Sadaqa Garya
+Dedicated section for deceased remembrance.
+![Sadaqa](Assets/Sadaqa-Garya.gif)
+
+### 📿 Tasabeeh Counter
+Digital counter for daily dhikr.
+![Tasabeeh](Assets/Tasabeeh.gif)
+
+## 📊 Statistics
+- 1,800+ Surahs available
+- 27,000+ Hadiths accessible
+- 80+ Azkar available
+
+## 🔧 Tech Stack
+- Next.js
+- TypeScript
+- Tailwind CSS
+
+## 🎥 Demo
 Feel free to explore the website through this link: [Muslim Website Demo](https://muslim-one.vercel.app/).
