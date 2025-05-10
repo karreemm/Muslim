@@ -3,7 +3,7 @@
 import TranslationPair from "../Lib/Types";
 import { useLanguage } from "../Context/LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosque } from "@fortawesome/free-solid-svg-icons";
+import { faMosque, faCode } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import React from "react";
 
@@ -57,14 +57,17 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 items-center md:flex md:flex-row md:justify-between md:items-start  dark:text-white">
+        <div className="mb-3 mt-10 flex flex-col gap-2 items-center md:flex md:flex-row md:justify-between md:items-start  dark:text-white">
           <p className="md:text-xl">{Copyright[language]}</p>
           <div className="flex items-center gap-5">
             <a
-              className="md:text-xl hover:opacity-80"
+              className="group md:text-xl flex gap-2 items-center hover:opacity-80"
               href="https://kareem-abdelnabi.vercel.app/"
             >
-              {Madeby[language]}
+              <FontAwesomeIcon icon={faCode} className="" />
+              <span className={`group-hover:underline ${language === "ar" ? "underline-offset-[14px]" : "underline-offset-8"}`}>
+                {Madeby[language]}
+              </span>
             </a>
 
             <div className="flex gap-3">
