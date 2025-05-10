@@ -86,7 +86,7 @@ export default function AzkarPage({ startingNumber, categoryId }: { startingNumb
                 <FontAwesomeIcon icon={isFavorite(azkar.number!) ? loved : notLoved} className={!isFavorite(azkar.number!) ? 'vibrate text-xl md:text-2xl' : 'text-xl md:text-2xl'} />
               </button>
 
-              <div className={`absolute ${language === "ar" ? 'left-14 md:bottom-4 md:left-4' : 'right-14 md:bottom-4 md:left-4'} ${isMdOrLarger ? '' : 'top-4'}`}>
+              <div className={`absolute ${language === "ar" ? 'left-14 md:bottom-4 md:left-4' : 'right-14 md:bottom-4 md:right-4'} ${isMdOrLarger ? '' : 'top-4'}`}>
                <ShareButtons url={`https://muslim-one.vercel.app/Azkar/Category/${zekr?.id}?zekr=${azkar.number}`} />
               </div>
 
