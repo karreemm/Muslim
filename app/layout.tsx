@@ -1,13 +1,13 @@
-
 import type { Metadata } from "next";
 import "./globals.css";
-import ThemeContextProvider from './Context/ThemeContext'; 
+import ThemeContextProvider from "./Context/ThemeContext";
 import LanguageContextProvider from "./Context/LanguageContext";
 import { SavedAyahsProvider } from "./Context/SavedAyahsContext";
 import { FavoriteSurahsProvider } from "./Context/FavoriteSurahsContext";
 import { FavoriteHadithsProvider } from "./Context/FavoriteHadithsContext";
 import { FavoriteAzkarProvider } from "./Context/FavoriteAzkarContext";
-import {SadaqaGaryaProvider} from "./Context/SadaqatContext";
+import { SadaqaGaryaProvider } from "./Context/SadaqatContext";
+import TasbeehContextProvider from "./Context/TasbeehContext";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -23,8 +23,15 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className="dark:bg-slate-900 bg-[#FFF5E4]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cabin+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cabin+Condensed:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="dynamic-font dark:bg-slate-900 bg-[#FFF5E4]">
         <LanguageContextProvider>
@@ -34,7 +41,9 @@ export default function RootLayout({
                 <FavoriteHadithsProvider>
                   <FavoriteAzkarProvider>
                     <SadaqaGaryaProvider>
-                      {children}
+                      <TasbeehContextProvider>
+                        {children}
+                      </TasbeehContextProvider>
                     </SadaqaGaryaProvider>
                   </FavoriteAzkarProvider>
                 </FavoriteHadithsProvider>

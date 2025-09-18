@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { DeceasedPerson } from '../Lib/Types';
+import { DeceasedPerson } from '../Types';
 
 interface SadaqaGaryaContextProps {
     deceasedPersons: DeceasedPerson[];

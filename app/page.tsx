@@ -1,8 +1,8 @@
 "use client";
 
-import Navbar from "./Components/Navbar";
-import HomeSection from "./Home/Home";
-import Footer from "./Components/Footer";
+import Navbar from "./Components/general/Navbar";
+import HomeSection from "./(Pages)/Home/Home";
+import Footer from "./Components/general/Footer";
 import "./globals.css";
 
 export default function Home() {

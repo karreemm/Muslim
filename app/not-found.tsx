@@ -1,7 +1,7 @@
 "use client";
 
 import NotFoundLight from "./Assets/Other/notFoundLight.webp";
-import TranslationPair from "./Lib/Types";
+import TranslationPair from "./Types";
 import { useLanguage } from "./Context/LanguageContext";
 
 export default function NotFound() {

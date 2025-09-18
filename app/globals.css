@@ -1,43 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 .fontAmiri {
-  font-family: 'Amiri', serif;
+  font-family: "Amiri", serif;
 }
 
 [dir="rtl"] .dynamic-font {
-  font-family: 'Amiri', serif;
+  font-family: "Amiri", serif;
 }
 
 [dir="ltr"] .dynamic-font {
-  font-family: 'Cabin Condensed', sans-serif;
+  font-family: "Cabin Condensed", sans-serif;
 }
 
 ::-webkit-scrollbar {
-  width: 8px; 
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFF5E4; 
+  background: #fff5e4;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #0d9488; 
-  border-radius: 10px; 
-  border: 2px solid #FFF5E4; 
+  background-color: #0d9488;
+  border-radius: 10px;
+  border: 2px solid #fff5e4;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0e7b72; 
+  background: #0e7b72;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a; 
+  background: #0f172a;
 }
 .dark ::-webkit-scrollbar-thumb {
   background-color: #14b8a6;
   border-radius: 10px;
-  border: 2px solid #0f172a; 
+  border: 2px solid #0f172a;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #12b7a9; 
+  background: #12b7a9;
 }
 
 @keyframes heartBeat {
@@ -63,11 +81,22 @@
 }
 
 @keyframes vibrate {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-2px); }
-  40% { transform: translateX(2px); }
-  60% { transform: translateX(-2px); }
-  80% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
 }
 
 .vibrate {
@@ -88,6 +117,21 @@
   opacity: 1;
   transform: translateY(0);
 }
-.Big{
+.Big {
   font-size: 10rem;
+}
+
+/* Loading Component Animations */
+@keyframes fade-in-out {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-out {
+  animation: fade-in-out 2s ease-in-out infinite;
 }
