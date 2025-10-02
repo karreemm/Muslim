@@ -58,6 +58,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   const { surah, loading, error } = useSurahData(surahNumber, reciterId);
   const {
     audioPlayer,
+    nextAudioPlayer,
     restart,
     currentAyahIndex,
     totalAyahs,
@@ -80,7 +81,6 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   const { downloadSurah, isDownloading } = useSurahDownload(
     surah,
     surahNumber,
-    reciterId
   );
 
   const handleDownload = async () => {
@@ -165,6 +165,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
         <div className="flex flex-col items-center gap-3">
           <div>
             <audio ref={audioPlayer} controls className="hidden" />
+            <audio ref={nextAudioPlayer} controls className="hidden" />
           </div>
 
           {/* Enhanced Audio Player Controls */}
@@ -304,14 +305,14 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               onClick={handleDownload}
               className={`w-full py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${
                 downloadStatus === "success"
-                  ? "bg-green-600 text-white"
+                  ? "bg-green-600 text-white hover:bg-green-700"
                   : downloadStatus === "error"
-                  ? "bg-red-600 text-white"
-                  : "bg-teal-600 text-white"
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500"
               } ${
                 downloadStatus === "downloading" || downloadStatus === "success"
                   ? "cursor-not-allowed opacity-90"
-                  : "hover:bg-teal-700 dark:hover:bg-teal-500 transform hover:scale-105 cursor-pointer"
+                  : "transform hover:scale-105 cursor-pointer"
               }`}
               disabled={
                 downloadStatus === "downloading" || downloadStatus === "success"

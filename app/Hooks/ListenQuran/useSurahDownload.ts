@@ -1,13 +1,9 @@
 import { useState } from "react";
-import {
-  fetchAyahAudio,
-  Surah,
-} from "../../(Pages)/ListenQuran/Service/GetSurah";
+import { Surah } from "../../(Pages)/ListenQuran/Service/GetSurah";
 
 export function useSurahDownload(
   surah: Surah | null,
   surahNumber: number,
-  reciterId: string
 ) {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
@@ -22,19 +18,19 @@ export function useSurahDownload(
     try {
       setIsDownloading(true);
       console.log("Downloading Surah:", surah.name);
-      console.log("surahNumber:", surahNumber);
-      console.log("reciterId:", reciterId);
 
       const audioBlobs = await Promise.all(
-        surah.ayahs.map(async (ayah) => {
+        surah.ayahs.map(async (ayah, index) => {
           try {
-            console.log("surahNumber:", surahNumber);
-            console.log("reciterId:", reciterId);
-            console.log("ayahNumber:", ayah.number);
-            return await fetchAyahAudio(surahNumber, ayah.number, reciterId);
+            console.log(`Fetching ayah ${index + 1} from: ${ayah.audio}`);
+            const response = await fetch(`/api/download-audio?url=${encodeURIComponent(ayah.audio)}`);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.blob();
           } catch (error) {
             console.error(
-              `Error fetching audio for ayah ${ayah.number}:`,
+              `Error fetching audio for ayah ${index + 1}:`,
               error
             );
             return null;
@@ -42,7 +38,7 @@ export function useSurahDownload(
         })
       );
 
-      const validBlobs = audioBlobs.filter((blob) => blob !== null);
+      const validBlobs = audioBlobs.filter((blob) => blob !== null) as Blob[];
 
       if (validBlobs.length === 0) {
         throw new Error("Failed to fetch audio for all Ayahs.");

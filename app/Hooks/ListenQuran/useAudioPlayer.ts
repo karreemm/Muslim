@@ -6,7 +6,13 @@ export function useAudioPlayer(surah: Surah | null) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [shouldAutoPlay, setShouldAutoPlay] = useState<boolean>(true);
   const [userInteracted, setUserInteracted] = useState<boolean>(false);
+  
+  // Dual audio elements for seamless transitions
   const audioPlayer = useRef<HTMLAudioElement>(null);
+  const nextAudioPlayer = useRef<HTMLAudioElement>(null);
+  const [isUsingPrimary, setIsUsingPrimary] = useState<boolean>(true);
+  const transitionTriggeredRef = useRef<boolean>(false);
+  const isTransitioningRef = useRef<boolean>(false);
 
   useEffect(() => {
     const handleUserInteraction = () => {
@@ -30,15 +36,40 @@ export function useAudioPlayer(surah: Surah | null) {
       setCurrentAyahIndex(0);
       setShouldAutoPlay(true);
       setIsPlaying(false);
+      setIsUsingPrimary(true);
+      transitionTriggeredRef.current = false;
+      isTransitioningRef.current = false;
     }
   }, [surah]);
 
+  // Preload next ayah
   useEffect(() => {
-    if (surah && audioPlayer.current && currentAyahIndex < surah.ayahs.length) {
-      const currentAyah = surah.ayahs[currentAyahIndex];
-      const audioElement = audioPlayer.current;
+    if (surah && nextAudioPlayer.current && currentAyahIndex < surah.ayahs.length - 1) {
+      const nextAyah = surah.ayahs[currentAyahIndex + 1];
+      const inactivePlayer = isUsingPrimary ? nextAudioPlayer.current : audioPlayer.current;
+      
+      if(inactivePlayer){
+        inactivePlayer.src = nextAyah.audio;
+        inactivePlayer.load();
+      }
+      console.log(`Preloaded ayah ${currentAyahIndex + 2}`);
+    }
+  }, [surah, currentAyahIndex, isUsingPrimary]);
 
-      audioElement.src = currentAyah.audio;
+  useEffect(() => {
+    if (surah && audioPlayer.current && nextAudioPlayer.current && currentAyahIndex < surah.ayahs.length) {
+      const currentAyah = surah.ayahs[currentAyahIndex];
+      const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
+      const inactivePlayer = isUsingPrimary ? nextAudioPlayer.current : audioPlayer.current;
+
+      // Reset transition flag
+      transitionTriggeredRef.current = false;
+
+      // Set source for current player only if it's different
+      if (activePlayer.src !== currentAyah.audio) {
+        activePlayer.src = currentAyah.audio;
+        activePlayer.load();
+      }
 
       const handleCanPlay = () => {
         console.log(
@@ -48,7 +79,7 @@ export function useAudioPlayer(surah: Surah | null) {
           userInteracted
         );
         if (shouldAutoPlay) {
-          audioElement
+          activePlayer
             .play()
             .then(() => {
               console.log("Audio started playing successfully");
@@ -67,119 +98,217 @@ export function useAudioPlayer(surah: Surah | null) {
 
       const handlePlay = () => {
         console.log("Audio play event fired");
-        setIsPlaying(true);
+        if (!isTransitioningRef.current) {
+          setIsPlaying(true);
+        }
       };
 
       const handlePause = () => {
-        console.log("Audio pause event fired");
-        setIsPlaying(false);
+        console.log("Audio pause event fired, isTransitioning:", isTransitioningRef.current);
+        // Don't update isPlaying during transitions
+        if (!isTransitioningRef.current) {
+          setIsPlaying(false);
+        }
+      };
+
+      // Handle seamless transition using timeupdate
+      const handleTimeUpdate = () => {
+        const timeLeft = activePlayer.duration - activePlayer.currentTime;
+        
+        // Start next audio 300ms before current ends
+        if (timeLeft <= 0.3 && !transitionTriggeredRef.current && currentAyahIndex < surah.ayahs.length - 1) {
+          transitionTriggeredRef.current = true;
+          isTransitioningRef.current = true;
+          console.log("Triggering seamless transition to next ayah");
+          
+          // Start playing next ayah while current is still playing
+          if (inactivePlayer.readyState >= 2) {
+            inactivePlayer.play()
+              .then(() => {
+                console.log("Next ayah started seamlessly");
+                // Update state immediately
+                setCurrentAyahIndex(currentAyahIndex + 1);
+                setIsUsingPrimary(!isUsingPrimary);
+                
+                // Stop the previous audio
+                setTimeout(() => {
+                  activePlayer.pause();
+                  activePlayer.currentTime = 0;
+                  isTransitioningRef.current = false;
+                }, 100);
+              })
+              .catch((error) => {
+                console.error("Error starting next ayah:", error);
+                isTransitioningRef.current = false;
+              });
+          }
+        }
       };
 
       const handleEnded = () => {
         console.log("Audio ended event fired");
-        setIsPlaying(false);
-        setCurrentAyahIndex((prevIndex) => {
-          const nextIndex = prevIndex + 1;
-          if (nextIndex < surah.ayahs.length) {
-            return nextIndex;
-          } else {
-            setShouldAutoPlay(false); 
-            return prevIndex;
-          }
-        });
+        
+        // Only handle if transition wasn't already triggered
+        if (!transitionTriggeredRef.current) {
+          setCurrentAyahIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+            if (nextIndex < surah.ayahs.length) {
+              setIsUsingPrimary(!isUsingPrimary);
+              return nextIndex;
+            } else {
+              setShouldAutoPlay(false);
+              setIsPlaying(false);
+              return prevIndex;
+            }
+          });
+        }
       };
 
-      audioElement.removeEventListener("canplay", handleCanPlay);
-      audioElement.removeEventListener("play", handlePlay);
-      audioElement.removeEventListener("pause", handlePause);
-      audioElement.removeEventListener("ended", handleEnded);
+      // Remove old listeners
+      activePlayer.removeEventListener("canplay", handleCanPlay);
+      activePlayer.removeEventListener("play", handlePlay);
+      activePlayer.removeEventListener("pause", handlePause);
+      activePlayer.removeEventListener("timeupdate", handleTimeUpdate);
+      activePlayer.removeEventListener("ended", handleEnded);
 
-      audioElement.addEventListener("canplay", handleCanPlay);
-      audioElement.addEventListener("play", handlePlay);
-      audioElement.addEventListener("pause", handlePause);
-      audioElement.addEventListener("ended", handleEnded);
+      // Add new listeners
+      activePlayer.addEventListener("canplay", handleCanPlay);
+      activePlayer.addEventListener("play", handlePlay);
+      activePlayer.addEventListener("pause", handlePause);
+      activePlayer.addEventListener("timeupdate", handleTimeUpdate);
+      activePlayer.addEventListener("ended", handleEnded);
 
       return () => {
-        audioElement.removeEventListener("canplay", handleCanPlay);
-        audioElement.removeEventListener("play", handlePlay);
-        audioElement.removeEventListener("pause", handlePause);
-        audioElement.removeEventListener("ended", handleEnded);
+        activePlayer.removeEventListener("canplay", handleCanPlay);
+        activePlayer.removeEventListener("play", handlePlay);
+        activePlayer.removeEventListener("pause", handlePause);
+        activePlayer.removeEventListener("timeupdate", handleTimeUpdate);
+        activePlayer.removeEventListener("ended", handleEnded);
       };
     }
-  }, [surah, currentAyahIndex, shouldAutoPlay]);
+  }, [surah, currentAyahIndex, shouldAutoPlay, isUsingPrimary]);
 
   const restart = () => {
     setCurrentAyahIndex(0);
     setShouldAutoPlay(true);
+    setIsUsingPrimary(true);
+    transitionTriggeredRef.current = false;
+    isTransitioningRef.current = false;
     if (audioPlayer.current) {
+      audioPlayer.current.pause();
       audioPlayer.current.currentTime = 0;
+    }
+    if (nextAudioPlayer.current) {
+      nextAudioPlayer.current.pause();
+      nextAudioPlayer.current.currentTime = 0;
     }
   };
 
   const playAyah = (ayahIndex: number) => {
     if (surah && ayahIndex >= 0 && ayahIndex < surah.ayahs.length) {
+      // Stop both players
+      if (audioPlayer.current) {
+        audioPlayer.current.pause();
+        audioPlayer.current.currentTime = 0;
+      }
+      if (nextAudioPlayer.current) {
+        nextAudioPlayer.current.pause();
+        nextAudioPlayer.current.currentTime = 0;
+      }
+      
       setCurrentAyahIndex(ayahIndex);
       setShouldAutoPlay(true);
+      transitionTriggeredRef.current = false;
+      isTransitioningRef.current = false;
     }
   };
 
   const pause = () => {
-    if (audioPlayer.current && !audioPlayer.current.paused) {
-      audioPlayer.current.pause();
+    const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
+    if (activePlayer && !activePlayer.paused) {
+      isTransitioningRef.current = false;
+      activePlayer.pause();
+      setIsPlaying(false);
     }
   };
 
   const play = () => {
-    if (audioPlayer.current) {
+    const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
+    if (activePlayer) {
       setUserInteracted(true);
       console.log("Play function called, audio element state:", {
-        paused: audioPlayer.current.paused,
-        readyState: audioPlayer.current.readyState,
-        src: audioPlayer.current.src,
+        paused: activePlayer.paused,
+        readyState: activePlayer.readyState,
+        src: activePlayer.src,
       });
 
-      if (audioPlayer.current.paused) {
-        audioPlayer.current
-          .play()
-          .then(() => {
-            console.log("Audio play() promise resolved");
-          })
-          .catch((error) => {
-            console.error("Error playing audio:", error);
-          });
-      }
+      activePlayer
+        .play()
+        .then(() => {
+          console.log("Audio play() promise resolved");
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error("Error playing audio:", error);
+          setIsPlaying(false);
+        });
     }
   };
 
   const togglePlayPause = () => {
     console.log("Toggle clicked, current isPlaying:", isPlaying);
-    if (audioPlayer.current) {
-      if (isPlaying) {
-        console.log("Pausing audio");
-        pause();
-      } else {
-        console.log("Playing audio");
-        play();
-      }
+    if (isPlaying) {
+      console.log("Pausing audio");
+      pause();
+    } else {
+      console.log("Playing audio");
+      play();
     }
   };
 
   const next = () => {
     if (surah && currentAyahIndex < surah.ayahs.length - 1) {
+      // Stop both players
+      if (audioPlayer.current) {
+        audioPlayer.current.pause();
+        audioPlayer.current.currentTime = 0;
+      }
+      if (nextAudioPlayer.current) {
+        nextAudioPlayer.current.pause();
+        nextAudioPlayer.current.currentTime = 0;
+      }
+      
       setCurrentAyahIndex(currentAyahIndex + 1);
       setShouldAutoPlay(true);
+      setIsUsingPrimary(!isUsingPrimary);
+      transitionTriggeredRef.current = false;
+      isTransitioningRef.current = false;
     }
   };
 
   const previous = () => {
     if (currentAyahIndex > 0) {
+      // Stop both players
+      if (audioPlayer.current) {
+        audioPlayer.current.pause();
+        audioPlayer.current.currentTime = 0;
+      }
+      if (nextAudioPlayer.current) {
+        nextAudioPlayer.current.pause();
+        nextAudioPlayer.current.currentTime = 0;
+      }
+      
       setCurrentAyahIndex(currentAyahIndex - 1);
       setShouldAutoPlay(true);
+      setIsUsingPrimary(!isUsingPrimary);
+      transitionTriggeredRef.current = false;
+      isTransitioningRef.current = false;
     }
   };
 
   return {
     audioPlayer,
+    nextAudioPlayer,
     currentAyahIndex,
     currentAyah: surah?.ayahs[currentAyahIndex] || null,
     totalAyahs: surah?.ayahs.length || 0,
