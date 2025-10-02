@@ -28,7 +28,7 @@ const ThemeContextProvider = ({ children }: IProps) => {
       const savedTheme = localStorage.getItem("theme");
       const isDarkMode = savedTheme === "dark";
       setTheme(isDarkMode);
-      document.body.classList.toggle("dark", isDarkMode);
+      document.documentElement.classList.toggle("dark", isDarkMode); 
     }
   }, []);
 
@@ -37,7 +37,7 @@ const ThemeContextProvider = ({ children }: IProps) => {
       const newTheme = !prev;
       if (typeof window !== "undefined") {
         localStorage.setItem("theme", newTheme ? "dark" : "light");
-        document.body.classList.toggle("dark", newTheme);
+        document.documentElement.classList.toggle("dark", newTheme); // Changed from document.body
       }
       return newTheme;
     });

@@ -5,8 +5,6 @@ import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
 import TranslationPair from "@/app/Types";
 import ShareButtons from "@/app/Components/general/ShareButtons";
-import useMediaQuery from "@/app/Hooks/general/useMediaQuery";
-import { useAzkarCategory } from "@/app/Hooks/Azkar/useAzkarCategory";
 import { useSingleZekr } from "@/app/Hooks/Azkar/useSingleZekr";
 import { useFavoriteZekrActions } from "@/app/Hooks/Azkar/useFavoriteZekrActions";
 
@@ -18,10 +16,9 @@ export default function SingleZekr({
   categoryId: string;
 }) {
   const { language } = useLanguage();
-  const isMdOrLarger = useMediaQuery("(min-width: 768px)");
 
   // Use custom hooks to manage logic
-  const { zekr, zekrData, loading, error } = useSingleZekr(
+  const { zekr, zekrData, loading } = useSingleZekr(
     categoryId,
     zekrNumber
   );
@@ -29,8 +26,8 @@ export default function SingleZekr({
   const { isFav, toggle: handleLoveClick } = useFavoriteStatus(zekr);
 
   const ZekrNumber: TranslationPair = {
-    ar: "ذكر رقم",
-    en: "Zekr Number",
+    ar: "رقم",
+    en: "Number",
   };
 
   return (

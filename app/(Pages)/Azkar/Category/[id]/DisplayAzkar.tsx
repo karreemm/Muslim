@@ -21,7 +21,7 @@ export default function AzkarPage({
   const isMdOrLarger = useMediaQuery("(min-width: 768px)");
 
     useAzkarCategory(categoryId);
-  const { azkarItems, loading, error } = useAzkarData(
+  const { azkarItems, loading } = useAzkarData(
     categoryId,
     startingNumber
   );
@@ -74,8 +74,8 @@ export default function AzkarPage({
 
                 <h1 className="text-3xl font-bold text-center flex gap-1">
                   {language === "en"
-                    ? `Azkar Number ${azkar.number}`
-                    : `ذكر رقم ${azkar.number}`}
+                    ? `Number ${azkar.number}`
+                    : `رقم ${azkar.number}`}
                 </h1>
                 <p dir="rtl" className="leading-9 mt-5 text-lg text-center">
                   {azkar.content}

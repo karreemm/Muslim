@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah }) => {
                   placeholder={SearchPlaceholder[language]}
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-600 text-slate-900"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-600 text-slate-900 dark:text-white"
                 />
               </div>
               <div className="flex flex-col gap-3 overflow-y-auto h-full px-2">

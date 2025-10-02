@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMosque,
@@ -29,6 +30,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isQuranDropdownOpen, setIsQuranDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -100,6 +102,15 @@ export default function Navbar() {
     en: "Your Sadaqat",
   };
 
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(path);
+  };
+  
+  const isQuranActive = () => pathname.startsWith("/ReadQuran") || pathname.startsWith("/ListenQuran");
+
   const handleLanguageChange = (lang: string) => {
     if (lang !== language) {
       toggleLanguage();
@@ -145,17 +156,25 @@ export default function Navbar() {
 
       <div className="hidden md:flex items-center gap-14 text-xl font-semibold">
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/"
         >
           {Home[language]}
         </Link>
 
-        <div className="relative no-underline hover:underline hover:underline-offset-15 transition-all duration-300">
+        <div className="relative">
           <button
             ref={quranButtonRef}
             onClick={() => setIsQuranDropdownOpen(!isQuranDropdownOpen)}
-            className="flex items-center justify-center transition-colors duration-200"
+            className={`flex items-center justify-center transition-all duration-300 ${
+              isQuranActive()
+                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                : "hover:underline hover:underline-offset-8"
+            }`}
           >
             {Quran[language]}
           </button>
@@ -170,13 +189,21 @@ export default function Navbar() {
             >
               <Link
                 href="/ReadQuran"
-                className="text-lg block w-full px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+                className={`text-lg block w-full px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                  isActive("/ReadQuran")
+                    ? "text-amber-600 dark:text-amber-400 font-bold"
+                    : ""
+                }`}
               >
                 {ReadQuran[language]}
               </Link>
               <Link
                 href="/ListenQuran"
-                className="block w-full text-lg px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+                className={`block w-full text-lg px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                  isActive("/ListenQuran")
+                    ? "text-amber-600 dark:text-amber-400 font-bold"
+                    : ""
+                }`}
               >
                 {ListenQuran[language]}
               </Link>
@@ -185,35 +212,55 @@ export default function Navbar() {
         </div>
 
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/ReadHadith")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/ReadHadith"
         >
           {Hadith[language]}
         </Link>
 
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/Azkar")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/Azkar"
         >
           {Azkar[language]}
         </Link>
 
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/Tasbeeh")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/Tasbeeh"
         >
           {Tasbeeh[language]}
         </Link>
 
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/PrayerTimes")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/PrayerTimes"
         >
           {PrayerTimes[language]}
         </Link>
 
         <Link
-          className="no-underline hover:underline hover:underline-offset-15 transition-all duration-300"
+          className={`no-underline transition-all duration-300 ${
+            isActive("/SadaqaGarya")
+              ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+              : "hover:underline hover:underline-offset-8"
+          }`}
           href="/SadaqaGarya"
         >
           {SadaqaGarya[language]}
@@ -270,21 +317,33 @@ export default function Navbar() {
 
         <Link
           href="/SavedAyahs"
-          className="hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200"
+          className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${
+            isActive("/SavedAyahs")
+              ? "text-amber-600 dark:text-amber-400"
+              : ""
+          }`}
         >
           <FontAwesomeIcon icon={faBookmark} size="lg" />
         </Link>
 
         <Link
           href="/Favourites"
-          className="hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200"
+          className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${
+            isActive("/Favourites")
+              ? "text-amber-600 dark:text-amber-400"
+              : ""
+          }`}
         >
           <FontAwesomeIcon icon={faHeart} size="lg" />
         </Link>
 
         <Link
           href="/Sadaqat"
-          className="hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200"
+          className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${
+            isActive("/Sadaqat")
+              ? "text-amber-600 dark:text-amber-400"
+              : ""
+          }`}
         >
           <FontAwesomeIcon icon={faSeedling} size="lg" />
         </Link>
@@ -308,7 +367,11 @@ export default function Navbar() {
         >
           <Link
             href="/"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faHouse} className="" />
             {Home[language]}
@@ -316,7 +379,11 @@ export default function Navbar() {
 
           <Link
             href="/ReadQuran"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/ReadQuran")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faBookOpen} className="" />
             {ReadQuran[language]}
@@ -324,7 +391,11 @@ export default function Navbar() {
 
           <Link
             href="/ListenQuran"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/ListenQuran")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faHeadphones} className="" />
             {ListenQuran[language]}
@@ -332,7 +403,11 @@ export default function Navbar() {
 
           <Link
             href="/ReadHadith"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/ReadHadith")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faBookOpen} className="" />
             {Hadith[language]}
@@ -340,7 +415,11 @@ export default function Navbar() {
 
           <Link
             href="/Azkar"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/Azkar")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faBookOpen} className="" />
             {Azkar[language]}
@@ -348,7 +427,11 @@ export default function Navbar() {
 
           <Link
             href="/Tasbeeh"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/Tasbeeh")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faListOl} className="" />
             {Tasbeeh[language]}
@@ -356,7 +439,11 @@ export default function Navbar() {
 
           <Link
             href="/PrayerTimes"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/PrayerTimes")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faClock} className="" />
             {PrayerTimes[language]}
@@ -364,7 +451,11 @@ export default function Navbar() {
 
           <Link
             href="/SadaqaGarya"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/SadaqaGarya")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faSeedling} className="" />
             {SadaqaGarya[language]}
@@ -374,7 +465,11 @@ export default function Navbar() {
 
           <Link
             href="/SavedAyahs"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/SavedAyahs")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faBookmark} className="" />
             {SavedAyahs[language]}
@@ -382,7 +477,11 @@ export default function Navbar() {
 
           <Link
             href="/Favourites"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/Favourites")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faHeart} className="" />
             {Favourites[language]}
@@ -390,7 +489,11 @@ export default function Navbar() {
 
           <Link
             href="/Sadaqat"
-            className="flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800"
+            className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+              isActive("/Sadaqat")
+                ? "text-amber-600 dark:text-amber-400 font-bold"
+                : ""
+            }`}
           >
             <FontAwesomeIcon icon={faSeedling} className="" />
             {YourSadaqat[language]}

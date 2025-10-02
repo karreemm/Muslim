@@ -46,14 +46,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #0e7b72;
 }
+:root.dark ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track,
 .dark ::-webkit-scrollbar-track {
   background: #0f172a;
 }
+:root.dark ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb,
 .dark ::-webkit-scrollbar-thumb {
   background-color: #14b8a6;
   border-radius: 10px;
   border: 2px solid #0f172a;
 }
+:root.dark ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover,
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #12b7a9;
 }

@@ -21,8 +21,8 @@ export default function BookPage({
   );
 
   const HadithNumber: TranslationPair = {
-    ar: "حديث رقم",
-    en: "Hadith Number",
+    ar: "رقم",
+    en: "Number",
   };
 
   return (
