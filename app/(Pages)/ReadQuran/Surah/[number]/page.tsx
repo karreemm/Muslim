@@ -19,7 +19,7 @@ import {
 } from "../../../../Utils/Helpers";
 import { RenderQuranText } from "./RenderQuranText";
 import Footer from "@/app/Components/general/Footer";
-import ShareButtons from "@/app/Components/general/ShareButtons";
+import ShareModal from "@/app/Components/modals/ShareModal";
 import {
   useQuranNavigation,
   useQuranDisplay,
@@ -170,7 +170,8 @@ export default function SurahPage() {
               {Size[language]}
             </button>
 
-            <ShareButtons
+            <ShareModal
+              size="2xl"
               url={`https://muslim-one.vercel.app/ReadQuran/Surah/${navigation.currentNumber}`}
             />
           </div>

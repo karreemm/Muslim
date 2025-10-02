@@ -3,7 +3,7 @@ import { ClipLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
-import ShareButtons from "@/app/Components/general/ShareButtons";
+import ShareModal from "@/app/Components/modals/ShareModal";
 import useMediaQuery from "@/app/Hooks/general/useMediaQuery";
 import { useAzkarCategory } from "@/app/Hooks/Azkar/useAzkarCategory";
 import { useAzkarData } from "@/app/Hooks/Azkar/useAzkarData";
@@ -63,13 +63,16 @@ export default function AzkarPage({
                 <div
                   className={`absolute ${
                     language === "ar"
-                      ? "left-14 md:bottom-4 md:left-4"
-                      : "right-14 md:bottom-4 md:right-4"
-                  } ${isMdOrLarger ? "" : "top-4"}`}
+                      ? "left-14"
+                      : "right-14"
+                  } ${isMdOrLarger ? "top-4" : "top-4"}`}
                 >
-                  <ShareButtons
-                    url={`https://muslim-one.vercel.app/Azkar/Category/${zekr?.id}?zekr=${azkar.number}`}
-                  />
+                  <div className={`${language === "ar" ? "mr-2" : "ml-2"}`}>
+                    <ShareModal
+                      size="2xl"
+                      url={`https://muslim-one.vercel.app/Azkar/Category/${zekr?.id}?zekr=${azkar.number}`}
+                    />
+                  </div>
                 </div>
 
                 <h1 className="text-3xl font-bold text-center flex gap-1">

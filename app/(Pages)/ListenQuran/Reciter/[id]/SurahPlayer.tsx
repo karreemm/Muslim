@@ -21,6 +21,7 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import ShareButtons from "@/app/Components/general/ShareButtons";
+import ShareModal from "@/app/Components/modals/ShareModal";
 import { ClipLoader } from "react-spinners";
 
 import {
@@ -360,7 +361,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
           <div className="flex items-center gap-3 mt-5">
             <h1 className="text-xl md:text-3xl">{Share[language]}</h1>
 
-            <ShareButtons
+            <ShareModal
+              size="2xl"
               url={`https://muslim-one.vercel.app/ListenQuran/Reciter/${reciterId}?surah=${surahNumber}`}
             />
           </div>

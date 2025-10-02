@@ -24,6 +24,10 @@
   font-family: "Amiri", serif;
 }
 
+.fontCabin {
+  font-family: "Cabin Condensed", sans-serif;
+}
+
 [dir="rtl"] .dynamic-font {
   font-family: "Amiri", serif;
 }

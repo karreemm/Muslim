@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
 import TranslationPair from "@/app/Types";
-import ShareButtons from "@/app/Components/general/ShareButtons";
+import ShareModal from "@/app/Components/modals/ShareModal";
 import { useSingleZekr } from "@/app/Hooks/Azkar/useSingleZekr";
 import { useFavoriteZekrActions } from "@/app/Hooks/Azkar/useFavoriteZekrActions";
 
@@ -64,7 +64,8 @@ export default function SingleZekr({
                     : "right-14 top-4"
                 } `}
               >
-                <ShareButtons
+                <ShareModal
+                  size="2xl"
                   url={`https://muslim-one.vercel.app/Azkar/Category/${zekrData?.id}?zekr=${zekr.number}`}
                 />
               </div>

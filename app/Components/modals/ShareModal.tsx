@@ -1,14 +1,15 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShareNodes, faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faShareNodes, faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 import {
   faFacebook,
   faWhatsapp,
   faTelegram,
   faLinkedin,
 } from "@fortawesome/free-brands-svg-icons";
-import { useEffect, useRef, useState } from "react";
+import { useState, Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import { useLanguage } from "../../Context/LanguageContext";
 import TranslationPair from "../../Types";
 
@@ -21,7 +22,6 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
   const { language } = useLanguage();
   const [copied, setCopied] = useState<boolean>(false);
   const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
-  const modalRef = useRef<HTMLDivElement>(null);
   const iconSize = size || "lg";
 
   const handleCopy = () => {
@@ -29,33 +29,11 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 3000);
+    }, 2000);
   };
-
-  const handleShare = () => {
-    setIsShareOpen(!isShareOpen);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setIsShareOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isShareOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isShareOpen]);
 
   const CopyText: TranslationPair = {
-    en: "Copy Link",
+    en: "Copy link",
     ar: "نسخ الرابط",
   };
 
@@ -64,141 +42,231 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
     ar: "تم النسخ!",
   };
 
-  const CloseModal: TranslationPair = {
-    en: "Close",
-    ar: "إغلاق",
+  const Share: TranslationPair = {
+    en: "Share",
+    ar: "مشاركة",
   };
 
-  const Share: TranslationPair = {
-    en: "Share it now",
-    ar: "شاركها الآن",
+  const ShareDescription: TranslationPair = {
+    en: "Share it with your friends and family, and may you be rewarded, God willing",
+    ar: "شاركها مع اصدقائك وعائلتك ولك الثواب ان شاء الله",
   };
 
   return (
     <>
-      <button onClick={handleShare} className={`block text-${iconSize}`}>
+      <button 
+        onClick={() => setIsShareOpen(true)} 
+        className={`group text-${iconSize} transition-all duration-200`}
+        aria-label="Share"
+      >
         <FontAwesomeIcon
           icon={faShareNodes}
-          className="text-teal-600 hover:opacity-80 cursor-pointer"
+          className="text-teal-600 hover:text-teal-700 hover:scale-110 transition-all duration-200"
         />
       </button>
 
-      {isShareOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-50">
-          <div
-            ref={modalRef}
-            className="relative p-4 w-full max-w-md  max-h-full"
+      <Transition appear show={isShareOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={setIsShareOpen}>
+          {/* Enhanced backdrop with stronger blur */}
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
-            <div className="relative bg-white rounded-lg shadow-sm">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                <h3 className="text-xl font-semibold text-gray-900 ">
-                  {Share[language]}
-                </h3>
-                <button
-                  onClick={handleShare}
-                  type="button"
-                  className="text-slate-700 hover:text-slate-800 text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                >
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                  <span className="sr-only">{CloseModal[language]}</span>
-                </button>
-              </div>
-              <div className="p-4 md:p-5 space-y-8">
-                <button
-                  className="flex text-2xl items-center gap-3 text-teal-600 hover:opacity-80"
-                  onClick={handleCopy}
-                >
-                  <FontAwesomeIcon icon={faCopy} />
-                  <span>{copied ? Copied[language] : CopyText[language]}</span>
-                </button>
-                <div className="flex items-center justify-between text-3xl">
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                          url
-                        )}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon
-                      className="text-blue-600 hover:opacity-80"
-                      icon={faFacebook}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                          url
-                        )}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon
-                      className="text-green-600 hover:opacity-80"
-                      icon={faWhatsapp}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `https://t.me/share/url?url=${encodeURIComponent(url)}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon
-                      className="text-blue-600 hover:opacity-80"
-                      icon={faTelegram}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                          url
-                        )}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon
-                      className="text-blue-600 hover:opacity-80"
-                      icon={faLinkedin}
-                    />
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                <button
-                  onClick={handleShare}
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                >
-                  {CloseModal[language]}
-                </button>
-              </div>
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
+          </Transition.Child>
+
+          {/* Full-screen container */}
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              {/* Dialog panel with enhanced animations */}
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-90 translate-y-4"
+                enterTo="opacity-100 scale-100 translate-y-0"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100 translate-y-0"
+                leaveTo="opacity-0 scale-90 translate-y-4"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                  {/* Modern Header */}
+                  <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 px-6 pt-6 pb-8">
+                    <button
+                      onClick={() => setIsShareOpen(false)}
+                      type="button"
+                      className={`absolute top-6 text-white hover:text-white hover:bg-white/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${language === "ar" ? "left-4" : "right-4"}`}
+                      aria-label="Close"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                    
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center">
+                        <FontAwesomeIcon
+                          icon={faShareNodes}
+                          className="text-white text-xl"
+                        />
+                      </div>
+                      <Dialog.Title className="text-2xl font-bold text-white">
+                        {Share[language]}
+                      </Dialog.Title>
+                    </div>
+                    <p className="text-teal-50 text-sm mt-1">
+                      {ShareDescription[language]}
+                    </p>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 space-y-6">
+                    {/* Copy Link Button */}
+                    <button
+                      dir={`${language === "ar" ? "rtl" : "ltr"}`}
+                      onClick={handleCopy}
+                      className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 transition-all duration-200 ${
+                        copied
+                          ? "bg-green-50 border-green-500 text-green-700"
+                          : "bg-gray-50 border-gray-200 hover:border-teal-500 hover:bg-teal-50 text-gray-700"
+                      }`}
+                    >
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                        copied ? "bg-green-500" : "bg-teal-500"
+                      }`}>
+                        <FontAwesomeIcon 
+                          icon={copied ? faCheck : faCopy} 
+                          className="text-white text-lg"
+                        />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className="font-semibold block w-fit">
+                          {copied ? Copied[language] : CopyText[language]}
+                        </span>
+                        {!copied && (
+                          <span className="text-xs text-gray-500 mt-0.5 block w-fit">
+                            {language === "en" ? "Click to copy" : "انقر للنسخ"}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+
+                    {/* Social Share Buttons */}
+                    <div dir="ltr"> 
+                      <p dir={`${language === "ar" ? "rtl" : "ltr"}`} className="text-base font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                        {language === "en" ? "Or share via" : "أو شارك عبر"}
+                      </p>
+                      <div className="grid grid-cols-4 gap-3 dynamic-font">
+                        <button
+                          onClick={() =>
+                            window.open(
+                              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                                url
+                              )}`,
+                              "_blank"
+                            )
+                          }
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-all duration-200 hover:scale-105"
+                        >
+                          <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center group-hover:bg-blue-700 transition-colors">
+                            <FontAwesomeIcon
+                              icon={faFacebook}
+                              className="text-white text-xl"
+                            />
+                          </div>
+                          <span className="text-xs font-medium text-gray-700">
+                            Facebook
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            window.open(
+                              `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                                url
+                              )}`,
+                              "_blank"
+                            )
+                          }
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-green-50 hover:bg-green-100 transition-all duration-200 hover:scale-105"
+                        >
+                          <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center group-hover:bg-green-700 transition-colors">
+                            <FontAwesomeIcon
+                              icon={faWhatsapp}
+                              className="text-white text-xl"
+                            />
+                          </div>
+                          <span className="text-xs font-medium text-gray-700">
+                            WhatsApp
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            window.open(
+                              `https://t.me/share/url?url=${encodeURIComponent(
+                                url
+                              )}`,
+                              "_blank"
+                            )
+                          }
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all duration-200 hover:scale-105"
+                        >
+                          <div className="w-12 h-12 rounded-xl bg-sky-500 flex items-center justify-center group-hover:bg-sky-600 transition-colors">
+                            <FontAwesomeIcon
+                              icon={faTelegram}
+                              className="text-white text-xl"
+                            />
+                          </div>
+                          <span className="text-xs font-medium text-gray-700">
+                            Telegram
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            window.open(
+                              `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                                url
+                              )}`,
+                              "_blank"
+                            )
+                          }
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-all duration-200 hover:scale-105"
+                        >
+                          <div className="w-12 h-12 rounded-xl bg-blue-700 flex items-center justify-center group-hover:bg-blue-800 transition-colors">
+                            <FontAwesomeIcon
+                              icon={faLinkedin}
+                              className="text-white text-xl"
+                            />
+                          </div>
+                          <span className="text-xs font-medium text-gray-700">
+                            LinkedIn
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
             </div>
           </div>
-        </div>
-      )}
+        </Dialog>
+      </Transition>
     </>
   );
 }

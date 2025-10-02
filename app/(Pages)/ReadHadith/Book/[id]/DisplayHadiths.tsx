@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
-import ShareButtons from "@/app/Components/general/ShareButtons";
+import ShareModal from "@/app/Components/modals/ShareModal";
 import { useMultipleHadiths } from "@/app/Hooks/ReadHadith/useMultipleHadiths";
 
 export default function BookPage({
@@ -62,7 +62,8 @@ export default function BookPage({
                     : "md:right-14 right-14"
                 }`}
               >
-                <ShareButtons
+                <ShareModal
+                  size="2xl"
                   url={`https://muslim-one.vercel.app/ReadHadith/Book/${bookId}?hadith=${hadith.numberEn}`}
                 />
               </div>
