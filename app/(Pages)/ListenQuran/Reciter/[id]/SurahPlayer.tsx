@@ -211,7 +211,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
             </div>
 
             {/* Surah Navigation */}
-            <div className="flex items-center justify-between mb-4">
+            <div dir="ltr" className="flex items-center justify-between mb-4">
               <button
                 onClick={handlePreviousSurah}
                 disabled={!canGoPreviousSurah}
@@ -224,9 +224,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               >
                 <FontAwesomeIcon
                   icon={faChevronLeft}
-                  className={`text-lg ${
-                    language === "ar" ? "fa-flip-horizontal" : ""
-                  }`}
+                  className={`text-lg`}
                 />
               </button>
 
@@ -248,15 +246,13 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               >
                 <FontAwesomeIcon
                   icon={faChevronRight}
-                  className={`text-lg ${
-                    language === "ar" ? "fa-flip-horizontal" : ""
-                  }`}
+                  className={`text-lg`}
                 />
               </button>
             </div>
 
             {/* Ayah Navigation Controls */}
-            <div className="flex items-center justify-center gap-4 mb-4">
+            <div dir="ltr" className="flex items-center justify-center gap-4 mb-4">
               <button
                 onClick={previous}
                 disabled={isFirstAyah}
@@ -269,9 +265,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               >
                 <FontAwesomeIcon
                   icon={faStepBackward}
-                  className={`text-lg ${
-                    language === "ar" ? "fa-flip-horizontal" : ""
-                  }`}
+                  className={`text-lg`}
                 />
               </button>
 
@@ -317,9 +311,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               >
                 <FontAwesomeIcon
                   icon={faStepForward}
-                  className={`text-lg ${
-                    language === "ar" ? "fa-flip-horizontal" : ""
-                  }`}
+                  className={`text-lg`}
                 />
               </button>
             </div>
