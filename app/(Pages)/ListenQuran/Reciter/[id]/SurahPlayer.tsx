@@ -20,7 +20,6 @@ import {
   faCheck,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
-import ShareButtons from "@/app/Components/general/ShareButtons";
 import ShareModal from "@/app/Components/modals/ShareModal";
 import { ClipLoader } from "react-spinners";
 
@@ -68,8 +67,14 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     isFirstAyah,
     isLastAyah,
     isPlaying,
-    togglePlayPause
-  } = useAudioPlayer(surah);
+    togglePlayPause,
+    currentTime,
+    duration,
+    handleSliderChange,
+    handleSliderMouseDown,
+    handleSliderMouseUp,
+    formatTime,
+  } = useAudioPlayer(surah, reciterId, surahNumber);
 
   const { isFavorite, toggleFavorite } = useFavoriteSurahActions(
     surahNumber,
@@ -79,10 +84,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     reciterNameEn,
     reciterNameAr
   );
-  const { downloadSurah, isDownloading } = useSurahDownload(
-    surah,
-    surahNumber,
-  );
+  const { downloadSurah, isDownloading } = useSurahDownload(surah, surahNumber);
 
   const handleDownload = async () => {
     setDownloadStatus("downloading");
@@ -177,14 +179,35 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                 {language === "ar" ? "آية" : "Ayah"} {currentAyahIndex + 1}{" "}
                 {language === "ar" ? "من" : "of"} {totalAyahs}
               </h3>
-              <div className="w-full bg-gray-300 dark:bg-slate-600 rounded-full h-2 mb-3">
-                <div
-                  className="bg-teal-600 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    width: `${((currentAyahIndex + 1) / totalAyahs) * 100}%`,
-                  }}
-                ></div>
+            </div>
+
+            {/* Interactive Slider */}
+            <div dir="ltr" className="mb-4">
+              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
               </div>
+
+              <input
+                type="range"
+                min="0"
+                max={duration || 0}
+                step="0.1"
+                value={currentTime}
+                onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                onMouseDown={handleSliderMouseDown}
+                onMouseUp={handleSliderMouseUp}
+                onTouchStart={handleSliderMouseDown}
+                onTouchEnd={handleSliderMouseUp}
+                className="w-full h-2 bg-gray-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer audio-slider"
+                style={{
+                  background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${
+                    (currentTime / duration) * 100
+                  }%, #d1d5db ${
+                    (currentTime / duration) * 100
+                  }%, #d1d5db 100%)`,
+                }}
+              />
             </div>
 
             {/* Surah Navigation */}
@@ -208,8 +231,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               </button>
 
               <div className="text-center flex-1 mx-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {language === "ar" ? "سورة" : "Surah"} {surahNumber}
+                <p className="text-sm md:text-lg text-gray-600 dark:text-gray-400">
+                  {language === "ar" ? "سورة" : "Surah"} {language === "ar" ? selectedSurahNameAr : selectedSurahNameEn}
                 </p>
               </div>
 

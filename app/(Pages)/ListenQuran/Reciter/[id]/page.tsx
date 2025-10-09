@@ -60,7 +60,7 @@ export default function ReciterPage() {
           </h3>
         </div>
         <div
-          className={`md:mt-5 scale-75 md:scale-100 ${
+          className={`md:mt-5 scale-75 md:scale-100 w-full ${
             language === "en" ? "ml-10 md:ml-0" : "mr-10 md:mr-0"
           } `}
         >
