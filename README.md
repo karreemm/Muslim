@@ -108,7 +108,7 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 - Beautiful, respectful interface
 
 ### 📿 Tasbeeh Counter
-![Tasbeeh](./Assets/Tasabeeh.gif)
+![Tasbeeh Counter](./Assets/Tasabeeh.gif)
 
 - **Digital dhikr counter** for daily remembrance
 - Tap or click to count
