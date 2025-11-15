@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface FavoriteHadith {
   text: string;
@@ -9,6 +9,7 @@ interface FavoriteHadith {
   numberAr: string | null;
   numberEn: number;
   bookId: string | null;
+  chapterId?: string | null;
 }
 
 interface FavoriteHadithsContextProps {
@@ -18,20 +19,28 @@ interface FavoriteHadithsContextProps {
   removeAllFavoriteHadiths: () => void;
 }
 
-const FavoriteHadithsContext = createContext<FavoriteHadithsContextProps | undefined>(undefined);
+const FavoriteHadithsContext = createContext<
+  FavoriteHadithsContextProps | undefined
+>(undefined);
 
-export const FavoriteHadithsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [favoriteHadiths, setFavoriteHadiths] = useState<FavoriteHadith[]>(() => {
-    if (typeof window !== 'undefined') {
-      const storedFavorites = JSON.parse(localStorage.getItem('favoriteHadiths') || '[]');
-      return storedFavorites;
+export const FavoriteHadithsProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [favoriteHadiths, setFavoriteHadiths] = useState<FavoriteHadith[]>(
+    () => {
+      if (typeof window !== "undefined") {
+        const storedFavorites = JSON.parse(
+          localStorage.getItem("favoriteHadiths") || "[]"
+        );
+        return storedFavorites;
+      }
+      return [];
     }
-    return [];
-  });
+  );
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('favoriteHadiths', JSON.stringify(favoriteHadiths));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("favoriteHadiths", JSON.stringify(favoriteHadiths));
     }
   }, [favoriteHadiths]);
 
@@ -40,7 +49,11 @@ export const FavoriteHadithsProvider: React.FC<{ children: React.ReactNode }> = 
   };
 
   const removeFavoriteHadith = (numberEn: number, bookId: string | null) => {
-    setFavoriteHadiths((prev) => prev.filter((hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId));
+    setFavoriteHadiths((prev) =>
+      prev.filter(
+        (hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId
+      )
+    );
   };
 
   const removeAllFavoriteHadiths = () => {
@@ -48,7 +61,14 @@ export const FavoriteHadithsProvider: React.FC<{ children: React.ReactNode }> = 
   };
 
   return (
-    <FavoriteHadithsContext.Provider value={{ favoriteHadiths, addFavoriteHadith, removeFavoriteHadith, removeAllFavoriteHadiths }}>
+    <FavoriteHadithsContext.Provider
+      value={{
+        favoriteHadiths,
+        addFavoriteHadith,
+        removeFavoriteHadith,
+        removeAllFavoriteHadiths,
+      }}
+    >
       {children}
     </FavoriteHadithsContext.Provider>
   );
@@ -57,7 +77,9 @@ export const FavoriteHadithsProvider: React.FC<{ children: React.ReactNode }> = 
 export const useFavoriteHadiths = () => {
   const context = useContext(FavoriteHadithsContext);
   if (!context) {
-    throw new Error("useFavoriteHadiths must be used within a FavoriteHadithsProvider");
+    throw new Error(
+      "useFavoriteHadiths must be used within a FavoriteHadithsProvider"
+    );
   }
   return context;
 };

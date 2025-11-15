@@ -70,7 +70,7 @@ export default function SingleZekr({
                 />
               </div>
 
-              <span className="inline-block bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+              <span className="inline-block bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-semibold w-fit">
                 {ZekrNumber[language]}{" "}
                 {language === "en" ? zekr.number : zekr.number}
               </span>

@@ -77,7 +77,15 @@ export default function HadithTable() {
 
   const handleGoToHadith = (hadith: any) => {
     const hadithNumber = hadith.numberEn;
-    router.push(`/ReadHadith/Book/${hadith.bookId}?hadith=${hadithNumber}`);
+    const chapterId = hadith.chapterId;
+
+    if (chapterId) {
+      router.push(
+        `/ReadHadith/Book/${hadith.bookId}/Chapter/${chapterId}?hadith=${hadithNumber}`
+      );
+    } else {
+      router.push(`/ReadHadith/Book/${hadith.bookId}?hadith=${hadithNumber}`);
+    }
   };
 
   return (
@@ -126,7 +134,11 @@ export default function HadithTable() {
                           <FontAwesomeIcon icon={faLocationArrow} />
                         </button>
                         <ShareModal
-                          url={`https://muslim-one.vercel.app/ReadHadith/Book/${book?.id}?hadith=${item.numberEn}`}
+                          url={
+                            item.chapterId
+                              ? `https://muslim-one.vercel.app/ReadHadith/Book/${book?.id}/Chapter/${item.chapterId}?hadith=${item.numberEn}`
+                              : `https://muslim-one.vercel.app/ReadHadith/Book/${book?.id}?hadith=${item.numberEn}`
+                          }
                         />
                         <button
                           className="text-red-600 dark:text-red-500 hover:opacity-80"

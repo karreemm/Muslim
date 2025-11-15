@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Hadith } from "@/app/Types";
 import {
   getChapterHadiths,
@@ -12,6 +13,9 @@ export function useChapterHadiths(
   chapterNumber: string,
   itemsPerPage: number = 10
 ) {
+  const searchParams = useSearchParams();
+  const hadithNumber = searchParams.get("hadith");
+  
   const [hadiths, setHadiths] = useState<Hadith[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +25,7 @@ export function useChapterHadiths(
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"number" | "content">("content");
   const [isSearching, setIsSearching] = useState(false);
+  const [showingSingleHadith, setShowingSingleHadith] = useState(false);
 
   const { favoriteHadiths, addFavoriteHadith, removeFavoriteHadith } =
     useFavoriteHadiths();
@@ -31,17 +36,32 @@ export function useChapterHadiths(
 
       try {
         setLoading(true);
-        const data = await getChapterHadiths(
-          bookSlug,
-          chapterNumber,
-          currentPage,
-          itemsPerPage
-        );
+        
+        // If hadith number is provided in URL, fetch only that hadith
+        if (hadithNumber && !isSearching) {
+          const data = await searchHadithByNumber(hadithNumber, bookSlug);
+          
+          if (data.hadiths && data.hadiths.data.length > 0) {
+            setHadiths(data.hadiths.data);
+            setTotalPages(1);
+            setTotalHadiths(1);
+            setShowingSingleHadith(true);
+          }
+        } else {
+          // Normal pagination mode
+          const data = await getChapterHadiths(
+            bookSlug,
+            chapterNumber,
+            currentPage,
+            itemsPerPage
+          );
 
-        if (data.hadiths) {
-          setHadiths(data.hadiths.data);
-          setTotalPages(data.hadiths.last_page);
-          setTotalHadiths(data.hadiths.total);
+          if (data.hadiths) {
+            setHadiths(data.hadiths.data);
+            setTotalPages(data.hadiths.last_page);
+            setTotalHadiths(data.hadiths.total);
+          }
+          setShowingSingleHadith(false);
         }
 
         setError(null);
@@ -56,7 +76,7 @@ export function useChapterHadiths(
     if (!isSearching) {
       fetchHadiths();
     }
-  }, [bookSlug, chapterNumber, currentPage, itemsPerPage, isSearching]);
+  }, [bookSlug, chapterNumber, currentPage, itemsPerPage, isSearching, hadithNumber]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -110,6 +130,17 @@ export function useChapterHadiths(
     setIsSearching(false);
     setCurrentPage(1);
   };
+  
+  const clearHadithFilter = () => {
+    // Remove the hadith query parameter and reload all hadiths
+    const url = new URL(window.location.href);
+    url.searchParams.delete("hadith");
+    window.history.replaceState({}, "", url);
+    setShowingSingleHadith(false);
+    setCurrentPage(1);
+    // Trigger re-fetch by updating state
+    window.location.reload();
+  };
 
   const isFavorite = (hadithNumber: string, bookSlug: string) => {
     return favoriteHadiths.some(
@@ -130,6 +161,7 @@ export function useChapterHadiths(
         numberAr: hadith.hadithNumber,
         numberEn: hadithNumber,
         bookId: bookSlug,
+        chapterId: hadith.chapterId || null,
       });
     }
   };
@@ -144,11 +176,13 @@ export function useChapterHadiths(
     searchQuery,
     searchType,
     isSearching,
+    showingSingleHadith,
     setSearchQuery,
     setSearchType,
     handlePageChange,
     handleSearch,
     clearSearch,
+    clearHadithFilter,
     isFavorite,
     toggleFavorite,
   };

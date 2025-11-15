@@ -34,11 +34,13 @@ export default function ChapterHadithsPage() {
     searchQuery,
     searchType,
     isSearching,
+    showingSingleHadith,
     setSearchQuery,
     setSearchType,
     handlePageChange,
     handleSearch,
     clearSearch,
+    clearHadithFilter,
     isFavorite,
     toggleFavorite,
   } = useChapterHadiths(bookSlug, chapterNumber, 10);
@@ -136,60 +138,71 @@ export default function ChapterHadithsPage() {
                   {TotalResults[language]}: {totalHadiths}
                 </p>
               )}
+              
+              {showingSingleHadith && (
+                <button
+                  onClick={clearHadithFilter}
+                  className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
+                >
+                  {language === "ar" ? "عرض جميع الأحاديث" : "View All Hadiths"}
+                </button>
+              )}
             </div>
 
-            <div className="w-full bg-white dark:bg-slate-800 rounded-lg shadow-md p-5">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setSearchType("content")}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      searchType === "content"
-                        ? "bg-teal-600 text-white"
-                        : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                    }`}
-                  >
-                    {SearchByContent[language]}
-                  </button>
-                  <button
-                    onClick={() => setSearchType("number")}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      searchType === "number"
-                        ? "bg-teal-600 text-white"
-                        : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                    }`}
-                  >
-                    {SearchByNumber[language]}
-                  </button>
-                </div>
-
-                <div className="flex-1 flex gap-2">
-                  <input
-                    type={searchType === "number" ? "number" : "text"}
-                    placeholder={SearchPlaceholder[language]}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 dark:bg-slate-700 dark:text-white"
-                  />
-                  <button
-                    onClick={handleSearch}
-                    className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
-                  >
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </button>
-                  {isSearching && (
+            {!showingSingleHadith && (
+              <div className="w-full bg-white dark:bg-slate-800 rounded-lg shadow-md p-5">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex gap-2">
                     <button
-                      onClick={clearSearch}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                      title={ClearSearch[language]}
+                      onClick={() => setSearchType("content")}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        searchType === "content"
+                          ? "bg-teal-600 text-white"
+                          : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
+                      }`}
                     >
-                      <FontAwesomeIcon icon={faXmark} />
+                      {SearchByContent[language]}
                     </button>
-                  )}
+                    <button
+                      onClick={() => setSearchType("number")}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        searchType === "number"
+                          ? "bg-teal-600 text-white"
+                          : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
+                      }`}
+                    >
+                      {SearchByNumber[language]}
+                    </button>
+                  </div>
+
+                  <div className="flex-1 flex gap-2">
+                    <input
+                      type={searchType === "number" ? "number" : "text"}
+                      placeholder={SearchPlaceholder[language]}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 dark:bg-slate-700 dark:text-white"
+                    />
+                    <button
+                      onClick={handleSearch}
+                      className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    </button>
+                    {isSearching && (
+                      <button
+                        onClick={clearSearch}
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                        title={ClearSearch[language]}
+                      >
+                        <FontAwesomeIcon icon={faXmark} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {loading && (
               <div className="flex flex-col items-center gap-4 mt-10">
@@ -304,7 +317,7 @@ export default function ChapterHadithsPage() {
                   </div>
                 )}
 
-                {totalPages > 1 && (
+                {totalPages > 1 && !showingSingleHadith && (
                   <div className="w-full mt-8">
                     <Pagination
                       currentPage={currentPage}

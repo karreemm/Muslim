@@ -65,7 +65,6 @@ export default function BookChaptersPage() {
       <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
         <div className="w-full flex justify-center mt-24">
           <div className="w-[95%] flex flex-col items-center gap-6">
-
             <div className="flex flex-col items-center gap-4">
               {book && (
                 <div className="w-24 h-24 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-3 shadow-lg">
@@ -168,7 +167,6 @@ export default function BookChaptersPage() {
                         className="group bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-5 border border-transparent hover:border-teal-500"
                       >
                         <div className="flex items-start gap-4">
-
                           <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
                             {chapter.chapterNumber}
                           </div>
@@ -179,18 +177,18 @@ export default function BookChaptersPage() {
                             </h3>
                             {language === "ar" ? (
                               <p
-                              dir="rtl"
-                              className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
-                            >
-                              {chapter.chapterArabic}
-                            </p>
+                                dir="rtl"
+                                className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
+                              >
+                                {chapter.chapterArabic}
+                              </p>
                             ) : (
                               <p
-                              dir="ltr"
-                              className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
-                            >
-                              {chapter.chapterEnglish}
-                            </p>
+                                dir="ltr"
+                                className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
+                              >
+                                {chapter.chapterEnglish}
+                              </p>
                             )}
                           </div>
 
