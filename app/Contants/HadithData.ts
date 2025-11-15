@@ -1,67 +1,73 @@
-import aboDawod from "../Assets/Books/aboDawod.webp"
-import bukhari from "../Assets/Books/bukhari.webp"
-import daremi from "../Assets/Books/daremi.webp"
-import ibnMajah from "../Assets/Books/ibnMajah.webp"
-import malik from "../Assets/Books/malik.webp"
-import muslim from "../Assets/Books/muslim.webp"
-import nasai from "../Assets/Books/nasai.webp"
-import termezei from "../Assets/Books/termezei.webp"
+import aboDawod from "../Assets/Books/aboDawod.webp";
+import bukhari from "../Assets/Books/bukhari.webp";
+import ibnMajah from "../Assets/Books/ibnMajah.webp";
+import muslim from "../Assets/Books/muslim.webp";
+import nasai from "../Assets/Books/nasai.webp";
+import termezei from "../Assets/Books/termezei.webp";
+import meshkatAlMasabih from "../Assets/Books/mishkatAlMasabih.webp";
 
 export const hadithBooks = [
   {
-      id: 'muslim',
-      name_en: 'Muslim',
-      name_ar: 'مسلم',
-      image: muslim,
-      number: 800
+    id: "sahih-bukhari",
+    slug: "sahih-bukhari",
+    name_en: "Sahih Bukhari",
+    name_ar: "صحيح البخاري",
+    image: bukhari,
+    description_en: "The most authentic collection of hadith",
+    description_ar: "أصح كتب الحديث",
   },
   {
-      id: 'bukhari',
-      name_en: 'Bukhari',
-      name_ar: 'البخاري',
-      image: bukhari,
-      number: 590
+    id: "sahih-muslim",
+    slug: "sahih-muslim",
+    name_en: "Sahih Muslim",
+    name_ar: "صحيح مسلم",
+    image: muslim,
+    description_en: "The second most authentic hadith collection",
+    description_ar: "ثاني أصح كتب الحديث",
   },
   {
-      id: 'tirmidzi',
-      name_en: 'Tirmidhi',
-      name_ar: 'الترمذي',
-      image: termezei,
-      number: 770     
+    id: "al-tirmidhi",
+    slug: "al-tirmidhi",
+    name_en: "Jami' Al-Tirmidhi",
+    name_ar: "جامع الترمذي",
+    image: termezei,
+    description_en: "Comprehensive collection by Imam Tirmidhi",
+    description_ar: "مجموعة شاملة للإمام الترمذي",
   },
   {
-      id: 'nasai',
-      name_en: 'Nasai',
-      name_ar: 'النسائي',
-      image: nasai,
-      number: 800
+    id: "abu-dawood",
+    slug: "abu-dawood",
+    name_en: "Sunan Abu Dawood",
+    name_ar: "سنن أبي داود",
+    image: aboDawod,
+    description_en: "Collection focusing on legal hadiths",
+    description_ar: "مجموعة تركز على الأحاديث الفقهية",
   },
   {
-      id: 'abu-daud',
-      name_en: 'Abu Daud',
-      name_ar: 'أبو داود',
-      image: aboDawod,
-      number: 780
+    id: "ibn-e-majah",
+    slug: "ibn-e-majah",
+    name_en: "Sunan Ibn-e-Majah",
+    name_ar: "سنن ابن ماجه",
+    image: ibnMajah,
+    description_en: "One of the six major hadith collections",
+    description_ar: "أحد الكتب الستة",
   },
   {
-      id: 'ibnu-majah',
-      name_en: 'Ibnu Majah',
-      name_ar: 'ابن ماجه',
-      image: ibnMajah,
-      number: 800
+    id: "sunan-nasai",
+    slug: "sunan-nasai",
+    name_en: "Sunan An-Nasa'i",
+    name_ar: "سنن النسائي",
+    image: nasai,
+    description_en: "Comprehensive hadith collection",
+    description_ar: "مجموعة شاملة للأحاديث",
   },
   {
-      id: 'darimi',
-      name_en: 'Darimi',
-      name_ar: 'الدارمي',
-      image: daremi,
-      number: 660
+    id: "mishkat",
+    slug: "mishkat",
+    name_en: "Mishkat Al-Masabih",
+    name_ar: "مشكاة المصابيح",
+    image: meshkatAlMasabih,
+    description_en: "A comprehensive hadith collection",
+    description_ar: "مجموعة شاملة للأحاديث",
   },
-  {
-      id: 'malik',
-      name_en: 'Malik',
-      name_ar: 'مالك',
-      image: malik,
-      number: 300
-  }
 ];

@@ -39,7 +39,7 @@ export default function SingleZekr({
           </div>
         ) : (
           zekr && (
-            <div className="relative bg-white w-full rounded-lg flex flex-col px-4 py-4">
+            <div className="relative bg-white dark:bg-slate-800 dark:text-white w-full rounded-lg flex flex-col px-4 py-4">
               <button
                 id={`love-button-${zekr.number}`}
                 onClick={handleLoveClick}
@@ -70,10 +70,10 @@ export default function SingleZekr({
                 />
               </div>
 
-              <h1 className="text-3xl font-bold text-center flex gap-1">
+              <span className="inline-block bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
                 {ZekrNumber[language]}{" "}
                 {language === "en" ? zekr.number : zekr.number}
-              </h1>
+              </span>
               <p dir="rtl" className="leading-9 mt-5 text-lg text-center">
                 {zekr.content}
               </p>

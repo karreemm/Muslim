@@ -35,7 +35,7 @@ export default function QuranNavbar({
       <div className="w-[90%] md:w-[80%] flex flex-col gap-10 items-center justify-normal md:flex-row md:items-center md:justify-between px-10 py-5">
         <div className="w-full md:w-[50%] flex flex-row gap-10">
           <input
-            className="w-full md:w-[70%] rounded-xl bg-white text-black dark:outline-hidden outline-hidden py-2 pl-10 pr-4 placeholder:text-[#03045e] dark:placeholder:text-slate-500"
+            className="w-full md:w-[70%] rounded-xl bg-white dark:bg-slate-800 text-black dark:text-white dark:outline-hidden outline-hidden py-2 pl-10 pr-4 placeholder:text-[#03045e] dark:placeholder:text-slate-200 border border-[#134B70] dark:border-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600"
             placeholder={SearchPlaceholder[language]}
             type="search"
             value={searchTerm}
@@ -53,7 +53,7 @@ export default function QuranNavbar({
             onClick={() => handleTabClick("Surahs")}
             className={`${
               activeTab === "Surahs"
-                ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black"
+                ? "bg-teal-600 text-white"
                 : ""
             } px-3 py-1 rounded-md`}
           >
@@ -63,7 +63,7 @@ export default function QuranNavbar({
             onClick={() => handleTabClick("Juzs")}
             className={`${
               activeTab === "Juzs"
-                ? "bg-[#03045e] text-white dark:bg-[#6EACDA] dark:text-black"
+                ? "bg-teal-600 text-white"
                 : ""
             } px-3 py-1 rounded-md`}
           >

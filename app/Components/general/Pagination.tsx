@@ -10,11 +10,13 @@ import React from "react";
 interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
+  currentPage?: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
+  currentPage: externalCurrentPage,
 }) => {
   const { language } = useLanguage() as { language: "ar" | "en" };
 
@@ -29,10 +31,17 @@ const Pagination: React.FC<PaginationProps> = ({
     },
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1);
+
+  const currentPage =
+    externalCurrentPage !== undefined
+      ? externalCurrentPage
+      : internalCurrentPage;
 
   const handlePageClick = (page: number) => {
-    setCurrentPage(page);
+    if (externalCurrentPage === undefined) {
+      setInternalCurrentPage(page);
+    }
     onPageChange(page);
   };
 

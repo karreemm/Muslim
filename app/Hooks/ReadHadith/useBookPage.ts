@@ -14,7 +14,6 @@ export interface UseBookPageReturn {
   searchResult: number | null;
   loading: boolean;
   searchError: boolean;
-  totalPages: number;
   handlePageChange: (page: number) => void;
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearch: () => Promise<void>;
@@ -37,7 +36,7 @@ export const useBookPage = (): UseBookPageReturn => {
   const [searchResult, setSearchResult] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<boolean>(false);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalPages] = useState<number>(0);
 
   useEffect(() => {
     const parts = pathname.split("/");
@@ -46,7 +45,6 @@ export const useBookPage = (): UseBookPageReturn => {
     console.log(id);
     if (id) {
       setBookId(id);
-      setTotalPages(hadithBooks.find((b) => b.id === id)?.number || 0);
     } else {
       setBookId("muslim");
     }
@@ -114,7 +112,6 @@ export const useBookPage = (): UseBookPageReturn => {
     searchResult,
     loading,
     searchError,
-    totalPages,
     handlePageChange,
     handleSearchChange,
     handleSearch,

@@ -4,9 +4,12 @@ import Link from "next/link";
 import { useLanguage } from "../../Context/LanguageContext";
 import { hadithBooks } from "../../Contants/HadithData";
 import TranslationPair from "../../Types";
+import { ClipLoader } from "react-spinners";
+import { useHadithBooks } from "@/app/Hooks/ReadHadith/useHadithBooks";
 
-export default function ListenQuranPage() {
+export default function ReadHadithPage() {
   const { language } = useLanguage();
+  const { books, loading, error } = useHadithBooks();
 
   const Title: TranslationPair = {
     en: "Read and Study the Hadiths of the Prophet from the Most Authentic Collections",
@@ -14,41 +17,126 @@ export default function ListenQuranPage() {
   };
 
   const Book: TranslationPair = {
-    ar: "كتاب الإمام",
-    en: "Book of the Imam",
+    ar: "كتاب",
+    en: "Book",
   };
+
+  const Chapters: TranslationPair = {
+    ar: "الأبواب",
+    en: "Chapters",
+  };
+
+  const Hadiths: TranslationPair = {
+    ar: "الأحاديث",
+    en: "Hadiths",
+  };
+
+  const LoadingText: TranslationPair = {
+    ar: "جاري التحميل...",
+    en: "Loading...",
+  };
+
+  const ErrorText: TranslationPair = {
+    ar: "حدث خطأ أثناء تحميل الكتب",
+    en: "Error loading books",
+  };
+
+   const displayBooks = hadithBooks.map((localBook) => {
+    const apiBook = books.find((b) => b.bookSlug === localBook.slug);
+    return {
+      ...localBook,
+      chapters_count: apiBook?.chapters_count || "0",
+      hadiths_count: apiBook?.hadiths_count || "0",
+    };
+  });
 
   return (
     <div className="bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white min-h-screen w-full flex justify-center">
       <div className="w-[95%] mt-32 flex flex-col items-center gap-10">
-        <h1 className="text-2xl md:text-4xl text-center">{Title[language]}</h1>
-        <div className="w-full flex flex-wrap gap-3 justify-center bg-[#FFF5E4] text-black dark:bg-slate-900 dark:text-white p-5">
-          {hadithBooks.map((book) => (
-            <Link
-              key={book.id}
-              href={`/ReadHadith/Book/${book.id}`}
-              className="w-full md:w-[30%] px-5 py-3 border border-[#134B70] dark:border-white shadow-lg rounded-lg flex justify-between group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500"
-            >
-              <div className="flex gap-5 items-center">
-                <div className="w-[65px] h-[65px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">
-                  <img
-                    loading="lazy"
-                    decoding="async"
-                    src={book.image?.src}
-                    alt={book.name_en}
-                    className="w-[50px] h-[50px] rounded-full"
-                  />
+        <h1 className="text-2xl md:text-4xl text-center font-bold">
+          {Title[language]}
+        </h1>
+
+        {loading ? (
+          <div className="flex flex-col items-center gap-4 mt-10">
+            <ClipLoader color={"#14b8a6"} loading={loading} size={50} />
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center text-xl mt-10">
+            {ErrorText[language]}
+          </div>
+        ) : (
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+            {displayBooks.map((book) => (
+              <Link
+                key={book.id}
+                href={`/ReadHadith/Book/${book.slug}`}
+                className="group relative overflow-hidden bg-white dark:bg-slate-800 text-[#134B70] dark:text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-teal-500"
+              >
+                <div className="p-6 flex flex-col gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 flex-shrink-0 bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl p-2 shadow-md">
+                      <img
+                        loading="lazy"
+                        decoding="async"
+                        src={book.image?.src}
+                        alt={book.name_en}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                        {language === "en" ? book.name_en : book.name_ar}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
+                    {language === "en"
+                      ? book.description_en
+                      : book.description_ar}
+                  </p>
+
+                  <div className="flex justify-between items-center pt-4 border-t border-gray-800 dark:border-gray-300">
+                    <div className="flex flex-col items-center">
+                      <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        {book.chapters_count}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {Chapters[language]}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        {book.hadiths_count}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {Hadiths[language]}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={`absolute top-6 opacity-0 group-hover:opacity-100 transition-opacity ${language === "ar" ? "left-4" : "right-4"}`}>
+                    <svg
+                      className="w-6 h-6 text-teal-600 dark:text-teal-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h1 className="md:text-2xl text-xl">{Book[language]}</h1>
-                  <span className="text-lg md:text-xl group-hover:text-teal-600 dark:group-hover:text-teal-500">
-                    {language === "en" ? book.name_en : book.name_ar}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
         <div className="h-20 md:h-0"></div>
       </div>
     </div>
