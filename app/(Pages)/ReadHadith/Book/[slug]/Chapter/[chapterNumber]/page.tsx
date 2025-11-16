@@ -182,7 +182,7 @@ export default function ChapterHadithsPage() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 dark:bg-slate-700 dark:text-white"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 dark:bg-slate-700 dark:text-white w-fit max-w-[70%] md:max-w-full"
                     />
                     <button
                       onClick={handleSearch}
