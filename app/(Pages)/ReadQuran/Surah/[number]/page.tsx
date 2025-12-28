@@ -59,8 +59,8 @@ export default function SurahPage() {
   };
 
   const Size: TranslationPair = {
-    en: "Font Size",
-    ar: "حجم الخط",
+    en: "Font",
+    ar: "الخط",
   };
 
   const Surah: TranslationPair = {
@@ -69,13 +69,8 @@ export default function SurahPage() {
   };
 
   const FullscreenText: TranslationPair = {
-    en: "Fullscreen",
-    ar: "شاشة كاملة",
-  };
-
-  const ExitFullscreenText: TranslationPair = {
-    en: "Exit",
-    ar: "خروج",
+    en: "Screen",
+    ar: "الشاشة",
   };
 
   return (
@@ -191,19 +186,20 @@ export default function SurahPage() {
                 {Size[language]}
               </button>
 
+              <button
+                onClick={toggleFullscreen}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+                title={FullscreenText[language]}
+              >
+                <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
+                {FullscreenText[language]}
+              </button>
+
               <ShareModal
                 size="2xl"
                 url={`https://muslim-one.vercel.app/ReadQuran/Surah/${navigation.currentNumber}`}
               />
 
-              <button
-                onClick={toggleFullscreen}
-                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-                title={isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
-              >
-                <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
-                {isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
-              </button>
             </div>
           </div>
         </div>

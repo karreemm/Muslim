@@ -55,18 +55,13 @@ export default function JuzPage() {
   };
 
   const Size: TranslationPair = {
-    en: "Font Size",
-    ar: "حجم الخط",
+    en: "Font",
+    ar: "الخط",
   };
 
   const FullscreenText: TranslationPair = {
-    en: "Fullscreen",
-    ar: "شاشة كاملة",
-  };
-
-  const ExitFullscreenText: TranslationPair = {
-    en: "Exit",
-    ar: "خروج",
+    en: "Screen",
+    ar: "الشاشة",
   };
 
   return (
@@ -176,10 +171,10 @@ export default function JuzPage() {
               <button
                 onClick={toggleFullscreen}
                 className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-                title={isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+                title={FullscreenText[language]}
               >
                 <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
-                {isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+                {FullscreenText[language]}
               </button>
             </div>
           </div>
