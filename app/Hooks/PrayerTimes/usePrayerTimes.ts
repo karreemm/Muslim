@@ -14,6 +14,7 @@ export interface PrayerTimings {
 
 export interface UsePrayerTimesReturn {
   prayerTimes: PrayerTimings | null;
+  rawPrayerTimes: PrayerTimings | null;
   loading: boolean;
   error: string | null;
 }
@@ -26,6 +27,7 @@ export interface UsePrayerTimesProps {
 
 export const usePrayerTimes = ({ address, date, language }: UsePrayerTimesProps): UsePrayerTimesReturn => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimings | null>(null);
+  const [rawPrayerTimes, setRawPrayerTimes] = useState<PrayerTimings | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +44,9 @@ export const usePrayerTimes = ({ address, date, language }: UsePrayerTimesProps)
           address[language].country,
           date
         );
-        
+
+        setRawPrayerTimes(timings);
+
         const formattedPrayerTimes: PrayerTimings = {
           Fajr: moment(timings.Fajr, "HH:mm").format("h:mm A"),
           Sunrise: moment(timings.Sunrise, "HH:mm").format("h:mm A"),
@@ -51,7 +55,7 @@ export const usePrayerTimes = ({ address, date, language }: UsePrayerTimesProps)
           Maghrib: moment(timings.Maghrib, "HH:mm").format("h:mm A"),
           Isha: moment(timings.Isha, "HH:mm").format("h:mm A"),
         };
-        
+
         setPrayerTimes(formattedPrayerTimes);
       } catch (err) {
         setError(
@@ -65,5 +69,5 @@ export const usePrayerTimes = ({ address, date, language }: UsePrayerTimesProps)
     fetchPrayerTimes();
   }, [address, date, language]);
 
-  return { prayerTimes, loading, error };
+  return { prayerTimes, rawPrayerTimes, loading, error };
 };

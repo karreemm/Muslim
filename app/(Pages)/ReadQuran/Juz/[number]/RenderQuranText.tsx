@@ -13,7 +13,8 @@ import { useAyahInteraction, useScrollToAyah } from "../../../../Hooks/ReadQuran
 export const RenderJuzText = (
   juzData: any,
   fontSize: number,
-  lineHeight: number
+  lineHeight: number,
+  isFullscreen: boolean = false
 ) => {
   const { language } = useLanguage();
   const ayahInteraction = useAyahInteraction();
@@ -21,7 +22,6 @@ export const RenderJuzText = (
   const [loading, setLoading] = useState<boolean>(true);
 
   const handleAyahClick = (ayah: any) => {
-    // Find surah information for this ayah
     const surah = surahNames.find((s) => s.number === ayah.surah.number);
     if (surah) {
       ayahInteraction.handleAyahClick(ayah, surah.ar, surah.en, ayah.surah.number);
@@ -74,7 +74,7 @@ export const RenderJuzText = (
   }
 
   return (
-    <div dir="rtl" className="fontAmiri flex flex-col items-center">
+    <div dir="rtl" className={`fontAmiri flex flex-col items-center transition-all duration-300 ${isFullscreen ? 'w-full h-full' : ''}`}>
       <div className="basmala text-xl md:text-3xl text-center my-4">
         {surahNumber === 9 ? (
           <p>أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</p>
@@ -86,21 +86,20 @@ export const RenderJuzText = (
       <div
         id="scrollable-div"
         ref={scrollToAyah.containerRef}
-        className="shadow-md bg-white text-black rounded-lg px-4 py-2 mt-5 md:mt-10 ayah-container max-w-[1200px] max-h-[300px] overflow-y-auto flex flex-wrap"
+        className={`shadow-md bg-white text-black rounded-lg px-4 py-2 mt-5 md:mt-10 ayah-container max-w-[1200px] overflow-y-auto flex flex-wrap transition-all duration-300 ${isFullscreen ? 'h-[75vh]' : 'max-h-[300px]'
+          }`}
       >
         {ayahs.map((ayah: any) => (
           <div
             key={ayah.number}
             ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
-            className={`flex flex-col relative items-start ${
-              ayah.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
-                ? "w-full"
-                : ""
-            }  ${
-              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah
+            className={`flex flex-col relative items-start ${ayah.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
+              ? "w-full"
+              : ""
+              }  ${scrollToAyah.highlightedAyahNumber === ayah.numberInSurah
                 ? "bg-yellow-200 dark:bg-teal-800 rounded-lg"
                 : ""
-            }`}
+              }`}
             style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
             onClick={() => handleAyahClick(ayah)}
             id={`ayah-${ayah.numberInSurah}`}

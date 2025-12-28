@@ -6,8 +6,10 @@ import {
   faMinus,
   faArrowRight,
   faArrowLeft,
+  faExpand,
+  faCompress,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import TranslationPair from "../../../../Types";
 import { useLanguage } from "../../../../Context/LanguageContext";
 import Navbar from "@/app/Components/general/Navbar";
@@ -23,6 +25,7 @@ import ShareModal from "@/app/Components/modals/ShareModal";
 import {
   useQuranNavigation,
   useQuranDisplay,
+  useFullscreen,
 } from "../../../../Hooks/ReadQuran";
 
 export default function SurahPage() {
@@ -30,6 +33,8 @@ export default function SurahPage() {
   const navigation = useQuranNavigation("surah");
   const display = useQuranDisplay();
   const [surahData, setSurahData] = useState<any>(null);
+  const quranContentRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(quranContentRef);
 
   const SurahNameAr = (navigation.navigationData.current as any)?.ar;
   const SurahNameEn = (navigation.navigationData.current as any)?.en;
@@ -61,6 +66,16 @@ export default function SurahPage() {
   const Surah: TranslationPair = {
     en: "Surah",
     ar: "سورة",
+  };
+
+  const FullscreenText: TranslationPair = {
+    en: "Fullscreen",
+    ar: "شاشة كاملة",
+  };
+
+  const ExitFullscreenText: TranslationPair = {
+    en: "Exit",
+    ar: "خروج",
   };
 
   return (
@@ -124,56 +139,72 @@ export default function SurahPage() {
               </>
             )}
           </div>
-          <div className="flex flex-col items-center gap-5">
-            <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-white">
-              {Surah[language]}{" "}
-              {navigation.navigationData.current?.[
-                language as keyof typeof navigation.navigationData.current
-              ]?.toString()}
-            </h1>
-            <p className="md:text-2xl text-xl flex items-center">
-              {Ayat[language]}:{" "}
-              {language === "ar"
-                ? toArabicNumber(surahData?.ayahs.length)
-                : surahData?.ayahs.length}
-            </p>
-          </div>
-
-          <div className="w-full md:w-[80%] py-4 px-2 overflow-auto">
-            {RenderQuranText(
-              surahData,
-              display.fontSize,
-              display.lineHeight,
-              SurahNameAr,
-              SurahNameEn,
-              navigation.currentNumber
-            )}
-          </div>
 
           <div
-            dir={language === "ar" ? "rtl" : "ltr"}
-            className="mt-5 flex items-center gap-5"
+            ref={quranContentRef}
+            className={`w-full flex flex-col items-center transition-all duration-300 ${isFullscreen ? 'flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto' : ''}`}
           >
-            <button
-              onClick={display.increaseFontSize}
-              className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-              {Size[language]}
-            </button>
+            <div className="flex flex-col items-center gap-5">
+              <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-teal-500">
+                {Surah[language]}{" "}
+                {navigation.navigationData.current?.[
+                  language as keyof typeof navigation.navigationData.current
+                ]?.toString()}
+              </h1>
+              <p className="md:text-2xl text-xl flex items-center dark:text-white">
+                {Ayat[language]}:{" "}
+                {language === "ar"
+                  ? toArabicNumber(surahData?.ayahs.length)
+                  : surahData?.ayahs.length}
+              </p>
+            </div>
 
-            <button
-              onClick={display.decreaseFontSize}
-              className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-            >
-              <FontAwesomeIcon icon={faMinus} />
-              {Size[language]}
-            </button>
+            <div className={`w-full md:w-[80%] py-4 px-2 overflow-auto ${isFullscreen ? 'h-full flex flex-col items-center justify-center' : ''}`}>
+              {RenderQuranText(
+                surahData,
+                display.fontSize,
+                display.lineHeight,
+                SurahNameAr,
+                SurahNameEn,
+                navigation.currentNumber,
+                isFullscreen
+              )}
+            </div>
 
-            <ShareModal
-              size="2xl"
-              url={`https://muslim-one.vercel.app/ReadQuran/Surah/${navigation.currentNumber}`}
-            />
+            <div
+              dir={language === "ar" ? "rtl" : "ltr"}
+              className="mt-5 flex items-center gap-5"
+            >
+              <button
+                onClick={display.increaseFontSize}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                {Size[language]}
+              </button>
+
+              <button
+                onClick={display.decreaseFontSize}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+              >
+                <FontAwesomeIcon icon={faMinus} />
+                {Size[language]}
+              </button>
+
+              <ShareModal
+                size="2xl"
+                url={`https://muslim-one.vercel.app/ReadQuran/Surah/${navigation.currentNumber}`}
+              />
+
+              <button
+                onClick={toggleFullscreen}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+                title={isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+              >
+                <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
+                {isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+              </button>
+            </div>
           </div>
         </div>
       </div>

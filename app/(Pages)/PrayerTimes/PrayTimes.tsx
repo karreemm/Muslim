@@ -3,7 +3,7 @@
 import React from "react";
 import { useLanguage } from "../../Context/LanguageContext";
 import TranslationPair from "../../Types";
-import { usePrayerLocation, usePrayerTimes, useDateFormatting } from "../../Hooks/PrayerTimes";
+import { usePrayerLocation, usePrayerTimes, useDateFormatting, useNextPrayer } from "../../Hooks/PrayerTimes";
 import Loading from "@/app/Components/general/Loading";
 
 const prayerNames = {
@@ -16,11 +16,13 @@ const PrayerTimes: React.FC = () => {
 
   const { address, loading: locationLoading, error: locationError } = usePrayerLocation();
   const { formattedDates, date } = useDateFormatting();
-  const { prayerTimes, loading: prayerTimesLoading, error: prayerTimesError } = usePrayerTimes({ 
-    address, 
-    date, 
-    language 
+  const { prayerTimes, rawPrayerTimes, loading: prayerTimesLoading, error: prayerTimesError } = usePrayerTimes({
+    address,
+    date,
+    language
   });
+
+  const { nextPrayer, timeRemaining } = useNextPrayer(rawPrayerTimes);
 
   const loading = locationLoading || prayerTimesLoading;
   const error = locationError || prayerTimesError;
@@ -58,11 +60,10 @@ const PrayerTimes: React.FC = () => {
                   {PrayerTimesText[language]} {address?.[language].city}
                 </h2>
                 <div
-                  className={`mt-3 md:mt-0 md:flex md:flex-col ${
-                    language === "ar"
-                      ? `flex flex-row justify-between`
-                      : `flex flex-col items-center`
-                  }`}
+                  className={`mt-3 md:mt-0 md:flex md:flex-col ${language === "ar"
+                    ? `flex flex-row justify-between`
+                    : `flex flex-col items-center`
+                    }`}
                 >
                   <h2 className="text-base md:text-lg font-bold">
                     {language === "en" ? formattedDates.gregorian.en : formattedDates.gregorian.ar}
@@ -72,19 +73,30 @@ const PrayerTimes: React.FC = () => {
                   </h2>
                 </div>
               </div>
-              <div className="mt-10 w-full flex flex-col items-center md:flex md:flex-row md:items-baseline md:justify-center gap-5 md:gap-10">
+              <div className="mt-10 w-full flex flex-col items-center md:flex md:flex-row md:items-center md:justify-center gap-5 md:gap-10">
                 {prayerNames[language].map((prayer, index) => {
                   const prayerKeys: (keyof typeof prayerTimes)[] = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
-                  const time = prayerTimes[prayerKeys[index]];
+                  const prayerKey = prayerKeys[index];
+                  const time = prayerTimes[prayerKey];
+                  const isNext = prayerKey === nextPrayer;
+
                   return (
                     <div
                       key={prayer}
-                      className="w-[90%] md:w-[15%] rounded-lg bg-[#FFF5E4] dark:bg-slate-900 shadow-md py-6 px-3 flex flex-col justify-center items-center gap-2"
+                      className={`w-[90%] md:w-[15%] rounded-lg shadow-md py-6 px-3 flex flex-col justify-center items-center gap-2 transition-all duration-300 ${isNext
+                        ? "bg-teal-600 dark:bg-teal-600 text-white transform scale-110 shadow-xl border-2 border-yellow-400"
+                        : "bg-[#FFF5E4] dark:bg-slate-900"
+                        }`}
                     >
-                      <p className="text-xl font-bold">{prayer} :</p>
+                      <p className={`text-xl font-bold ${isNext ? "text-yellow-300" : ""}`}>{prayer} :</p>
                       <p dir="ltr" className="text-xl">
                         {time}
                       </p>
+                      {isNext && (
+                        <div className="mt-2 text-sm font-bold bg-black/20 px-3 py-1 rounded-full animate-pulse">
+                          - {timeRemaining}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

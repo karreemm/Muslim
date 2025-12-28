@@ -66,11 +66,10 @@ export default function Footer() {
             >
               <FontAwesomeIcon icon={faCode} className="" />
               <span
-                className={`group-hover:underline ${
-                  language === "ar"
+                className={`group-hover:underline ${language === "ar"
                     ? "underline-offset-14"
                     : "underline-offset-8"
-                }`}
+                  }`}
               >
                 {Madeby[language]}
               </span>

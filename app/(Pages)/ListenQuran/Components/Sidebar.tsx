@@ -53,9 +53,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah }) => {
   return (
     <>
       <nav
-        className={`z-30 fixed top-16 h-full shadow-lg border-black dark:border-white bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white transition-all duration-300 ${
-          isExpanded ? "w-[80%] md:w-80" : "w-16"
-        } ${language === "ar" ? `right-0 border-l` : `left-0 border-r`}`}
+        className={`z-30 fixed top-16 h-full shadow-lg border-black dark:border-white bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white transition-all duration-300 ${isExpanded ? "w-[80%] md:w-80" : "w-16"
+          } ${language === "ar" ? `right-0 border-l` : `left-0 border-r`}`}
       >
         <div className={`flex flex-col h-full ${isExpanded ? "mt-7" : ""}`}>
           <div className="h-20 flex items-center justify-between px-4">
@@ -93,11 +92,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah }) => {
                   <button
                     key={surah.number}
                     onClick={() => handleSurahClick(surah.number)}
-                    className={`w-full px-5 py-3 border border-[#134B70] dark:border-white shadow-lg rounded-lg flex items-center gap-5 group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500 ${
-                      selectedSurah === surah.number
+                    className={`w-full px-5 py-3 border border-[#134B70] dark:border-white shadow-lg rounded-lg flex items-center gap-5 group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500 ${selectedSurah === surah.number
                         ? "bg-teal-100 dark:bg-teal-700"
                         : ""
-                    }`}
+                      }`}
                   >
                     <div className="w-[65px] h-[45px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">
                       {language === "en"

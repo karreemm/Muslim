@@ -1,6 +1,7 @@
 export { usePrayerLocation } from "./usePrayerLocation";
 export { usePrayerTimes } from "./usePrayerTimes";
 export { useDateFormatting } from "./useDateFormatting";
+export { useNextPrayer } from "./useNextPrayer";
 
 export type {
   LocationData,

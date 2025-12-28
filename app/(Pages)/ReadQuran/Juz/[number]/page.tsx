@@ -6,8 +6,10 @@ import {
   faMinus,
   faArrowRight,
   faArrowLeft,
+  faExpand,
+  faCompress,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import TranslationPair from "../../../../Types";
 import { useLanguage } from "../../../../Context/LanguageContext";
 import Navbar from "@/app/Components/general/Navbar";
@@ -22,6 +24,7 @@ import Footer from "@/app/Components/general/Footer";
 import {
   useQuranNavigation,
   useQuranDisplay,
+  useFullscreen,
 } from "../../../../Hooks/ReadQuran";
 
 export default function JuzPage() {
@@ -29,6 +32,8 @@ export default function JuzPage() {
   const navigation = useQuranNavigation("juz");
   const display = useQuranDisplay();
   const [JuzData, setJuzData] = useState<any>(null);
+  const quranContentRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(quranContentRef);
 
   useEffect(() => {
     if (navigation.number) {
@@ -52,6 +57,16 @@ export default function JuzPage() {
   const Size: TranslationPair = {
     en: "Font Size",
     ar: "حجم الخط",
+  };
+
+  const FullscreenText: TranslationPair = {
+    en: "Fullscreen",
+    ar: "شاشة كاملة",
+  };
+
+  const ExitFullscreenText: TranslationPair = {
+    en: "Exit",
+    ar: "خروج",
   };
 
   return (
@@ -116,43 +131,57 @@ export default function JuzPage() {
             )}
           </div>
 
-          <div className="flex flex-col items-center gap-5">
-            <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-white">
-              {(navigation.navigationData.current as any)?.name?.[language] ||
-                ""}
-            </h1>
-            <p className="md:text-2xl text-xl flex items-center">
-              {Surahs[language]}:{" "}
-              {language === "ar"
-                ? toArabicNumber(
+          <div
+            ref={quranContentRef}
+            className={`w-full flex flex-col items-center transition-all duration-300 ${isFullscreen ? 'flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto' : ''}`}
+          >
+            <div className="flex flex-col items-center gap-5">
+              <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-teal-500">
+                {(navigation.navigationData.current as any)?.name?.[language] ||
+                  ""}
+              </h1>
+              <p className="md:text-2xl text-xl flex items-center dark:text-white">
+                {Surahs[language]}:{" "}
+                {language === "ar"
+                  ? toArabicNumber(
                     (navigation.navigationData.current as any)?.surahs
                   )
-                : (navigation.navigationData.current as any)?.surahs}
-            </p>
-          </div>
+                  : (navigation.navigationData.current as any)?.surahs}
+              </p>
+            </div>
 
-          <div dir="rtl" className="w-full md:w-[80%] py-4 px-2 overflow-auto">
-            {RenderJuzText(JuzData, display.fontSize, display.lineHeight)}
-          </div>
+            <div dir="rtl" className={`w-full md:w-[80%] py-4 px-2 overflow-auto ${isFullscreen ? 'h-full flex flex-col items-center justify-center' : ''}`}>
+              {RenderJuzText(JuzData, display.fontSize, display.lineHeight, isFullscreen)}
+            </div>
 
-          <div
-            dir={language === "ar" ? "rtl" : "ltr"}
-            className="mt-5 flex gap-5"
-          >
-            <button
-              onClick={display.increaseFontSize}
-              className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+            <div
+              dir={language === "ar" ? "rtl" : "ltr"}
+              className="mt-5 flex gap-5"
             >
-              <FontAwesomeIcon icon={faPlus} />
-              {Size[language]}
-            </button>
-            <button
-              onClick={display.decreaseFontSize}
-              className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-            >
-              <FontAwesomeIcon icon={faMinus} />
-              {Size[language]}
-            </button>
+              <button
+                onClick={display.increaseFontSize}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                {Size[language]}
+              </button>
+              <button
+                onClick={display.decreaseFontSize}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+              >
+                <FontAwesomeIcon icon={faMinus} />
+                {Size[language]}
+              </button>
+
+              <button
+                onClick={toggleFullscreen}
+                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
+                title={isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+              >
+                <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
+                {isFullscreen ? ExitFullscreenText[language] : FullscreenText[language]}
+              </button>
+            </div>
           </div>
         </div>
       </div>
