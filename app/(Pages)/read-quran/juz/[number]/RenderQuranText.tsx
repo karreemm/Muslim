@@ -179,6 +179,22 @@ export const RenderJuzText = (
             ayahInteraction.handleSaveAyah(ayah);
           }
         }}
+        surahNameAr={
+          ayahs.find(
+            (a: any) =>
+              a.numberInSurah === ayahInteraction.showPopover.ayahNumber
+          )?.surah.name
+        }
+        surahNameEn={
+          surahNames.find(
+            (s) =>
+              s.number ===
+              ayahs.find(
+                (a: any) =>
+                  a.numberInSurah === ayahInteraction.showPopover.ayahNumber
+              )?.surah.number
+          )?.en
+        }
       />
     </div>
   );

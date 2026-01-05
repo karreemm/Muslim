@@ -119,6 +119,8 @@ export const RenderQuranText = (
             ayahInteraction.handleSaveAyah(ayah);
           }
         }}
+        surahNameAr={SNameAr}
+        surahNameEn={SNameEn}
       />
     </div>
   );

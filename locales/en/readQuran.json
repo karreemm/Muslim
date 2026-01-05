@@ -2,7 +2,13 @@
   "popover": {
     "saveAyah": "Save Ayah",
     "listenAyah": "Listen to Ayah",
-    "selectReciter": "Select Reciter"
+    "selectReciter": "Select Reciter",
+    "viewTafseer": "View Tafseer"
+  },
+  "tafseer": {
+    "title": "Ayah Tafseer",
+    "selectBook": "Select Tafseer Book",
+    "notAvailable": "Tafseer is not available for this ayah"
   },
   "sidebar": {
     "title": "Search for a Surah / Juz"
