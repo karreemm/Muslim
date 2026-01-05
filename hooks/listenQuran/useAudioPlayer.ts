@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Surah } from "../../app/(pages)/listen-quran/service/GetSurah";
-import audioDurationsSummary from "../../Data/audioDurationsSummary.json";
+import audioDurationsSummary from "../../data/audioDurationsSummary.json";
 
 export function useAudioPlayer(
   surah: Surah | null,
