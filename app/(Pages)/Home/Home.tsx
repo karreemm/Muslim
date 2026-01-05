@@ -1,7 +1,7 @@
 "use client";
 
-import ImgLight from "../../../assets/general/bg2.webp";
-import ImgDark from "../../../assets/general/bg8.webp";
+import ImgLight from "../../../assets/general/bgLight.webp";
+import ImgDark from "../../../assets/general/bgDark.webp";
 import install from "../../../assets/general/Installation.webp";
 import { useLanguage } from "../../../context/LanguageContext";
 import Link from "next/link";

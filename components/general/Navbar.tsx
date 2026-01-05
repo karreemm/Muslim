@@ -83,13 +83,13 @@ export default function Navbar() {
 
   return (
     <div className="z-50 fixed flex w-full items-center justify-between px-4 py-3 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md">
-      <div className="flex gap-2 text-xl">
+      <Link href="/" className="flex gap-2 text-xl">
         <FontAwesomeIcon
           icon={faMosque}
           className={language === "ar" ? "mt-2" : "mt-1"}
         />
         <span className="text-2xl font-semibold">{t("navbar.title")}</span>
-      </div>
+      </Link>
 
       <div className="hidden md:flex items-center gap-14 text-xl font-semibold">
         <Link

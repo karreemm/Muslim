@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Mosque from "@/assets/general/mosque.webp";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
@@ -100,15 +101,27 @@ const PrayerTimes: React.FC = () => {
                   return (
                     <div
                       key={prayer}
-                      className={`w-[90%] md:w-[15%] rounded-lg shadow-md py-6 px-3 flex flex-col justify-center items-center gap-2 transition-all duration-300 ${
+                      className={`w-[90%] md:w-[15%] rounded-lg shadow-md py-6 px-3 flex flex-col justify-center items-center gap-2 transition-all duration-300 relative overflow-hidden ${
                         isNext
-                          ? "bg-teal-600 dark:bg-teal-600 text-white transform scale-110 shadow-xl border-2 border-yellow-400"
+                          ? "text-white transform scale-110 shadow-xl border-2 border-teal-400"
                           : "bg-[#FFF5E4] dark:bg-slate-900"
                       }`}
+                      style={
+                        isNext
+                          ? {
+                              backgroundImage: `url(${Mosque.src})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }
+                          : undefined
+                      }
                     >
+                      {isNext && (
+                        <div className="absolute inset-0 bg-black/40 -z-10"></div>
+                      )}
                       <p
                         className={`text-xl font-bold ${
-                          isNext ? "text-yellow-300" : ""
+                          isNext ? "text-teal-300" : ""
                         }`}
                       >
                         {prayer} :
