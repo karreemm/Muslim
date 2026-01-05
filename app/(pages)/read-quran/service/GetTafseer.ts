@@ -16,7 +16,7 @@ export interface AyahTafseer {
 
 export const getTafseerList = async (): Promise<TafseerBook[]> => {
   try {
-    const response = await fetch("http://api.quran-tafseer.com/tafseer");
+    const response = await fetch("/api/tafseer");
     if (!response.ok) {
       throw new Error("Failed to fetch tafseer list");
     }
@@ -35,7 +35,7 @@ export const getAyahTafseer = async (
 ): Promise<AyahTafseer | null> => {
   try {
     const response = await fetch(
-      `http://api.quran-tafseer.com/tafseer/${tafseerId}/${surahNumber}/${ayahNumber}`
+      `/api/tafseer?tafseerId=${tafseerId}&surahNumber=${surahNumber}&ayahNumber=${ayahNumber}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch ayah tafseer");
