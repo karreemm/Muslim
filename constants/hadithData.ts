@@ -1,10 +1,10 @@
-import aboDawod from "../Assets/Books/aboDawod.webp";
-import bukhari from "../Assets/Books/bukhari.webp";
-import ibnMajah from "../Assets/Books/ibnMajah.webp";
-import muslim from "../Assets/Books/muslim.webp";
-import nasai from "../Assets/Books/nasai.webp";
-import termezei from "../Assets/Books/termezei.webp";
-import meshkatAlMasabih from "../Assets/Books/mishkatAlMasabih.webp";
+import aboDawod from "../assets/books/aboDawod.webp";
+import bukhari from "../assets/books/bukhari.webp";
+import ibnMajah from "../assets/books/ibnMajah.webp";
+import muslim from "../assets/books/muslim.webp";
+import nasai from "../assets/books/nasai.webp";
+import termezei from "../assets/books/termezei.webp";
+import meshkatAlMasabih from "../assets/books/mishkatAlMasabih.webp";
 
 export const hadithBooks = [
   {
