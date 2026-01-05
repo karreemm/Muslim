@@ -2,7 +2,7 @@
 
 # 🌙 Muslim Website
 
-### *Get Closer To Allah*
+### _Get Closer To Allah_
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=vercel)](https://muslim-one.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -10,88 +10,126 @@
 
 **A continuous charity (Sadaqah Jariyah) progressive web application designed to help Muslims around the world get closer to Allah.**
 
-[🌐 Live Demo](https://muslim-one.vercel.app/) • [📝 Report Bug](https://github.com/karreemm/Muslim/issues) • [✨ Request Feature](https://github.com/karreemm/Muslim/issues)
-
 </div>
 
 ---
 
 ## 📖 About The Project
 
-Muslim Website is a comprehensive Islamic resource platform that brings together the Holy Quran, authentic Hadiths, daily Azkar, and essential Islamic tools in one beautifully designed, user-friendly interface. Built as a Sadaqah Jariyah (continuous charity).
-
-### 🎯 Key Highlights
-
-- 🌍 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile devices
-- 🌓 **Dark Mode Support** - Easy on the eyes for day and night reading
-- 🌐 **Bilingual Interface** - Full support for Arabic and English languages
-- 📱 **Progressive Web App (PWA)** - Install on your device
-- 🎨 **Beautiful UI/UX** - Clean, modern design focused on readability and usability
-- 💾 **Local Storage** - Save your progress and favorites across sessions
+Muslim Website is a comprehensive Islamic resource platform that brings together the Holy Quran, authentic Hadiths, daily Azkar, prayer times, and essential Islamic tools in one beautifully designed, user-friendly interface. Built as a Sadaqah Jariyah (continuous charity).
 
 ---
 
 ## ✨ Features
 
 ### 📖 Read the Holy Quran
-- Browse by **Surah** or **Juz** for flexible navigation
-- Beautiful Arabic typography optimized for Quranic text
-- **Save Ayahs** to continue reading later
+
+- Browse by **Surah** (1-114) or **Juz** (1-30) for flexible navigation
+- Beautiful **Uthmani script** optimized for Quranic text
+- **Tafseer (Interpretation)** - Access multiple tafseer books in Arabic
+- **Save Ayahs** - Mark verses to continue reading later
 - **Bookmark favorite Surahs** for quick access
-- Smooth scrolling and intuitive interface
+- **Copy & Share** - Easily share Quranic verses
+- Smooth scrolling with ayah highlighting
+- Full-screen reading mode
+- Ayah-by-ayah navigation
 
 ### 🎧 Listen to the Holy Quran
-- Choose from **14 world-renowned reciters** including:
-  - Abdullah Basfar, Abdurrahman Al-Sudais, Mishary Alafasy
-  - Maher Al Muaiqly, Muhammad Jibreel, and more
-- High-quality audio streaming
+
+- Choose from **14 world-renowned reciters**:
+  - Abdullah Basfar (عبد الله بصفر)
+  - Abdurrahman Al-Sudais (عبدالرحمن السديس)
+  - Abu Bakr Ash-Shaatree (أبو بكر الشاطري)
+  - Ahmed Al-Ajamy (أحمد العجمي)
+  - Mishary Alafasy (مشاري العفاسي)
+  - Hani Rifai (هاني الرفاعي)
+  - Mahmoud Al-Husary (محمود الحصري)
+  - Ali Al-Hudhaify (علي الحذيفي)
+  - Ibrahim Akhdar (إبراهيم الأخضر)
+  - Maher Al Muaiqly (ماهر المعيقلي)
+  - Muhammad Ayyoub (محمد أيوب)
+  - Muhammad Jibreel (محمد جبريل)
+  - Saood Ash-Shuraym (سعود الشريم)
+  - Mohamed El-Minshawi (محمد المنشاوي)
+- **High-quality audio** streaming
+- **Audio controls** - Play, pause, seek, and skip
+- **Download audio** - Save for offline listening
+- **Favorite Surahs** - Quick access to your preferred recitations
 - Browse by reciter or Surah
-- Seamless playback controls
 
 ### 📜 Read Authentic Hadiths
-- Access **8 authentic Hadith collections**:
-  - Sahih Muslim, Sahih Bukhari, Sunan Abu Dawud
-  - Sunan al-Tirmidhi, Sunan an-Nasa'i, Sunan Ibn Majah
-  - Muwatta Malik, Musnad Ahmad
-- Over **7,000+ hadiths** available
-- Save and bookmark favorite hadiths
-- Easy search and navigation
+
+- Access **8 major authentic Hadith collections**:
+  - Sahih Bukhari
+  - Sahih Muslim
+  - Sunan Abu Dawud
+  - Sunan al-Tirmidhi
+  - Sunan an-Nasa'i
+  - Sunan Ibn Majah
+  - Muwatta Malik
+  - Musnad Ahmad
+- **20,000+ authentic hadiths** with proper chain of narration
+- **Browse by book and chapter**
+- **Search hadiths** in English or Arabic
+- **Bookmark favorite hadiths** for quick reference
+- Hadith grading and reference information
 
 ### 🕋 Daily Azkar & Duas
-- **8 comprehensive categories** of Azkar:
-  - 🌅 Morning Azkar (25 duas)
-  - 🌙 Evening Azkar (25 duas)
-  - 🤲 Post-Salah Azkar (9 duas)
-  - 📿 Tasbeeh (16 phrases)
-  - 😴 Sleep Azkar (10 duas)
-  - ⏰ Wake Up Azkar (3 duas)
-  - 📖 Quranic Duas (26 duas)
-  - 🕌 Prophets' Duas (13 duas)
-- **127+ total duas and azkar**
-- Arabic text with transliteration and translation
-- Save your favorite azkar
 
-### ⭐ Favorites & Saved Items
-- Save Quranic verses for later reading
-- Bookmark your favorite Surahs
-- Mark favorite Hadiths
-- Save preferred Azkar
-- All data stored locally on your device
+- **8 comprehensive categories** with 127+ authentic azkar:
+  - **Morning Azkar** (أذكار الصباح) - 25 supplications
+  - **Evening Azkar** (أذكار المساء) - 25 supplications
+  - **Sleep Azkar** (أذكار النوم) - 10 bedtime duas
+  - **Wake Up Azkar** (أذكار الاستيقاظ) - 3 morning duas
+  - **After Prayer Azkar** (أذكار الصلاة) - 9 post-salah duas
+  - **Quranic Duas** (أدعية قرآنية) - 26 Quranic supplications
+  - **Prophets' Duas** (أدعية الأنبياء) - 13 prophetic supplications
+- Full Arabic text with proper diacritics
+- Repetition counter for each zikr
+- **Favorite Azkar** - Save your most-used supplications
+- Share individual azkar
 
 ### 🕌 Prayer Times
-- **Location-based accurate prayer times**
-- Shows all 5 daily prayers (Fajr, Dhuhr, Asr, Maghrib, Isha)
-- Automatic location detection
 
-### 💖 Sadaqa Jariya
-- Dedicate Quran reading for **deceased loved ones**
-- Beautiful, respectful interface
+- **Accurate prayer times** based on your location
+- Shows all **5 daily prayers**: Fajr, Dhuhr, Asr, Maghrib, Isha
+- **Automatic location detection**
+- **Egyptian General Authority** calculation method
+- **Countdown to next prayer** with live updates
+- Hijri and Gregorian calendar dates
 
-### 📿 Tasbeeh Counter
-- **Digital dhikr counter** for daily remembrance
-- Tap or click to count
-- Set goals and track progress
-- Persistent state across sessions
+### ⭐ Favorites & Saved Items
+
+- **Saved Ayahs** - Bookmark Quranic verses with:
+  - Surah name and ayah number
+  - Full Arabic text
+  - Quick navigation back to the ayah
+  - Delete and manage saved items
+- **Favorite Surahs** - Quick access to your most-listened Surahs with specific reciters
+- **Favorite Hadiths** - Save important hadiths for quick reference
+- **Favorite Azkar** - Mark your most-used supplications
+- Easy management and deletion of saved items
+
+### 💖 Sadaqa Jariya (Ongoing Charity)
+
+- Create a **personalized page** with:
+  - Deceased person's name
+  - Selected Quranic chapters (Al-Fatihah, Yaseen, etc.)
+  - Beautiful funeral duas
+  - Shareable link to allow others to participate
+- **Share memorial pages** with family and friends
+
+### 📿 Tasbeeh Counter (Digital Dhikr)
+
+- **Digital counter** for daily remembrance and dhikr
+- **Reset counter** when needed
+- **Persistent counting** - Saves automatically
+
+### 🎨 Additional Features
+
+- **Theme Toggle** - Switch between light and dark modes
+- **Language Switcher** - Seamless Arabic/English translation
+- **Share Functionality** - Share content via social media or copy link
 
 ---
 
@@ -99,14 +137,12 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 
 <div align="center">
 
-| Resource | Count |
-|----------|-------|
-| 📖 Quran Surahs | 114 Surahs |
-| 📜 Total Hadiths | 7,000+ Hadiths |
-| 🕋 Azkar & Duas | 127+ Azkar |
-| 🎧 Reciters | 14 Reciters |
-| 📚 Hadith Books | 8 Collections |
-| 🗂️ Azkar Categories | 8 Categories |
+| Resource         | Count                        |
+| ---------------- | ---------------------------- |
+| 🎧 Reciters      | 14 World-Class Reciters      |
+| 📜 Total Hadiths | 20,000+ Authentic Hadiths    |
+| 📚 Hadith Books  | 8 Major Collections          |
+| 🕋 Azkar & Duas  | 127+ Authentic Supplications |
 
 </div>
 
@@ -114,57 +150,62 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 
 ## 🛠️ Tech Stack
 
-- **[Next.js 14.2](https://nextjs.org/)** 
-- **[Tailwind CSS 4.1](https://tailwindcss.com/)** 
-- **[Headless UI](https://headlessui.com/)**  
-- **[Axios](https://axios-http.com/)**
+### Frontend
+
+- **[Next.js 14.2](https://nextjs.org/)**
+- **[TypeScript 5.0](https://www.typescriptlang.org/)**
+- **[Tailwind CSS 4.1](https://tailwindcss.com/)**
+- **[Headless UI](https://headlessui.com/)**
+
+### APIs & Services
+
+- **[AlQuran Cloud API](https://alquran.cloud/api)** - Quran text and audio
+- **[Quran Tafseer API](http://api.quran-tafseer.com)** - Tafseer interpretations
+- **[Aladhan API](https://aladhan.com/prayer-times-api)** - Prayer times calculation
+- **[Hadith API](https://hadithapi.com/)** - Authentic hadith collections (API key required)
+- **[Azkar API](https://github.com/nawafalqari/azkar-api)** - Daily azkar and duas
+- **[Islamic Network CDN](https://cdn.islamic.network/)** - High-quality Quran audio
+- **[IP-API](http://ip-api.com/)** - IP-based geolocation
 
 ---
 
-## APIs & Data Sources
-- **[Quran.com API](https://quran.com/)** - Quran text and audio
-- **[Aladhan API](https://aladhan.com/prayer-times-api)** - Prayer times
-- **[Sunnah.com API](https://sunnah.com/)** - Hadith collections
+## 📚 API Documentation
+
+For detailed information about all APIs used in this project, including endpoints, authentication requirements, parameters, and examples, please refer to:
+
+**[Complete API Documentation](API_DOCUMENTATION.md)**
 
 ---
 
-## 🚀 Getting Started
+## 🤝 Contributing
 
-### Prerequisites
+Any contributions you make are **greatly appreciated** and will be considered as Sadaqah Jariyah for you too.
 
-- Node.js 18.0 or higher
-- npm or yarn package manager
+### How to Contribute
 
-### Installation
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/karreemm/Muslim.git
-   cd Muslim
-   ```
+### Areas for Contribution
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+- UI/UX improvements
+- Bug fixes and testing
+- Mobile optimization
+- New features
 
-3. **Run the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-4. **Open in browser**
-   
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-### Build for Production
-
-```bash
-npm run build
-npm start
 ---
-</div>
+
+## 📄 License
+
+This project is open source and available for anyone to use, modify, and distribute. It is created as Sadaqah Jariyah (ongoing charity).
+
+---
+
+## 👨‍💻 Author
+
+**Kareem Abdel Nabi**
+
+- GitHub: [@karreemm](https://github.com/karreemm)
