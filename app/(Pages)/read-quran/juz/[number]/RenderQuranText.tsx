@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { toArabicNumber } from "../../../../../utils/helpers";
-import { useLanguage } from "../../../../../context/LanguageContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "../../../../../constants/quranData";
 import { ClipLoader } from "react-spinners";
 import {
   useAyahInteraction,
   useScrollToAyah,
 } from "../../../../../hooks/readQuran";
-import { useTranslation } from "@/hooks/general/useTranslation";
+import { useTheme } from "@/context/ThemeContext";
+import { AyahPopover } from "../../components/AyahPopover";
 
 export const RenderJuzText = (
   juzData: any,
@@ -19,13 +17,18 @@ export const RenderJuzText = (
   lineHeight: number,
   isFullscreen: boolean = false
 ) => {
-  const { language } = useLanguage();
-  const { t } = useTranslation();
+  const { theme } = useTheme();
   const ayahInteraction = useAyahInteraction();
   const scrollToAyah = useScrollToAyah(juzData?.length);
   const [loading, setLoading] = useState<boolean>(true);
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
-  const handleAyahClick = (ayah: any) => {
+  const handleAyahClick = (ayah: any, event: React.MouseEvent) => {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    setPopoverPosition({
+      x: rect.left,
+      y: rect.top - 10,
+    });
     const surah = surahNames.find((s) => s.number === ayah.surah.number);
     if (surah) {
       ayahInteraction.handleAyahClick(
@@ -74,7 +77,7 @@ export const RenderJuzText = (
         isFullscreen ? "w-full h-full" : ""
       }`}
     >
-      <div className="basmala text-xl md:text-3xl text-center my-4">
+      <div className="basmala dark:text-white text-xl md:text-3xl text-center my-4">
         {surahNumber === 9 ? (
           <p>أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</p>
         ) : (
@@ -93,17 +96,21 @@ export const RenderJuzText = (
           <div
             key={ayah.number}
             ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
-            className={`flex flex-col relative items-start ${
+            className={`fontAmiri flex items-center relative ${
               ayah.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
                 ? "w-full"
                 : ""
             }  ${
-              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah
-                ? "bg-yellow-200 dark:bg-teal-800 rounded-lg"
+              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
+              theme === false
+                ? `bg-yellow-200 rounded-lg`
+                : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
+                  theme === true
+                ? `bg-yellow-600 rounded-lg`
                 : ""
             }`}
             style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
-            onClick={() => handleAyahClick(ayah)}
+            onClick={(e) => handleAyahClick(ayah, e)}
             id={`ayah-${ayah.numberInSurah}`}
           >
             {ayah.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? (
@@ -113,7 +120,11 @@ export const RenderJuzText = (
                     بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱللرَّحِيمِ
                   </p>
                 </div>
-                <p className="ayah cursor-pointer w-full">
+                <p
+                  dir="rtl"
+                  className="ayah cursor-pointer w-full"
+                  id={`ayah-${ayah.numberInSurah}`}
+                >
                   {ayah.text
                     .replace("بِسْمِ ٱللَّهِ ٱللرَّحْمَٰنِ ٱللرَّحِيمِ", "")
                     .trim()}
@@ -128,7 +139,11 @@ export const RenderJuzText = (
                 </p>
               </>
             ) : (
-              <p className="ayah w-full cursor-pointer">
+              <p
+                dir="rtl"
+                className="ayah w-full cursor-pointer"
+                id={`ayah-${ayah.numberInSurah}`}
+              >
                 {ayah.text}
                 <span className="separator mx-1">
                   <span className="icon">
@@ -140,45 +155,31 @@ export const RenderJuzText = (
                 </span>
               </p>
             )}
-
-            {/* Popover */}
-            {ayahInteraction.showPopover.isOpen &&
-              ayahInteraction.showPopover.ayahNumber === ayah.numberInSurah && (
-                <div
-                  dir={language === "ar" ? "rtl" : "ltr"}
-                  ref={ayahInteraction.popoverRef}
-                  className="dynamic-font z-40 absolute bg-white w-64 p-2 flex flex-col rounded-sm shadow-lg top-0"
-                  style={{ [language === "ar" ? "left" : "right"]: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* Close icon */}
-                  <button
-                    className="absolute top-2"
-                    style={{ [language === "ar" ? "left" : "right"]: "1rem" }}
-                    onClick={ayahInteraction.handleClosePopover}
-                  >
-                    <FontAwesomeIcon icon={faX} />
-                  </button>
-                  <p className="ml-5">{t("readQuran.saveThisAyah")}</p>
-                  <div className="flex gap-3 items-center w-full justify-center">
-                    <button
-                      className="bg-green-500 hover:opacity-80 text-white w-[40%] rounded-lg text-sm py-1"
-                      onClick={() => ayahInteraction.handleSaveAyah(ayah)}
-                    >
-                      {t("common.yes")}
-                    </button>
-                    <button
-                      className="bg-red-500 hover:opacity-80 text-white w-[40%] rounded-lg text-sm py-1"
-                      onClick={ayahInteraction.handleClosePopover}
-                    >
-                      {t("common.no")}
-                    </button>
-                  </div>
-                </div>
-              )}
           </div>
         ))}
       </div>
+
+      <AyahPopover
+        isOpen={ayahInteraction.showPopover.isOpen}
+        ayahNumber={ayahInteraction.showPopover.ayahNumber}
+        surahNumber={
+          ayahs.find(
+            (a: any) =>
+              a.numberInSurah === ayahInteraction.showPopover.ayahNumber
+          )?.surah.number || 1
+        }
+        position={popoverPosition}
+        onClose={ayahInteraction.handleClosePopover}
+        onSave={() => {
+          const ayah = ayahs.find(
+            (a: any) =>
+              a.numberInSurah === ayahInteraction.showPopover.ayahNumber
+          );
+          if (ayah) {
+            ayahInteraction.handleSaveAyah(ayah);
+          }
+        }}
+      />
     </div>
   );
 };
