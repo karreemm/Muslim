@@ -427,7 +427,7 @@ export default function Navbar() {
             }`}
           >
             <FontAwesomeIcon icon={faSeedling} className="" />
-            {t("navbar.sadaqat")}
+            {t("navbar.yourSadaqat")}
           </Link>
         </div>
       )}
