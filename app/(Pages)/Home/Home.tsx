@@ -1,64 +1,16 @@
 "use client";
 
-import TranslationPair from "../../Types";
-import ImgLight from "../../Assets/Other/bg2.webp";
-import ImgDark from "../../Assets/Other/bg8.webp";
-import install from "../../Assets/Other/Installation.webp";
-import { useLanguage } from "../../Context/LanguageContext";
+import ImgLight from "../../../assets/general/bg2.webp";
+import ImgDark from "../../../assets/general/bg8.webp";
+import install from "../../../assets/general/Installation.webp";
+import { useLanguage } from "../../../context/LanguageContext";
 import Link from "next/link";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 export default function Header() {
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
-  const Welcome: TranslationPair = {
-    en: "Your Way to the Right Way",
-    ar: "طريقك إلى الهدى",
-  };
-
-  const Desc: TranslationPair = {
-    en: "We are here to help you: ",
-    ar: "نحن هنا لمساعدتك على: ",
-  };
-
-  const FirstItem: TranslationPair = {
-    en: "Read the Holy Quran",
-    ar: "قراءة القرآن الكريم",
-  };
-
-  const SecondItem: TranslationPair = {
-    en: " Listen to the Holy Quran with your favorite reciters",
-    ar: "الاستماع إلى القرآن الكريم باصوات شيوخك المفضلين",
-  };
-
-  const ThirdItem: TranslationPair = {
-    en: "Read the Hadiths of the Prophet from Sunnah Books",
-    ar: "قراءة الأحاديث النبوية الشريفة من كتب السنة",
-  };
-
-  const FourthItem: TranslationPair = {
-    en: "Read and Learn Azkar and Duaa",
-    ar: "قراءة الأذكار والأدعية والتعلم منها",
-  };
-
-  const Title: TranslationPair = {
-    en: "How to Install it on your Phone",
-    ar: "كيف تثبته على هاتفك",
-  };
-
-  const Step1: TranslationPair = {
-    en: "Tap the menu icon (3 dots in upper right-hand corner)",
-    ar: "اضغط على أيقونة القائمة (3 نقاط في الزاوية العلوية اليمنى)",
-  };
-
-  const Step2: TranslationPair = {
-    en: "Tap Add to Home screen",
-    ar: "اضغط على إضافة إلى الشاشة الرئيسية",
-  };
-
-  const Step3: TranslationPair = {
-    en: "Choose a name for the website shortcut, then Chrome will add it to your home screen.",
-    ar: "اختر اسمًا لاختصار الموقع، ثم سيضيفه كروم إلى الشاشة الرئيسية.",
-  };
 
   return (
     <>
@@ -67,9 +19,9 @@ export default function Header() {
           <div className="w-full md:min-h-screen flex flex-col items-center gap-14 md:flex md:flex-row md:justify-between md:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white">
             <div className="md:w-1/2 flex flex-col gap-5">
               <h1 className="text-2xl md:text-4xl font-bold">
-                {Welcome[language]}
+                {t("home.welcome")}
               </h1>
-              <h1 className="md:text-2xl text-lg">{Desc[language]}</h1>
+              <h1 className="md:text-2xl text-lg">{t("home.description")}</h1>
               <ul
                 className={`flex flex-col list-disc list-outside text-lg md:text-2xl gap-5 mt-5 md:mt-10 relative ${
                   language === "en" ? "pl-5" : "pr-5"
@@ -77,42 +29,42 @@ export default function Header() {
               >
                 <li>
                   <Link
-                    href="/ReadQuran"
+                    href="/read-quran"
                     className={`before:absolute ${
                       language === "en" ? "before:left-0" : "before:right-0"
                     } before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}
                   >
-                    {FirstItem[language]}
+                    {t("home.item1")}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/ListenQuran"
+                    href="/listen-quran"
                     className={`before:absolute ${
                       language === "en" ? "before:left-0" : "before:right-0"
                     } before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}
                   >
-                    {SecondItem[language]}
+                    {t("home.item2")}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/ReadHadith"
+                    href="/read-hadith"
                     className={`before:absolute ${
                       language === "en" ? "before:left-0" : "before:right-0"
                     } before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}
                   >
-                    {ThirdItem[language]}
+                    {t("home.item3")}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/Azkar"
+                    href="/azkar"
                     className={`before:absolute ${
                       language === "en" ? "before:left-0" : "before:right-0"
                     } before:text-lg before:font-bold before:top-0 before:mt-1 hover:opacity-70`}
                   >
-                    {FourthItem[language]}
+                    {t("home.item4")}
                   </Link>
                 </li>
               </ul>
@@ -135,7 +87,7 @@ export default function Header() {
           <div className="md:hidden w-full flex flex-col gap-10 md:flex-row md:justify-between md:items-center mt-10">
             <div className="w-full md:w-[70%] flex flex-col">
               <h1 className="text-2xl md:text-4xl font-bold">
-                {Title[language]}
+                {t("home.install")}
               </h1>
 
               <ul
@@ -148,7 +100,7 @@ export default function Header() {
                     language === "en" ? "before:left-0" : "before:right-0"
                   } before:text-lg before:font-bold before:top-0 before:mt-1`}
                 >
-                  {Step1[language]}
+                  {t("home.step1")}
                 </li>
 
                 <li
@@ -156,7 +108,7 @@ export default function Header() {
                     language === "en" ? "before:left-0" : "before:right-0"
                   } before:text-lg before:font-bold before:top-0 before:mt-8`}
                 >
-                  {Step2[language]}
+                  {t("home.step2")}
                 </li>
 
                 <li
@@ -164,7 +116,7 @@ export default function Header() {
                     language === "en" ? "before:left-0" : "before:right-0"
                   } before:text-lg before:font-bold before:top-0 before:mt-16`}
                 >
-                  {Step3[language]}
+                  {t("home.step3")}
                 </li>
               </ul>
             </div>

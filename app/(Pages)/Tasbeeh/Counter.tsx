@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import TranslationPair from "../../Types";
-import { useLanguage } from "../../Context/LanguageContext";
-import { useTasbeeh } from "../../Context/TasbeehContext";
-import { toArabicNumber } from "../../Utils/Helpers";
-import SuccessAlert from "../../Components/alerts/SuccessAlert";
-import { toEnglishNumber } from "../../Utils/Helpers";
+import { useLanguage } from "../../../context/LanguageContext";
+import { useTasbeeh } from "../../../context/TasbeehContext";
+import { toArabicNumber } from "../../../utils/helpers";
+import SuccessAlert from "../../../components/alerts/SuccessAlert";
+import { toEnglishNumber } from "../../../utils/helpers";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 const Counter = () => {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const {
     count,
     goal,
@@ -54,7 +55,7 @@ const Counter = () => {
   };
 
   useEffect(() => {
-    console.log("Count:", count, "Goal:", goal); // Debug log
+    console.log("Count:", count, "Goal:", goal); 
     if (count === goal && goal !== 0) {
       console.log("goal reached");
       setShowAlert(true);
@@ -63,38 +64,18 @@ const Counter = () => {
         resetAll();
       }, 3000);
     }
-  }, [count, goal]); // Removed resetAll from dependencies
+  }, [count, goal]); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setGoalAndResetCount(parseInt(toEnglishNumber(e.target.value)) || 0);
   };
 
-  const Zekr: TranslationPair = {
-    en: "Start Tasbeeh now using the counter below",
-    ar: "ابدأ التسبيح الآن باستخدام العداد ",
-  };
-
-  const Placeholder: TranslationPair = {
-    en: "Enter the number of Tasabeeh (30)",
-    ar: "أدخل عدد التسبيح الذي تريد الوصول إليه (30)",
-  };
-
-  const Reset: TranslationPair = {
-    en: "Reset Counter",
-    ar: "إعادة تعيين العداد",
-  };
-
-  const Success: TranslationPair = {
-    en: `You have reached your goal of ${goal} times`,
-    ar: `لقد قمت بذكر الله ${toArabicNumber(goal)} مرات`,
-  };
-
   return (
     <div className="w-full min-h-screen px-2 flex flex-col gap-10 items-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-      <h1 className="text-2xl font-bold text-center">{Zekr[language]}</h1>
+      <h1 className="text-2xl font-bold text-center">{t("tasbeeh.title")}</h1>
       <SuccessAlert
-        message={Success}
+        message={t("tasbeeh.sucess")}
         show={showAlert}
         onClose={() => setShowAlert(false)}
       />
@@ -104,7 +85,7 @@ const Counter = () => {
           name="goal"
           id="goal"
           value={inputValue}
-          placeholder={Placeholder[language]}
+          placeholder={t("tasbeeh.placeholder")}
           onChange={(e) => handleChange(e)}
           type="number"
         />
@@ -113,7 +94,7 @@ const Counter = () => {
           onClick={handleReset}
           className="px-4 py-2 font-semibold bg-teal-600 text-white rounded-lg"
         >
-          {Reset[language]}
+          {t("tasbeeh.reset")}
         </button>
       </div>
 

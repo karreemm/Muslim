@@ -1,0 +1,16 @@
+{
+  "azkar": {
+    "noFavourites": "No Favourite Azkar Yet",
+    "zekrNo": "Zekr No",
+    "clearAllAzkar": "Clear All Azkar"
+  },
+  "hadith": {
+    "noFavourites": "No Favourite Hadith Yet",
+    "hadithNo": "Hadith No",
+    "clearAllHadith": "Clear All Hadith"
+  },
+  "surah": {
+    "noFavourites": "No Favourite Surahs Yet",
+    "clearAllSurahs": "Clear All Surahs"
+  }
+}

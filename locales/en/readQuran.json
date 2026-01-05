@@ -1,0 +1,11 @@
+{
+  "popover": {
+    "saveAyah": "Save Ayah",
+    "listenAyah": "Listen to Ayah",
+    "selectReciter": "Select Reciter"
+  },
+  "sidebar": {
+    "title": "Search for a Surah / Juz"
+  },
+  "saveThisAyah": "Save this Ayah?"
+}

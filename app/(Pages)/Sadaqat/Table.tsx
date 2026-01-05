@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSadaqaGarya } from "../../Context/SadaqatContext";
+import { useSadaqaGarya } from "../../../context/SadaqatContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
-import ShareModal from "../../Components/modals/ShareModal";
+import ShareModal from "../../../components/modals/ShareModal";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
-import { useLanguage } from "../../Context/LanguageContext";
-import TranslationPair from "../../Types";
-import { safeEncode } from "../../Utils/Encoding";
+import { useLanguage } from "../../../context/LanguageContext";
+import { safeEncode } from "../../../utils/encoding";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 export default function DeceasedPersonsTable() {
   const {
@@ -25,32 +25,8 @@ export default function DeceasedPersonsTable() {
     {}
   );
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const router = useRouter();
-
-  const Name: TranslationPair = {
-    en: "Name",
-    ar: "الاسم",
-  };
-
-  const Actions: TranslationPair = {
-    en: "Actions",
-    ar: "الإجراءات",
-  };
-
-  const ClearAll: TranslationPair = {
-    en: "Clear All Sadaqat",
-    ar: "مسح جميع الصدقات",
-  };
-
-  const NoSadaqat: TranslationPair = {
-    en: "You have no Sadaqat yet",
-    ar: "ليس لديك صدقات بعد",
-  };
-
-  const Title: TranslationPair = {
-    en: "Your Sadaqat",
-    ar: "صدقاتك",
-  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -79,20 +55,20 @@ export default function DeceasedPersonsTable() {
     if (person) {
       const encodedData = safeEncode(person);
       const shortenedUrl = await shortenURL(
-        `https://muslim-one.vercel.app/SadaqaGarya/${slug}?data=${encodedData}`
+        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`
       );
       return shortenedUrl || "";
     }
-    return `https://muslim-one.vercel.app/SadaqaGarya/${slug}`;
+    return `https://muslim-one.vercel.app/sadaqa-garya/${slug}`;
   };
 
   const handleNavigation = (slug: string) => {
     const person = getDeceasedPerson(slug);
     if (person) {
       const encodedData = safeEncode(person);
-      router.push(`/SadaqaGarya/${slug}?data=${encodedData}`);
+      router.push(`/sadaqa-garya/${slug}?data=${encodedData}`);
     } else {
-      router.push(`/SadaqaGarya/${slug}`);
+      router.push(`/sadaqa-garya/${slug}`);
     }
   };
 
@@ -122,11 +98,11 @@ export default function DeceasedPersonsTable() {
   return (
     <div className="mt-24 w-[90%] min-h-screen mx-auto px-4 md:px-8">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
-        {Title[language]}
+        {t("sadaqa.table.title")}
       </h1>
       {isEmpty && (
         <h1 className="text-2xl md:text-3xl font-bold text-center mt-20">
-          {NoSadaqat[language]}
+          {t("sadaqa.table.noSadaqat")}
         </h1>
       )}
       {!isEmpty && (
@@ -135,8 +111,8 @@ export default function DeceasedPersonsTable() {
             <table className="w-full table-auto text-sm">
               <thead className="bg-teal-600 text-white font-medium border-b sticky top-0 z-10">
                 <tr>
-                  <th className="py-3 px-6">{Name[language]}</th>
-                  <th className="py-3 px-6">{Actions[language]}</th>
+                  <th className="py-3 px-6">{t("common.name")}</th>
+                  <th className="py-3 px-6">{t("common.actions")}</th>
                 </tr>
               </thead>
               <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
@@ -172,7 +148,7 @@ export default function DeceasedPersonsTable() {
             onClick={clearAllDeceasedPersons}
           >
             <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />
-            {ClearAll[language]}
+            {t("sadaqa.table.clearAll")}
           </button>
         </>
       )}

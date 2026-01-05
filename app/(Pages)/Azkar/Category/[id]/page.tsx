@@ -2,21 +2,22 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/app/Context/LanguageContext";
-import Nvbar from "@/app/Components/general/Navbar";
-import Footer from "@/app/Components/general/Footer";
-import { AzkarCategories } from "@/app/Contants/AzkarData";
-import TranslationPair from "@/app/Types";
-import Pagination from "../../../../Components/general/Pagination";
-import { toArabicNumber } from "@/app/Utils/Helpers";
+import { useLanguage } from "@/context/LanguageContext";
+import Nvbar from "@/components/general/Navbar";
+import Footer from "@/components/general/Footer";
+import { AzkarCategories } from "@/constants/azkarData";
+import Pagination from "../../../../../components/general/Pagination";
+import { toArabicNumber } from "@/utils/helpers";
 import DisplayZekr from "./DisplayZekr";
 import DisplayAzkar from "./DisplayAzkar";
 import { ClipLoader } from "react-spinners";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 export default function CategoryPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   const [categoryId, setCategoryId] = useState<string>("");
   const [categoryNameEn, setCategoryNameEn] = useState<string>("");
@@ -68,18 +69,13 @@ export default function CategoryPage() {
     console.log(`Current Page: ${page}`);
   };
 
-  const Category: TranslationPair = {
-    ar: "فئة",
-    en: "Category",
-  };
-
   return (
     <>
       <Nvbar />
       <div className="w-full min-h-screen flex flex-col gap-5 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
         <div className="w-full flex justify-center">
           <h1 className="mt-24 text-4xl font-bold flex gap-1 text-center">
-            {Category[language]}{" "}
+            {t("common.category")}{" "}
             {language === "en" ? categoryNameEn : categoryNameAr}
           </h1>
         </div>

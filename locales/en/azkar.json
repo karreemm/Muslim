@@ -1,0 +1,13 @@
+{
+  "title": "Select a category to explore and reflect on its Azkar",
+  "morning": "Morning Azkar",
+  "evening": "Evening Azkar",
+  "afterPrayer": "After Prayer Azkar",
+  "sleep": "Sleep Azkar",
+  "wakeup": "Wake Up Azkar",
+  "other": "Other Azkar",
+  "counter": "Count",
+  "reset": "Reset",
+  "addToFavorites": "Add to Favorites",
+  "removeFromFavorites": "Remove from Favorites"
+}

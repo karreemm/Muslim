@@ -1,12 +1,12 @@
-import { useLanguage } from "@/app/Context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { ClipLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
-import TranslationPair from "@/app/Types";
-import ShareModal from "@/app/Components/modals/ShareModal";
-import { useSingleZekr } from "@/app/Hooks/Azkar/useSingleZekr";
-import { useFavoriteZekrActions } from "@/app/Hooks/Azkar/useFavoriteZekrActions";
+import TranslationPair from "@/types";
+import ShareModal from "@/components/modals/ShareModal";
+import { useSingleZekr } from "@/hooks/azkar/useSingleZekr";
+import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 
 export default function SingleZekr({
   zekrNumber,
@@ -17,11 +17,7 @@ export default function SingleZekr({
 }) {
   const { language } = useLanguage();
 
-  // Use custom hooks to manage logic
-  const { zekr, zekrData, loading } = useSingleZekr(
-    categoryId,
-    zekrNumber
-  );
+  const { zekr, zekrData, loading } = useSingleZekr(categoryId, zekrNumber);
   const { useFavoriteStatus } = useFavoriteZekrActions(categoryId);
   const { isFav, toggle: handleLoveClick } = useFavoriteStatus(zekr);
 
@@ -59,14 +55,12 @@ export default function SingleZekr({
 
               <div
                 className={`absolute ${
-                  language === "ar"
-                    ? "left-14 top-4"
-                    : "right-14 top-4"
+                  language === "ar" ? "left-14 top-4" : "right-14 top-4"
                 } `}
               >
                 <ShareModal
                   size="2xl"
-                  url={`https://muslim-one.vercel.app/Azkar/Category/${zekrData?.id}?zekr=${zekr.number}`}
+                  url={`https://muslim-one.vercel.app/azkar/category/${zekrData?.id}?zekr=${zekr.number}`}
                 />
               </div>
 

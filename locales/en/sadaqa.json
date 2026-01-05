@@ -1,0 +1,21 @@
+{
+  "title": "Sadaqa Garya For",
+  "readQuran": "Read Quran",
+  "makeDua": "Make Dua",
+  "duaTitle": "Duas for the Deceased",
+  "recommendedSurahs": "Recommended Surahs for the Deceased",
+  "shareIt": "Share it and make it a continuous charity in your good deeds and his good deeds inshallah",
+  "form": {
+    "title": "Create a New Sadaqa Garya",
+    "nameEnLabel": "Deceased's Name (in English)",
+    "nameArLabel": "Deceased's Name (in Arabic)",
+    "messageEnLabel": "Message (in English)",
+    "messageArLabel": "Message (in Arabic)",
+    "generate": "Create"
+  },
+  "table": {
+    "title": "Your Sadaqat",
+    "noSadaqat": "You don't have any Sadaqat yet.",
+    "clearAll": "Clear All Sadaqat"
+  }
+}

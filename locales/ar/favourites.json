@@ -1,0 +1,16 @@
+{
+  "azkar": {
+    "zekrNo": "ذكر رقم",
+    "clearAllAzkar": "مسح كل الأذكار",
+    "noFavourites": "لا توجد أذكار مفضلة بعد"
+  },
+  "hadith": {
+    "hadithNo": "رقم الحديث",
+    "clearAllHadith": "مسح كل الأحاديث",
+    "noFavourites": "لا توجد أحاديث مفضلة بعد"
+  },
+  "surah": {
+    "noFavourites": "لا توجد سور مفضلة بعد",
+    "clearAllSurahs": "مسح كل السور"
+  }
+}

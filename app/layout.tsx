@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ThemeContextProvider from "./Context/ThemeContext";
-import LanguageContextProvider from "./Context/LanguageContext";
-import { SavedAyahsProvider } from "./Context/SavedAyahsContext";
-import { FavoriteSurahsProvider } from "./Context/FavoriteSurahsContext";
-import { FavoriteHadithsProvider } from "./Context/FavoriteHadithsContext";
-import { FavoriteAzkarProvider } from "./Context/FavoriteAzkarContext";
-import { SadaqaGaryaProvider } from "./Context/SadaqatContext";
-import TasbeehContextProvider from "./Context/TasbeehContext";
+import ThemeContextProvider from "../context/ThemeContext";
+import LanguageContextProvider from "../context/LanguageContext";
+import { SavedAyahsProvider } from "../context/SavedAyahsContext";
+import { FavoriteSurahsProvider } from "../context/FavoriteSurahsContext";
+import { FavoriteHadithsProvider } from "../context/FavoriteHadithsContext";
+import { FavoriteAzkarProvider } from "../context/FavoriteAzkarContext";
+import { SadaqaGaryaProvider } from "../context/SadaqatContext";
+import TasbeehContextProvider from "../context/TasbeehContext";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" className="dark:bg-slate-900 bg-[#FFF5E4]">
+    <html className="">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -33,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="dynamic-font dark:bg-slate-900 bg-[#FFF5E4]">
+      <body className="dynamic-font">
         <LanguageContextProvider>
           <ThemeContextProvider>
             <SavedAyahsProvider>

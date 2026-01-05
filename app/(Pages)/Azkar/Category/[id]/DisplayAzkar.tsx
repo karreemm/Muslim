@@ -1,14 +1,14 @@
-import { useLanguage } from "@/app/Context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { ClipLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
-import ShareModal from "@/app/Components/modals/ShareModal";
-import useMediaQuery from "@/app/Hooks/general/useMediaQuery";
-import { useAzkarCategory } from "@/app/Hooks/Azkar/useAzkarCategory";
-import { useAzkarData } from "@/app/Hooks/Azkar/useAzkarData";
-import { useFavoriteZekrActions } from "@/app/Hooks/Azkar/useFavoriteZekrActions";
-import { AzkarCategories } from "@/app/Contants/AzkarData";
+import ShareModal from "@/components/modals/ShareModal";
+import useMediaQuery from "@/hooks/general/useMediaQuery";
+import { useAzkarCategory } from "../../../../../hooks/azkar/useAzkarCategory";
+import { useAzkarData } from "@/hooks/azkar/useAzkarData";
+import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
+import { AzkarCategories } from "@/constants/azkarData";
 
 export default function AzkarPage({
   startingNumber,
@@ -20,11 +20,8 @@ export default function AzkarPage({
   const { language } = useLanguage();
   const isMdOrLarger = useMediaQuery("(min-width: 768px)");
 
-    useAzkarCategory(categoryId);
-  const { azkarItems, loading } = useAzkarData(
-    categoryId,
-    startingNumber
-  );
+  useAzkarCategory(categoryId);
+  const { azkarItems, loading } = useAzkarData(categoryId, startingNumber);
   const { handleLoveClick, isFavorite } = useFavoriteZekrActions(categoryId);
 
   return (
@@ -62,15 +59,13 @@ export default function AzkarPage({
 
                 <div
                   className={`absolute ${
-                    language === "ar"
-                      ? "left-14"
-                      : "right-14"
+                    language === "ar" ? "left-14" : "right-14"
                   } ${isMdOrLarger ? "top-4" : "top-4"}`}
                 >
                   <div className={`${language === "ar" ? "mr-2" : "ml-2"}`}>
                     <ShareModal
                       size="2xl"
-                      url={`https://muslim-one.vercel.app/Azkar/Category/${zekr?.id}?zekr=${azkar.number}`}
+                      url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${azkar.number}`}
                     />
                   </div>
                 </div>

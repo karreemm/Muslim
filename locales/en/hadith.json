@@ -1,0 +1,25 @@
+{
+  "title": "Read and learn the noble Prophetic Hadiths from a collection of Sunnah books",
+  "error": "An error occurred while fetching the books. Please try again.",
+  "book": {
+    "title": "Book Chapters",
+    "searchPlaceholder": "Search in chapters...",
+    "chapterLabel": "Chapter",
+    "error": "An error occurred while fetching the chapters. Please try again.",
+    "noChaptersFound": "No chapters found."
+  },
+  "chapter": {
+    "title": "Chapter Hadiths",
+    "hadithNo": "Hadith Number",
+    "searchPlaceholder": "Search in this chapter's hadiths",
+    "byNumber": "By Number",
+    "byContent": "By Content",
+    "clearSearch": "Clear Search",
+    "error": "An error occurred while fetching the hadiths of this chapter. Please try again.",
+    "noHadithsFound": "No hadiths found for this chapter.",
+    "totalResults": "Total Results",
+    "sahih": "Sahih",
+    "da`eef": "Da`eef",
+    "hasan": "Hasan"
+  }
+}

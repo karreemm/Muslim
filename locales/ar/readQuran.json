@@ -1,0 +1,11 @@
+{
+  "popover": {
+    "saveAyah": "حفظ الآية",
+    "listenAyah": "استمع للآية",
+    "selectReciter": "اختر القارئ"
+  },
+  "sidebar": {
+    "title": "ابحث عن سورة / جزء"
+  },
+  "saveThisAyah": "حفظ هذه الآية؟"
+}

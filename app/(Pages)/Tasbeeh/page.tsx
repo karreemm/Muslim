@@ -1,8 +1,8 @@
 "use client";
 
 import Counter from "./Counter";
-import Navbar from "../../Components/general/Navbar";
-import Footer from "../../Components/general/Footer";
+import Navbar from "../../../components/general/Navbar";
+import Footer from "../../../components/general/Footer";
 
 export default function App() {
   return (

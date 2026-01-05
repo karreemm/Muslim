@@ -1,31 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import TranslationPair from "../../../Types";
-import { useLanguage } from "../../../Context/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface ButtonGroupProps {
   onSelectionChange: (selected: string) => void;
 }
 
 export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
-  const { language } = useLanguage();
+  const { t } = useTranslation();
   const [selectedButton, setSelectedButton] = useState<string>("Surahs");
-
-  const FavSurahs: TranslationPair = {
-    ar: "السور",
-    en: "Surahs",
-  };
-
-  const FavHadiths: TranslationPair = {
-    ar: "الأحاديث",
-    en: "Hadiths",
-  };
-
-  const FavAzkar: TranslationPair = {
-    en: "Azkar",
-    ar: "الأذكار",
-  };
 
   const handleClick = (e: any) => {
     const value = e.target.value;
@@ -44,7 +28,7 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
             : "bg-teal-600 text-white"
         } hover:opacity-80`}
       >
-        {FavSurahs[language]}
+        {t("common.surahs")}
       </button>
 
       <button
@@ -56,7 +40,7 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
             : "bg-teal-600 text-white"
         } hover:opacity-80`}
       >
-        {FavHadiths[language]}
+        {t("common.hadiths")}
       </button>
 
       <button
@@ -68,7 +52,7 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
             : "bg-teal-600 text-white"
         } hover:opacity-80`}
       >
-        {FavAzkar[language]}
+        {t("common.azkar")}
       </button>
     </div>
   );

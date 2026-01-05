@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import ButtonGroup from "./components/ButtonGroup";
-import FavouriteSurahsTable from "./sections/FavouriteSurahs/Table";
-import FavouriteHadithsTable from "./sections/FavouriteHadiths/Table";
-import FavouriteAzkarTable from "./sections/FavouriteAzkar/Table";
-import Navbar from "../../Components/general/Navbar";
-import Footer from "../../Components/general/Footer";
+import FavouriteSurahsTable from "./sections/FavouriteSurahsTable";
+import FavouriteHadithsTable from "./sections/FavouriteHadithsTable";
+import FavouriteAzkarTable from "./sections/FavouriteAzkarTable";
+import Navbar from "../../../components/general/Navbar";
+import Footer from "../../../components/general/Footer";
 
 export default function ParentComponent() {
   const [selectedButton, setSelectedButton] = useState<string>("Surahs");
