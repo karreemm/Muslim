@@ -173,7 +173,7 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 
 For detailed information about all APIs used in this project, including endpoints, authentication requirements, parameters, and examples, please refer to:
 
-**[Complete API Documentation](API_DOCUMENTATION.md)**
+**[Complete API Documentation](API_Doc.md)**
 
 ---
 
@@ -203,9 +203,3 @@ Any contributions you make are **greatly appreciated** and will be considered as
 This project is open source and available for anyone to use, modify, and distribute. It is created as Sadaqah Jariyah (ongoing charity).
 
 ---
-
-## 👨‍💻 Author
-
-**Kareem Abdel Nabi**
-
-- GitHub: [@karreemm](https://github.com/karreemm)
