@@ -98,14 +98,14 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
     e.stopPropagation();
     setSelectedBookId(bookId);
   };
-  
+
   const filteredBooks = tafseerBooks.filter(
     (book) => book.language === language
   );
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-[60]" onClose={() => {}} static>
+      <Dialog as="div" className="relative z-[60]" onClose={() => { }} static>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -130,9 +130,8 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
               leaveTo="opacity-0 scale-90 translate-y-4"
             >
               <Dialog.Panel
-                className={`w-full max-w-3xl transform rounded-2xl shadow-2xl transition-all ${
-                  theme ? "bg-slate-800" : "bg-white"
-                }`}
+                className={`w-full max-w-3xl transform rounded-2xl shadow-2xl transition-all ${theme ? "bg-slate-800" : "bg-white"
+                  }`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div
@@ -142,9 +141,8 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                   <button
                     onClick={onClose}
                     type="button"
-                    className={`absolute top-6 text-white hover:text-white hover:bg-white/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${
-                      language === "ar" ? "left-4" : "right-4"
-                    }`}
+                    className={`absolute top-6 text-white hover:text-white hover:bg-white/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${language === "ar" ? "left-4" : "right-4"
+                      }`}
                     aria-label="Close"
                   >
                     <FontAwesomeIcon icon={faTimes} className="text-lg" />
@@ -170,9 +168,8 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
 
                 <div
                   dir={language === "ar" ? "rtl" : "ltr"}
-                  className={`px-6 py-4 border-b ${
-                    theme ? "border-slate-700" : "border-gray-200"
-                  }`}
+                  className={`px-6 py-4 border-b ${theme ? "border-slate-700" : "border-gray-200"
+                    }`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex flex-wrap gap-2">
@@ -182,13 +179,12 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                         onClick={(e) => handleBookChange(e, book.id)}
                         onMouseDown={(e) => e.preventDefault()}
                         type="button"
-                        className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${
-                          selectedBookId === book.id
-                            ? "bg-teal-600 text-white shadow-md scale-105"
-                            : theme
+                        className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${selectedBookId === book.id
+                          ? "bg-teal-600 text-white shadow-md scale-105"
+                          : theme
                             ? "bg-slate-700 text-gray-300 hover:bg-slate-600"
                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
+                          }`}
                       >
                         {book.name}
                       </button>
@@ -198,7 +194,7 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
 
                 <div
                   dir={language === "ar" ? "rtl" : "ltr"}
-                  className="px-6 py-6 max-h-[50vh] overflow-y-auto"
+                  className="px-6 py-6 max-h-[50vh]"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center h-40">
@@ -208,11 +204,10 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                       />
                     </div>
                   ) : error ? (
-                    <div className="flex items-center justify-center h-40">
+                    <div className="flex items-center justify-center overflow-y-auto h-40">
                       <p
-                        className={`dynamic-font text-center ${
-                          theme ? "text-gray-400" : "text-gray-600"
-                        }`}
+                        className={`dynamic-font text-center ${theme ? "text-gray-400" : "text-gray-600"
+                          }`}
                       >
                         {error}
                       </p>
@@ -220,21 +215,18 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                   ) : currentTafseer ? (
                     <div>
                       <div
-                        className={`rounded-xl p-5 ${
-                          theme ? "bg-slate-700" : "bg-gray-100"
-                        }`}
+                        className={`rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto ${theme ? "bg-[#0f172b]" : "bg-[#fff5e4]"
+                          }`}
                       >
                         <p
-                          className={`dynamic-font text-sm font-medium mb-3 ${
-                            theme ? "text-gray-300" : "text-gray-600"
-                          }`}
+                          className={`dynamic-font text-sm font-medium mb-3 ${theme ? "text-gray-300" : "text-gray-600"
+                            }`}
                         >
                           {currentTafseer.tafseer_name}
                         </p>
                         <p
-                          className={`fontAmiri text-lg leading-relaxed text-justify ${
-                            theme ? "text-white" : "text-gray-800"
-                          }`}
+                          className={`fontAmiri text-lg leading-relaxed text-justify ${theme ? "text-white" : "text-gray-800"
+                            }`}
                           dir="rtl"
                         >
                           {currentTafseer.text}
@@ -244,9 +236,8 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                   ) : (
                     <div className="flex items-center justify-center h-40">
                       <p
-                        className={`dynamic-font text-center ${
-                          theme ? "text-gray-400" : "text-gray-600"
-                        }`}
+                        className={`dynamic-font text-center ${theme ? "text-gray-400" : "text-gray-600"
+                          }`}
                       >
                         {t("readQuran.tafseer.notAvailable")}
                       </p>
@@ -256,9 +247,8 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
 
                 <div
                   dir={language === "ar" ? "rtl" : "ltr"}
-                  className={`px-6 py-4 border-t ${
-                    theme ? "border-slate-700" : "border-gray-200"
-                  }`}
+                  className={`px-6 py-4 border-t ${theme ? "border-slate-700" : "border-gray-200"
+                    }`}
                 >
                   <button
                     onClick={onClose}
