@@ -72,14 +72,14 @@ export default function CategoryPage() {
   return (
     <>
       <Nvbar />
-      <div className="w-full min-h-screen flex flex-col gap-5 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col gap-5 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
         <div className="w-full flex justify-center">
           <h1 className="mt-24 text-4xl font-bold flex gap-1 text-center">
             {t("common.category")}{" "}
             {language === "en" ? categoryNameEn : categoryNameAr}
           </h1>
         </div>
-        <div className="mt-10 w-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+        <div className="flex-1 mt-10 w-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <ClipLoader color={"#36D7B7"} loading={loading} size={50} />

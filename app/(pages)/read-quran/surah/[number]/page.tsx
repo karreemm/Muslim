@@ -58,7 +58,7 @@ export default function SurahPage() {
     <>
       <Navbar />
       <div className="w-full min-h-screen flex flex-col items-center p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-        <div className="relative mt-20 w-[90%] flex flex-col items-center">
+        <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && (
               <>
@@ -118,11 +118,10 @@ export default function SurahPage() {
 
           <div
             ref={quranContentRef}
-            className={`w-full flex flex-col items-center transition-all duration-300 ${
-              isFullscreen
+            className={`w-full flex flex-col items-center transition-all duration-300 ${isFullscreen
                 ? "flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto"
                 : ""
-            }`}
+              }`}
           >
             <div className="flex flex-col items-center gap-5">
               <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-teal-500">
@@ -140,11 +139,10 @@ export default function SurahPage() {
             </div>
 
             <div
-              className={`w-full md:w-[80%] py-4 px-2 overflow-auto ${
-                isFullscreen
+              className={`w-full md:w-[80%] py-4 px-2 overflow-auto ${isFullscreen
                   ? "h-full flex flex-col items-center justify-center"
                   : ""
-              }`}
+                }`}
             >
               {RenderQuranText(
                 surahData,

@@ -33,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="dynamic-font">
+      <body className="dynamic-font bg-[#FFF5E4] dark:bg-slate-900">
         <LanguageContextProvider>
           <ThemeContextProvider>
             <SavedAyahsProvider>

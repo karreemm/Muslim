@@ -86,11 +86,10 @@ export default function SadaqaGaryaPage() {
           <button
             type="submit"
             disabled={!validateForm()}
-            className={`w-full bg-teal-600 text-white p-3 rounded-md transition ${
-              isSubmitting
+            className={`w-full bg-teal-600 text-white p-3 rounded-md transition ${isSubmitting
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-teal-700"
-            }`}
+              }`}
           >
             {isSubmitting ? "Processing..." : t("sadaqa.form.generate")}
           </button>

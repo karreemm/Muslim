@@ -22,11 +22,10 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
       <button
         value="Surahs"
         onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Surahs"
-            ? "text-black dark:text-white border-2 border-black dark:border-white"
-            : "bg-teal-600 text-white"
-        } hover:opacity-80`}
+        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${selectedButton === "Surahs"
+            ? "bg-teal-600 text-white"
+            : "text-black dark:text-white border-2 border-black dark:border-white"
+          } hover:opacity-80`}
       >
         {t("common.surahs")}
       </button>
@@ -34,11 +33,10 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
       <button
         value="Hadiths"
         onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Hadiths"
-            ? "text-black dark:text-white border-2 border-black dark:border-white"
-            : "bg-teal-600 text-white"
-        } hover:opacity-80`}
+        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${selectedButton === "Hadiths"
+            ? "bg-teal-600 text-white"
+            : "text-black dark:text-white border-2 border-black dark:border-white"
+          } hover:opacity-80`}
       >
         {t("common.hadiths")}
       </button>
@@ -46,11 +44,10 @@ export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
       <button
         value="Azkar"
         onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Azkar"
-            ? "text-black dark:text-white border-2 border-black dark:border-white"
-            : "bg-teal-600 text-white"
-        } hover:opacity-80`}
+        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${selectedButton === "Azkar"
+            ? "bg-teal-600 text-white"
+            : "text-black dark:text-white border-2 border-black dark:border-white"
+          } hover:opacity-80`}
       >
         {t("common.azkar")}
       </button>

@@ -18,8 +18,8 @@ export default function ParentComponent() {
   return (
     <>
       <Navbar />
-      <div className="w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white min-h-screen">
-        <div className="w-[90%] mt-32">
+      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+        <div className="w-full mt-32">
           <ButtonGroup onSelectionChange={handleSelectionChange} />
           {selectedButton === "Surahs" && <FavouriteSurahsTable />}
           {selectedButton === "Hadiths" && <FavouriteHadithsTable />}

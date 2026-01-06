@@ -96,7 +96,7 @@ export default function DeceasedPersonsTable() {
   }
 
   return (
-    <div className="mt-24 w-[90%] min-h-screen mx-auto px-4 md:px-8">
+    <div className="mt-24 w-[90%] max-w-[1500px] mx-auto min-h-screen px-4 md:px-8">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
         {t("sadaqa.table.title")}
       </h1>

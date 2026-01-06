@@ -37,7 +37,7 @@ export default function ReadHadithPage() {
             {t("hadith.error")}
           </div>
         ) : (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+          <div className="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
             {displayBooks.map((book) => (
               <Link
                 key={book.id}
@@ -88,9 +88,8 @@ export default function ReadHadithPage() {
                   </div>
 
                   <div
-                    className={`absolute top-6 opacity-0 group-hover:opacity-100 transition-opacity ${
-                      language === "ar" ? "left-4" : "right-4"
-                    }`}
+                    className={`absolute top-6 opacity-0 group-hover:opacity-100 transition-opacity ${language === "ar" ? "left-4" : "right-4"
+                      }`}
                   >
                     <svg
                       className="w-6 h-6 text-teal-600 dark:text-teal-400"

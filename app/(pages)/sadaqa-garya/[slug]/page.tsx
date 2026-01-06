@@ -56,11 +56,10 @@ export default function DeceasedPage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 p-8">
-        <div className="w-[90%] mx-auto mt-20">
+        <div className="w-[90%] max-w-[1500px] mx-auto mt-20">
           <h1
-            className={`${
-              language === "ar" ? "leading-10" : ""
-            } flex flex-col justify-center text-3xl mb-4 text-center text-[#134B70] dark:text-white`}
+            className={`${language === "ar" ? "leading-10" : ""
+              } flex flex-col justify-center text-3xl mb-4 text-center text-[#134B70] dark:text-white`}
           >
             {t("sadaqa.title")}
             <p className={`text-5xl font-semibold mb-5 mt-8`}>
@@ -105,8 +104,8 @@ export default function DeceasedPage() {
                           ? "Collapse"
                           : "اغلق"
                         : language === "en"
-                        ? "Read Surah"
-                        : "اقرأ السورة"}
+                          ? "Read Surah"
+                          : "اقرأ السورة"}
                     </button>
                   </div>
 

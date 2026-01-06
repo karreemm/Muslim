@@ -10,7 +10,7 @@ export default function ListenQuranPage() {
 
   return (
     <div className="bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white min-h-screen w-full flex justify-center">
-      <div className="w-[95%] mt-32 flex flex-col items-center gap-10">
+      <div className="w-[95%] max-w-[1500px] mx-auto mt-32 flex flex-col items-center gap-10">
         <h1 className="text-2xl md:text-4xl text-center">{t("listenQuran.title")}</h1>
         <div className="w-full flex flex-wrap gap-5 justify-center bg-[#FFF5E4] text-black dark:bg-slate-900 dark:text-white p-5">
           {reciters.map((reciter) => (
