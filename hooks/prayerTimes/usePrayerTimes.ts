@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { getPrayerTimes } from "../../app/(pages)/prayer-times/service/GetPrayerTimes";
-import { LocationData } from "./usePrayerLocation";
 import moment from "moment-hijri";
+
+export interface LocationData {
+  city: { en: string; ar: string };
+  country: { en: string; ar: string };
+  latitude?: number;
+  longitude?: number;
+}
 
 export interface PrayerTimings {
   Fajr: string;
@@ -46,8 +52,8 @@ export const usePrayerTimes = ({
 
       try {
         const timings = await getPrayerTimes(
-          address[language].city,
-          address[language].country,
+          address.city[language],
+          address.country[language],
           date,
           address.latitude,
           address.longitude
