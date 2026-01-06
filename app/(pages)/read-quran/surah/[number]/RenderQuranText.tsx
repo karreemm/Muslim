@@ -48,9 +48,8 @@ export const RenderQuranText = (
   return (
     <div
       dir="rtl"
-      className={`fontAmiri flex flex-col items-center transition-all duration-300 ${
-        isFullscreen ? "w-full h-full" : ""
-      }`}
+      className={`fontAmiri flex flex-col items-center transition-all duration-300 ${isFullscreen ? "w-full h-full" : ""
+        }`}
     >
       <div
         dir="rtl"
@@ -64,44 +63,37 @@ export const RenderQuranText = (
       </div>
       <div
         id="scrollable-div"
+        dir="rtl"
         ref={scrollToAyah.containerRef}
-        className={`bg-white text-black dark:bg-slate-800 dark:text-white shadow-md rounded-lg px-4 py-2 mt-5 md:mt-10 ayah-container max-w-[1200px] overflow-y-auto flex flex-wrap transition-all duration-300 ${
-          isFullscreen ? "h-[75vh]" : "max-h-[300px]"
-        }`}
+        className={`bg-white text-black dark:bg-slate-800 dark:text-white shadow-md rounded-lg px-6 py-4 mt-5 md:mt-10 ayah-container max-w-[1200px] overflow-y-auto transition-all duration-300 text-justify leading-loose ${isFullscreen ? "h-[75vh]" : "max-h-[400px]"
+          }`}
+        style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
       >
         {ayahs.map((ayah) => (
-          <div
+          <span
             key={ayah.number}
             ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
-            className={`fontAmiri flex items-center relative ${
-              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
-              theme === false
-                ? `bg-yellow-200 rounded-lg`
+            className={`fontAmiri inline cursor-pointer ${scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
+                theme === false
+                ? `bg-yellow-200 rounded px-1`
                 : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
                   theme === true
-                ? `bg-yellow-600 rounded-lg`
-                : ""
-            }`}
-            style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
+                  ? `bg-yellow-600 rounded px-1`
+                  : ""
+              }`}
             onClick={(e) => handleAyahClick(ayah, e)}
             id={`ayah-${ayah.numberInSurah}`}
           >
-            <p
-              dir="rtl"
-              className="ayah cursor-pointer"
-              id={`ayah-${ayah.numberInSurah}`}
-            >
-              {ayah.text}
-              <span className="separator mx-1">
-                <span className="icon">
-                  ۝
-                  <span className="number">
-                    {toArabicNumber(ayah.numberInSurah)}
-                  </span>
+            {ayah.text}
+            <span className="separator mx-1">
+              <span className="icon">
+                ۝
+                <span className="number">
+                  {toArabicNumber(ayah.numberInSurah)}
                 </span>
               </span>
-            </p>
-          </div>
+            </span>
+          </span>
         ))}
       </div>
 
