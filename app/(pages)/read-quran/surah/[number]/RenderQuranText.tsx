@@ -7,7 +7,7 @@ import {
 } from "../../../../../hooks/readQuran";
 import { useTheme } from "@/context/ThemeContext";
 import { AyahPopover } from "../../components/AyahPopover";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export const RenderQuranText = (
   surahData: any,
@@ -23,6 +23,41 @@ export const RenderQuranText = (
   const scrollToAyah = useScrollToAyah(surahData?.ayahs?.length);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
+  const processedAyahs = useMemo(() => {
+    if (!surahData || !surahData.ayahs || !surahData.ayahs.length) return [];
+
+    const ayahs = surahData.ayahs.map((ayah: any) => ({ ...ayah }));
+
+    if (surahData.number !== 9 && surahData.number !== 1 && ayahs[0]) {
+      const originalText = ayahs[0].text;
+
+      const basmala = String.fromCharCode(
+        1576, 1616, 1587, 1618, 1605, 1616,
+        32,
+        1649, 1604, 1604, 1617, 1614, 1607, 1616,
+        32,
+        1649, 1604, 1585, 1617, 1614, 1581, 1618, 1605, 1614, 1648, 1606, 1616,
+        32,
+        1649, 1604, 1585, 1617, 1614, 1581, 1616, 1610, 1605, 1616
+      );
+
+      if (originalText.startsWith(basmala)) {
+        ayahs[0].text = originalText.substring(basmala.length).trim();
+      }
+      else {
+        const raheem = "ٱلرَّحِيمِ";
+        const raheemIndex = originalText.indexOf(raheem);
+
+        if (raheemIndex !== -1 && raheemIndex < 50) {
+          const afterBasmala = raheemIndex + raheem.length;
+          ayahs[0].text = originalText.substring(afterBasmala).trim();
+        }
+      }
+    }
+
+    return ayahs;
+  }, [surahData?.ayahs, surahData?.number]);
+
   const handleAyahClick = (ayah: any, event: React.MouseEvent) => {
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     setPopoverPosition({
@@ -32,18 +67,7 @@ export const RenderQuranText = (
     ayahInteraction.handleAyahClick(ayah, SNameAr, SNameEn, SNumber);
   };
 
-  if (!surahData || !surahData.ayahs.length) return null;
-
-  const ayahs = [...surahData.ayahs];
-
-  if (
-    surahData.number !== 9 &&
-    ayahs[0].text.startsWith("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
-  ) {
-    ayahs[0].text = ayahs[0].text
-      .replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ/, "")
-      .trim();
-  }
+  if (!surahData || !surahData.ayahs || !surahData.ayahs.length) return null;
 
   return (
     <div
@@ -69,17 +93,17 @@ export const RenderQuranText = (
           }`}
         style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
       >
-        {ayahs.map((ayah) => (
+        {processedAyahs.map((ayah: any) => (
           <span
             key={ayah.number}
             ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
             className={`fontAmiri inline cursor-pointer ${scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
-                theme === false
-                ? `bg-yellow-200 rounded px-1`
-                : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
-                  theme === true
-                  ? `bg-yellow-600 rounded px-1`
-                  : ""
+              theme === false
+              ? `bg-yellow-200 rounded px-1`
+              : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
+                theme === true
+                ? `bg-yellow-600 rounded px-1`
+                : ""
               }`}
             onClick={(e) => handleAyahClick(ayah, e)}
             id={`ayah-${ayah.numberInSurah}`}
@@ -104,8 +128,8 @@ export const RenderQuranText = (
         position={popoverPosition}
         onClose={ayahInteraction.handleClosePopover}
         onSave={() => {
-          const ayah = ayahs.find(
-            (a) => a.numberInSurah === ayahInteraction.showPopover.ayahNumber
+          const ayah = processedAyahs.find(
+            (a: any) => a.numberInSurah === ayahInteraction.showPopover.ayahNumber
           );
           if (ayah) {
             ayahInteraction.handleSaveAyah(ayah);
