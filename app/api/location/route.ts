@@ -16,7 +16,7 @@ export async function GET(req: Request) {
       longitude = parseFloat(lon);
 
       const geoResponse = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1&accept-language=en`,
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=8&addressdetails=1&accept-language=en`,
         {
           headers: {
             "User-Agent": "Muslim-App/1.0",
@@ -30,10 +30,11 @@ export async function GET(req: Request) {
 
       const geoData = await geoResponse.json();
       city =
+        geoData.address.state ||
         geoData.address.city ||
         geoData.address.town ||
-        geoData.address.state ||
-        geoData.address.county;
+        geoData.address.county ||
+        geoData.address.region;
       country = geoData.address.country;
     } else {
       const response = await fetch(
