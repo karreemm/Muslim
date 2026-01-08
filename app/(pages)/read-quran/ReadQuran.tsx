@@ -34,13 +34,13 @@ export default function ReadQuran() {
           setSearchTerm={setSearchTerm}
         />
       </div>
-      <div className="w-[90%] flex flex-wrap gap-5 justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white p-5">
+      <div className="w-[90%] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white p-5">
         {activeTab === "Surahs"
           ? filteredSurahs.map((surah) => (
             <Link
               key={surah.number}
               href={`/read-quran/surah/${surah.number}`}
-              className="bg-white dark:bg-slate-800 max-h-[90px] w-full md:w-[30%] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500"
+              className="bg-white dark:bg-slate-800 max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500"
             >
               <div className="flex gap-2 items-center">
                 <div className="w-[65px] h-[45px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">
@@ -62,7 +62,7 @@ export default function ReadQuran() {
             <Link
               key={juz.number}
               href={`/read-quran/juz/${juz.number}`}
-              className="bg-white dark:bg-slate-800 max-h-[90px] w-full md:w-[30%] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500"
+              className="bg-white dark:bg-slate-800 max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500"
             >
               <div className="flex gap-2 items-center">
                 <div className="w-[65px] h-[45px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">

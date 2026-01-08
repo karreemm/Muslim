@@ -95,7 +95,7 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-14 text-xl font-semibold">
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/")
+              className={`hidden xl:inline-block no-underline transition-all duration-300 ${isActive("/")
                 ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
                 : "hover:underline hover:underline-offset-8"
                 }`}
@@ -241,9 +241,11 @@ export default function Navbar() {
               )}
             </div>
 
+            <div className="hidden lg:block h-6 border-1 border-gray-600 dark:border-gray-500"></div>
+
             <Link
               href="/saved-ayahs"
-              className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/saved-ayahs") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/saved-ayahs") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faBookmark} size="lg" />
@@ -251,7 +253,7 @@ export default function Navbar() {
 
             <Link
               href="/favourites"
-              className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/favourites") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/favourites") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -259,7 +261,7 @@ export default function Navbar() {
 
             <Link
               href="/sadaqat"
-              className={`hidden md:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faSeedling} size="lg" />
@@ -267,7 +269,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 md:hidden ${isMobileMenuOpen ? "rotate-90" : "rotate-0"
+              className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 lg:hidden ${isMobileMenuOpen ? "rotate-90" : "rotate-0"
                 }`}
               aria-label="Toggle Mobile Menu"
             >
@@ -278,7 +280,7 @@ export default function Navbar() {
 
         {isMobileMenuOpen && (
           <div
-            className={`absolute top-16 px-5 py-2 border-b border-black dark:border-white left-0 w-full bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md md:hidden ${language === "ar" ? `text-right` : `text-left`
+            className={`absolute top-16 px-5 py-2 border-b border-black dark:border-white left-0 w-full bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md lg:hidden ${language === "ar" ? `text-right` : `text-left`
               }`}
           >
             <Link

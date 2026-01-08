@@ -15,15 +15,15 @@ export default function Header() {
   return (
     <>
       <div className="w-full flex justify-center">
-        <div className="mt-32 md:mt-0 min-h-screen w-[90%] max-w-[1500px] flex flex-col gap-10">
-          <div className="w-full md:min-h-screen mx-auto flex flex-col items-center gap-14 md:flex md:flex-row md:justify-between md:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white">
-            <div className="md:w-1/2 flex flex-col gap-5">
-              <h1 className="text-2xl md:text-4xl font-bold">
+        <div className="mt-32 lg:mt-0 min-h-screen w-[90%] max-w-[1500px] flex flex-col gap-10">
+          <div className="w-full lg:min-h-screen mx-auto flex flex-col items-center gap-14 lg:flex lg:flex-row lg:justify-between lg:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white">
+            <div className="lg:w-1/2 flex flex-col gap-5">
+              <h1 className="text-2xl lg:text-4xl font-bold">
                 {t("home.welcome")}
               </h1>
-              <h1 className="md:text-2xl text-lg">{t("home.description")}</h1>
+              <h1 className="lg:text-2xl text-lg">{t("home.description")}</h1>
               <ul
-                className={`flex flex-col list-disc list-outside text-lg md:text-2xl gap-5 mt-5 md:mt-10 relative ${language === "en" ? "pl-5" : "pr-5"
+                className={`flex flex-col list-disc list-outside text-lg lg:text-2xl gap-5 mt-5 lg:mt-10 relative ${language === "en" ? "pl-5" : "pr-5"
                   }`}
               >
                 <li>
@@ -65,7 +65,7 @@ export default function Header() {
               </ul>
             </div>
 
-            <div className="md:w-1/2 flex justify-center">
+            <div className="lg:w-1/2 flex justify-center">
               <img
                 src={ImgDark.src}
                 alt=""
@@ -79,14 +79,14 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="md:hidden w-full flex flex-col gap-10 md:flex-row md:justify-between md:items-center mt-10">
-            <div className="w-full md:w-[70%] flex flex-col">
-              <h1 className="text-2xl md:text-4xl font-bold">
+          <div className="lg:hidden w-full flex flex-col gap-10 lg:flex-row lg:justify-between lg:items-center mt-10">
+            <div className="w-full lg:w-[70%] flex flex-col">
+              <h1 className="text-2xl lg:text-4xl font-bold">
                 {t("home.install")}
               </h1>
 
               <ul
-                className={`flex flex-col list-disc list-outside text-lg md:text-2xl gap-5 mt-5 md:mt-10 relative ${language === "en" ? "pl-5" : "pr-5"
+                className={`flex flex-col list-disc list-outside text-lg lg:text-2xl gap-5 mt-5 lg:mt-10 relative ${language === "en" ? "pl-5" : "pr-5"
                   }`}
               >
                 <li
@@ -112,7 +112,7 @@ export default function Header() {
               </ul>
             </div>
 
-            <div className="w-full md:w-[30%] flex justify-center">
+            <div className="w-full lg:w-[30%] flex justify-center">
               <img
                 src={install.src}
                 alt="Installation"
