@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import styles from "@/app/styles/modules/AudioPlayer.module.css";
+import animationStyles from "@/app/styles/modules/Animations.module.css";
 import { useLanguage } from "@/context/LanguageContext";
 import { reciters } from "@/constants/recitersData";
 import { surahNames } from "@/constants/quranData";
@@ -75,6 +77,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     handleSliderMouseDown,
     handleSliderMouseUp,
     formatTime,
+    isBuffering,
   } = useAudioPlayer(surah, reciterId, surahNumber);
 
   const { isFavorite, toggleFavorite } = useFavoriteSurahActions(
@@ -165,13 +168,11 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                 onMouseUp={handleSliderMouseUp}
                 onTouchStart={handleSliderMouseDown}
                 onTouchEnd={handleSliderMouseUp}
-                className="w-full h-2 bg-gray-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer audio-slider"
+                className={`w-full h-2 bg-gray-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer ${styles.audioSlider}`}
                 style={{
-                  background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${
-                    (currentTime / duration) * 100
-                  }%, #d1d5db ${
-                    (currentTime / duration) * 100
-                  }%, #d1d5db 100%)`,
+                  background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100
+                    }%, #d1d5db ${(currentTime / duration) * 100
+                    }%, #d1d5db 100%)`,
                 }}
               />
             </div>
@@ -181,11 +182,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               <button
                 onClick={handlePreviousSurah}
                 disabled={!canGoPreviousSurah}
-                className={`p-2 rounded-lg transition-all flex justify-center items-center ${
-                  canGoPreviousSurah
-                    ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                    : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                }`}
+                className={`p-2 rounded-lg transition-all flex justify-center items-center ${canGoPreviousSurah
+                  ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
+                  : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
+                  }`}
                 title={language === "ar" ? "السورة السابقة" : "Previous Surah"}
               >
                 <FontAwesomeIcon icon={faChevronLeft} className={`text-lg`} />
@@ -203,11 +203,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               <button
                 onClick={handleNextSurah}
                 disabled={!canGoNextSurah}
-                className={`p-2 rounded-lg transition-all flex justify-center items-center ${
-                  canGoNextSurah
-                    ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                    : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                }`}
+                className={`p-2 rounded-lg transition-all flex justify-center items-center ${canGoNextSurah
+                  ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
+                  : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
+                  }`}
                 title={language === "ar" ? "السورة التالية" : "Next Surah"}
               >
                 <FontAwesomeIcon icon={faChevronRight} className={`text-lg`} />
@@ -222,11 +221,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               <button
                 onClick={previous}
                 disabled={isFirstAyah}
-                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${
-                  isFirstAyah
-                    ? "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                    : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                }`}
+                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${isFirstAyah
+                  ? "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
+                  : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
+                  }`}
                 title={language === "ar" ? "الآية السابقة" : "Previous Ayah"}
               >
                 <FontAwesomeIcon icon={faStepBackward} className={`text-lg`} />
@@ -235,17 +233,17 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               {/* Play/Pause Toggle Button */}
               <button
                 onClick={handleTogglePlayPause}
-                className="p-4 rounded-full bg-teal-600 dark:bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500 transition-all transform hover:scale-105 flex items-center justify-center h-14 w-14"
+                className={`p-4 rounded-full bg-teal-600 dark:bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500 transition-all transform hover:scale-105 flex items-center justify-center h-14 w-14 ${isBuffering ? styles.loadingButton : ""}`}
                 title={
                   isPlaying
                     ? language === "ar"
                       ? "إيقاف"
                       : "Pause"
                     : language === "ar"
-                    ? "تشغيل"
-                    : "Play"
+                      ? "تشغيل"
+                      : "Play"
                 }
-                disabled={isDownloading}
+                disabled={isDownloading || isBuffering}
               >
                 <FontAwesomeIcon
                   icon={isPlaying ? faPause : faPlay}
@@ -265,11 +263,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
               <button
                 onClick={next}
                 disabled={isLastAyah}
-                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${
-                  isLastAyah
-                    ? "bg-gray-100 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                    : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                }`}
+                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${isLastAyah
+                  ? "bg-gray-100 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
+                  : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
+                  }`}
                 title={language === "ar" ? "الآية التالية" : "Next Ayah"}
               >
                 <FontAwesomeIcon icon={faStepForward} className={`text-lg`} />
@@ -279,17 +276,15 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
             {/* Download Button */}
             <button
               onClick={handleDownload}
-              className={`w-full py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${
-                downloadStatus === "success"
-                  ? "bg-green-600 text-white hover:bg-green-700"
-                  : downloadStatus === "error"
+              className={`w-full py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${downloadStatus === "success"
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : downloadStatus === "error"
                   ? "bg-red-600 text-white hover:bg-red-700"
                   : "bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500"
-              } ${
-                downloadStatus === "downloading" || downloadStatus === "success"
+                } ${downloadStatus === "downloading" || downloadStatus === "success"
                   ? "cursor-not-allowed opacity-90"
                   : "transform hover:scale-105 cursor-pointer"
-              }`}
+                }`}
               disabled={
                 downloadStatus === "downloading" || downloadStatus === "success"
               }
@@ -299,8 +294,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                   downloadStatus === "success"
                     ? faCheck
                     : downloadStatus === "error"
-                    ? faExclamationTriangle
-                    : faDownload
+                      ? faExclamationTriangle
+                      : faDownload
                 }
                 className={
                   downloadStatus === "downloading" ? "animate-bounce" : ""
@@ -326,7 +321,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                 icon={isFavorite ? loved : notLoved}
                 className={
                   !isFavorite
-                    ? "vibrate text-lg md:text-2xl"
+                    ? `${animationStyles.vibrate} text-lg md:text-2xl`
                     : "text-lg md:text-2xl"
                 }
               />
@@ -350,5 +345,4 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     </div>
   );
 };
-
 export default SurahAudioPlayer;

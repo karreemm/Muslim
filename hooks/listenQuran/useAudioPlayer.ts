@@ -12,14 +12,12 @@ export function useAudioPlayer(
   const [shouldAutoPlay, setShouldAutoPlay] = useState<boolean>(true);
   const [userInteracted, setUserInteracted] = useState<boolean>(false);
 
-  // Slider states
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [ayahDurations, setAyahDurations] = useState<number[]>([]);
   const [cumulativeDurations, setCumulativeDurations] = useState<number[]>([]);
 
-  // Dual audio elements for seamless transitions
   const audioPlayer = useRef<HTMLAudioElement>(null);
   const nextAudioPlayer = useRef<HTMLAudioElement>(null);
   const [isUsingPrimary, setIsUsingPrimary] = useState<boolean>(true);
@@ -44,7 +42,6 @@ export function useAudioPlayer(
     };
   }, []);
 
-  // Reset everything when surah changes
   useEffect(() => {
     if (surah) {
       console.log("Surah changed, resetting state");
@@ -60,7 +57,6 @@ export function useAudioPlayer(
       isTransitioningRef.current = false;
       seekingRef.current = false;
 
-      // Stop and reset both players
       if (audioPlayer.current) {
         audioPlayer.current.pause();
         audioPlayer.current.currentTime = 0;
@@ -74,7 +70,6 @@ export function useAudioPlayer(
     }
   }, [surah]);
 
-  // Load ayah durations from pre-calculated JSON data
   useEffect(() => {
     if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;
 
@@ -85,7 +80,6 @@ export function useAudioPlayer(
       surahNumber
     );
 
-    // Access the pre-calculated data from JSON
     const reciterData = (audioDurationsSummary as any)[reciterId];
     if (!reciterData) {
       console.warn(`No duration data found for reciter: ${reciterId}`);
@@ -103,7 +97,6 @@ export function useAudioPlayer(
     const durations = surahData.ayahDurations || [];
     setAyahDurations(durations);
 
-    // Calculate cumulative durations
     const cumulative: number[] = [];
     let sum = 0;
     for (const dur of durations) {
@@ -115,7 +108,6 @@ export function useAudioPlayer(
     console.log("Ayah durations loaded from JSON, total:", sum);
   }, [surah, reciterId, surahNumber]);
 
-  // Preload next ayah
   useEffect(() => {
     if (
       surah &&
@@ -150,10 +142,8 @@ export function useAudioPlayer(
         ? nextAudioPlayer.current
         : audioPlayer.current;
 
-      // Reset transition flag
       transitionTriggeredRef.current = false;
 
-      // Set source for current player only if it's different and not seeking
       if (activePlayer.src !== currentAyah.audio && !seekingRef.current) {
         activePlayer.src = currentAyah.audio;
         activePlayer.load();
@@ -196,13 +186,11 @@ export function useAudioPlayer(
           "Audio pause event fired, isTransitioning:",
           isTransitioningRef.current
         );
-        // Don't update isPlaying during transitions or seeking
         if (!isTransitioningRef.current && !seekingRef.current) {
           setIsPlaying(false);
         }
       };
 
-      // Update current time
       const handleTimeUpdate = () => {
         if (
           !isDragging &&
@@ -216,7 +204,6 @@ export function useAudioPlayer(
 
         const timeLeft = activePlayer.duration - activePlayer.currentTime;
 
-        // Start next audio 300ms before current ends
         if (
           timeLeft <= 0.3 &&
           !transitionTriggeredRef.current &&
@@ -227,17 +214,14 @@ export function useAudioPlayer(
           isTransitioningRef.current = true;
           console.log("Triggering seamless transition to next ayah");
 
-          // Start playing next ayah while current is still playing
           if (inactivePlayer.readyState >= 2) {
             inactivePlayer
               .play()
               .then(() => {
                 console.log("Next ayah started seamlessly");
-                // Update state immediately
                 setCurrentAyahIndex(currentAyahIndex + 1);
                 setIsUsingPrimary(!isUsingPrimary);
 
-                // Stop the previous audio
                 setTimeout(() => {
                   activePlayer.pause();
                   activePlayer.currentTime = 0;
@@ -255,7 +239,6 @@ export function useAudioPlayer(
       const handleEnded = () => {
         console.log("Audio ended event fired");
 
-        // Only handle if transition wasn't already triggered
         if (!transitionTriggeredRef.current && !seekingRef.current) {
           setCurrentAyahIndex((prevIndex) => {
             const nextIndex = prevIndex + 1;
@@ -271,14 +254,12 @@ export function useAudioPlayer(
         }
       };
 
-      // Remove old listeners
       activePlayer.removeEventListener("canplay", handleCanPlay);
       activePlayer.removeEventListener("play", handlePlay);
       activePlayer.removeEventListener("pause", handlePause);
       activePlayer.removeEventListener("timeupdate", handleTimeUpdate);
       activePlayer.removeEventListener("ended", handleEnded);
 
-      // Add new listeners
       activePlayer.addEventListener("canplay", handleCanPlay);
       activePlayer.addEventListener("play", handlePlay);
       activePlayer.addEventListener("pause", handlePause);
@@ -301,6 +282,41 @@ export function useAudioPlayer(
     isDragging,
     cumulativeDurations,
   ]);
+
+  const [isBuffering, setIsBuffering] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleBufferingStart = () => setIsBuffering(true);
+    const handleBufferingEnd = () => setIsBuffering(false);
+
+    if (audioPlayer.current) {
+      audioPlayer.current.addEventListener('waiting', handleBufferingStart);
+      audioPlayer.current.addEventListener('loadstart', handleBufferingStart);
+      audioPlayer.current.addEventListener('canplay', handleBufferingEnd);
+      audioPlayer.current.addEventListener('playing', handleBufferingEnd);
+    }
+    if (nextAudioPlayer.current) {
+      nextAudioPlayer.current.addEventListener('waiting', handleBufferingStart);
+      nextAudioPlayer.current.addEventListener('loadstart', handleBufferingStart);
+      nextAudioPlayer.current.addEventListener('canplay', handleBufferingEnd);
+      nextAudioPlayer.current.addEventListener('playing', handleBufferingEnd);
+    }
+
+    return () => {
+      if (audioPlayer.current) {
+        audioPlayer.current.removeEventListener('waiting', handleBufferingStart);
+        audioPlayer.current.removeEventListener('loadstart', handleBufferingStart);
+        audioPlayer.current.removeEventListener('canplay', handleBufferingEnd);
+        audioPlayer.current.removeEventListener('playing', handleBufferingEnd);
+      }
+      if (nextAudioPlayer.current) {
+        nextAudioPlayer.current.removeEventListener('waiting', handleBufferingStart);
+        nextAudioPlayer.current.removeEventListener('loadstart', handleBufferingStart);
+        nextAudioPlayer.current.removeEventListener('canplay', handleBufferingEnd);
+        nextAudioPlayer.current.removeEventListener('playing', handleBufferingEnd);
+      }
+    };
+  }, [audioPlayer.current, nextAudioPlayer.current]);
 
   const stopAllPlayers = () => {
     if (audioPlayer.current) {
@@ -425,7 +441,6 @@ export function useAudioPlayer(
 
     console.log("Seeking to time:", currentTime);
 
-    // Find which ayah this time corresponds to
     let targetAyahIndex = 0;
     for (let i = cumulativeDurations.length - 1; i >= 0; i--) {
       if (currentTime >= cumulativeDurations[i]) {
@@ -434,7 +449,6 @@ export function useAudioPlayer(
       }
     }
 
-    // Calculate the time within that ayah
     const timeWithinAyah = currentTime - cumulativeDurations[targetAyahIndex];
 
     console.log(
@@ -446,11 +460,9 @@ export function useAudioPlayer(
 
     const wasPlaying = isPlaying;
 
-    // Stop all players first
     stopAllPlayers();
     setIsPlaying(false);
 
-    // If we need to switch ayahs
     if (targetAyahIndex !== currentAyahIndex) {
       console.log(
         "Switching from ayah",
@@ -459,10 +471,8 @@ export function useAudioPlayer(
         targetAyahIndex
       );
 
-      // Update ayah index
       setCurrentAyahIndex(targetAyahIndex);
 
-      // Determine which player to use
       const shouldUsePrimary = targetAyahIndex % 2 === 0;
       setIsUsingPrimary(shouldUsePrimary);
 
@@ -499,7 +509,6 @@ export function useAudioPlayer(
         );
       }
     } else {
-      // Same ayah, just seek
       const activePlayer = isUsingPrimary
         ? audioPlayer.current
         : nextAudioPlayer.current;
@@ -551,7 +560,6 @@ export function useAudioPlayer(
     previous,
     isLastAyah: surah ? currentAyahIndex >= surah.ayahs.length - 1 : false,
     isFirstAyah: currentAyahIndex === 0,
-    // Slider functionality
     currentTime,
     duration,
     isDragging,
@@ -559,5 +567,6 @@ export function useAudioPlayer(
     handleSliderMouseDown,
     handleSliderMouseUp,
     formatTime,
+    isBuffering,
   };
 }

@@ -15,6 +15,7 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { reciters } from "../../../../constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "./TafseerModal";
+import animationStyles from "@/app/styles/modules/Animations.module.css";
 
 interface AyahPopoverProps {
   isOpen: boolean;
@@ -59,7 +60,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
       if (
         popoverRef.current &&
         !popoverRef.current.contains(event.target as Node) &&
-        !showTafseerModal 
+        !showTafseerModal
       ) {
         onClose();
       }
@@ -202,10 +203,9 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
         ref={popoverRef}
         className={`
           fixed z-50 rounded-lg shadow-2xl border
-          ${
-            theme
-              ? "bg-slate-800 border-slate-600 text-white"
-              : "bg-white border-gray-200 text-gray-800"
+          ${theme
+            ? "bg-slate-800 border-slate-600 text-white"
+            : "bg-white border-gray-200 text-gray-800"
           }
           min-w-[240px] max-w-[280px]
           transition-all duration-200 ease-in-out
@@ -229,10 +229,9 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
             onClick={onClose}
             className={`
               rounded-md transition-colors w-6 h-6 flex items-center justify-center
-              ${
-                theme
-                  ? "hover:bg-slate-700 text-gray-300"
-                  : "hover:bg-gray-100 text-gray-600"
+              ${theme
+                ? "hover:bg-slate-700 text-gray-300"
+                : "hover:bg-gray-100 text-gray-600"
               }
             `}
           >
@@ -246,10 +245,9 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
             disabled={isSaved}
             className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${
-                theme
-                  ? "hover:bg-slate-700 disabled:bg-green-900/30"
-                  : "hover:bg-gray-100 disabled:bg-green-100"
+              ${theme
+                ? "hover:bg-slate-700 disabled:bg-green-900/30"
+                : "hover:bg-gray-100 disabled:bg-green-100"
               }
               disabled:cursor-not-allowed
             `}
@@ -268,19 +266,17 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
             disabled={isLoadingAudio}
             className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${
-                theme
-                  ? "hover:bg-slate-700 disabled:opacity-50"
-                  : "hover:bg-gray-100 disabled:opacity-50"
+              ${theme
+                ? "hover:bg-slate-700 disabled:opacity-50"
+                : "hover:bg-gray-100 disabled:opacity-50"
               }
               disabled:cursor-not-allowed
             `}
           >
             <FontAwesomeIcon
               icon={isLoadingAudio ? faSpinner : faHeadphones}
-              className={`w-5 ${isLoadingAudio ? "animate-spin" : ""} ${
-                isPlaying ? "text-teal-600 dark:text-teal-500" : ""
-              }`}
+              className={`w-5 ${isLoadingAudio ? "animate-spin" : ""} ${isPlaying ? "text-teal-600 dark:text-teal-500" : ""
+                }`}
             />
             <span className="dynamic-font flex-1 text-start">
               {isLoadingAudio
@@ -288,22 +284,22 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
                 : t("readQuran.popover.listenAyah")}
             </span>
             {isPlaying && (
-              <div className="flex items-center gap-0.5">
+              <div className={animationStyles.soundWave}>
                 <div
-                  className="w-1 bg-teal-600 dark:bg-teal-500 rounded-full animate-[wave_0.8s_ease-in-out_infinite]"
-                  style={{ height: "12px", animationDelay: "0s" }}
+                  className={animationStyles.waveBar}
+                  style={{ animationDelay: "0s" }}
                 ></div>
                 <div
-                  className="w-1 bg-teal-600 dark:bg-teal-500 rounded-full animate-[wave_0.8s_ease-in-out_infinite]"
-                  style={{ height: "16px", animationDelay: "0.1s" }}
+                  className={animationStyles.waveBar}
+                  style={{ animationDelay: "0.1s" }}
                 ></div>
                 <div
-                  className="w-1 bg-teal-600 dark:bg-teal-500 rounded-full animate-[wave_0.8s_ease-in-out_infinite]"
-                  style={{ height: "10px", animationDelay: "0.2s" }}
+                  className={animationStyles.waveBar}
+                  style={{ animationDelay: "0.2s" }}
                 ></div>
                 <div
-                  className="w-1 bg-teal-600 dark:bg-teal-500 rounded-full animate-[wave_0.8s_ease-in-out_infinite]"
-                  style={{ height: "14px", animationDelay: "0.3s" }}
+                  className={animationStyles.waveBar}
+                  style={{ animationDelay: "0.3s" }}
                 ></div>
               </div>
             )}
@@ -334,9 +330,8 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
             >
               <div className="w-5 flex items-center justify-center">
                 <div
-                  className={`w-2 h-2 rounded-full ${
-                    theme ? "bg-teal-600" : "bg-teal-500"
-                  }`}
+                  className={`w-2 h-2 rounded-full ${theme ? "bg-teal-600" : "bg-teal-500"
+                    }`}
                 ></div>
               </div>
               <div className="flex-1 text-start">
@@ -344,9 +339,8 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
                   {t("readQuran.popover.selectReciter")}
                 </div>
                 <div
-                  className={`text-xs mt-0.5 ${
-                    theme ? "text-gray-400" : "text-gray-500"
-                  }`}
+                  className={`text-xs mt-0.5 ${theme ? "text-gray-400" : "text-gray-500"
+                    }`}
                 >
                   {reciterName}
                 </div>
@@ -358,10 +352,9 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
                 className={`
                   absolute ${language === "ar" ? "left-0" : "right-0"}
                   mt-1 w-full rounded-lg shadow-xl border max-h-64 overflow-y-auto
-                  ${
-                    theme
-                      ? "bg-slate-800 border-slate-600"
-                      : "bg-white border-gray-200"
+                  ${theme
+                    ? "bg-slate-800 border-slate-600"
+                    : "bg-white border-gray-200"
                   }
                 `}
                 style={{
@@ -376,12 +369,11 @@ export const AyahPopover: React.FC<AyahPopoverProps> = ({
                     className={`
                       w-full px-4 py-2 text-start transition-colors
                       ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
-                      ${
-                        selectedReciter === reciter.id
-                          ? theme
-                            ? "bg-slate-700"
-                            : "bg-gray-100"
-                          : ""
+                      ${selectedReciter === reciter.id
+                        ? theme
+                          ? "bg-slate-700"
+                          : "bg-gray-100"
+                        : ""
                       }
                     `}
                   >

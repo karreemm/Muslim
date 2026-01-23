@@ -47,8 +47,8 @@ export default function SingleZekr({
                   icon={isFav ? loved : notLoved}
                   className={
                     !isFav
-                      ? "vibrate text-xl md:text-2xl"
-                      : "text-xl md:text-2xl"
+                      ? "text-red-500 text-xl md:text-2xl"
+                      : "text-gray-400 hover:text-red-500 text-xl md:text-2xl"
                   }
                 />
               </button>

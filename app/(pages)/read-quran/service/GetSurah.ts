@@ -1,12 +1,12 @@
-export default async function GetSurah(surahNumber: string) {
-    const edition = 'quran-uthmani';
-    try {
-      const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${edition}`);
-      const data = await response.json();
-      console.log('Fetched Surah Data:', data);
-      return data.data;
-    } catch (error) {
-      console.error('Error fetching Surah:', error);
-      throw error;
-    }
+export default async function GetSurah(id: string) {
+  try {
+    const response = await fetch(
+      `https://api.quran.com/api/v4/verses/by_chapter/${id}?words=true&word_fields=text_uthmani,line_number,page_number&per_page=1000`
+    );
+    const data = await response.json();
+    return data.verses;
+  } catch (error) {
+    console.error("Error fetching Surah:", error);
+    throw error;
   }
+}

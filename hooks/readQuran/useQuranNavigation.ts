@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { surahNames, juzNames } from "../../constants/quranData";
 
-type NavigationType = "surah" | "juz";
+type NavigationType = "surah" | "juz" | "page";
 
 interface NavigationConfig {
   type: NavigationType;
@@ -19,8 +19,8 @@ export const useQuranNavigation = (type: NavigationType) => {
 
   const config: NavigationConfig = {
     type,
-    maxNumber: type === "surah" ? surahNames.length : juzNames.length,
-    basePath: type === "surah" ? "/read-quran/surah" : "/read-quran/juz",
+    maxNumber: type === "surah" ? surahNames.length : (type === "juz" ? juzNames.length : 604),
+    basePath: type === "surah" ? "/read-quran/surah" : (type === "juz" ? "/read-quran/juz" : "/read-quran/page"),
   };
 
   const currentNumber = number ? parseInt(number) : 0;
@@ -33,6 +33,7 @@ export const useQuranNavigation = (type: NavigationType) => {
 
     if (
       pageNumber &&
+      !isNaN(parseInt(pageNumber)) &&
       (parseInt(pageNumber) > config.maxNumber || parseInt(pageNumber) < 1)
     ) {
       router.push(`${config.basePath}/1`);
@@ -61,7 +62,7 @@ export const useQuranNavigation = (type: NavigationType) => {
         next: nextSurah,
         prev: prevSurah,
       };
-    } else {
+    } else if (type === "juz") {
       const currentJuz = juzNames.find((j) => j.number.toString() === number);
       const nextJuz = hasNext ? juzNames[currentNumber] : null;
       const prevJuz = hasPrev ? juzNames[currentNumber - 2] : null;
@@ -71,6 +72,12 @@ export const useQuranNavigation = (type: NavigationType) => {
         next: nextJuz,
         prev: prevJuz,
       };
+    } else {
+      return {
+        current: { number: currentNumber, label: `Page ${currentNumber}` },
+        next: hasNext ? { number: currentNumber + 1 } : null,
+        prev: hasPrev ? { number: currentNumber - 1 } : null,
+      }
     }
   };
 

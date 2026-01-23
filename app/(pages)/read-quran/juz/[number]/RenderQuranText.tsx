@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "@/app/styles/modules/QuranText.module.css";
 import { useState, useEffect } from "react";
 import { toArabicNumber } from "../../../../../utils/helpers";
 import { surahNames } from "../../../../../constants/quranData";
@@ -76,7 +77,9 @@ export const RenderJuzText = (
       className={`fontAmiri flex flex-col items-center transition-all duration-300 ${isFullscreen ? "w-full h-full" : ""
         }`}
     >
-      <div className="basmala dark:text-white text-xl md:text-3xl text-center my-4">
+      <div
+        className={`${styles.quranBasmala} text-teal-700 dark:text-teal-400`}
+      >
         {surahNumber === 9 ? (
           <p>أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ</p>
         ) : (
@@ -88,15 +91,18 @@ export const RenderJuzText = (
         id="scrollable-div"
         dir="rtl"
         ref={scrollToAyah.containerRef}
-        className={`bg-white text-black dark:bg-slate-800 dark:text-white shadow-md rounded-lg px-6 py-4 mt-5 md:mt-10 ayah-container max-w-[1200px] overflow-y-auto transition-all duration-300 text-justify leading-loose ${isFullscreen ? "h-[75vh]" : "max-h-[400px]"
+        className={`${styles.quranText
+          } bg-[#FEFDF8] text-gray-900 dark:bg-slate-800 dark:text-gray-100 shadow-lg rounded-lg px-6 md:px-8 py-6 mt-5 md:mt-10 overflow-y-auto overflow-x-hidden transition-all duration-300 w-full max-w-[1200px] ${isFullscreen ? "h-[75vh]" : "max-h-[400px]"
           }`}
-        style={{ fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}
+        style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
       >
         {ayahs.map((ayah: any) => (
           <>
             {ayah.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") && (
-              <div className="w-full text-center my-4 md:my-8 block">
-                <p className="ayah text-2xl md:text-4xl">
+              <div className="w-full text-center my-6 block">
+                <p
+                  className={`${styles.quranBasmala} text-2xl md:text-3xl text-teal-700 dark:text-teal-400`}
+                >
                   بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
                 </p>
               </div>
@@ -104,13 +110,14 @@ export const RenderJuzText = (
             <span
               key={ayah.number}
               ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
-              className={`fontAmiri inline cursor-pointer ${scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
+              className={`${styles.quranVerse
+                } inline cursor-pointer transition-colors duration-200 ${scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
                   theme === false
                   ? `bg-yellow-200 rounded px-1`
                   : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
                     theme === true
-                    ? `bg-yellow-600 rounded px-1`
-                    : ""
+                    ? `bg-yellow-700 rounded px-1`
+                    : `hover:bg-teal-50 dark:hover:bg-slate-700 rounded px-1`
                 }`}
               onClick={(e) => handleAyahClick(ayah, e)}
               id={`ayah-${ayah.numberInSurah}`}
@@ -119,15 +126,10 @@ export const RenderJuzText = (
                 ? ayah.text
                   .replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "")
                   .trim()
-                : ayah.text}
-              <span className="separator mx-1">
-                <span className="icon">
-                  ۝
-                  <span className="number">
-                    {toArabicNumber(ayah.numberInSurah)}
-                  </span>
-                </span>
-              </span>
+                : ayah.text}{" "}
+              <span className="verse-number text-teal-600 dark:text-teal-400">
+                <span>{toArabicNumber(ayah.numberInSurah)}</span>
+              </span>{" "}
             </span>
           </>
         ))}

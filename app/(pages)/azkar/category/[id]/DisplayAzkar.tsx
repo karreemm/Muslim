@@ -43,24 +43,22 @@ export default function AzkarPage({
                 <button
                   id={`love-button-${azkar.number}`}
                   onClick={() => handleLoveClick(azkar)}
-                  className={`text-red-500 hover:text-red-600 absolute ${
-                    language === "ar" ? `top-4 left-4` : `top-4 right-4`
-                  } `}
+                  className={`text-red-500 hover:text-red-600 absolute ${language === "ar" ? `top-4 left-4` : `top-4 right-4`
+                    } `}
                 >
                   <FontAwesomeIcon
                     icon={isFavorite(azkar.number!) ? loved : notLoved}
                     className={
-                      !isFavorite(azkar.number!)
-                        ? "vibrate text-xl md:text-2xl"
-                        : "text-xl md:text-2xl"
+                      isFavorite(azkar.number!)
+                        ? "text-red-500 text-xl md:text-2xl"
+                        : "text-gray-400 hover:text-red-500 text-xl md:text-2xl"
                     }
                   />
                 </button>
 
                 <div
-                  className={`absolute ${
-                    language === "ar" ? "left-14" : "right-14"
-                  } ${isMdOrLarger ? "top-4" : "top-4"}`}
+                  className={`absolute ${language === "ar" ? "left-14" : "right-14"
+                    } ${isMdOrLarger ? "top-4" : "top-4"}`}
                 >
                   <div className={`${language === "ar" ? "mr-2" : "ml-2"}`}>
                     <ShareModal

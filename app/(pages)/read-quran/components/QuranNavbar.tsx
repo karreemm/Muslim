@@ -3,7 +3,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { useLanguage } from "../../../../context/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
 export default function QuranNavbar({
@@ -16,7 +15,6 @@ export default function QuranNavbar({
   setSearchTerm: (term: string) => void;
 }) {
   const [activeTab, setActiveTab] = useState<string>("Surahs");
-  const { language } = useLanguage();
   const { t } = useTranslation();
 
   const handleTabClick = (tabName: string) => {

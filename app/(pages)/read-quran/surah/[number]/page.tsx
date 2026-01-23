@@ -10,42 +10,52 @@ import {
   faCompress,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef } from "react";
-import { useLanguage } from "../../../../../context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 import Navbar from "@/components/general/Navbar";
 import GetSurah from "../../service/GetSurah";
 import {
   toArabicNumber,
   showPopover,
   hidePopover,
-} from "../../../../../utils/helpers";
-import { RenderQuranText } from "./RenderQuranText";
+} from "@/utils/helpers";
 import Footer from "@/components/general/Footer";
 import ShareModal from "@/components/modals/ShareModal";
 import {
   useQuranNavigation,
   useQuranDisplay,
   useFullscreen,
-} from "../../../../../hooks/readQuran";
+} from "@/hooks/readQuran";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import QuranMultiPageRenderer from "../../components/QuranMultiPageRenderer";
+
+interface SurahData {
+  number: number;
+  en: string;
+  ar: string;
+  ayahs: number;
+  startPage: number;
+  endPage: number;
+}
 
 export default function SurahPage() {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const navigation = useQuranNavigation("surah");
   const display = useQuranDisplay();
-  const [surahData, setSurahData] = useState<any>(null);
+  const [surahVerses, setSurahVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggleFullscreen } = useFullscreen(quranContentRef);
 
-  const SurahNameAr = (navigation.navigationData.current as any)?.ar;
-  const SurahNameEn = (navigation.navigationData.current as any)?.en;
+  const currentSurah = navigation.navigationData.current as SurahData | undefined;
+  const nextSurah = navigation.navigationData.next as SurahData | undefined;
+  const prevSurah = navigation.navigationData.prev as SurahData | undefined;
 
   useEffect(() => {
     if (navigation.number) {
       const fetchSurahData = async () => {
         try {
           const data = await GetSurah(navigation.number!);
-          setSurahData(data);
+          setSurahVerses(data);
         } catch (error) {
           console.error("Error fetching Surah:", error);
         }
@@ -60,7 +70,7 @@ export default function SurahPage() {
       <div className="w-full min-h-screen flex flex-col items-center p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
         <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
           <div>
-            {navigation.hasNext && (
+            {navigation.hasNext && nextSurah && (
               <>
                 <button
                   onClick={() => navigation.handleNavigation("next")}
@@ -79,15 +89,13 @@ export default function SurahPage() {
                 >
                   <div className="flex justify-center px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                     <h3 className="font-semibold text-gray-900 dark:text-white">
-                      {navigation.navigationData.next?.[
-                        language as keyof typeof navigation.navigationData.next
-                      ]?.toString()}
+                      {nextSurah[language as keyof SurahData]?.toString()}
                     </h3>
                   </div>
                 </div>
               </>
             )}
-            {navigation.hasPrev && (
+            {navigation.hasPrev && prevSurah && (
               <>
                 <button
                   onClick={() => navigation.handleNavigation("prev")}
@@ -106,9 +114,7 @@ export default function SurahPage() {
                 >
                   <div className="flex justify-center px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                     <h3 className="font-semibold text-gray-900 dark:text-white">
-                      {navigation.navigationData.prev?.[
-                        language as keyof typeof navigation.navigationData.prev
-                      ]?.toString()}
+                      {prevSurah[language as keyof SurahData]?.toString()}
                     </h3>
                   </div>
                 </div>
@@ -123,36 +129,45 @@ export default function SurahPage() {
                 : ""
               }`}
           >
-            <div className="flex flex-col items-center gap-5">
+            <div className="flex flex-col items-center gap-3 mb-5">
               <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-teal-500">
                 {t("common.surahWithNoAll")}{" "}
-                {navigation.navigationData.current?.[
-                  language as keyof typeof navigation.navigationData.current
-                ]?.toString()}
+                {currentSurah?.[language as keyof SurahData]?.toString()}
               </h1>
-              <p className="md:text-2xl text-xl flex items-center dark:text-white">
-                {t("common.ayahs")}:{" "}
-                {language === "ar"
-                  ? toArabicNumber(surahData?.ayahs.length)
-                  : surahData?.ayahs.length}
-              </p>
+              {currentSurah && (
+                <>
+                  <p className="text-lg md:text-xl font-semibold text-gray-700 dark:text-gray-300">
+                    {language === "ar" ? (
+                      <>الآيات: {toArabicNumber(currentSurah.ayahs)}</>
+                    ) : (
+                      <>Ayahs: {currentSurah.ayahs}</>
+                    )}
+                  </p>
+                  <p className="mt-3 text-xl md:text-3xl font-semibold text-center">
+                    {language === "ar" ? (
+                      <span>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+                    ) : (
+                      <>
+                      <p>In the name of Allah, </p>
+                      <p>the Most Gracious, the Most Merciful</p>
+                      </>
+                    )}
+                  </p>
+                </>
+              )}
             </div>
 
             <div
-              className={`w-full md:w-[80%] py-4 px-2 overflow-auto ${isFullscreen
+              className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden ${isFullscreen
                   ? "h-full flex flex-col items-center justify-center"
                   : ""
                 }`}
             >
-              {RenderQuranText(
-                surahData,
-                display.fontSize,
-                display.lineHeight,
-                SurahNameAr,
-                SurahNameEn,
-                navigation.currentNumber,
-                isFullscreen
-              )}
+              <QuranMultiPageRenderer
+                verses={surahVerses}
+                fontSize={display.fontSize}
+                lineHeight={display.lineHeight}
+              />
             </div>
 
             <div

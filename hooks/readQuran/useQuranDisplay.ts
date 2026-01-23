@@ -1,36 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { DEFAULT_BREAKPOINTS } from "@/constants/quranFontSize";
 
 interface DisplaySettings {
   fontSize: number;
   lineHeight: number;
 }
 
-export const useQuranDisplay = (
-  initialFontSize: number = 18,
-  initialLineHeight: number = 2.5
-) => {
-  const [fontSize, setFontSize] = useState<number>(initialFontSize);
-  const [lineHeight, setLineHeight] = useState<number>(initialLineHeight);
+export const useQuranDisplay = () => {
+  const getResponsiveSettings = (width: number): DisplaySettings => {
+    const config = DEFAULT_BREAKPOINTS.find(
+      (bp) => width >= bp.minWidth && (!bp.maxWidth || width <= bp.maxWidth)
+    );
+    
+    return {
+      fontSize: config?.baseFontSize || 32,
+      lineHeight: config?.baseLineHeight || 1.8,
+    };
+  };
+
+  const [screenWidth, setScreenWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+  
+  const responsiveSettings = getResponsiveSettings(screenWidth);
+  
+  const [fontSize, setFontSize] = useState<number>(responsiveSettings.fontSize);
+  const [lineHeight, setLineHeight] = useState<number>(responsiveSettings.lineHeight);
+  const [manualAdjustment, setManualAdjustment] = useState<number>(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const newSettings = getResponsiveSettings(screenWidth);
+    setFontSize(newSettings.fontSize + manualAdjustment);
+    setLineHeight(newSettings.lineHeight + (manualAdjustment * 0.02));
+  }, [screenWidth, manualAdjustment]);
 
   const handleFontSizeChange = (increase: boolean) => {
-    setFontSize((prevSize) => (increase ? prevSize + 2 : prevSize - 2));
-    setLineHeight((prevLineHeight) =>
-      increase ? prevLineHeight + 0.2 : prevLineHeight - 0.2
-    );
+    const adjustment = increase ? 2 : -2;
+    setManualAdjustment((prev) => prev + adjustment);
+    setFontSize((prevSize) => prevSize + adjustment);
+    setLineHeight((prevLineHeight) => prevLineHeight + (increase ? 0.05 : -0.05));
   };
 
   const increaseFontSize = () => handleFontSizeChange(true);
   const decreaseFontSize = () => handleFontSizeChange(false);
 
   const resetToDefault = () => {
-    setFontSize(initialFontSize);
-    setLineHeight(initialLineHeight);
+    setManualAdjustment(0);
+    const settings = getResponsiveSettings(screenWidth);
+    setFontSize(settings.fontSize);
+    setLineHeight(settings.lineHeight);
   };
 
   const setCustomSettings = (settings: Partial<DisplaySettings>) => {
     if (settings.fontSize !== undefined) {
+      const baseSettings = getResponsiveSettings(screenWidth);
+      setManualAdjustment(settings.fontSize - baseSettings.fontSize);
       setFontSize(settings.fontSize);
     }
     if (settings.lineHeight !== undefined) {

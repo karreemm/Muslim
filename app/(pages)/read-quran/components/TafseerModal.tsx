@@ -215,6 +215,7 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                   ) : currentTafseer ? (
                     <div>
                       <div
+                        dir={language === "ar" ? "rtl" : "ltr"}
                         className={`rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto ${theme ? "bg-[#0f172b]" : "bg-[#fff5e4]"
                           }`}
                       >
@@ -227,7 +228,7 @@ export const TafseerModal: React.FC<TafseerModalProps> = ({
                         <p
                           className={`fontAmiri text-lg leading-relaxed text-justify ${theme ? "text-white" : "text-gray-800"
                             }`}
-                          dir="rtl"
+                          dir={language === "ar" ? "rtl" : "ltr"}
                         >
                           {currentTafseer.text}
                         </p>

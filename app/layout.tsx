@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className="">
+    <html>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -33,7 +33,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="dynamic-font bg-[#FFF5E4] dark:bg-slate-900">
+      <body
+        className={`dynamic-font bg-[#FFF5E4] dark:bg-slate-900`}
+      >
         <LanguageContextProvider>
           <ThemeContextProvider>
             <SavedAyahsProvider>
