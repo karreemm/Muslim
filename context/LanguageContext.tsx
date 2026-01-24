@@ -1,6 +1,14 @@
 "use client";
 
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  startTransition,
+} from "react";
 
 interface LanguageContextType {
   language: string;
@@ -30,17 +38,17 @@ const LanguageContextProvider = ({ children }: IProps) => {
   }, []);
 
   const toggleLanguage = useCallback(() => {
-    setLanguage((prev) => {
-      const newLanguage = prev === "ar" ? "en" : "ar";
-      const newDir = newLanguage === "ar" ? "rtl" : "ltr";
-      document.documentElement.dir = newDir;
+    const newLanguage = language === "ar" ? "en" : "ar";
+    const newDir = newLanguage === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = newDir;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("language", newLanguage);
+    }
+    startTransition(() => {
+      setLanguage(newLanguage);
       setDir(newDir);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("language", newLanguage);
-      }
-      return newLanguage;
     });
-  }, []);
+  }, [language]);
 
   const value = {
     language,
@@ -49,7 +57,9 @@ const LanguageContextProvider = ({ children }: IProps) => {
   };
 
   return (
-    <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
   );
 };
 
@@ -58,7 +68,9 @@ export default LanguageContextProvider;
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === null) {
-    throw new Error("useLanguage must be used within a LanguageContextProvider");
+    throw new Error(
+      "useLanguage must be used within a LanguageContextProvider",
+    );
   }
   return context;
 };

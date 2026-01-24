@@ -1,14 +1,14 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import { toArabicNumber } from "../../../../../utils/helpers";
 import {
   useAyahInteraction,
   useScrollToAyah,
 } from "../../../../../hooks/readQuran";
 import { useTheme } from "@/context/ThemeContext";
 import { AyahPopover } from "../../components/AyahPopover";
-import { useState, useMemo } from "react";
+import { AyahText } from "../../components/AyahText";
+import { useState, useMemo, useCallback, memo, useEffect, useRef } from "react";
 
 export const RenderQuranText = (
   surahData: any,
@@ -24,13 +24,27 @@ export const RenderQuranText = (
   const scrollToAyah = useScrollToAyah(surahData?.ayahs?.length);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
+  const CHUNK_SIZE = 50;
+  
+  const initialVisibleCount = useMemo(() => {
+    if (scrollToAyah.highlightedAyahNumber > 0) {
+      const chunksNeeded = Math.ceil(scrollToAyah.highlightedAyahNumber / CHUNK_SIZE) + 1;
+      return chunksNeeded * CHUNK_SIZE;
+    }
+    return CHUNK_SIZE;
+  }, [scrollToAyah.highlightedAyahNumber]);
+  
+  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+  const loadingMoreRef = useRef(false);
+
   const processedAyahs = useMemo(() => {
     if (!surahData || !surahData.ayahs || !surahData.ayahs.length) return [];
 
-    const ayahs = surahData.ayahs.map((ayah: any) => ({ ...ayah }));
+    const ayahs = surahData.ayahs;
 
     if (surahData.number !== 9 && surahData.number !== 1 && ayahs[0]) {
-      const originalText = ayahs[0].text;
+      const modifiedAyahs = [...ayahs];
+      const originalText = modifiedAyahs[0].text;
 
       const basmala = String.fromCharCode(
         1576,
@@ -74,29 +88,74 @@ export const RenderQuranText = (
       );
 
       if (originalText.startsWith(basmala)) {
-        ayahs[0].text = originalText.substring(basmala.length).trim();
+        modifiedAyahs[0] = {
+          ...modifiedAyahs[0],
+          text: originalText.substring(basmala.length).trim(),
+        };
+        return modifiedAyahs;
       } else {
         const raheem = "ٱلرَّحِيمِ";
         const raheemIndex = originalText.indexOf(raheem);
 
         if (raheemIndex !== -1 && raheemIndex < 50) {
           const afterBasmala = raheemIndex + raheem.length;
-          ayahs[0].text = originalText.substring(afterBasmala).trim();
+          modifiedAyahs[0] = {
+            ...modifiedAyahs[0],
+            text: originalText.substring(afterBasmala).trim(),
+          };
+          return modifiedAyahs;
         }
       }
     }
 
     return ayahs;
-  }, [surahData?.ayahs, surahData?.number]);
+  }, [surahData]);
 
-  const handleAyahClick = (ayah: any, event: React.MouseEvent) => {
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    setPopoverPosition({
-      x: rect.left,
-      y: rect.top - 10,
-    });
-    ayahInteraction.handleAyahClick(ayah, SNameAr, SNameEn, SNumber);
-  };
+  useEffect(() => {
+    const container = scrollToAyah.containerRef.current;
+    if (!container || !processedAyahs.length) return;
+
+    const handleScroll = () => {
+      if (loadingMoreRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+
+      if (scrollPercentage > 0.7 && visibleCount < processedAyahs.length) {
+        loadingMoreRef.current = true;
+        requestAnimationFrame(() => {
+          setVisibleCount((prev) =>
+            Math.min(prev + CHUNK_SIZE, processedAyahs.length),
+          );
+          loadingMoreRef.current = false;
+        });
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [processedAyahs.length, visibleCount, scrollToAyah.containerRef]);
+
+  useEffect(() => {
+    if (scrollToAyah.highlightedAyahNumber > 0) {
+      const chunksNeeded = Math.ceil(scrollToAyah.highlightedAyahNumber / CHUNK_SIZE) + 1;
+      setVisibleCount(chunksNeeded * CHUNK_SIZE);
+    } else {
+      setVisibleCount(CHUNK_SIZE);
+    }
+  }, [surahData?.number, scrollToAyah.highlightedAyahNumber]);
+
+  const handleAyahClick = useCallback(
+    (ayah: any, event: React.MouseEvent) => {
+      const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+      setPopoverPosition({
+        x: rect.left,
+        y: rect.top - 10,
+      });
+      ayahInteraction.handleAyahClick(ayah, SNameAr, SNameEn, SNumber);
+    },
+    [ayahInteraction, SNameAr, SNameEn, SNumber],
+  );
 
   if (!surahData || !surahData.ayahs || !surahData.ayahs.length) return null;
 
@@ -129,41 +188,26 @@ export const RenderQuranText = (
           isFullscreen ? "h-[75vh]" : "max-h-[400px]"
         }`}
       >
-        {processedAyahs.map((ayah: any) => (
-          <span
+        {processedAyahs.slice(0, visibleCount).map((ayah: any) => (
+          <AyahText
             key={ayah.number}
-            ref={scrollToAyah.setAyahRef(ayah.numberInSurah)}
-            className={`${
-              isFatiha ? styles.quranVerseFatiha : styles.quranVerse
-            } cursor-pointer transition-colors duration-200 ${
-              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
-              theme === false
-                ? `bg-yellow-200 rounded px-1`
-                : scrollToAyah.highlightedAyahNumber === ayah.numberInSurah &&
-                    theme === true
-                  ? `bg-yellow-700 rounded px-1`
-                  : `hover:bg-teal-50 dark:hover:bg-slate-700 rounded px-1`
-            }`}
-            onClick={(e) => handleAyahClick(ayah, e)}
-            id={`ayah-${ayah.numberInSurah}`}
-            style={
-              isFatiha
-                ? {
-                    fontSize: `${fontSize}px`,
-                    display: "block",
-                    textAlign: "center",
-                    wordSpacing: "0",
-                    letterSpacing: "0",
-                  }
-                : { fontSize: `${fontSize}px` }
+            ayah={ayah}
+            isFatiha={isFatiha}
+            fontSize={fontSize}
+            lineHeight={lineHeight}
+            isHighlighted={
+              scrollToAyah.highlightedAyahNumber === ayah.numberInSurah
             }
-          >
-            {ayah.text}{" "}
-            <span className="verse-number text-teal-600 dark:text-teal-400">
-              <span>{toArabicNumber(ayah.numberInSurah)}</span>
-            </span>{" "}
-          </span>
+            theme={theme}
+            onClick={handleAyahClick}
+            setAyahRef={scrollToAyah.setAyahRef}
+          />
         ))}
+        {visibleCount < processedAyahs.length && (
+          <div className="w-full text-center py-4 text-gray-500 dark:text-gray-400">
+            <span className="text-sm">...</span>
+          </div>
+        )}
       </div>
 
       <AyahPopover
@@ -178,7 +222,7 @@ export const RenderQuranText = (
               a.numberInSurah === ayahInteraction.showPopover.ayahNumber,
           );
           if (ayah) {
-            ayahInteraction.handleSaveAyah(ayah);
+            ayahInteraction.handleSaveAyah(ayah, SNameEn, SNameAr, SNumber);
           }
         }}
         surahNameAr={SNameAr}

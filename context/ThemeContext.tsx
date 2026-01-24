@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useState,
+  startTransition,
 } from "react";
 
 interface ThemeContextType {
@@ -28,20 +29,20 @@ const ThemeContextProvider = ({ children }: IProps) => {
       const savedTheme = localStorage.getItem("theme");
       const isDarkMode = savedTheme === "dark";
       setTheme(isDarkMode);
-      document.documentElement.classList.toggle("dark", isDarkMode); 
+      document.documentElement.classList.toggle("dark", isDarkMode);
     }
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const newTheme = !prev;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", newTheme ? "dark" : "light");
-        document.documentElement.classList.toggle("dark", newTheme); 
-      }
-      return newTheme;
+    const newTheme = !theme;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", newTheme ? "dark" : "light");
+      document.documentElement.classList.toggle("dark", newTheme);
+    }
+    startTransition(() => {
+      setTheme(newTheme);
     });
-  }, []);
+  }, [theme]);
 
   const value = {
     theme,
