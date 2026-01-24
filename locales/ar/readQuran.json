@@ -3,12 +3,18 @@
     "saveAyah": "حفظ الآية",
     "listenAyah": "استمع للآية",
     "selectReciter": "اختر القارئ",
-    "viewTafseer": "عرض التفسير"
+    "viewTafseer": "عرض التفسير",
+    "viewTranslation": "عرض الترجمة"
   },
   "tafseer": {
     "title": "تفسير الآية",
     "selectBook": "اختر كتاب التفسير",
     "notAvailable": "التفسير غير متوفر لهذه الآية"
+  },
+  "translation": {
+    "title": "ترجمة الآية",
+    "selectTranslation": "اختر الترجمة",
+    "noData": "الترجمة غير متوفرة لهذه الآية"
   },
   "sidebar": {
     "title": "ابحث عن سورة / جزء"

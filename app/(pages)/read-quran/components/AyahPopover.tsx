@@ -9,12 +9,14 @@ import {
   faCheck,
   faSpinner,
   faBook,
+  faLanguage,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../../context/LanguageContext";
 import { useTheme } from "../../../../context/ThemeContext";
 import { reciters } from "../../../../constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "./TafseerModal";
+import { TranslationModal } from "./TranslationModal";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
 
 interface AyahPopoverProps {
@@ -53,6 +55,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
       isPlaying: false,
     });
     const [showTafseerModal, setShowTafseerModal] = useState(false);
+    const [showTranslationModal, setShowTranslationModal] = useState(false);
 
     const { isSaved, isLoadingAudio, isPlaying } = popoverState;
 
@@ -66,7 +69,8 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
         if (
           popoverRef.current &&
           !popoverRef.current.contains(event.target as Node) &&
-          !showTafseerModal
+          !showTafseerModal &&
+          !showTranslationModal
         ) {
           onClose();
         }
@@ -99,6 +103,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           isPlaying: false,
         });
         setShowTafseerModal(false);
+        setShowTranslationModal(false);
         if (audioRef) {
           audioRef.pause();
           audioRef.src = "";
@@ -340,6 +345,21 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               </span>
             </button>
 
+            <button
+              onClick={() => {
+                setShowTranslationModal(true);
+              }}
+              className={`
+              w-full px-4 py-3 flex items-center gap-3 transition-colors
+              ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
+            `}
+            >
+              <FontAwesomeIcon icon={faLanguage} className="w-5" />
+              <span className="dynamic-font flex-1 text-start">
+                {t("readQuran.popover.viewTranslation")}
+              </span>
+            </button>
+
             <div className="relative">
               <button
                 onClick={() => setShowReciterMenu(!showReciterMenu)}
@@ -420,7 +440,17 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           surahNameAr={surahNameAr}
           surahNameEn={surahNameEn}
         />
+        <TranslationModal
+          isOpen={showTranslationModal}
+          onClose={() => setShowTranslationModal(false)}
+          surahNumber={surahNumber}
+          ayahNumber={ayahNumber}
+          surahNameAr={surahNameAr}
+          surahNameEn={surahNameEn}
+        />
       </>
     );
   },
 );
+
+AyahPopover.displayName = "AyahPopover";

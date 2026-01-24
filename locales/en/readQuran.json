@@ -3,12 +3,18 @@
     "saveAyah": "Save Ayah",
     "listenAyah": "Listen to Ayah",
     "selectReciter": "Select Reciter",
-    "viewTafseer": "View Tafseer"
+    "viewTafseer": "View Tafseer",
+    "viewTranslation": "View Translation"
   },
   "tafseer": {
     "title": "Ayah Tafseer",
     "selectBook": "Select Tafseer Book",
     "notAvailable": "Tafseer is not available for this ayah"
+  },
+  "translation": {
+    "title": "Ayah Translation",
+    "selectTranslation": "Select Translation",
+    "noData": "Translation is not available for this ayah"
   },
   "sidebar": {
     "title": "Search for a Surah / Juz"
