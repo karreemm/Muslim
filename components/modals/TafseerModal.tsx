@@ -1,22 +1,20 @@
 "use client";
-import React, { memo, useEffect, useState, Fragment } from "react";
+
+import React, { useState, useEffect, Fragment, memo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faLanguage,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faBook, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/LanguageContext";
-import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { useTheme } from "@/context/ThemeContext";
 import {
-  getAyahTranslation,
-  popularTranslations,
-  type AyahTranslation,
-} from "../service/GetTranslation";
+  getTafseerList,
+  getAyahTafseer,
+  TafseerBook,
+  AyahTafseer,
+} from "../../app/(pages)/read-quran/service/GetTafseer";
 
-interface TranslationModalProps {
+interface TafseerModalProps {
   isOpen: boolean;
   onClose: () => void;
   surahNumber: number;
@@ -25,48 +23,75 @@ interface TranslationModalProps {
   surahNameEn?: string;
 }
 
-export const TranslationModal: React.FC<TranslationModalProps> = memo(
+export const TafseerModal: React.FC<TafseerModalProps> = memo(
   ({ isOpen, onClose, surahNumber, ayahNumber, surahNameAr, surahNameEn }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
     const { theme } = useTheme();
 
-    const [selectedEditionId, setSelectedEditionId] = useState<string>("en.sahih");
-    const [currentTranslation, setCurrentTranslation] = useState<AyahTranslation | null>(null);
+    const [tafseerBooks, setTafseerBooks] = useState<TafseerBook[]>([]);
+    const [selectedBookId, setSelectedBookId] = useState<number>(1);
+    const [currentTafseer, setCurrentTafseer] = useState<AyahTafseer | null>(
+      null,
+    );
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
-      const fetchTranslation = async () => {
-        if (!isOpen || !selectedEditionId) return;
+      const fetchTafseerBooks = async () => {
+        const books = await getTafseerList();
+        if (books.length > 0) {
+          setTafseerBooks(books);
+
+          const defaultBook = books.find(
+            (book) => book.language === (language === "ar" ? "ar" : "en"),
+          );
+          if (defaultBook) {
+            setSelectedBookId(defaultBook.id);
+          }
+        } else {
+          setError("Failed to load tafseer books");
+        }
+      };
+
+      if (isOpen) {
+        fetchTafseerBooks();
+        setError("");
+      }
+    }, [isOpen, language]);
+
+    useEffect(() => {
+      const fetchTafseer = async () => {
+        if (!isOpen || !selectedBookId) return;
 
         setIsLoading(true);
         setError("");
-        const translation = await getAyahTranslation(
+        const tafseer = await getAyahTafseer(
+          selectedBookId,
           surahNumber,
           ayahNumber,
-          selectedEditionId
         );
 
-        if (translation) {
-          setCurrentTranslation(translation);
+        if (tafseer) {
+          setCurrentTafseer(tafseer);
         } else {
-          setError("Failed to load translation");
+          setError("Failed to load tafseer");
         }
         setIsLoading(false);
       };
 
-      if (isOpen) {
-        setError("");
-        fetchTranslation();
-      }
-    }, [selectedEditionId, surahNumber, ayahNumber, isOpen]);
+      fetchTafseer();
+    }, [selectedBookId, surahNumber, ayahNumber, isOpen]);
 
-    const handleEditionChange = (e: React.MouseEvent, editionId: string) => {
+    const handleBookChange = (e: React.MouseEvent, bookId: number) => {
       e.preventDefault();
       e.stopPropagation();
-      setSelectedEditionId(editionId);
+      setSelectedBookId(bookId);
     };
+
+    const filteredBooks = tafseerBooks.filter(
+      (book) => book.language === language,
+    );
 
     return (
       <Transition appear show={isOpen} as={Fragment}>
@@ -118,12 +143,12 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                     <div className="flex items-center gap-3 mb-2">
                       <div className="bg-white/20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center">
                         <FontAwesomeIcon
-                          icon={faLanguage}
+                          icon={faBook}
                           className="text-white text-xl"
                         />
                       </div>
                       <Dialog.Title className="text-2xl font-bold text-white dynamic-font">
-                        {t("readQuran.translation.title")}
+                        {t("readQuran.tafseer.title")}
                       </Dialog.Title>
                     </div>
                     <p className="text-teal-50 text-sm mt-1 dynamic-font">
@@ -134,28 +159,28 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                   </div>
 
                   <div
-                    dir={"ltr"}
+                    dir={language === "ar" ? "rtl" : "ltr"}
                     className={`px-6 py-4 border-b ${
                       theme ? "border-slate-700" : "border-gray-200"
                     }`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex flex-wrap gap-2">
-                      {popularTranslations.map((edition) => (
+                      {filteredBooks.map((book) => (
                         <button
-                          key={edition.id}
-                          onClick={(e) => handleEditionChange(e, edition.id)}
+                          key={book.id}
+                          onClick={(e) => handleBookChange(e, book.id)}
                           onMouseDown={(e) => e.preventDefault()}
                           type="button"
                           className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${
-                            selectedEditionId === edition.id
+                            selectedBookId === book.id
                               ? "bg-teal-600 text-white shadow-md scale-105"
                               : theme
                                 ? "bg-slate-700 text-gray-300 hover:bg-slate-600"
                                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }`}
                         >
-                          {edition.englishName}
+                          {book.name}
                         </button>
                       ))}
                     </div>
@@ -182,30 +207,29 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           {error}
                         </p>
                       </div>
-                    ) : currentTranslation ? (
+                    ) : currentTafseer ? (
                       <div>
                         <div
-                          dir="ltr"
+                          dir={language === "ar" ? "rtl" : "ltr"}
                           className={`rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto ${
                             theme ? "bg-[#0f172b]" : "bg-[#fff5e4]"
                           }`}
                         >
                           <p
-                            className={`text-lg leading-relaxed dynamic-font ${
-                              theme ? "text-gray-100" : "text-gray-800"
+                            className={`dynamic-font text-sm font-medium mb-3 ${
+                              theme ? "text-gray-300" : "text-gray-600"
                             }`}
                           >
-                            {currentTranslation.text}
+                            {currentTafseer.tafseer_name}
                           </p>
-                          {currentTranslation.edition && (
-                            <p
-                              className={`mt-4 text-sm font-medium dynamic-font ${
-                                theme ? "text-gray-400" : "text-gray-600"
-                              }`}
-                            >
-                              — {currentTranslation.edition.name}
-                            </p>
-                          )}
+                          <p
+                            className={`fontAmiri text-lg leading-relaxed text-justify ${
+                              theme ? "text-white" : "text-gray-800"
+                            }`}
+                            dir={language === "ar" ? "rtl" : "ltr"}
+                          >
+                            {currentTafseer.text}
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -215,7 +239,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                             theme ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
-                          {t("readQuran.translation.noData")}
+                          {t("readQuran.tafseer.notAvailable")}
                         </p>
                       </div>
                     )}
@@ -242,7 +266,5 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
         </Dialog>
       </Transition>
     );
-  }
+  },
 );
-
-TranslationModal.displayName = "TranslationModal";

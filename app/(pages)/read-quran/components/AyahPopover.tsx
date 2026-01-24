@@ -15,8 +15,8 @@ import { useLanguage } from "../../../../context/LanguageContext";
 import { useTheme } from "../../../../context/ThemeContext";
 import { reciters } from "../../../../constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
-import { TafseerModal } from "./TafseerModal";
-import { TranslationModal } from "./TranslationModal";
+import { TafseerModal } from "../../../../components/modals/TafseerModal";
+import { TranslationModal } from "../../../../components/modals/TranslationModal";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
 
 interface AyahPopoverProps {
@@ -223,6 +223,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           ref={popoverRef}
           className={`
           fixed z-50 rounded-lg shadow-2xl border
+          top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
           ${
             theme
               ? "bg-slate-800 border-slate-600 text-white"
@@ -231,10 +232,6 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           min-w-[240px] max-w-[280px]
           transition-all duration-200 ease-in-out
         `}
-          style={{
-            top: `${position.y}px`,
-            left: `${position.x}px`,
-          }}
           onClick={(e) => e.stopPropagation()}
         >
           <div

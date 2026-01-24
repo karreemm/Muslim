@@ -199,7 +199,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2 relative">
             <button
               onClick={toggleTheme}
-              className="flex items-center justify-center w-10 h-10 transition-colors duration-200"
+              className="flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer"
               aria-label="Toggle Theme"
             >
               {theme ? (
@@ -212,7 +212,7 @@ export default function Navbar() {
               <button
                 ref={buttonRef}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-center w-10 h-10 transition-colors duration-200"
+                className="flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer"
                 aria-label="Change Language"
               >
                 <FontAwesomeIcon icon={faEarthAfrica} size="lg" />
@@ -245,7 +245,7 @@ export default function Navbar() {
 
             <Link
               href="/saved-ayahs"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/saved-ayahs") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/saved-ayahs") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faBookmark} size="lg" />
@@ -253,7 +253,7 @@ export default function Navbar() {
 
             <Link
               href="/favourites"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/favourites") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/favourites") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -261,7 +261,7 @@ export default function Navbar() {
 
             <Link
               href="/sadaqat"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 transition-colors duration-200 ${isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
                 }`}
             >
               <FontAwesomeIcon icon={faSeedling} size="lg" />
