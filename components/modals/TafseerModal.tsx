@@ -23,7 +23,7 @@ interface TafseerModalProps {
   surahNameEn?: string;
 }
 
-export const TafseerModal: React.FC<TafseerModalProps> = memo(
+const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
   ({ isOpen, onClose, surahNumber, ayahNumber, surahNameAr, surahNameEn }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
@@ -268,3 +268,7 @@ export const TafseerModal: React.FC<TafseerModalProps> = memo(
     );
   },
 );
+
+TafseerModalComponent.displayName = "TafseerModal";
+
+export const TafseerModal = TafseerModalComponent;

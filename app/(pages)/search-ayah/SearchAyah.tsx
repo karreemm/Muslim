@@ -123,7 +123,7 @@ export default function SearchAyah() {
                   {t("searchAyah.resultsFound", { count: totalResults })}
                 </h2>
                 <p className="text-sm mt-1 dynamic-font opacity-70">
-                  {t("searchAyah.searchingFor")} "{keyword}"
+                  {t("searchAyah.searchingFor")} &quot;{keyword}&quot;
                 </p>
                 <p className="text-sm mt-1 dynamic-font opacity-70">
                   {t("searchAyah.showingPage", {
