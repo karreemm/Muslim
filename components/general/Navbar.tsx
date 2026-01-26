@@ -18,6 +18,7 @@ import {
   faListOl,
   faClock,
   faSeedling,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -46,7 +47,7 @@ export default function Navbar() {
   };
 
   const isQuranActive = () =>
-    pathname.startsWith("/read-quran") || pathname.startsWith("/listen-quran");
+    pathname.startsWith("/read-quran") || pathname.startsWith("/listen-quran") || pathname.startsWith("/search-ayah");
 
   const handleLanguageChange = (lang: string) => {
     if (lang !== language) {
@@ -95,10 +96,11 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-14 text-xl font-semibold">
             <Link
-              className={`hidden xl:inline-block no-underline transition-all duration-300 ${isActive("/")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`hidden xl:inline-block no-underline transition-all duration-300 ${
+                isActive("/")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/"
             >
               {t("navbar.home")}
@@ -108,88 +110,107 @@ export default function Navbar() {
               <button
                 ref={quranButtonRef}
                 onClick={() => setIsQuranDropdownOpen(!isQuranDropdownOpen)}
-                className={`flex items-center justify-center transition-all duration-300 ${isQuranActive()
-                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                  : "hover:underline hover:underline-offset-8"
-                  }`}
+                className={`flex items-center justify-center transition-all duration-300 ${
+                  isQuranActive()
+                    ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                    : "hover:underline hover:underline-offset-8"
+                }`}
               >
                 {t("navbar.quran")}
               </button>
               {isQuranDropdownOpen && (
                 <div
                   ref={quranDropdownRef}
-                  className={`absolute ${language === "ar"
-                    ? "left-0 text-right w-36"
-                    : "right-0 text-left w-36"
-                    } mt-2 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded-sm shadow-lg`}
+                  className={`absolute ${
+                    language === "ar"
+                      ? "left-0 text-right w-36"
+                      : "right-0 text-left w-36"
+                  } mt-2 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded-sm shadow-lg`}
                 >
                   <Link
                     href="/read-quran"
-                    className={`text-lg block w-full px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/read-quran")
-                      ? "text-amber-600 dark:text-amber-400 font-bold"
-                      : ""
-                      }`}
+                    className={`text-lg block w-full px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                      isActive("/read-quran")
+                        ? "text-amber-600 dark:text-amber-400 font-bold"
+                        : ""
+                    }`}
                   >
                     {t("navbar.readQuran")}
                   </Link>
                   <Link
                     href="/listen-quran"
-                    className={`block w-full text-lg px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/listen-quran")
-                      ? "text-amber-600 dark:text-amber-400 font-bold"
-                      : ""
-                      }`}
+                    className={`block w-full text-lg px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                      isActive("/listen-quran")
+                        ? "text-amber-600 dark:text-amber-400 font-bold"
+                        : ""
+                    }`}
                   >
                     {t("navbar.listenQuran")}
+                  </Link>
+                  <Link
+                    href="/search-ayah"
+                    className={`block w-full text-lg px-4 py-2 hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                      isActive("/search-ayah")
+                        ? "text-amber-600 dark:text-amber-400 font-bold"
+                        : ""
+                    }`}
+                  >
+                    {t("navbar.searchAyah")}
                   </Link>
                 </div>
               )}
             </div>
 
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/read-hadith")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`no-underline transition-all duration-300 ${
+                isActive("/read-hadith")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/read-hadith"
             >
               {t("navbar.hadith")}
             </Link>
 
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/azkar")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`no-underline transition-all duration-300 ${
+                isActive("/azkar")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/azkar"
             >
               {t("navbar.azkar")}
             </Link>
 
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/tasbeeh")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`no-underline transition-all duration-300 ${
+                isActive("/tasbeeh")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/tasbeeh"
             >
               {t("navbar.tasbeeh")}
             </Link>
 
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/prayer-times")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`no-underline transition-all duration-300 ${
+                isActive("/prayer-times")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/prayer-times"
             >
               {t("navbar.prayerTimes")}
             </Link>
 
             <Link
-              className={`no-underline transition-all duration-300 ${isActive("/sadaqa-garya")
-                ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
-                : "hover:underline hover:underline-offset-8"
-                }`}
+              className={`no-underline transition-all duration-300 ${
+                isActive("/sadaqa-garya")
+                  ? "text-amber-600 dark:text-amber-400 underline underline-offset-8"
+                  : "hover:underline hover:underline-offset-8"
+              }`}
               href="/sadaqa-garya"
             >
               {t("navbar.sadaqaGarya")}
@@ -220,20 +241,23 @@ export default function Navbar() {
               {isDropdownOpen && (
                 <div
                   ref={dropdownRef}
-                  className={`absolute ${language === "ar" ? "left-0" : "right-0"
-                    } mt-2 w-32 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded-sm shadow-lg`}
+                  className={`absolute ${
+                    language === "ar" ? "left-0" : "right-0"
+                  } mt-2 w-32 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white border-teal-600 dark:border-teal-500 rounded-sm shadow-lg`}
                 >
                   <button
                     onClick={() => handleLanguageChange("ar")}
-                    className={`block w-full px-4 py-2 text-left ${language === "ar" ? "bg-[#f5ead5] dark:bg-slate-800" : ""
-                      }`}
+                    className={`block w-full px-4 py-2 text-left ${
+                      language === "ar" ? "bg-[#f5ead5] dark:bg-slate-800" : ""
+                    }`}
                   >
                     العربية
                   </button>
                   <button
                     onClick={() => handleLanguageChange("en")}
-                    className={`block w-full px-4 py-2 text-left ${language === "en" ? "bg-[#f5ead5] dark:bg-slate-800" : ""
-                      }`}
+                    className={`block w-full px-4 py-2 text-left ${
+                      language === "en" ? "bg-[#f5ead5] dark:bg-slate-800" : ""
+                    }`}
                   >
                     English
                   </button>
@@ -245,50 +269,63 @@ export default function Navbar() {
 
             <Link
               href="/saved-ayahs"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/saved-ayahs") ? "text-amber-600 dark:text-amber-400" : ""
-                }`}
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${
+                isActive("/saved-ayahs")
+                  ? "text-amber-600 dark:text-amber-400"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faBookmark} size="lg" />
             </Link>
 
             <Link
               href="/favourites"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/favourites") ? "text-amber-600 dark:text-amber-400" : ""
-                }`}
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${
+                isActive("/favourites")
+                  ? "text-amber-600 dark:text-amber-400"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faHeart} size="lg" />
             </Link>
 
             <Link
               href="/sadaqat"
-              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
-                }`}
+              className={`hidden lg:flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out hover:cursor-pointer ${
+                isActive("/sadaqat") ? "text-amber-600 dark:text-amber-400" : ""
+              }`}
             >
               <FontAwesomeIcon icon={faSeedling} size="lg" />
             </Link>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 lg:hidden ${isMobileMenuOpen ? "rotate-90" : "rotate-0"
-                }`}
+              className={`flex items-center justify-center w-10 h-10 transition-transform duration-700 lg:hidden ${
+                isMobileMenuOpen ? "rotate-90" : "rotate-0"
+              }`}
               aria-label="Toggle Mobile Menu"
             >
-              <FontAwesomeIcon icon={isMobileMenuOpen ? faX : faBars} size="lg" />
+              <FontAwesomeIcon
+                icon={isMobileMenuOpen ? faX : faBars}
+                size="lg"
+              />
             </button>
           </div>
         </div>
 
         {isMobileMenuOpen && (
           <div
-            className={`absolute top-16 px-5 py-2 border-b border-black dark:border-white left-0 w-full bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md lg:hidden ${language === "ar" ? `text-right` : `text-left`
-              }`}
+            className={`absolute top-16 px-5 py-2 border-b border-black dark:border-white left-0 w-full bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md lg:hidden ${
+              language === "ar" ? `text-right` : `text-left`
+            }`}
           >
             <Link
               href="/"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faHouse} className="" />
               {t("navbar.home")}
@@ -296,10 +333,11 @@ export default function Navbar() {
 
             <Link
               href="/read-quran"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/read-quran")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/read-quran")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faBookOpen} className="" />
               {t("navbar.readQuran")}
@@ -307,21 +345,35 @@ export default function Navbar() {
 
             <Link
               href="/listen-quran"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/listen-quran")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/listen-quran")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faHeadphones} className="" />
               {t("navbar.listenQuran")}
             </Link>
 
             <Link
+              href="/search-ayah"
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/search-ayah")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
+            >
+              <FontAwesomeIcon icon={faSearch} className="" />
+              {t("navbar.searchAyah")}
+            </Link>
+
+            <Link
               href="/read-hadith"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/read-hadith")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/read-hadith")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faBookOpen} className="" />
               {t("navbar.hadith")}
@@ -329,10 +381,11 @@ export default function Navbar() {
 
             <Link
               href="/azkar"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/azkar")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/azkar")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faBookOpen} className="" />
               {t("navbar.azkar")}
@@ -340,10 +393,11 @@ export default function Navbar() {
 
             <Link
               href="/tasbeeh"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/tasbeeh")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/tasbeeh")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faListOl} className="" />
               {t("navbar.tasbeeh")}
@@ -351,10 +405,11 @@ export default function Navbar() {
 
             <Link
               href="/prayer-times"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/prayer-times")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/prayer-times")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faClock} className="" />
               {t("navbar.prayerTimes")}
@@ -362,10 +417,11 @@ export default function Navbar() {
 
             <Link
               href="/sadaqa-garya"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/sadaqa-garya")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/sadaqa-garya")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faSeedling} className="" />
               {t("navbar.sadaqaGarya")}
@@ -375,10 +431,11 @@ export default function Navbar() {
 
             <Link
               href="/saved-ayahs"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/saved-ayahs")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/saved-ayahs")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faBookmark} className="" />
               {t("navbar.savedAyahs")}
@@ -386,10 +443,11 @@ export default function Navbar() {
 
             <Link
               href="/favourites"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/favourites")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/favourites")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faHeart} className="" />
               {t("navbar.favourites")}
@@ -397,10 +455,11 @@ export default function Navbar() {
 
             <Link
               href="/sadaqat"
-              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${isActive("/sadaqat")
-                ? "text-amber-600 dark:text-amber-400 font-bold"
-                : ""
-                }`}
+              className={`flex items-center gap-3 px-4 py-2 text-lg hover:bg-[#f5ead5] dark:hover:bg-slate-800 ${
+                isActive("/sadaqat")
+                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                  : ""
+              }`}
             >
               <FontAwesomeIcon icon={faSeedling} className="" />
               {t("navbar.yourSadaqat")}
@@ -409,6 +468,5 @@ export default function Navbar() {
         )}
       </div>
     </div>
-
   );
 }

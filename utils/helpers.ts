@@ -34,3 +34,15 @@
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
   }
+
+  export const removeDiacritics = (text: string): string => {
+    return text
+      .replace(/[\u064B-\u065F]/g, '') 
+      .replace(/\u0670/g, '')
+      .replace(/[\u0671\u0672\u0673\u0675]/g, 'ا') 
+      .replace(/\u0649/g, 'ي') 
+      .replace(/\u0629/g, 'ه') 
+      .replace(/\u0640/g, '') 
+      .replace(/\s+/g, ' ')
+      .trim();
+  };

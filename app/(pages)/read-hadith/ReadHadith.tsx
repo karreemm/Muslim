@@ -6,6 +6,7 @@ import { hadithBooks } from "../../../constants/hadithData";
 import { ClipLoader } from "react-spinners";
 import { useHadithBooks } from "@/hooks/readHadith/useHadithBooks";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { BookCardSkeleton } from "./components/BookCardSkeleton";
 
 export default function ReadHadithPage() {
   const { language } = useLanguage();
@@ -29,8 +30,13 @@ export default function ReadHadithPage() {
         </h1>
 
         {loading ? (
-          <div className="flex flex-col items-center gap-4 mt-10">
-            <ClipLoader color={"#14b8a6"} loading={loading} size={50} />
+          <div className="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+            <BookCardSkeleton />
+            <BookCardSkeleton />
+            <BookCardSkeleton />
+            <BookCardSkeleton />
+            <BookCardSkeleton />
+            <BookCardSkeleton />
           </div>
         ) : error ? (
           <div className="text-red-500 text-center text-xl mt-10">
@@ -88,8 +94,9 @@ export default function ReadHadithPage() {
                   </div>
 
                   <div
-                    className={`absolute top-6 opacity-0 group-hover:opacity-100 transition-opacity ${language === "ar" ? "left-4" : "right-4"
-                      }`}
+                    className={`absolute top-6 opacity-0 group-hover:opacity-100 transition-opacity ${
+                      language === "ar" ? "left-4" : "right-4"
+                    }`}
                   >
                     <svg
                       className="w-6 h-6 text-teal-600 dark:text-teal-400"

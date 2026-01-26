@@ -10,6 +10,7 @@ import { useBookChapters } from "@/hooks/readHadith/useBookChapters";
 import { hadithBooks } from "@/constants/hadithData";
 import Pagination from "@/components/general/Pagination";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { ChapterCardSkeleton } from "../../components/ChapterCardSkeleton";
 
 export default function BookChaptersPage() {
   const params = useParams();
@@ -105,14 +106,20 @@ export default function BookChaptersPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {language === "ar"
                   ? `تم العثور على ${chapters.length} باب`
-                  : `Found ${chapters.length} chapter${chapters.length !== 1 ? "s" : ""
-                  }`}
+                  : `Found ${chapters.length} chapter${
+                      chapters.length !== 1 ? "s" : ""
+                    }`}
               </p>
             )}
 
             {loading && (
-              <div className="flex flex-col items-center gap-4 mt-10">
-                <ClipLoader color={"#14b8a6"} loading={loading} size={50} />
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+                <ChapterCardSkeleton />
+                <ChapterCardSkeleton />
+                <ChapterCardSkeleton />
+                <ChapterCardSkeleton />
+                <ChapterCardSkeleton />
+                <ChapterCardSkeleton />
               </div>
             )}
 
@@ -143,7 +150,8 @@ export default function BookChaptersPage() {
 
                           <div className="flex-1 min-w-0">
                             <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                              {t("hadith.book.chapterLabel")} {chapter.chapterNumber}
+                              {t("hadith.book.chapterLabel")}{" "}
+                              {chapter.chapterNumber}
                             </h3>
                             {language === "ar" ? (
                               <p
@@ -164,8 +172,9 @@ export default function BookChaptersPage() {
 
                           <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg
-                              className={`w-5 h-5 text-teal-600 dark:text-teal-400 ${language === "ar" ? "rotate-180" : ""
-                                }`}
+                              className={`w-5 h-5 text-teal-600 dark:text-teal-400 ${
+                                language === "ar" ? "rotate-180" : ""
+                              }`}
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"

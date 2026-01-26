@@ -9,6 +9,7 @@ import { ClipLoader } from "react-spinners";
 import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
 import { hadithBooks } from "@/constants/hadithData";
 import Pagination from "@/components/general/Pagination";
+import { HadithCardSkeleton } from "../../../../components/HadithCardSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
@@ -137,8 +138,10 @@ export default function ChapterHadithsPage() {
             )}
 
             {loading && (
-              <div className="flex flex-col items-center gap-4 mt-10">
-                <ClipLoader color={"#14b8a6"} loading={loading} size={50} />
+              <div className="w-full flex flex-col gap-6 mt-6">
+                <HadithCardSkeleton />
+                <HadithCardSkeleton />
+                <HadithCardSkeleton />
               </div>
             )}
 
@@ -204,15 +207,15 @@ export default function ChapterHadithsPage() {
                                   hadith.status.toLowerCase() === "sahih"
                                     ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                     : hadith.status.toLowerCase() === "hasan"
-                                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                                      ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                                 }`}
                               >
                                 {hadith.status.toLowerCase() === "sahih"
                                   ? t("hadith.chapter.sahih")
                                   : hadith.status.toLowerCase() === "hasan"
-                                  ? t("hadith.chapter.hasan")
-                                  : t("hadith.chapter.da`eef")}
+                                    ? t("hadith.chapter.hasan")
+                                    : t("hadith.chapter.da`eef")}
                               </span>
                             </>
                           )}

@@ -14,6 +14,7 @@ import enFavourites from "@/locales/en/favourites.json";
 import enSavedAyahs from "@/locales/en/savedAyahs.json";
 import enCommon from "@/locales/en/common.json";
 import enFooter from "@/locales/en/footer.json";
+import enSearchAyah from "@/locales/en/searchAyah.json";
 
 import arNavbar from "@/locales/ar/navbar.json";
 import arHome from "@/locales/ar/home.json";
@@ -29,6 +30,7 @@ import arFavourites from "@/locales/ar/favourites.json";
 import arSavedAyahs from "@/locales/ar/savedAyahs.json";
 import arCommon from "@/locales/ar/common.json";
 import arFooter from "@/locales/ar/footer.json";
+import arSearchAyah from "@/locales/ar/searchAyah.json";
 
 type TranslationKey = string;
 
@@ -52,6 +54,7 @@ const translations: Record<string, Translations> = {
     savedAyahs: enSavedAyahs,
     common: enCommon,
     footer: enFooter,
+    searchAyah: enSearchAyah,
   },
   ar: {
     navbar: arNavbar,
@@ -68,6 +71,7 @@ const translations: Record<string, Translations> = {
     savedAyahs: arSavedAyahs,
     common: arCommon,
     footer: arFooter,
+    searchAyah: arSearchAyah,
   },
 };
 

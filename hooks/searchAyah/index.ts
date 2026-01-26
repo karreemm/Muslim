@@ -1,0 +1,1 @@
+export { useSearchAyah } from "./useSearchAyah";
