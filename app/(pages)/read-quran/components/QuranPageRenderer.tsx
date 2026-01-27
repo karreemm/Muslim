@@ -242,7 +242,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             ))}
         </div>
         {pageNumber && (
-          <div className="mt-3 text-sm text-gray-700 dark:text-gray-500 font-sans w-full text-center">
+          <div className="mt-3 text-sm text-gray-700 dark:text-gray-300 font-sans w-full text-center">
             {pageNumber}
           </div>
         )}

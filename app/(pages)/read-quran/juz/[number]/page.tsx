@@ -71,7 +71,7 @@ export default function JuzPage() {
               <>
                 <button
                   onClick={() => navigation.handleNavigation("next")}
-                  className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white"
+                  className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                   onMouseEnter={() => showPopover("popover-next")}
                   onMouseLeave={() => hidePopover("popover-next")}
                 >

@@ -61,7 +61,7 @@ export default function PageView() {
                             <>
                                 <button
                                     onClick={() => navigation.handleNavigation("next")}
-                                    className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white"
+                                    className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                                     onMouseEnter={() => showPopover("popover-next")}
                                     onMouseLeave={() => hidePopover("popover-next")}
                                 >
@@ -86,7 +86,7 @@ export default function PageView() {
                             <>
                                 <button
                                     onClick={() => navigation.handleNavigation("prev")}
-                                    className="absolute top-0 left-0 text-2xl text-teal-600 dark:text-white"
+                                    className="absolute top-0 left-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                                     onMouseEnter={() => showPopover("popover-prev")}
                                     onMouseLeave={() => hidePopover("popover-prev")}
                                 >

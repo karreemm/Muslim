@@ -2,12 +2,8 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlus,
-  faMinus,
   faArrowRight,
   faArrowLeft,
-  faExpand,
-  faCompress,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -74,7 +70,7 @@ export default function SurahPage() {
               <>
                 <button
                   onClick={() => navigation.handleNavigation("next")}
-                  className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white"
+                  className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                   onMouseEnter={() => showPopover("popover-next")}
                   onMouseLeave={() => hidePopover("popover-next")}
                 >
@@ -99,7 +95,7 @@ export default function SurahPage() {
               <>
                 <button
                   onClick={() => navigation.handleNavigation("prev")}
-                  className="absolute top-0 left-0 text-2xl text-teal-600 dark:text-white"
+                  className="absolute top-0 left-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                   onMouseEnter={() => showPopover("popover-prev")}
                   onMouseLeave={() => hidePopover("popover-prev")}
                 >
@@ -133,6 +129,12 @@ export default function SurahPage() {
               <h1 className="md:text-5xl text-3xl font-bold text-teal-600 dark:text-teal-500">
                 {t("common.surahWithNoAll")}{" "}
                 {currentSurah?.[language as keyof SurahData]?.toString()}
+                <span className="mx-3 md:mx-6">
+                  <ShareModal
+                    size="2xl"
+                    url={`https://muslim-one.vercel.app/read-quran/surah/${navigation.currentNumber}`}
+                  />
+                </span>
               </h1>
               {currentSurah && (
                 <>
@@ -167,41 +169,6 @@ export default function SurahPage() {
                 verses={surahVerses}
                 fontSize={display.fontSize}
                 lineHeight={display.lineHeight}
-              />
-            </div>
-
-            <div
-              dir={language === "ar" ? "rtl" : "ltr"}
-              className="mt-5 flex items-center gap-5"
-            >
-              <button
-                onClick={display.increaseFontSize}
-                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-              >
-                <FontAwesomeIcon icon={faPlus} />
-                {t("common.font")}
-              </button>
-
-              <button
-                onClick={display.decreaseFontSize}
-                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-              >
-                <FontAwesomeIcon icon={faMinus} />
-                {t("common.font")}
-              </button>
-
-              <button
-                onClick={toggleFullscreen}
-                className="hover:opacity-80 py-2 px-4 rounded-md flex items-center gap-2 bg-teal-600 text-white font-bold"
-                title={t("common.screen")}
-              >
-                <FontAwesomeIcon icon={isFullscreen ? faCompress : faExpand} />
-                {t("common.screen")}
-              </button>
-
-              <ShareModal
-                size="2xl"
-                url={`https://muslim-one.vercel.app/read-quran/surah/${navigation.currentNumber}`}
               />
             </div>
           </div>
