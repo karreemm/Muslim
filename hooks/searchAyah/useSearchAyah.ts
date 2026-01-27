@@ -6,6 +6,7 @@ import {
 
 export const useSearchAyah = () => {
   const [keyword, setKeyword] = useState("");
+  const [searchedKeyword, setSearchedKeyword] = useState("");
   const [results, setResults] = useState<SearchResponse | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +29,7 @@ export const useSearchAyah = () => {
       if (page === 1) {
         setHasSearched(true);
         setCurrentPage(1);
+        setSearchedKeyword(keyword);
       }
 
       try {
@@ -63,6 +65,7 @@ export const useSearchAyah = () => {
 
   const clearSearch = useCallback(() => {
     setKeyword("");
+    setSearchedKeyword("");
     setResults(null);
     setTotalCount(0);
     setError("");
@@ -86,6 +89,7 @@ export const useSearchAyah = () => {
   return {
     keyword,
     setKeyword,
+    searchedKeyword,
     results,
     totalResults: totalCount,
     isLoading,

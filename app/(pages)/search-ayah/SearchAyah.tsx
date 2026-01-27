@@ -21,6 +21,7 @@ export default function SearchAyah() {
   const {
     keyword,
     setKeyword,
+    searchedKeyword,
     results,
     totalResults,
     isLoading,
@@ -123,7 +124,7 @@ export default function SearchAyah() {
                   {t("searchAyah.resultsFound", { count: totalResults })}
                 </h2>
                 <p className="text-sm mt-1 dynamic-font opacity-70">
-                  {t("searchAyah.searchingFor")} &quot;{keyword}&quot;
+                  {t("searchAyah.searchingFor")} &quot;{searchedKeyword}&quot;
                 </p>
                 <p className="text-sm mt-1 dynamic-font opacity-70">
                   {t("searchAyah.showingPage", {
@@ -134,7 +135,10 @@ export default function SearchAyah() {
               </div>
               <div className="grid grid-cols-1 gap-5">
                 {results.matches.map((ayah, index) => (
-                  <AyahSearchCard key={`${ayah.number}-${index}`} ayah={ayah} />
+                  <AyahSearchCard
+                    key={`${ayah.number}-${index}`}
+                    ayah={ayah}
+                  />
                 ))}
               </div>
               {totalPages > 1 && (
@@ -173,7 +177,7 @@ export default function SearchAyah() {
               </p>
             </div>
           ) : (
-            <div className="text-center py-20">
+            <div className="text-center py-20 flex justify-center items-center flex-col">
               <FontAwesomeIcon
                 icon={faSearch}
                 className="text-6xl text-teal-600 dark:text-teal-500 mb-4"
