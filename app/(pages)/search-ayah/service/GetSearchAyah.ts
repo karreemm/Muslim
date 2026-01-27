@@ -45,7 +45,11 @@ export const searchAyahs = async (
     }
 
     const normalizedKeyword = removeDiacritics(keyword.trim());
-    
+
+    if (normalizedKeyword.length <= 2) {
+      throw new Error('Search term is too short. Please use at least 3 characters for better results.');
+    }
+
     console.log('Original Keyword:', keyword);
     console.log('Normalized Keyword:', normalizedKeyword);
     console.log('Page:', page, 'Limit:', limit);
@@ -54,7 +58,7 @@ export const searchAyahs = async (
     console.log('Search URL:', url);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const response = await fetch(url, {
       method: 'GET',
@@ -66,6 +70,16 @@ export const searchAyahs = async (
 
     clearTimeout(timeoutId);
 
+    if (response.status === 404) {
+      console.log('No results found (404)');
+      return { count: 0, matches: [] };
+    }
+
+    if (response.status === 500) {
+      console.error('Server error (500) - API cannot process this search');
+      throw new Error('The API server is having trouble processing this search. Try using a longer or more specific search term.');
+    }
+
     if (!response.ok) {
       console.error('Response not OK:', response.status, response.statusText);
       throw new Error(`Failed to search ayahs: ${response.status} ${response.statusText}`);
@@ -73,7 +87,7 @@ export const searchAyahs = async (
 
     const data = await response.json();
     console.log('API Response:', data);
-    
+
     if (!data.data || data.data.count === 0) {
       return { count: 0, matches: [] };
     }
@@ -106,12 +120,12 @@ export const searchAyahs = async (
         const ayahResponse = await fetch(
           `https://api.alquran.cloud/v1/ayah/${num}/quran-uthmani`,
         );
-        
+
         if (ayahResponse.ok) {
           const ayahData = await ayahResponse.json();
           fullAyahs.push(ayahData.data);
         }
-        
+
         await new Promise(resolve => setTimeout(resolve, 50));
       } catch (error) {
         console.error(`Error fetching ayah ${num}:`, error);
@@ -119,8 +133,8 @@ export const searchAyahs = async (
     }
 
     return {
-      count: uniqueAyahNumbers.length, 
-      matches: fullAyahs, 
+      count: uniqueAyahNumbers.length,
+      matches: fullAyahs,
     };
   } catch (error) {
     if (error instanceof Error) {
