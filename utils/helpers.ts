@@ -1,46 +1,54 @@
-  export function toArabicNumber(number: number | undefined): string {
-    if (number === undefined) {
-      return '';
-    }
-    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return number.toString().split('').map(digit => arabicNumbers[parseInt(digit)]).join('');
+export function toArabicNumber(number: number | undefined): string {
+  if (number === undefined) {
+    return "";
   }
-  
-  export const toEnglishNumber = (str: string) => {
-    const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return str.replace(/[۰-۹]/g, (d) => persianNumbers.indexOf(d).toString()).replace(/[٠-٩]/g, (d) => arabicNumbers.indexOf(d).toString());
-  };
+  const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  return number
+    .toString()
+    .split("")
+    .map((digit) => arabicNumbers[parseInt(digit)])
+    .join("");
+}
 
-  export function showPopover(id: string): void {
-    const popover = document.getElementById(id);
-    if (popover) {
-      popover.classList.remove('invisible', 'opacity-0');
-      popover.classList.add('visible', 'opacity-100');
-    }
-  }
-  
-  export function hidePopover(id: string): void {
-    const popover = document.getElementById(id);
-    if (popover) {
-      popover.classList.remove('visible', 'opacity-100');
-      popover.classList.add('invisible', 'opacity-0');
-    }
-  }
+export const toEnglishNumber = (str: string) => {
+  const persianNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  return str
+    .replace(/[۰-۹]/g, (d) => persianNumbers.indexOf(d).toString())
+    .replace(/[٠-٩]/g, (d) => arabicNumbers.indexOf(d).toString());
+};
 
-  export function slugify(text: string): string {
-    return text
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)+/g, '');
+export function showPopover(id: string): void {
+  const popover = document.getElementById(id);
+  if (popover) {
+    popover.classList.remove("invisible", "opacity-0");
+    popover.classList.add("visible", "opacity-100");
   }
+}
 
-  export const removeDiacritics = (text: string): string => {
-    return text
-      .replace(/[\u064B-\u065F]/g, '')
-      .replace(/\u0670/g, '')
-      .replace(/[\u06D6-\u06ED]/g, '')
-      .replace(/\u0640/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-  };
+export function hidePopover(id: string): void {
+  const popover = document.getElementById(id);
+  if (popover) {
+    popover.classList.remove("visible", "opacity-100");
+    popover.classList.add("invisible", "opacity-0");
+  }
+}
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
+export const removeDiacritics = (text: string): string => {
+  return text
+    .replace(/[\u064B-\u065F]/g, "") 
+    .replace(/\u0670/g, "") 
+    .replace(/[\u06D6-\u06ED]/g, "") 
+    .replace(/\u0640/g, "") 
+    .replace(/\u0671/g, "\u0627") 
+    .replace(/[\u0622\u0623\u0625]/g, "\u0627") 
+    .replace(/\s+/g, " ") 
+    .trim();
+};

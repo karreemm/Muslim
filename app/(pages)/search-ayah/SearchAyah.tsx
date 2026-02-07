@@ -3,7 +3,6 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
-  faSpinner,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -32,6 +31,8 @@ export default function SearchAyah() {
     currentPage,
     changePage,
     totalPages,
+    wholeWord,
+    setWholeWord,
   } = useSearchAyah();
 
   const handleClearSearch = () => {
@@ -81,6 +82,38 @@ export default function SearchAyah() {
                   className="flex-1 text-base sm:text-xl dynamic-font outline-none bg-transparent text-[#134B70] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 min-w-0"
                   dir={language === "ar" ? "rtl" : "ltr"}
                 />
+
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={wholeWord}
+                      onChange={(e) => setWholeWord(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-5 h-5 border-2 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-slate-700 peer-checked:bg-teal-600 peer-checked:border-teal-600 dark:peer-checked:bg-teal-500 dark:peer-checked:border-teal-500 transition-all duration-200 flex items-center justify-center group-hover:border-teal-500 dark:group-hover:border-teal-400">
+                      <svg
+                        className={`w-3 h-3 text-white transition-all duration-200 ${
+                          wholeWord
+                            ? "opacity-100 scale-100"
+                            : "opacity-0 scale-50"
+                        }`}
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <span className="text-sm sm:text-base dynamic-font text-gray-700 dark:text-gray-300 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors select-none">
+                    {t("searchAyah.exactPhrase")}
+                  </span>
+                </label>
+
                 {keyword && (
                   <button
                     onClick={handleClearSearch}
@@ -136,8 +169,9 @@ export default function SearchAyah() {
               <div className="grid grid-cols-1 gap-5">
                 {results.matches.map((ayah, index) => (
                   <AyahSearchCard
-                    key={`${ayah.number}-${index}`}
+                      key={`${ayah.number}-${index}`}
                     ayah={ayah}
+                    highlightKeyword={searchedKeyword}
                   />
                 ))}
               </div>

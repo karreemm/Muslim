@@ -21,5 +21,7 @@
   "searchButton": "Search",
   "showingPage": "Showing page {{current}} of {{total}}",
   "previous": "Previous",
-  "next": "Next"
+  "next": "Next",
+  "wholeWord": "Whole Word",
+  "exactPhrase": "Exact Phrase"
 }

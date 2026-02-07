@@ -14,15 +14,19 @@ import { TranslationModal } from "@/components/modals/TranslationModal";
 import type { SearchAyah } from "../service/GetSearchAyah";
 import { reciters } from "@/constants/recitersData";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
+import { useTheme } from "@/context/ThemeContext";
+import { highlightText } from "@/utils/highlightText";
 
 interface AyahSearchCardProps {
   ayah: SearchAyah;
+  highlightKeyword?: string;
 }
 
 export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
-  ({ ayah }) => {
+  ({ ayah, highlightKeyword }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
+    const { theme } = useTheme();
 
     const [selectedReciter, setSelectedReciter] =
       useState<string>("ar.alafasy");
@@ -166,7 +170,13 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               className="text-2xl leading-loose dynamic-font text-[#134B70] dark:text-white"
               dir="rtl"
             >
-              {ayah.text}
+              {highlightKeyword
+                ? highlightText({
+                    text: ayah.text,
+                    keyword: highlightKeyword,
+                    isDarkMode: theme,
+                  })
+                : ayah.text}
             </p>
           </div>
 
@@ -225,7 +235,9 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               </span>
             </button>
 
-            <div className={`relative ${language === "ar" ? "md:mr-auto" : "md:ml-auto"}`}>
+            <div
+              className={`relative ${language === "ar" ? "md:mr-auto" : "md:ml-auto"}`}
+            >
               <button
                 onClick={() => setShowReciterMenu(!showReciterMenu)}
                 className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-[#FFF5E4] dark:bg-slate-700 text-[#134B70] dark:text-white hover:bg-teal-600 hover:text-white"

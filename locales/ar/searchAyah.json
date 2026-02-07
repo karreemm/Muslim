@@ -21,5 +21,7 @@
   "searchButton": "بحث",
   "showingPage": "عرض صفحة {{current}} من {{total}}",
   "previous": "السابق",
-  "next": "التالي"
+  "next": "التالي",
+  "wholeWord": "كلمة كاملة",
+  "exactPhrase": "عبارة دقيقة"
 }

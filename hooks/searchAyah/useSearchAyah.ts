@@ -15,6 +15,7 @@ export const useSearchAyah = () => {
   const [error, setError] = useState<string>("");
   const [hasSearched, setHasSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [wholeWord, setWholeWord] = useState(true);
   const itemsPerPage = 20;
 
   const performSearch = useCallback(
@@ -40,6 +41,8 @@ export const useSearchAyah = () => {
           "all",
           page,
           itemsPerPage,
+          wholeWord,
+          language,
         );
 
         if (searchResults) {
@@ -48,7 +51,7 @@ export const useSearchAyah = () => {
           setError("");
 
           if (searchResults.count === 0) {
-            console.log('No ayahs matched the search query');
+            console.log("No ayahs matched the search query");
           }
         } else {
           setError("Failed to fetch search results");
@@ -57,27 +60,59 @@ export const useSearchAyah = () => {
       } catch (err) {
         console.error("Search error:", err);
         if (err instanceof Error) {
-          if (err.message.includes('too short')) {
-            language === 'ar'
-              ? setError('مصطلح البحث قصير جدًا. يُرجى استخدام 3 أحرف على الأقل.')
-              : setError('Search term is too short. Please use at least 3 characters.');
-          } else if (err.message.includes('timeout')) {
-            language === 'ar'
-              ? setError('استغرق البحث وقتًا أطول من المتوقع. حاول استخدام عبارة أبسط أو أعد المحاولة لاحقًا.')
-              : setError('The search is taking too long. Please try a simpler search or try again later.');   
-          } else if (err.message.includes('Failed to fetch')) {
-            language === 'ar'
-              ? setError('حدث خطأ في الشبكة. يُرجى التحقق من اتصال الإنترنت ثم المحاولة مرة أخرى.')
-              : setError('Network error. Please check your internet connection and try again.');
-          } else if (err.message.includes('API server is having trouble')) {
-            language === 'ar'
-              ? setError('حدثت مشكلة في الخادم بسبب مصطلح البحث. حاول استخدام عبارة أطول أو أكثر تحديدًا.')
-              : setError('The search term caused a server error. Try using a longer or more specific phrase.');
+          if (err.message.includes("too short")) {
+            if (language === "en") {
+              setError(
+                "Search term is too short. Please use at least 3 characters.",
+              );
+            } else {
+              setError(
+                "كلمة البحث قصيرة جدًا. يرجى استخدام 3 أحرف على الأقل للحصول على نتائج أفضل.",
+              );
+            }
+          } else if (err.message.includes("timeout")) {
+            if (language === "en") {
+              setError(
+                "The search is taking too long. Please try a simpler search or try again later.",
+              );
+            } else {
+              setError(
+                "البحث يستغرق وقتًا طويلاً. يرجى تجربة بحث أبسط أو المحاولة مرة أخرى لاحقًا.",
+              );
+            }
+          } else if (err.message.includes("Failed to fetch")) {
+            if (language === "en") {
+              setError(
+                "Network error. Please check your internet connection and try again.",
+              );
+            } else {
+              setError(
+                "خطأ في الشبكة. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
+              );
+            }
+          } else if (err.message.includes("API server is having trouble")) {
+            if (language === "en") {
+              setError(
+                "The search term caused a server error. Try using a longer or more specific phrase.",
+              );
+            } else {
+              setError(
+                "تسبب مصطلح البحث في خطأ في الخادم. حاول استخدام عبارة أطول أو أكثر تحديدًا.",
+              );
+            }
           } else {
-            language === 'ar' ? setError(err.message || "حدث خطأ أثناء البحث") : setError(err.message || "An error occurred while searching");
+            if (language === "en") {
+              setError(err.message || "An error occurred while searching");
+            } else {
+              setError(err.message || "حدث خطأ أثناء البحث");
+            }
           }
         } else {
-          language === 'ar' ? setError("حدث خطأ أثناء البحث") : setError("An error occurred while searching");
+          if (language === "en") {
+            setError("An error occurred while searching");
+          } else {
+            setError("حدث خطأ أثناء البحث");
+          }
         }
         setResults(null);
         setTotalCount(0);
@@ -85,7 +120,7 @@ export const useSearchAyah = () => {
         setIsLoading(false);
       }
     },
-    [keyword, itemsPerPage],
+    [keyword, itemsPerPage, wholeWord, language],
   );
 
   const clearSearch = useCallback(() => {
@@ -125,5 +160,7 @@ export const useSearchAyah = () => {
     currentPage,
     changePage,
     totalPages,
+    wholeWord,
+    setWholeWord,
   };
 };

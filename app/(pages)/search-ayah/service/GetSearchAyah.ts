@@ -1,4 +1,4 @@
-import { removeDiacritics } from '@/utils/helpers';
+import { removeDiacritics } from "@/utils/helpers";
 
 export interface SearchAyah {
   number: number;
@@ -33,11 +33,36 @@ export interface SearchResponse {
   matches: SearchAyah[];
 }
 
+const filterWholeWordMatches = (
+  matches: SearchAyah[],
+  searchTerm: string,
+): SearchAyah[] => {
+  const searchWords = searchTerm.trim().split(/\s+/);
+
+  return matches.filter((match) => {
+    const normalizedText = removeDiacritics(match.text);
+
+    return searchWords.every((word) => {
+      const regex = new RegExp(
+        `(^|\\s|[\\u060C\\u061B\\u061F\\u0640])${escapeRegex(word)}($|\\s|[\\u060C\\u061B\\u061F\\u0640])`,
+        "g",
+      );
+      return regex.test(normalizedText);
+    });
+  });
+};
+
+const escapeRegex = (str: string): string => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
 export const searchAyahs = async (
   keyword: string,
   surah: string | number = "all",
   page: number = 1,
-  limit: number = 20
+  limit: number = 20,
+  wholeWord: boolean = true,
+  language: string = "ar",
 ): Promise<SearchResponse | null> => {
   try {
     if (!keyword || keyword.trim().length === 0) {
@@ -47,72 +72,106 @@ export const searchAyahs = async (
     const normalizedKeyword = removeDiacritics(keyword.trim());
 
     if (normalizedKeyword.length <= 2) {
-      throw new Error('Search term is too short. Please use at least 3 characters for better results.');
+      if (language === "en") {
+        throw new Error(
+          "Search term is too short. Please use at least 3 characters for better results.",
+        );
+      }
+      throw new Error(
+        "كلمة البحث قصيرة جدًا. يرجى استخدام 3 أحرف على الأقل للحصول على نتائج أفضل.",
+      );
     }
 
-    console.log('Original Keyword:', keyword);
-    console.log('Normalized Keyword:', normalizedKeyword);
-    console.log('Page:', page, 'Limit:', limit);
+    console.log("Original Keyword:", keyword);
+    console.log("Normalized Keyword:", normalizedKeyword);
+    console.log("Page:", page, "Limit:", limit);
 
     const url = `https://api.alquran.cloud/v1/search/${encodeURIComponent(normalizedKeyword)}/${surah}/ar`;
-    console.log('Search URL:', url);
+    console.log("Search URL:", url);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       signal: controller.signal,
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
 
     clearTimeout(timeoutId);
 
     if (response.status === 404) {
-      console.log('No results found (404)');
+      console.log("No results found (404)");
       return { count: 0, matches: [] };
     }
 
     if (response.status === 500) {
-      console.error('Server error (500) - API cannot process this search');
-      throw new Error('The API server is having trouble processing this search. Try using a longer or more specific search term.');
+      console.error("Server error (500) - API cannot process this search");
+      if (language === "en") {
+        throw new Error(
+          "The API server is having trouble processing this search. Try using a longer or more specific search term.",
+        );
+      }
+      throw new Error(
+        "خادم API يواجه مشكلة في معالجة هذا البحث. حاول استخدام مصطلح بحث أطول أو أكثر تحديدًا.",
+      );
     }
 
     if (!response.ok) {
-      console.error('Response not OK:', response.status, response.statusText);
-      throw new Error(`Failed to search ayahs: ${response.status} ${response.statusText}`);
+      console.error("Response not OK:", response.status, response.statusText);
+      if (language === "en") {
+        throw new Error(
+          `Failed to search ayahs: ${response.status} ${response.statusText}`,
+        );
+      }
+      throw new Error(
+        `فشل في البحث عن الآيات: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = await response.json();
-    console.log('API Response:', data);
+    console.log("API Response:", data);
 
     if (!data.data || data.data.count === 0) {
       return { count: 0, matches: [] };
     }
 
     const quranMatches = data.data.matches.filter(
-      (match: SearchAyah) => match.edition.type === "quran"
+      (match: SearchAyah) => match.edition.type === "quran",
     );
 
-    console.log('Quran Matches:', quranMatches.length);
+    console.log("Quran Matches:", quranMatches.length);
 
     if (quranMatches.length === 0) {
       return { count: 0, matches: [] };
     }
 
-    const uniqueAyahNumbers = Array.from(
-      new Set(quranMatches.map((match: SearchAyah) => match.number))
+    const filteredMatches = wholeWord
+      ? filterWholeWordMatches(quranMatches, normalizedKeyword)
+      : quranMatches;
+
+    console.log(
+      `After ${wholeWord ? "whole word" : "substring"} filter:`,
+      filteredMatches.length,
     );
 
-    console.log('Total unique ayahs:', uniqueAyahNumbers.length);
+    if (filteredMatches.length === 0) {
+      return { count: 0, matches: [] };
+    }
+
+    const uniqueAyahNumbers = Array.from(
+      new Set(filteredMatches.map((match: SearchAyah) => match.number)),
+    );
+
+    console.log("Total unique ayahs:", uniqueAyahNumbers.length);
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedAyahNumbers = uniqueAyahNumbers.slice(startIndex, endIndex);
 
-    console.log('Fetching ayahs for page:', paginatedAyahNumbers);
+    console.log("Fetching ayahs for page:", paginatedAyahNumbers);
 
     const fullAyahs = [];
     for (const num of paginatedAyahNumbers) {
@@ -126,7 +185,7 @@ export const searchAyahs = async (
           fullAyahs.push(ayahData.data);
         }
 
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
       } catch (error) {
         console.error(`Error fetching ayah ${num}:`, error);
       }
@@ -138,13 +197,13 @@ export const searchAyahs = async (
     };
   } catch (error) {
     if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        console.error('Request timeout - API took too long to respond');
-        throw new Error('Request timeout. Please try again.');
+      if (error.name === "AbortError") {
+        console.error("Request timeout - API took too long to respond");
+        throw new Error("Request timeout. Please try again.");
       }
-      console.error('Error searching ayahs:', error.message);
+      console.error("Error searching ayahs:", error.message);
     } else {
-      console.error('Error searching ayahs:', error);
+      console.error("Error searching ayahs:", error);
     }
     throw error;
   }
@@ -153,13 +212,15 @@ export const searchAyahs = async (
 export const searchInEdition = async (
   keyword: string,
   edition: string,
+  language: string = "ar",
 ): Promise<SearchResponse | null> => {
-  return searchAyahs(keyword, "all");
+  return searchAyahs(keyword, "all", 1, 20, true, language);
 };
 
 export const searchInSurah = async (
   keyword: string,
   surahNumber: number,
+  language: string = "ar",
 ): Promise<SearchResponse | null> => {
-  return searchAyahs(keyword, surahNumber);
+  return searchAyahs(keyword, surahNumber, 1, 20, true, language);
 };
