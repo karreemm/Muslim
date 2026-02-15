@@ -21,14 +21,35 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
 
     const pages = useMemo(() => {
       if (!verses) return {};
-      const groupedPages: Record<number, any[]> = {};
+
+      console.log("[QuranMultiPageRenderer] Total verses:", verses.length);
+
+      // Extract unique page numbers from WORDS, not verses
+      const pageNumbersSet = new Set<number>();
       verses.forEach((verse) => {
-        const pageNum = verse.page_number;
-        if (!groupedPages[pageNum]) {
-          groupedPages[pageNum] = [];
-        }
-        groupedPages[pageNum].push(verse);
+        verse.words.forEach((word: any) => {
+          if (word.page_number) {
+            pageNumbersSet.add(word.page_number);
+          }
+        });
       });
+
+      const pageNumbers = Array.from(pageNumbersSet).sort((a, b) => a - b);
+      console.log(
+        "[QuranMultiPageRenderer] Unique pages from words:",
+        pageNumbers.join(", "),
+      );
+
+      // Create a map where each page gets ALL verses
+      // QuranPageRenderer will filter words by page_number
+      const groupedPages: Record<number, any[]> = {};
+      pageNumbers.forEach((pageNum) => {
+        groupedPages[pageNum] = verses; // Pass all verses to each page
+        console.log(
+          `[QuranMultiPageRenderer] Page ${pageNum}: Assigned ALL ${verses.length} verses`,
+        );
+      });
+
       return groupedPages;
     }, [verses]);
 

@@ -106,28 +106,42 @@ export const RenderJuzText = (
     );
   }
 
-  if (!juzData || !juzData.length) return null;
+  // Process ayahs to remove basmala from first ayah without mutating original data
+  const processedAyahs = useMemo(() => {
+    if (!juzData || !juzData.length) return [];
 
-  const ayahs = juzData;
-  const surahNumber = ayahs[0]?.surah.number;
-  const firstAyahText = ayahs[0]?.text;
+    const surahNumber = juzData[0]?.surah?.number;
+    const firstAyahText = juzData[0]?.text;
 
-  const displayBasmala =
-    surahNumber !== 9 &&
-    firstAyahText?.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
+    const displayBasmala =
+      surahNumber !== 9 &&
+      juzData[0]?.numberInSurah === 1 &&
+      firstAyahText?.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ");
 
-  if (displayBasmala) {
-    ayahs[0].text = firstAyahText
-      .replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "")
-      .trim();
-  }
+    if (displayBasmala) {
+      // Create a copy of the array and modify the first element without mutating
+      const modifiedAyahs = [...juzData];
+      modifiedAyahs[0] = {
+        ...modifiedAyahs[0],
+        text: firstAyahText
+          .replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "")
+          .trim(),
+      };
+      return modifiedAyahs;
+    }
+
+    return juzData;
+  }, [juzData]);
+
+  if (!processedAyahs.length) return null;
+
+  const surahNumber = processedAyahs[0]?.surah?.number;
 
   return (
     <div
       dir="rtl"
-      className={`fontAmiri flex flex-col items-center transition-all duration-300 ${
-        isFullscreen ? "w-full h-full" : ""
-      }`}
+      className={`fontAmiri flex flex-col items-center transition-all duration-300 ${isFullscreen ? "w-full h-full" : ""
+        }`}
     >
       <div
         className={`${styles.quranBasmala} text-teal-700 dark:text-teal-400`}
@@ -143,14 +157,12 @@ export const RenderJuzText = (
         id="scrollable-div"
         dir="rtl"
         ref={scrollToAyah.containerRef}
-        className={`${
-          styles.quranText
-        } bg-[#FEFDF8] text-gray-900 dark:bg-slate-800 dark:text-gray-100 shadow-lg rounded-lg px-6 md:px-8 py-6 mt-5 md:mt-10 overflow-y-auto overflow-x-hidden transition-all duration-300 w-full max-w-[1200px] ${
-          isFullscreen ? "h-[75vh]" : "max-h-[400px]"
-        }`}
+        className={`${styles.quranText
+          } bg-[#FEFDF8] text-gray-900 dark:bg-slate-800 dark:text-gray-100 shadow-lg rounded-lg px-6 md:px-8 py-6 mt-5 md:mt-10 overflow-y-auto overflow-x-hidden transition-all duration-300 w-full max-w-[1200px] ${isFullscreen ? "h-[75vh]" : "max-h-[400px]"
+          }`}
         style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
       >
-        {ayahs.slice(0, visibleCount).map((ayah: any) => (
+        {processedAyahs.slice(0, visibleCount).map((ayah: any) => (
           <JuzAyahText
             key={ayah.number}
             ayah={ayah}
@@ -164,7 +176,7 @@ export const RenderJuzText = (
             setAyahRef={scrollToAyah.setAyahRef}
           />
         ))}
-        {visibleCount < ayahs.length && (
+        {visibleCount < processedAyahs.length && (
           <div className="w-full text-center py-4 text-gray-500 dark:text-gray-400">
             <span className="text-sm">...</span>
           </div>
@@ -175,7 +187,7 @@ export const RenderJuzText = (
         isOpen={ayahInteraction.showPopover.isOpen}
         ayahNumber={ayahInteraction.showPopover.ayahNumber}
         surahNumber={
-          ayahs.find(
+          processedAyahs.find(
             (a: any) =>
               a.numberInSurah === ayahInteraction.showPopover.ayahNumber,
           )?.surah.number || 1
@@ -183,7 +195,7 @@ export const RenderJuzText = (
         position={popoverPosition}
         onClose={ayahInteraction.handleClosePopover}
         onSave={() => {
-          const ayah = ayahs.find(
+          const ayah = processedAyahs.find(
             (a: any) =>
               a.numberInSurah === ayahInteraction.showPopover.ayahNumber,
           );
@@ -200,7 +212,7 @@ export const RenderJuzText = (
           }
         }}
         surahNameAr={
-          ayahs.find(
+          processedAyahs.find(
             (a: any) =>
               a.numberInSurah === ayahInteraction.showPopover.ayahNumber,
           )?.surah.name
@@ -209,7 +221,7 @@ export const RenderJuzText = (
           surahNames.find(
             (s) =>
               s.number ===
-              ayahs.find(
+              processedAyahs.find(
                 (a: any) =>
                   a.numberInSurah === ayahInteraction.showPopover.ayahNumber,
               )?.surah.number,

@@ -25,7 +25,7 @@ export const RenderQuranText = (
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
   const CHUNK_SIZE = 50;
-  
+
   const initialVisibleCount = useMemo(() => {
     if (scrollToAyah.highlightedAyahNumber > 0) {
       const chunksNeeded = Math.ceil(scrollToAyah.highlightedAyahNumber / CHUNK_SIZE) + 1;
@@ -33,7 +33,7 @@ export const RenderQuranText = (
     }
     return CHUNK_SIZE;
   }, [scrollToAyah.highlightedAyahNumber]);
-  
+
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
   const loadingMoreRef = useRef(false);
 
@@ -42,7 +42,7 @@ export const RenderQuranText = (
 
     const ayahs = surahData.ayahs;
 
-    if (surahData.number !== 9 && surahData.number !== 1 && ayahs[0]) {
+    if (surahData.number !== 9 && surahData.number !== 1 && ayahs[0]?.numberInSurah === 1) {
       const modifiedAyahs = [...ayahs];
       const originalText = modifiedAyahs[0].text;
 
@@ -164,9 +164,8 @@ export const RenderQuranText = (
   return (
     <div
       dir="rtl"
-      className={`flex flex-col items-center transition-all duration-300 ${
-        isFullscreen ? "w-full h-full" : ""
-      }`}
+      className={`flex flex-col items-center transition-all duration-300 ${isFullscreen ? "w-full h-full" : ""
+        }`}
     >
       <div
         dir="rtl"
@@ -182,11 +181,9 @@ export const RenderQuranText = (
         id="scrollable-div"
         dir="rtl"
         ref={scrollToAyah.containerRef}
-        className={`${
-          isFatiha ? styles.quranTextFatiha : styles.quranText
-        } bg-[#FEFDF8] text-gray-900 dark:bg-slate-800 dark:text-gray-100 shadow-lg rounded-lg px-6 md:px-8 py-6 mt-5 md:mt-10 overflow-y-auto overflow-x-hidden transition-all duration-300 w-full max-w-[1200px] ${
-          isFullscreen ? "h-[75vh]" : "max-h-[400px]"
-        }`}
+        className={`${isFatiha ? styles.quranTextFatiha : styles.quranText
+          } bg-[#FEFDF8] text-gray-900 dark:bg-slate-800 dark:text-gray-100 shadow-lg rounded-lg px-6 md:px-8 py-6 mt-5 md:mt-10 overflow-y-auto overflow-x-hidden transition-all duration-300 w-full max-w-[1200px] ${isFullscreen ? "h-[75vh]" : "max-h-[400px]"
+          }`}
       >
         {processedAyahs.slice(0, visibleCount).map((ayah: any) => (
           <AyahText
