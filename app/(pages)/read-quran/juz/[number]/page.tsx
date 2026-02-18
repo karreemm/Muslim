@@ -22,7 +22,7 @@ import {
   useFullscreen,
 } from "@/hooks/readQuran";
 import { useTranslation } from "@/hooks/general/useTranslation";
-import QuranMultiPageRenderer from "../../components/QuranMultiPageRenderer";
+import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
 
 interface JuzData {
   number: number;
@@ -151,7 +151,7 @@ export default function JuzPage() {
                   : ""
               }`}
             >
-              <QuranMultiPageRenderer
+              <JuzMultiPageRenderer
                 verses={juzVerses}
                 fontSize={display.fontSize}
                 lineHeight={display.lineHeight}

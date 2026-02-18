@@ -1,11 +1,9 @@
 "use client";
-
 import {
   ReactNode,
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
   startTransition,
 } from "react";
@@ -15,42 +13,27 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-interface IProps {
-  children: ReactNode;
-}
-
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
-const ThemeContextProvider = ({ children }: IProps) => {
-  const [theme, setTheme] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme");
-      const isDarkMode = savedTheme === "dark";
-      setTheme(isDarkMode);
-      document.documentElement.classList.toggle("dark", isDarkMode);
-    }
-  }, []);
+const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
 
   const toggleTheme = useCallback(() => {
     const newTheme = !theme;
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", newTheme ? "dark" : "light");
-      document.documentElement.classList.toggle("dark", newTheme);
-    }
-    startTransition(() => {
-      setTheme(newTheme);
-    });
+
+    document.documentElement.classList.toggle("dark", newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+
+    startTransition(() => setTheme(newTheme));
   }, [theme]);
 
-  const value = {
-    theme,
-    toggleTheme,
-  };
-
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
 };
 
@@ -58,8 +41,6 @@ export default ThemeContextProvider;
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === null) {
-    throw new Error("useTheme must be used within a ThemeContextProvider");
-  }
+  if (!context) throw new Error("useTheme must be used within provider");
   return context;
 };

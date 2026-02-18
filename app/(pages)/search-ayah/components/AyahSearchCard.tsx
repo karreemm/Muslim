@@ -15,7 +15,7 @@ import type { SearchAyah } from "../service/GetSearchAyah";
 import { reciters } from "@/constants/recitersData";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
 import { useTheme } from "@/context/ThemeContext";
-import { highlightText } from "@/utils/highlightText";
+import { highlightText } from "@/components/general/highlightText";
 
 interface AyahSearchCardProps {
   ayah: SearchAyah;

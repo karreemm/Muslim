@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { removeDiacritics } from "./helpers";
+import { removeDiacritics } from "../../utils/helpers";
 
 export interface HighlightTextProps {
   text: string;
@@ -42,7 +42,9 @@ export const highlightText = ({
           continue;
         }
 
-        if (normalizedChar.toLowerCase() === searchWord[wordPos].toLowerCase()) {
+        if (
+          normalizedChar.toLowerCase() === searchWord[wordPos].toLowerCase()
+        ) {
           wordPos++;
           textPos++;
         } else {
@@ -51,7 +53,10 @@ export const highlightText = ({
       }
 
       if (wordPos === searchWord.length) {
-        while (textPos < text.length && removeDiacritics(text[textPos]) === "") {
+        while (
+          textPos < text.length &&
+          removeDiacritics(text[textPos]) === ""
+        ) {
           textPos++;
         }
 
@@ -77,11 +82,7 @@ export const highlightText = ({
           parts.push(
             <span
               key={`highlight-${segmentKey++}`}
-              className={`${
-                isDarkMode
-                  ? "text-teal-300"
-                  : "text-teal-600"
-              }`}
+              className={`${isDarkMode ? "text-teal-300" : "text-teal-600"}`}
               style={{ fontWeight: "700" }}
             >
               {currentSegment}
@@ -105,9 +106,7 @@ export const highlightText = ({
         <span
           key={`highlight-${segmentKey++}`}
           className={`px-1.5 py-0.5 rounded mx-0.5 ${
-            isDarkMode
-              ? "text-teal-300"
-              : "text-teal-600"
+            isDarkMode ? "text-teal-300" : "text-teal-600"
           }`}
           style={{ fontWeight: "700" }}
         >

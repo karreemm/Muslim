@@ -8,6 +8,7 @@ import { FavoriteHadithsProvider } from "../context/FavoriteHadithsContext";
 import { FavoriteAzkarProvider } from "../context/FavoriteAzkarContext";
 import { SadaqaGaryaProvider } from "../context/SadaqatContext";
 import TasbeehContextProvider from "../context/TasbeehContext";
+import { ThemeScript } from "@/utils/themeScript";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -22,6 +23,8 @@ export default function RootLayout({
   return (
     <html>
       <head>
+        <meta name="color-scheme" content="dark light" />
+        <ThemeScript />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
