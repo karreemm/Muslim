@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
+    <html lang="ar" dir="rtl">
       <head>
         <meta name="color-scheme" content="dark light" />
         <ThemeScript />

@@ -121,8 +121,8 @@ export default function SurahPage() {
           <div
             ref={quranContentRef}
             className={`w-full flex flex-col items-center transition-all duration-300 ${isFullscreen
-                ? "flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto"
-                : ""
+              ? "flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto"
+              : ""
               }`}
           >
             <div className="flex flex-col items-center gap-3 mb-5">
@@ -150,8 +150,8 @@ export default function SurahPage() {
                       <span>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
                     ) : (
                       <>
-                      <p>In the name of Allah, </p>
-                      <p>the Most Gracious, the Most Merciful</p>
+                        <p>In the name of Allah, </p>
+                        <p>the Most Gracious, the Most Merciful</p>
                       </>
                     )}
                   </p>
@@ -161,8 +161,8 @@ export default function SurahPage() {
 
             <div
               className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden ${isFullscreen
-                  ? "h-full flex flex-col items-center justify-center"
-                  : ""
+                ? "h-full flex flex-col items-center justify-center"
+                : ""
                 }`}
             >
               <QuranMultiPageRenderer

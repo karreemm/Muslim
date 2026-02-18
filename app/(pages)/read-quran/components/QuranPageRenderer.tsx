@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import React, { useEffect, useState, useCallback, memo } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
 import { useSavedAyahs } from "@/context/SavedAyahsContext";
@@ -11,6 +11,7 @@ interface Word {
   id: number;
   position: number;
   text_uthmani: string;
+  code_v2: string;
   line_number: number;
   page_number: number;
   char_type_name: string;
@@ -28,31 +29,53 @@ interface VerseChunk {
   words: Word[];
 }
 
-interface SurahHeader {
-  surahNumber: number;
-  firstAyah: number;
-  lastAyah: number;
-}
-
 interface QuranPageRendererProps {
   verses: Verse[];
   fontSize: number;
   lineHeight: number;
   pageNumber?: number;
   highlightedAyahNumber?: number;
-  surahHeader?: SurahHeader;
 }
 
 const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
-  ({ verses, fontSize, lineHeight, pageNumber, highlightedAyahNumber = 0, surahHeader }) => {
+  ({ verses, fontSize, lineHeight, pageNumber, highlightedAyahNumber = 0 }) => {
     const { saveAyah } = useSavedAyahs();
     const [hoveredVerseKey, setHoveredVerseKey] = useState<string | null>(null);
     const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(
       null,
     );
     const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
+    const [fontReady, setFontReady] = useState(false);
 
     const isSpecialPage = pageNumber === 1 || pageNumber === 2;
+    const pageFontName = pageNumber ? `p${pageNumber}-font` : null;
+
+    // Inject page-specific @font-face and wait for font to load
+    useEffect(() => {
+      if (!pageNumber) {
+        setFontReady(true);
+        return;
+      }
+      const fontName = `p${pageNumber}-font`;
+      const fontUrl = `/quran-fonts/p${pageNumber}.woff2`;
+      const styleId = `quran-font-${pageNumber}`;
+
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement("style");
+        style.id = styleId;
+        style.innerHTML = `@font-face { font-family: '${fontName}'; src: url('${fontUrl}') format('woff2'); }`;
+        document.head.appendChild(style);
+      }
+
+      document.fonts
+        .load(`1em ${fontName}`)
+        .then(() => {
+          setFontReady(true);
+        })
+        .catch(() => {
+          setFontReady(true); // fall back gracefully
+        });
+    }, [pageNumber]);
 
     // Track line order based on first appearance in the data
     const [lineOrder, setLineOrder] = useState<string[]>([]);
@@ -72,13 +95,38 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           `[QuranPageRenderer] Page ${pageNumber}: Total words received:`,
           allWords.length,
         );
+        console.log(
+          `[QuranPageRenderer] Page ${pageNumber}: Verses:`,
+          verses.map((v) => v.verse_key).join(", "),
+        );
 
-        // Filter words by page_number - trust the backend completely
+        // Filter words to only include those for current page
         const pageWords = pageNumber
-          ? allWords.filter((word) => word.page_number === pageNumber)
+          ? allWords.filter(
+              (word) => Number(word.page_number) === Number(pageNumber),
+            )
           : allWords;
 
-        // Group words by line
+        console.log(
+          `[QuranPageRenderer] Page ${pageNumber}: Words after filtering by page:`,
+          pageWords.length,
+        );
+        const uniqueVerseKeys = Array.from(
+          new Set(pageWords.map((w) => w.verse_key)),
+        );
+        const lineNumbersInFiltered = Array.from(
+          new Set(pageWords.map((w) => w.line_number)),
+        ).sort((a, b) => a - b);
+        console.log(
+          `[QuranPageRenderer] Page ${pageNumber}: Line numbers in filtered words:`,
+          lineNumbersInFiltered.join(", "),
+        );
+        console.log(
+          `[QuranPageRenderer] Page ${pageNumber}: Unique verse keys in filtered words:`,
+          uniqueVerseKeys.join(", "),
+        );
+
+        // Group words by line - Map preserves insertion order from API
         const wordsByLine = new Map<string, Word[]>();
 
         pageWords.forEach((word) => {
@@ -89,14 +137,18 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           wordsByLine.get(lineKey)!.push(word);
         });
 
-        // Render lines in numerical order
-        const lineKeys = Array.from(wordsByLine.keys())
-          .map(k => parseInt(k))
-          .sort((a, b) => a - b)
-          .map(n => n.toString());
+        console.log(
+          `[QuranPageRenderer] Page ${pageNumber}: Lines found:`,
+          Array.from(wordsByLine.keys()).join(", "),
+        );
 
         // Convert to verse chunks for rendering
         const groupedLines: Record<string, VerseChunk[]> = {};
+
+        // Sort lines numerically
+        const lineKeys = Array.from(wordsByLine.keys()).sort(
+          (a, b) => parseInt(a) - parseInt(b),
+        );
 
         lineKeys.forEach((lineKey) => {
           const lineWords = wordsByLine.get(lineKey)!;
@@ -117,6 +169,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           if (currentChunk) {
             chunks.push(currentChunk);
           }
+
+          console.log(
+            `[QuranPageRenderer] Page ${pageNumber}, Line ${lineKey}: ${chunks.map((c) => `${c.verseKey}(${c.words.length} words)`).join(", ")}`,
+          );
 
           groupedLines[lineKey] = chunks;
         });
@@ -159,7 +215,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
 
       if (!verse) return;
 
-      const text = verse.words.map((word) => word.text_uthmani).join(" ");
+      const text = verse.words
+        .map((word) => word.text_uthmani || word.code_v2)
+        .join(" ");
 
       const surahInfo = surahNames.find((s) => s.number === surahNumber);
 
@@ -184,25 +242,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const surahNameAr = surahInfo?.ar;
     const surahNameEn = surahInfo?.en;
 
-    // Helper function to render surah header
-    const renderSurahHeader = () => (
-      <div className="w-full text-center mb-4 pb-4 border-b-2 border-teal-200 dark:border-teal-700">
-        <div className="bg-gradient-to-r from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30 rounded-lg p-3 border border-teal-200 dark:border-teal-700">
-          <h2 className="text-2xl font-bold text-teal-700 dark:text-teal-300 mb-1">
-            {surahNames.find((s) => s.number === surahHeader?.surahNumber)?.ar}
-          </h2>
-          <p className="text-sm text-teal-600 dark:text-teal-400 mb-2">
-            الآيات: {toArabicNumber(surahHeader!.firstAyah)} - {toArabicNumber(surahHeader!.lastAyah)}
-          </p>
-          {surahHeader!.surahNumber !== 9 && (
-            <p className="text-xl text-teal-700 dark:text-teal-300 font-arabic">
-              بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-            </p>
-          )}
-        </div>
-      </div>
-    );
-
     return (
       <div
         className="w-full flex flex-col items-center justify-center py-4 px-2 lg:p-4 bg-white dark:bg-[#1d293d] rounded-lg border-2 border-slate-900 dark:border-slate-400 shadow-inner mb-4 relative"
@@ -211,51 +250,41 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
         <div
           className="mt-3 text-center w-full max-w-[800px]"
           style={{
-            fontFamily: "'Amiri', serif",
+            fontFamily:
+              pageFontName && fontReady
+                ? `'${pageFontName}'`
+                : "'Amiri', serif",
             fontSize: `${fontSize}px`,
             lineHeight: lineHeight,
           }}
         >
-          {lineOrder.map((lineNumber) => {
-            // Check if this line contains the first verse of a new surah
-            const lineChunks = lines[lineNumber] || [];
-            const hasNewSurahStart =
-              surahHeader &&
-              lineChunks.some((chunk) => {
-                if (!chunk.verseKey) return false;
-                const [surahNum, ayahNum] = chunk.verseKey
-                  .split(":")
-                  .map(Number);
-                return (
-                  surahNum === surahHeader.surahNumber &&
-                  ayahNum === surahHeader.firstAyah
-                );
-              });
-
-            return (
-              <React.Fragment key={`line-fragment-${lineNumber}`}>
-                {/* Render surah header before the line containing verse 1 */}
-                {hasNewSurahStart && renderSurahHeader()}
-
-                <div
-                  key={lineNumber}
-                  className="w-full px-4 mb-2 block"
-                  style={
-                    isSpecialPage
-                      ? {
-                          textAlign: "center",
-                          width: "100%",
-                          wordSpacing: "0",
-                          letterSpacing: "0",
-                        }
-                      : {
-                          textAlignLast: "justify",
-                          textAlign: "justify",
-                          width: "100%",
-                        }
-                  }
-                >
-                  {lineChunks.map((chunk, chunkIndex) => {
+          {lineOrder.map((lineNumber) => (
+            <div
+              key={lineNumber}
+              className="w-full px-4 mb-2 block"
+              style={
+                pageFontName && fontReady
+                  ? {
+                      textAlign: "center",
+                      width: "100%",
+                      wordSpacing: "0",
+                      letterSpacing: "0",
+                    }
+                  : isSpecialPage
+                    ? {
+                        textAlign: "center",
+                        width: "100%",
+                        wordSpacing: "0",
+                        letterSpacing: "0",
+                      }
+                    : {
+                        textAlignLast: "justify",
+                        textAlign: "justify",
+                        width: "100%",
+                      }
+              }
+            >
+              {lines[lineNumber]?.map((chunk, chunkIndex) => {
                 const isHighlighted =
                   highlightedAyahNumber > 0 &&
                   chunk.verseKey?.split(":")[1] ===
@@ -283,34 +312,35 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                     onMouseLeave={() => setHoveredVerseKey(null)}
                     onClick={(e) => handleWordClick(e, chunk.verseKey)}
                   >
-                    {chunk.words.map((word, wordIndex) => (
-                      <span key={`${word.id}-${wordIndex}`}>
-                        {word.char_type_name === "end" ? (
-                          <span className={styles.ayahNumberWrapper}>
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: word.text_uthmani,
-                              }}
-                              className={styles.ayahNumberText}
-                            />
+                    {pageFontName && fontReady
+                      ? // code_v2 mode: concatenate all glyph codes with no spaces
+                        chunk.words.map((word) => word.code_v2 || "").join("")
+                      : chunk.words.map((word, wordIndex) => (
+                          <span key={`${word.id}-${wordIndex}`}>
+                            {word.char_type_name === "end" ? (
+                              <span className={styles.ayahNumberWrapper}>
+                                <span
+                                  dangerouslySetInnerHTML={{
+                                    __html: word.text_uthmani,
+                                  }}
+                                  className={styles.ayahNumberText}
+                                />
+                              </span>
+                            ) : (
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: word.text_uthmani,
+                                }}
+                                className={styles.quranWord}
+                              />
+                            )}{" "}
                           </span>
-                        ) : (
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: word.text_uthmani,
-                            }}
-                            className={styles.quranWord}
-                          />
-                        )}{" "}
-                      </span>
-                    ))}
+                        ))}
                   </span>
                 );
               })}
             </div>
-              </React.Fragment>
-            );
-          })}
+          ))}
         </div>
         {pageNumber && (
           <div className="mt-3 text-sm text-gray-700 dark:text-gray-300 font-sans w-full text-center">
