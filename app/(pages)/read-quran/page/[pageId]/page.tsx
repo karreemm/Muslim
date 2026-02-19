@@ -18,15 +18,15 @@ import QuranPageRenderer from "../../components/QuranPageRenderer";
 import Footer from "@/components/general/Footer";
 import {
     useQuranNavigation,
-    useQuranDisplay,
+    useContainerFontSize
 } from "@/hooks/readQuran";
 
 export default function PageView() {
     const { language } = useLanguage();
     const navigation = useQuranNavigation("page");
-    const display = useQuranDisplay();
     const [pageVerses, setPageVerses] = useState<any>(null);
     const quranContentRef = useRef<HTMLDivElement>(null);
+    const {fontSize, lineHeight} = useContainerFontSize(quranContentRef);
 
     useEffect(() => {
         if (navigation.number) {
@@ -115,8 +115,8 @@ export default function PageView() {
                         >
                             <QuranPageRenderer
                                 verses={pageVerses}
-                                fontSize={display.fontSize}
-                                lineHeight={display.lineHeight}
+                                fontSize={fontSize}
+                                lineHeight={lineHeight}
                             />
                         </div>
                     </div>
