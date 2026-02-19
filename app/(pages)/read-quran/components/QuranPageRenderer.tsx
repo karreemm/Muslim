@@ -89,7 +89,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 {surahHeaderInfo && (
                   <div
                     key={`header-${lineNumber}`}
-                    className="w-full mb-2"
+                    className="w-full mb-4 mt-6"
                     style={{ fontFamily: "'Amiri', serif" }}
                   >
                     <QuranSurahHeader

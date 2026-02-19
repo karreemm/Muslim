@@ -10,10 +10,10 @@ import { showPopover, hidePopover } from "@/utils/helpers";
 import Footer from "@/components/general/Footer";
 import {
   useQuranNavigation,
-  useQuranDisplay,
 } from "@/hooks/readQuran";
 import QuranMultiPageRenderer from "../../components/QuranMultiPageRenderer";
 import ReadingProgressBar from "@/components/general/ReadingProgressBar";
+import { useContainerFontSize } from "@/hooks/readQuran/useContainerFontSize";
 
 interface SurahData {
   number: number;
@@ -28,9 +28,10 @@ interface SurahData {
 export default function SurahPage() {
   const { language } = useLanguage();
   const navigation = useQuranNavigation("surah");
-  const display = useQuranDisplay();
   const [surahVerses, setSurahVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
+  const { fontSize, lineHeight } = useContainerFontSize(quranContentRef);
+  
 
   const [loadedPages, setLoadedPages] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -125,16 +126,16 @@ export default function SurahPage() {
           </div>
 
           <div
-            ref={quranContentRef}
             className={`w-full mt-6 flex flex-col items-center transition-all duration-300 `}
           >
             <div
+              ref={quranContentRef}
               className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden`}
             >
               <QuranMultiPageRenderer
                 verses={surahVerses}
-                fontSize={display.fontSize}
-                lineHeight={display.lineHeight}
+                fontSize={fontSize}
+                lineHeight={lineHeight}
                 surahHeader={
                   currentSurah
                     ? {

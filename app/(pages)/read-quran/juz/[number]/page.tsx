@@ -10,7 +10,7 @@ import { showPopover, hidePopover } from "@/utils/helpers";
 import Footer from "@/components/general/Footer";
 import {
   useQuranNavigation,
-  useQuranDisplay,
+  useContainerFontSize,
 } from "@/hooks/readQuran";
 import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
 import ReadingProgressBar from "@/components/general/ReadingProgressBar";
@@ -28,9 +28,9 @@ interface JuzData {
 export default function JuzPage() {
   const { language } = useLanguage();
   const navigation = useQuranNavigation("juz");
-  const display = useQuranDisplay();
   const [juzVerses, setJuzVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
+  const { fontSize, lineHeight } = useContainerFontSize(quranContentRef);
 
   const [loadedPages, setLoadedPages] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -122,16 +122,16 @@ export default function JuzPage() {
           </div>
 
           <div
-            ref={quranContentRef}
             className={`w-full mt-6 flex flex-col items-center transition-all duration-300`}
-          >
+            >
             <div
+              ref={quranContentRef}
               className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden`}
             >
               <JuzMultiPageRenderer
                 verses={juzVerses}
-                fontSize={display.fontSize}
-                lineHeight={display.lineHeight}
+                fontSize={fontSize}
+                lineHeight={lineHeight}
                 onLoadedPagesChange={handleLoadedPagesChange}
               />
             </div>
