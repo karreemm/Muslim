@@ -7,7 +7,7 @@ interface DisplaySettings {
   lineHeight: number;
 }
 
-const BASE_RATIO = 0.049;        
+const BASE_RATIO = 0.048;        
 const LINE_HEIGHT_BASE = 1.75;
 const LINE_HEIGHT_RATIO = 0.0002; 
 
