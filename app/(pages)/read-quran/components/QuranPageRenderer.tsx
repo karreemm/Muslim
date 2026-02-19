@@ -25,6 +25,50 @@ interface QuranPageRendererProps {
   surahHeader?: SurahHeaderInfo;
 }
 
+const SKELETON_LINE_WIDTHS = [
+  "92%",
+  "88%",
+  "95%",
+  "85%",
+  "90%",
+  "93%",
+  "87%",
+  "91%",
+  "86%",
+  "94%",
+  "89%",
+  "92%",
+  "84%",
+  "90%",
+  "88%",
+];
+
+interface QuranPageSkeletonProps {
+  hasSurahHeader?: boolean;
+}
+
+const QuranPageSkeleton: React.FC<QuranPageSkeletonProps> = ({
+  hasSurahHeader,
+}) => (
+  <div className="w-full flex flex-col items-center py-4 px-2 lg:p-4 bg-white dark:bg-[#1d293d] rounded-lg border-2 border-slate-900 dark:border-slate-400 shadow-inner mb-4">
+    <div className="mt-3 w-full max-w-[800px] flex flex-col items-center gap-3 animate-pulse">
+      {hasSurahHeader && (
+        <>
+          <div className="w-full h-14 bg-gray-200 dark:bg-slate-700 rounded mb-2" />
+          <div className="w-[60%] h-8 bg-gray-200 dark:bg-slate-700 rounded mb-4" />
+        </>
+      )}
+      {SKELETON_LINE_WIDTHS.map((width, i) => (
+        <div
+          key={i}
+          className="h-8 bg-gray-200 dark:bg-slate-700 rounded"
+          style={{ width }}
+        />
+      ))}
+    </div>
+  </div>
+);
+
 const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
   ({
     verses,
@@ -50,6 +94,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       selectedSurahNameAr,
       selectedSurahNameEn,
     } = useAyahInteraction(verses);
+
+    if (!fontReady && pageNumber) {
+      return <QuranPageSkeleton hasSurahHeader={!!surahHeader} />;
+    }
 
     const firstAyah1Line = surahHeader
       ? (lineOrder.find((ln) =>
