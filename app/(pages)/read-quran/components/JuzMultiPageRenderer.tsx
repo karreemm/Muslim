@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, memo, useState, useEffect, useRef } from "react";
+import { useMemo, memo, useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import QuranPageRenderer from "./QuranPageRenderer";
 import { surahNames } from "@/constants/quranData";
@@ -10,10 +10,11 @@ interface JuzMultiPageRendererProps {
   verses: any[];
   fontSize: number;
   lineHeight: number;
+  onLoadedPagesChange?: (loadedPages: number, totalPages: number) => void;
 }
 
 const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
-  ({ verses, fontSize, lineHeight }) => {
+  ({ verses, fontSize, lineHeight, onLoadedPagesChange }) => {
     const searchParams = useSearchParams();
     const highlightedAyahNumber = parseInt(searchParams.get("ayah") || "0", 10);
     const [visiblePages, setVisiblePages] = useState(3);
@@ -21,11 +22,9 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
     const loadingMoreRef = useRef(false);
     const hasScrolledRef = useRef(false);
 
-    // Group verses by page and track surah changes
     const { pages, surahHeaders } = useMemo(() => {
       if (!verses) return { pages: {}, surahHeaders: {} };
 
-      // Extract unique page numbers from WORDS
       const pageNumbersSet = new Set<number>();
       verses.forEach((verse) => {
         verse.words.forEach((word: any) => {
@@ -37,19 +36,19 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
 
       const pageNumbers = Array.from(pageNumbersSet).sort((a, b) => a - b);
 
-      // Track surah changes - detect ANY verse with ayah_number === 1 on each page
-      const surahHeadersMap: Record<number, { surahNumber: number; firstAyah: number; lastAyah: number }> = {};
+      const surahHeadersMap: Record<
+        number,
+        { surahNumber: number; firstAyah: number; lastAyah: number }
+      > = {};
       const groupedPages: Record<number, any[]> = {};
 
       pageNumbers.forEach((pageNum) => {
         groupedPages[pageNum] = verses;
 
-        // Find ALL verses that have words on this page, check if any has verse_number = 1
         const versesOnPage = verses.filter((verse) =>
-          verse.words.some((word: any) => word.page_number === pageNum)
+          verse.words.some((word: any) => word.page_number === pageNum),
         );
 
-        // Check if any verse on this page is verse number 1 (start of new surah)
         const newSurahVerse = versesOnPage.find((verse) => {
           const ayahNum = parseInt(verse.verse_key.split(":")[1]);
           return ayahNum === 1;
@@ -59,13 +58,17 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
           const surahNum = newSurahVerse.verse_key.split(":")[0];
           const ayahNum = parseInt(newSurahVerse.verse_key.split(":")[1]);
 
-          // Find the last ayah of this surah in the juz
           const sameSurahVerses = verses.filter(
-            (v) => v.verse_key.split(":")[0] === surahNum
+            (v) => v.verse_key.split(":")[0] === surahNum,
           );
-          const lastAyah = sameSurahVerses.length > 0
-            ? parseInt(sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(":")[1])
-            : ayahNum;
+          const lastAyah =
+            sameSurahVerses.length > 0
+              ? parseInt(
+                  sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(
+                    ":",
+                  )[1],
+                )
+              : ayahNum;
 
           surahHeadersMap[pageNum] = {
             surahNumber: parseInt(surahNum),
@@ -132,6 +135,14 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
     }, [verses, highlightedPage]);
 
     useEffect(() => {
+      if (onLoadedPagesChange) {
+        const loaded = Math.min(visiblePages, sortedPageNumbers.length);
+        const total = sortedPageNumbers.length;
+        onLoadedPagesChange(loaded, total);
+      }
+    }, [visiblePages, sortedPageNumbers, onLoadedPagesChange]);
+
+    useEffect(() => {
       if (highlightedAyahNumber && highlightedPage && !hasScrolledRef.current) {
         const timer = setTimeout(() => {
           const ayahElement = document.getElementById(
@@ -168,7 +179,11 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
           const surahHeader = surahHeaders[pageNumber];
 
           return (
-            <div key={pageNum} id={`page-${pageNum}`} className="w-full flex justify-center">
+            <div
+              key={pageNum}
+              id={`page-${pageNum}`}
+              className="w-full flex justify-center"
+            >
               <QuranPageRenderer
                 verses={pages[pageNumber]}
                 fontSize={fontSize}

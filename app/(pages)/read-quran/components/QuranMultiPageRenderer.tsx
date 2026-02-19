@@ -1,17 +1,25 @@
 "use client";
 
-import { useMemo, memo, useState, useEffect, useRef } from "react";
+import { useMemo, memo, useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import QuranPageRenderer from "./QuranPageRenderer";
+
+interface SurahHeaderInfo {
+  surahNumber: number;
+  firstAyah: number;
+  lastAyah: number;
+}
 
 interface QuranMultiPageRendererProps {
   verses: any[];
   fontSize: number;
   lineHeight: number;
+  surahHeader?: SurahHeaderInfo;
+  onLoadedPagesChange?: (loadedPages: number, totalPages: number) => void;
 }
 
 const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
-  ({ verses, fontSize, lineHeight }) => {
+  ({ verses, fontSize, lineHeight, surahHeader, onLoadedPagesChange }) => {
     const searchParams = useSearchParams();
     const highlightedAyahNumber = parseInt(searchParams.get("ayah") || "0", 10);
     const [visiblePages, setVisiblePages] = useState(3);
@@ -24,7 +32,6 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
 
       console.log("[QuranMultiPageRenderer] Total verses:", verses.length);
 
-      // Extract unique page numbers from WORDS, not verses
       const pageNumbersSet = new Set<number>();
       verses.forEach((verse) => {
         verse.words.forEach((word: any) => {
@@ -40,11 +47,9 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
         pageNumbers.join(", "),
       );
 
-      // Create a map where each page gets ALL verses
-      // QuranPageRenderer will filter words by page_number
       const groupedPages: Record<number, any[]> = {};
       pageNumbers.forEach((pageNum) => {
-        groupedPages[pageNum] = verses; // Pass all verses to each page
+        groupedPages[pageNum] = verses; 
         console.log(
           `[QuranMultiPageRenderer] Page ${pageNum}: Assigned ALL ${verses.length} verses`,
         );
@@ -107,6 +112,14 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
     }, [verses, highlightedPage]);
 
     useEffect(() => {
+      if (onLoadedPagesChange) {
+        const loaded = Math.min(visiblePages, sortedPageNumbers.length);
+        const total = sortedPageNumbers.length;
+        onLoadedPagesChange(loaded, total);
+      }
+    }, [visiblePages, sortedPageNumbers, onLoadedPagesChange]);
+
+    useEffect(() => {
       if (highlightedAyahNumber && highlightedPage && !hasScrolledRef.current) {
         const timer = setTimeout(() => {
           const ayahElement = document.getElementById(
@@ -153,6 +166,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
                   ? highlightedAyahNumber
                   : 0
               }
+              surahHeader={surahHeader}
             />
           </div>
         ))}

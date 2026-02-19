@@ -54,7 +54,7 @@ export default function PageView() {
     return (
         <>
             <Navbar />
-            <div className="w-full min-h-screen flex flex-col items-center p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+            <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
                 <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
                     <div>
                         {navigation.hasNext && (
@@ -111,7 +111,7 @@ export default function PageView() {
 
                     <div
                         ref={quranContentRef}
-                        className={`w-full flex flex-col items-center transition-all duration-300 ${isFullscreen
+                        className={`w-full mt-6 flex flex-col items-center transition-all duration-300 ${isFullscreen
                                 ? "flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto"
                                 : ""
                             }`}

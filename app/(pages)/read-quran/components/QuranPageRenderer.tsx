@@ -1,11 +1,12 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import { useEffect, useState, useCallback, memo } from "react";
+import { useEffect, useState, useCallback, memo, Fragment } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
 import { useSavedAyahs } from "@/context/SavedAyahsContext";
 import { toArabicNumber } from "@/utils/helpers";
+import QuranSurahHeader from "@/components/general/QuranSurahHeader";
 
 interface Word {
   id: number;
@@ -29,16 +30,30 @@ interface VerseChunk {
   words: Word[];
 }
 
+interface SurahHeaderInfo {
+  surahNumber: number;
+  firstAyah: number;
+  lastAyah: number;
+}
+
 interface QuranPageRendererProps {
   verses: Verse[];
   fontSize: number;
   lineHeight: number;
   pageNumber?: number;
   highlightedAyahNumber?: number;
+  surahHeader?: SurahHeaderInfo;
 }
 
 const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
-  ({ verses, fontSize, lineHeight, pageNumber, highlightedAyahNumber = 0 }) => {
+  ({
+    verses,
+    fontSize,
+    lineHeight,
+    pageNumber,
+    highlightedAyahNumber = 0,
+    surahHeader,
+  }) => {
     const { saveAyah } = useSavedAyahs();
     const [hoveredVerseKey, setHoveredVerseKey] = useState<string | null>(null);
     const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(
@@ -50,7 +65,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const isSpecialPage = pageNumber === 1 || pageNumber === 2;
     const pageFontName = pageNumber ? `p${pageNumber}-font` : null;
 
-    // Inject page-specific @font-face and wait for font to load
     useEffect(() => {
       if (!pageNumber) {
         setFontReady(true);
@@ -73,17 +87,15 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           setFontReady(true);
         })
         .catch(() => {
-          setFontReady(true); // fall back gracefully
+          setFontReady(true); 
         });
     }, [pageNumber]);
 
-    // Track line order based on first appearance in the data
     const [lineOrder, setLineOrder] = useState<string[]>([]);
     const [lines, setLines] = useState<Record<string, VerseChunk[]>>({});
 
     useEffect(() => {
       if (verses) {
-        // Extract all words from verses in document order
         const allWords: Word[] = [];
         verses.forEach((verse) => {
           verse.words.forEach((word) => {
@@ -100,7 +112,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           verses.map((v) => v.verse_key).join(", "),
         );
 
-        // Filter words to only include those for current page
         const pageWords = pageNumber
           ? allWords.filter(
               (word) => Number(word.page_number) === Number(pageNumber),
@@ -126,7 +137,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           uniqueVerseKeys.join(", "),
         );
 
-        // Group words by line - Map preserves insertion order from API
         const wordsByLine = new Map<string, Word[]>();
 
         pageWords.forEach((word) => {
@@ -142,10 +152,8 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           Array.from(wordsByLine.keys()).join(", "),
         );
 
-        // Convert to verse chunks for rendering
         const groupedLines: Record<string, VerseChunk[]> = {};
 
-        // Sort lines numerically
         const lineKeys = Array.from(wordsByLine.keys()).sort(
           (a, b) => parseInt(a) - parseInt(b),
         );
@@ -242,6 +250,17 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const surahNameAr = surahInfo?.ar;
     const surahNameEn = surahInfo?.en;
 
+    const firstAyah1Line = surahHeader
+      ? (lineOrder.find((ln) =>
+          lines[ln]?.some(
+            (chunk) =>
+              chunk.verseKey?.split(":")[0] ===
+                surahHeader.surahNumber.toString() &&
+              chunk.verseKey?.split(":")[1] === "1",
+          ),
+        ) ?? null)
+      : null;
+
     return (
       <div
         className="w-full flex flex-col items-center justify-center py-4 px-2 lg:p-4 bg-white dark:bg-[#1d293d] rounded-lg border-2 border-slate-900 dark:border-slate-400 shadow-inner mb-4 relative"
@@ -258,89 +277,114 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             lineHeight: lineHeight,
           }}
         >
-          {lineOrder.map((lineNumber) => (
-            <div
-              key={lineNumber}
-              className="w-full px-4 mb-2 block"
-              style={
-                pageFontName && fontReady
-                  ? {
-                      textAlign: "center",
-                      width: "100%",
-                      wordSpacing: "0",
-                      letterSpacing: "0",
-                    }
-                  : isSpecialPage
-                    ? {
-                        textAlign: "center",
-                        width: "100%",
-                        wordSpacing: "0",
-                        letterSpacing: "0",
-                      }
-                    : {
-                        textAlignLast: "justify",
-                        textAlign: "justify",
-                        width: "100%",
-                      }
-              }
-            >
-              {lines[lineNumber]?.map((chunk, chunkIndex) => {
-                const isHighlighted =
-                  highlightedAyahNumber > 0 &&
-                  chunk.verseKey?.split(":")[1] ===
-                    highlightedAyahNumber.toString();
+          {lineOrder.map((lineNumber) => {
+            const isHeaderLine = surahHeader && lineNumber === firstAyah1Line;
+            const surahHeaderInfo = isHeaderLine
+              ? surahNames.find((s) => s.number === surahHeader!.surahNumber)
+              : null;
 
-                return (
-                  <span
-                    key={`${lineNumber}-${chunkIndex}`}
-                    id={
-                      isHighlighted
-                        ? `ayah-${highlightedAyahNumber}`
-                        : undefined
-                    }
-                    className={`cursor-pointer rounded px-1 ${
-                      hoveredVerseKey === chunk.verseKey ||
-                      selectedVerseKey === chunk.verseKey
-                        ? "text-teal-500 dark:text-teal-400"
-                        : ""
-                    } ${
-                      isHighlighted ? "bg-yellow-200 dark:bg-yellow-700" : ""
-                    }`}
-                    onMouseEnter={() =>
-                      chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
-                    }
-                    onMouseLeave={() => setHoveredVerseKey(null)}
-                    onClick={(e) => handleWordClick(e, chunk.verseKey)}
+            return (
+              <Fragment key={lineNumber}>
+                {surahHeaderInfo && (
+                  <div
+                    key={`header-${lineNumber}`}
+                    className="w-full mb-2"
+                    style={{ fontFamily: "'Amiri', serif" }}
                   >
-                    {pageFontName && fontReady
-                      ? // code_v2 mode: concatenate all glyph codes with no spaces
-                        chunk.words.map((word) => word.code_v2 || "").join("")
-                      : chunk.words.map((word, wordIndex) => (
-                          <span key={`${word.id}-${wordIndex}`}>
-                            {word.char_type_name === "end" ? (
-                              <span className={styles.ayahNumberWrapper}>
-                                <span
-                                  dangerouslySetInnerHTML={{
-                                    __html: word.text_uthmani,
-                                  }}
-                                  className={styles.ayahNumberText}
-                                />
+                    <QuranSurahHeader
+                      surahNameAr={surahHeaderInfo.arTashkeel}
+                      surahNumber={surahHeader!.surahNumber}
+                    />
+                  </div>
+                )}
+                <div
+                  key={lineNumber}
+                  className="w-full px-4 mb-2 block"
+                  style={
+                    pageFontName && fontReady
+                      ? {
+                          textAlign: "center",
+                          width: "100%",
+                          wordSpacing: "0",
+                          letterSpacing: "0",
+                        }
+                      : isSpecialPage
+                        ? {
+                            textAlign: "center",
+                            width: "100%",
+                            wordSpacing: "0",
+                            letterSpacing: "0",
+                          }
+                        : {
+                            textAlignLast: "justify",
+                            textAlign: "justify",
+                            width: "100%",
+                          }
+                  }
+                >
+                  {lines[lineNumber]?.map((chunk, chunkIndex) => {
+                    const isHighlighted =
+                      highlightedAyahNumber > 0 &&
+                      chunk.verseKey?.split(":")[1] ===
+                        highlightedAyahNumber.toString();
+
+                    return (
+                      <span
+                        key={`${lineNumber}-${chunkIndex}`}
+                        id={
+                          isHighlighted
+                            ? `ayah-${highlightedAyahNumber}`
+                            : undefined
+                        }
+                        className={`cursor-pointer rounded px-1 ${
+                          hoveredVerseKey === chunk.verseKey ||
+                          selectedVerseKey === chunk.verseKey
+                            ? "text-teal-500 dark:text-teal-400"
+                            : ""
+                        } ${
+                          isHighlighted
+                            ? "bg-yellow-200 dark:bg-yellow-700"
+                            : ""
+                        }`}
+                        onMouseEnter={() =>
+                          chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
+                        }
+                        onMouseLeave={() => setHoveredVerseKey(null)}
+                        onClick={(e) => handleWordClick(e, chunk.verseKey)}
+                      >
+                        {pageFontName && fontReady
+                          ?
+                            chunk.words
+                              .map((word) => word.code_v2 || "")
+                              .join("")
+                          : chunk.words.map((word, wordIndex) => (
+                              <span key={`${word.id}-${wordIndex}`}>
+                                {word.char_type_name === "end" ? (
+                                  <span className={styles.ayahNumberWrapper}>
+                                    <span
+                                      dangerouslySetInnerHTML={{
+                                        __html: word.text_uthmani,
+                                      }}
+                                      className={styles.ayahNumberText}
+                                    />
+                                  </span>
+                                ) : (
+                                  <span
+                                    dangerouslySetInnerHTML={{
+                                      __html: word.text_uthmani,
+                                    }}
+                                    className={styles.quranWord}
+                                  />
+                                )}{" "}
                               </span>
-                            ) : (
-                              <span
-                                dangerouslySetInnerHTML={{
-                                  __html: word.text_uthmani,
-                                }}
-                                className={styles.quranWord}
-                              />
-                            )}{" "}
-                          </span>
-                        ))}
-                  </span>
-                );
-              })}
-            </div>
-          ))}
+                            ))}
+                      </span>
+                    );
+                  })}
+                </div>
+              </Fragment>
+            );
+          })}
         </div>
         {pageNumber && (
           <div className="mt-3 text-sm text-gray-700 dark:text-gray-300 font-sans w-full text-center">
