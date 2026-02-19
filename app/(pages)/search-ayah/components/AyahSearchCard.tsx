@@ -200,15 +200,15 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               {isPlaying && (
                 <div className={animationStyles.soundWave}>
                   <div
-                    className={animationStyles.waveBar}
+                    className={animationStyles.waveBarWhite}
                     style={{ animationDelay: "0s" }}
                   ></div>
                   <div
-                    className={animationStyles.waveBar}
+                    className={animationStyles.waveBarWhite}
                     style={{ animationDelay: "0.1s" }}
                   ></div>
                   <div
-                    className={animationStyles.waveBar}
+                    className={animationStyles.waveBarWhite}
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                 </div>

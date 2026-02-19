@@ -87,6 +87,13 @@
     animation: wave 0.8s ease-in-out infinite;
 }
 
+.waveBarWhite{
+    width: 3px;
+    background-color: #ffffff;
+    border-radius: 9999px;
+    animation: wave 0.8s ease-in-out infinite;
+}
+
 :global(.dark) .waveBar {
     background-color: #14b8a6;
 }
