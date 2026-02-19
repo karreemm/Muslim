@@ -1,143 +1,81 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useSavedAyahs } from "../../context/SavedAyahsContext";
-import { toArabicNumber } from "../../utils/helpers";
-import { surahNames } from "../../constants/quranData";
+import { useState, useCallback } from "react";
+import { surahNames } from "@/constants/quranData";
+import { useSavedAyahs } from "@/context/SavedAyahsContext";
+import { toArabicNumber } from "@/utils/helpers";
+import type { QuranVerse } from "./useQuranPageLines";
 
-interface AyahInteractionState {
-  ayahNumber: number;
-  isOpen: boolean;
-}
+const getSurahAndAyah = (verseKey: string | null) => {
+  if (!verseKey) return { surah: 0, ayah: 0 };
+  const [surah, ayah] = verseKey.split(":").map(Number);
+  return { surah, ayah };
+};
 
-interface AyahData {
-  text: string;
-  numberInSurah: number;
-  surah?: {
-    number: number;
-  };
-}
-
-interface SavedAyahData {
-  surahNameEn: string | undefined;
-  surahNameAr: string | undefined;
-  ayahNumberAr: number | string | null;
-  text: string;
-  ayahNumberEn: number | null;
-  SurahNumber: number | string | null;
-}
-
-export const useAyahInteraction = () => {
+export const useAyahInteraction = (verses: QuranVerse[]) => {
   const { saveAyah } = useSavedAyahs();
-  const [showPopover, setShowPopover] = useState<AyahInteractionState>({
-    ayahNumber: 0,
-    isOpen: false,
-  });
+  const [hoveredVerseKey, setHoveredVerseKey] = useState<string | null>(null);
+  const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
-  const [ayahNumberEn, setAyahNumberEn] = useState<number | null>(null);
-  const [ayahNumberAr, setAyahNumberAr] = useState<number | string | null>(
-    null,
-  );
-  const [surahNumber, setSurahNumber] = useState<number | string | null>(null);
-  const [surahNameAr, setSurahNameAr] = useState<string | undefined>(undefined);
-  const [surahNameEn, setSurahNameEn] = useState<string | undefined>(undefined);
-
-  const popoverRef = useRef<HTMLDivElement | null>(null);
-
-  const handleAyahClick = useCallback(
-    (
-      ayah: AyahData,
-      providedSurahNameAr?: string,
-      providedSurahNameEn?: string,
-      providedSurahNumber?: number | string,
-    ) => {
-      console.log("Ayah clicked:", ayah.numberInSurah);
-      setShowPopover({ ayahNumber: ayah.numberInSurah, isOpen: true });
-      setAyahNumberEn(ayah.numberInSurah);
-      setAyahNumberAr(toArabicNumber(ayah.numberInSurah));
-
-      if (providedSurahNumber && providedSurahNameAr && providedSurahNameEn) {
-        setSurahNumber(providedSurahNumber);
-        setSurahNameAr(providedSurahNameAr);
-        setSurahNameEn(providedSurahNameEn);
-      } else if (ayah.surah?.number) {
-        setSurahNumber(ayah.surah.number);
-        const surah = surahNames.find((s) => s.number === ayah.surah!.number);
-        if (surah) {
-          setSurahNameAr(surah.ar);
-          setSurahNameEn(surah.en);
-        }
-      }
+  const handleWordClick = useCallback(
+    (event: React.MouseEvent, verseKey: string | undefined) => {
+      if (!verseKey) return;
+      event.stopPropagation();
+      setSelectedVerseKey(verseKey);
+      setPopoverPosition({ x: event.clientX, y: event.clientY });
     },
     [],
   );
 
-  const handleSaveAyah = useCallback(
-    (
-      ayah: AyahData,
-      providedSurahNameEn?: string,
-      providedSurahNameAr?: string,
-      providedSurahNumber?: number | string,
-    ) => {
-      console.log("handleSaveAyah called");
-      console.log("Saving Ayah with the following details:");
-      console.log("Surah Name (EN):", providedSurahNameEn || surahNameEn);
-      console.log("Surah Name (AR):", providedSurahNameAr || surahNameAr);
-      console.log("Ayah Number (EN):", ayah.numberInSurah);
-      console.log("Surah Number:", providedSurahNumber || surahNumber);
-      console.log("Ayah Text:", ayah.text);
-
-      const savedAyahData: SavedAyahData = {
-        surahNameEn: providedSurahNameEn || surahNameEn,
-        surahNameAr: providedSurahNameAr || surahNameAr,
-        ayahNumberAr: toArabicNumber(ayah.numberInSurah),
-        text: ayah.text,
-        ayahNumberEn: ayah.numberInSurah,
-        SurahNumber: providedSurahNumber || surahNumber,
-      };
-
-      saveAyah(savedAyahData);
-      console.log("Ayah saved:", ayah.text);
-      setShowPopover({ ayahNumber: 0, isOpen: false });
-    },
-    [surahNameEn, surahNameAr, surahNumber, saveAyah],
-  );
-
-  const handleClosePopover = useCallback((event?: React.MouseEvent) => {
-    if (event) {
-      event.stopPropagation();
-    }
-    setShowPopover({ ayahNumber: 0, isOpen: false });
+  const handleClosePopover = useCallback(() => {
+    setSelectedVerseKey(null);
   }, []);
 
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (
-      popoverRef.current &&
-      !popoverRef.current.contains(event.target as Node)
-    ) {
-      setShowPopover({ ayahNumber: 0, isOpen: false });
-    }
-  }, []);
+  const handleSaveAyah = useCallback(() => {
+    if (!selectedVerseKey) return;
 
-  useEffect(() => {
-    if (showPopover.isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showPopover.isOpen, handleClickOutside]);
+    const { surah: surahNumber, ayah: ayahNumber } =
+      getSurahAndAyah(selectedVerseKey);
+
+    const verse = verses.find((v) => v.verse_key === selectedVerseKey);
+    if (!verse) return;
+
+    const text = verse.words
+      .map((word) => word.text_uthmani || word.code_v2)
+      .join(" ");
+
+    const surahInfo = surahNames.find((s) => s.number === surahNumber);
+    if (!surahInfo) return;
+
+    saveAyah({
+      surahNameEn: surahInfo.en,
+      surahNameAr: surahInfo.ar,
+      ayahNumberAr: toArabicNumber(ayahNumber),
+      text,
+      ayahNumberEn: ayahNumber,
+      SurahNumber: surahNumber,
+    });
+
+    handleClosePopover();
+  }, [selectedVerseKey, verses, saveAyah, handleClosePopover]);
+
+  const { surah: selectedSurahNumber, ayah: selectedAyahNumber } =
+    getSurahAndAyah(selectedVerseKey);
+
+  const surahInfo = surahNames.find((s) => s.number === selectedSurahNumber);
 
   return {
-    showPopover,
-    popoverRef,
-    handleAyahClick,
-    handleSaveAyah,
+    hoveredVerseKey,
+    setHoveredVerseKey,
+    selectedVerseKey,
+    popoverPosition,
+    handleWordClick,
     handleClosePopover,
-    ayahNumberEn,
-    ayahNumberAr,
-    surahNumber,
-    surahNameAr,
-    surahNameEn,
+    handleSaveAyah,
+    selectedSurahNumber,
+    selectedAyahNumber,
+    selectedSurahNameAr: surahInfo?.ar,
+    selectedSurahNameEn: surahInfo?.en,
   };
 };

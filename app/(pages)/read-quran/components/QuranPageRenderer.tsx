@@ -1,34 +1,14 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import { useEffect, useState, useCallback, memo, Fragment } from "react";
+import { memo, Fragment } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
-import { useSavedAyahs } from "@/context/SavedAyahsContext";
-import { toArabicNumber } from "@/utils/helpers";
 import QuranSurahHeader from "@/components/general/QuranSurahHeader";
-
-interface Word {
-  id: number;
-  position: number;
-  text_uthmani: string;
-  code_v2: string;
-  line_number: number;
-  page_number: number;
-  char_type_name: string;
-  verse_key?: string;
-}
-
-interface Verse {
-  id: number;
-  verse_key: string;
-  words: Word[];
-}
-
-interface VerseChunk {
-  verseKey: string | undefined;
-  words: Word[];
-}
+import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
+import { useQuranPageLines } from "@/hooks/readQuran/useQuranPageLines";
+import { useAyahInteraction } from "@/hooks/readQuran/useAyahInteraction";
+import type { QuranVerse } from "@/hooks/readQuran";
 
 interface SurahHeaderInfo {
   surahNumber: number;
@@ -37,7 +17,7 @@ interface SurahHeaderInfo {
 }
 
 interface QuranPageRendererProps {
-  verses: Verse[];
+  verses: QuranVerse[];
   fontSize: number;
   lineHeight: number;
   pageNumber?: number;
@@ -54,201 +34,22 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     highlightedAyahNumber = 0,
     surahHeader,
   }) => {
-    const { saveAyah } = useSavedAyahs();
-    const [hoveredVerseKey, setHoveredVerseKey] = useState<string | null>(null);
-    const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(
-      null,
-    );
-    const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
-    const [fontReady, setFontReady] = useState(false);
-
-    const isSpecialPage = pageNumber === 1 || pageNumber === 2;
-    const pageFontName = pageNumber ? `p${pageNumber}-font` : null;
-
-    useEffect(() => {
-      if (!pageNumber) {
-        setFontReady(true);
-        return;
-      }
-      const fontName = `p${pageNumber}-font`;
-      const fontUrl = `/quran-fonts/p${pageNumber}.woff2`;
-      const styleId = `quran-font-${pageNumber}`;
-
-      if (!document.getElementById(styleId)) {
-        const style = document.createElement("style");
-        style.id = styleId;
-        style.innerHTML = `@font-face { font-family: '${fontName}'; src: url('${fontUrl}') format('woff2'); }`;
-        document.head.appendChild(style);
-      }
-
-      document.fonts
-        .load(`1em ${fontName}`)
-        .then(() => {
-          setFontReady(true);
-        })
-        .catch(() => {
-          setFontReady(true); 
-        });
-    }, [pageNumber]);
-
-    const [lineOrder, setLineOrder] = useState<string[]>([]);
-    const [lines, setLines] = useState<Record<string, VerseChunk[]>>({});
-
-    useEffect(() => {
-      if (verses) {
-        const allWords: Word[] = [];
-        verses.forEach((verse) => {
-          verse.words.forEach((word) => {
-            allWords.push({ ...word, verse_key: verse.verse_key });
-          });
-        });
-
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Total words received:`,
-          allWords.length,
-        );
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Verses:`,
-          verses.map((v) => v.verse_key).join(", "),
-        );
-
-        const pageWords = pageNumber
-          ? allWords.filter(
-              (word) => Number(word.page_number) === Number(pageNumber),
-            )
-          : allWords;
-
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Words after filtering by page:`,
-          pageWords.length,
-        );
-        const uniqueVerseKeys = Array.from(
-          new Set(pageWords.map((w) => w.verse_key)),
-        );
-        const lineNumbersInFiltered = Array.from(
-          new Set(pageWords.map((w) => w.line_number)),
-        ).sort((a, b) => a - b);
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Line numbers in filtered words:`,
-          lineNumbersInFiltered.join(", "),
-        );
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Unique verse keys in filtered words:`,
-          uniqueVerseKeys.join(", "),
-        );
-
-        const wordsByLine = new Map<string, Word[]>();
-
-        pageWords.forEach((word) => {
-          const lineKey = word.line_number.toString();
-          if (!wordsByLine.has(lineKey)) {
-            wordsByLine.set(lineKey, []);
-          }
-          wordsByLine.get(lineKey)!.push(word);
-        });
-
-        console.log(
-          `[QuranPageRenderer] Page ${pageNumber}: Lines found:`,
-          Array.from(wordsByLine.keys()).join(", "),
-        );
-
-        const groupedLines: Record<string, VerseChunk[]> = {};
-
-        const lineKeys = Array.from(wordsByLine.keys()).sort(
-          (a, b) => parseInt(a) - parseInt(b),
-        );
-
-        lineKeys.forEach((lineKey) => {
-          const lineWords = wordsByLine.get(lineKey)!;
-          const chunks: VerseChunk[] = [];
-          let currentChunk: VerseChunk | null = null;
-
-          lineWords.forEach((word) => {
-            if (!currentChunk) {
-              currentChunk = { verseKey: word.verse_key, words: [word] };
-            } else if (currentChunk.verseKey === word.verse_key) {
-              currentChunk.words.push(word);
-            } else {
-              chunks.push(currentChunk);
-              currentChunk = { verseKey: word.verse_key, words: [word] };
-            }
-          });
-
-          if (currentChunk) {
-            chunks.push(currentChunk);
-          }
-
-          console.log(
-            `[QuranPageRenderer] Page ${pageNumber}, Line ${lineKey}: ${chunks.map((c) => `${c.verseKey}(${c.words.length} words)`).join(", ")}`,
-          );
-
-          groupedLines[lineKey] = chunks;
-        });
-
-        setLineOrder(lineKeys);
-        setLines(groupedLines);
-      }
-    }, [verses, pageNumber]);
-
-    const handleWordClick = useCallback(
-      (event: React.MouseEvent, verseKey: string | undefined) => {
-        if (!verseKey) return;
-        event.stopPropagation();
-        setSelectedVerseKey(verseKey);
-
-        const x = event.clientX;
-        const y = event.clientY;
-        setPopoverPosition({ x, y });
-      },
-      [],
-    );
-
-    const handleClosePopover = useCallback(() => {
-      setSelectedVerseKey(null);
-    }, []);
-
-    const getSurahAndAyah = (verseKey: string | null) => {
-      if (!verseKey) return { surah: 0, ayah: 0 };
-      const [surah, ayah] = verseKey.split(":").map(Number);
-      return { surah, ayah };
-    };
-
-    const handleSaveAyah = useCallback(() => {
-      if (!selectedVerseKey) return;
-
-      const { surah: surahNumber, ayah: ayahNumber } =
-        getSurahAndAyah(selectedVerseKey);
-
-      const verse = verses.find((v) => v.verse_key === selectedVerseKey);
-
-      if (!verse) return;
-
-      const text = verse.words
-        .map((word) => word.text_uthmani || word.code_v2)
-        .join(" ");
-
-      const surahInfo = surahNames.find((s) => s.number === surahNumber);
-
-      if (!surahInfo) return;
-
-      saveAyah({
-        surahNameEn: surahInfo.en,
-        surahNameAr: surahInfo.ar,
-        ayahNumberAr: toArabicNumber(ayahNumber),
-        text: text,
-        ayahNumberEn: ayahNumber,
-        SurahNumber: surahNumber,
-      });
-
-      handleClosePopover();
-    }, [selectedVerseKey, verses, saveAyah, handleClosePopover]);
-
-    const { surah: surahNumber, ayah: ayahNumber } =
-      getSurahAndAyah(selectedVerseKey);
-
-    const surahInfo = surahNames.find((s) => s.number === surahNumber);
-    const surahNameAr = surahInfo?.ar;
-    const surahNameEn = surahInfo?.en;
+    const { fontReady, pageFontName, isSpecialPage } =
+      useQuranPageFont(pageNumber);
+    const { lineOrder, lines } = useQuranPageLines(verses, pageNumber);
+    const {
+      hoveredVerseKey,
+      setHoveredVerseKey,
+      selectedVerseKey,
+      popoverPosition,
+      handleWordClick,
+      handleClosePopover,
+      handleSaveAyah,
+      selectedSurahNumber,
+      selectedAyahNumber,
+      selectedSurahNameAr,
+      selectedSurahNameEn,
+    } = useAyahInteraction(verses);
 
     const firstAyah1Line = surahHeader
       ? (lineOrder.find((ln) =>
@@ -353,8 +154,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                         onClick={(e) => handleWordClick(e, chunk.verseKey)}
                       >
                         {pageFontName && fontReady
-                          ?
-                            chunk.words
+                          ? chunk.words
                               .map((word) => word.code_v2 || "")
                               .join("")
                           : chunk.words.map((word, wordIndex) => (
@@ -395,13 +195,13 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
         {selectedVerseKey && (
           <AyahPopover
             isOpen={!!selectedVerseKey}
-            ayahNumber={ayahNumber}
-            surahNumber={surahNumber}
+            ayahNumber={selectedAyahNumber}
+            surahNumber={selectedSurahNumber}
             position={popoverPosition}
             onClose={handleClosePopover}
             onSave={handleSaveAyah}
-            surahNameAr={surahNameAr}
-            surahNameEn={surahNameEn}
+            surahNameAr={selectedSurahNameAr}
+            surahNameEn={selectedSurahNameEn}
           />
         )}
       </div>

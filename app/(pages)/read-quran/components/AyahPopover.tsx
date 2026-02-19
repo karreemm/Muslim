@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, memo } from "react";
+import { memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
@@ -18,6 +18,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "../../../../components/modals/TafseerModal";
 import { TranslationModal } from "../../../../components/modals/TranslationModal";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
+import { useAyahAudio } from "@/hooks/readQuran/useAyahAudio";
+import { useAyahPopover } from "@/hooks/readQuran/useAyahPopover";
 
 interface AyahPopoverProps {
   isOpen: boolean;
@@ -35,7 +37,6 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
     isOpen,
     ayahNumber,
     surahNumber,
-    position,
     onClose,
     onSave,
     surahNameAr,
@@ -44,177 +45,29 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
     const { language } = useLanguage();
     const { t } = useTranslation();
     const { theme } = useTheme();
-    const popoverRef = useRef<HTMLDivElement | null>(null);
-    const [selectedReciter, setSelectedReciter] =
-      useState<string>("ar.alafasy");
-    const [showReciterMenu, setShowReciterMenu] = useState(false);
-    const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
-    const [popoverState, setPopoverState] = useState({
-      isSaved: false,
-      isLoadingAudio: false,
-      isPlaying: false,
-    });
-    const [showTafseerModal, setShowTafseerModal] = useState(false);
-    const [showTranslationModal, setShowTranslationModal] = useState(false);
 
-    const { isSaved, isLoadingAudio, isPlaying } = popoverState;
+    const {
+      popoverRef,
+      isSaved,
+      showTafseerModal,
+      setShowTafseerModal,
+      showTranslationModal,
+      setShowTranslationModal,
+      handleSaveClick,
+    } = useAyahPopover({ isOpen, onClose, onSave });
 
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        const target = event.target as HTMLElement;
-        if (target.closest('[role="dialog"]')) {
-          return;
-        }
-
-        if (
-          popoverRef.current &&
-          !popoverRef.current.contains(event.target as Node) &&
-          !showTafseerModal &&
-          !showTranslationModal
-        ) {
-          onClose();
-        }
-      };
-
-      if (isOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      }
-
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [isOpen, onClose, showTafseerModal]);
-
-    useEffect(() => {
-      return () => {
-        if (audioRef) {
-          audioRef.pause();
-          audioRef.src = "";
-        }
-      };
-    }, [audioRef]);
-
-    useEffect(() => {
-      if (!isOpen) {
-        setShowReciterMenu(false);
-        setPopoverState({
-          isSaved: false,
-          isLoadingAudio: false,
-          isPlaying: false,
-        });
-        setShowTafseerModal(false);
-        setShowTranslationModal(false);
-        if (audioRef) {
-          audioRef.pause();
-          audioRef.src = "";
-        }
-      }
-    }, [isOpen, audioRef]);
-
-    const handleSaveClick = useCallback(() => {
-      onSave();
-      setPopoverState((prev) => ({ ...prev, isSaved: true }));
-      setTimeout(() => {
-        onClose();
-      }, 1000);
-    }, [onSave, onClose]);
-
-    const handleListenClick = useCallback(async () => {
-      if (isPlaying && audioRef) {
-        audioRef.pause();
-        setPopoverState((prev) => ({ ...prev, isPlaying: false }));
-        return;
-      }
-
-      setPopoverState((prev) => ({ ...prev, isLoadingAudio: true }));
-
-      try {
-        const response = await fetch(
-          `https://api.alquran.cloud/v1/surah/${surahNumber}/${selectedReciter}`,
-        );
-
-        if (!response.ok) {
-          console.error("Failed to fetch surah data");
-          setPopoverState((prev) => ({ ...prev, isLoadingAudio: false }));
-          return;
-        }
-
-        const data = await response.json();
-        const ayahData = data.data.ayahs.find(
-          (a: any) => a.numberInSurah === ayahNumber,
-        );
-
-        if (!ayahData || !ayahData.audio) {
-          console.error("Audio URL not found for this ayah");
-          setPopoverState((prev) => ({ ...prev, isLoadingAudio: false }));
-          return;
-        }
-
-        const audioUrl = ayahData.audio;
-        console.log("Playing audio from:", audioUrl);
-
-        const audio = new Audio(audioUrl);
-
-        audio.onended = () => {
-          setPopoverState((prev) => ({ ...prev, isPlaying: false }));
-        };
-
-        audio.onerror = () => {
-          console.error("Error playing audio");
-          setPopoverState((prev) => ({
-            ...prev,
-            isPlaying: false,
-            isLoadingAudio: false,
-          }));
-        };
-
-        audio.onloadeddata = () => {
-          setPopoverState((prev) => ({ ...prev, isLoadingAudio: false }));
-        };
-
-        setAudioRef(audio);
-        await audio.play();
-        setPopoverState((prev) => ({ ...prev, isPlaying: true }));
-      } catch (error) {
-        console.error("Error playing ayah audio:", error);
-        setPopoverState((prev) => ({ ...prev, isLoadingAudio: false }));
-      }
-    }, [isPlaying, audioRef, surahNumber, selectedReciter, ayahNumber]);
-
-    const handleReciterChange = useCallback(
-      (reciterId: string) => {
-        setSelectedReciter(reciterId);
-        setShowReciterMenu(false);
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem("preferredReciter", reciterId);
-        }
-
-        if (audioRef && isPlaying) {
-          audioRef.pause();
-          setPopoverState((prev) => ({ ...prev, isPlaying: false }));
-        }
-      },
-      [audioRef, isPlaying],
-    );
-
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const savedReciter = localStorage.getItem("preferredReciter");
-        if (savedReciter) {
-          setSelectedReciter(savedReciter);
-        }
-      }
-    }, []);
+    const {
+      selectedReciter,
+      showReciterMenu,
+      setShowReciterMenu,
+      isPlaying,
+      isLoadingAudio,
+      handleListenClick,
+      handleReciterChange,
+      reciterName,
+    } = useAyahAudio(surahNumber, ayahNumber, isOpen);
 
     if (!isOpen) return null;
-
-    const selectedReciterData = reciters.find((r) => r.id === selectedReciter);
-    const reciterName = selectedReciterData
-      ? language === "ar"
-        ? selectedReciterData.NameAr
-        : selectedReciterData.NameEn
-      : "";
 
     return (
       <>

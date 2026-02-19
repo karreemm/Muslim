@@ -11,7 +11,6 @@ import Footer from "@/components/general/Footer";
 import {
   useQuranNavigation,
   useQuranDisplay,
-  useFullscreen,
 } from "@/hooks/readQuran";
 import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
 import ReadingProgressBar from "@/components/general/ReadingProgressBar";
@@ -32,7 +31,6 @@ export default function JuzPage() {
   const display = useQuranDisplay();
   const [juzVerses, setJuzVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
-  const { isFullscreen, toggleFullscreen } = useFullscreen(quranContentRef);
 
   const [loadedPages, setLoadedPages] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -44,7 +42,6 @@ export default function JuzPage() {
     [],
   );
 
-  const currentJuz = navigation.navigationData.current as JuzData | undefined;
   const nextJuz = navigation.navigationData.next as JuzData | undefined;
   const prevJuz = navigation.navigationData.prev as JuzData | undefined;
 
@@ -126,18 +123,10 @@ export default function JuzPage() {
 
           <div
             ref={quranContentRef}
-            className={`w-full mt-6 flex flex-col items-center transition-all duration-300 ${
-              isFullscreen
-                ? "flex flex-col items-center justify-center p-5 w-full h-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-teal-500 fixed top-0 left-0 z-50 overflow-y-auto"
-                : ""
-            }`}
+            className={`w-full mt-6 flex flex-col items-center transition-all duration-300`}
           >
             <div
-              className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden ${
-                isFullscreen
-                  ? "h-full flex flex-col items-center justify-center"
-                  : ""
-              }`}
+              className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden`}
             >
               <JuzMultiPageRenderer
                 verses={juzVerses}

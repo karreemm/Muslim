@@ -1,10 +1,8 @@
 "use client";
 
-import { useMemo, memo, useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, memo, useRef } from "react";
 import QuranPageRenderer from "./QuranPageRenderer";
-import { surahNames } from "@/constants/quranData";
-import { toArabicNumber } from "@/utils/helpers";
+import { useQuranPages } from "@/hooks/readQuran/useQuranPages";
 
 interface JuzMultiPageRendererProps {
   verses: any[];
@@ -15,36 +13,29 @@ interface JuzMultiPageRendererProps {
 
 const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
   ({ verses, fontSize, lineHeight, onLoadedPagesChange }) => {
-    const searchParams = useSearchParams();
-    const highlightedAyahNumber = parseInt(searchParams.get("ayah") || "0", 10);
-    const [visiblePages, setVisiblePages] = useState(3);
     const containerRef = useRef<HTMLDivElement>(null);
-    const loadingMoreRef = useRef(false);
-    const hasScrolledRef = useRef(false);
+    const {
+      pages,
+      sortedPageNumbers,
+      visiblePages,
+      highlightedAyahNumber,
+      highlightedPage,
+    } = useQuranPages(verses, onLoadedPagesChange);
 
-    const { pages, surahHeaders } = useMemo(() => {
-      if (!verses) return { pages: {}, surahHeaders: {} };
-
-      const pageNumbersSet = new Set<number>();
-      verses.forEach((verse) => {
-        verse.words.forEach((word: any) => {
-          if (word.page_number) {
-            pageNumbersSet.add(word.page_number);
-          }
-        });
-      });
-
-      const pageNumbers = Array.from(pageNumbersSet).sort((a, b) => a - b);
+    const surahHeaders = useMemo(() => {
+      if (!verses)
+        return {} as Record<
+          number,
+          { surahNumber: number; firstAyah: number; lastAyah: number }
+        >;
 
       const surahHeadersMap: Record<
         number,
         { surahNumber: number; firstAyah: number; lastAyah: number }
       > = {};
-      const groupedPages: Record<number, any[]> = {};
 
-      pageNumbers.forEach((pageNum) => {
-        groupedPages[pageNum] = verses;
-
+      Object.keys(pages).forEach((pageNumStr) => {
+        const pageNum = parseInt(pageNumStr);
         const versesOnPage = verses.filter((verse) =>
           verse.words.some((word: any) => word.page_number === pageNum),
         );
@@ -57,7 +48,6 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
         if (newSurahVerse) {
           const surahNum = newSurahVerse.verse_key.split(":")[0];
           const ayahNum = parseInt(newSurahVerse.verse_key.split(":")[1]);
-
           const sameSurahVerses = verses.filter(
             (v) => v.verse_key.split(":")[0] === surahNum,
           );
@@ -73,100 +63,13 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
           surahHeadersMap[pageNum] = {
             surahNumber: parseInt(surahNum),
             firstAyah: ayahNum,
-            lastAyah: lastAyah,
+            lastAyah,
           };
         }
       });
 
-      return { pages: groupedPages, surahHeaders: surahHeadersMap };
-    }, [verses]);
-
-    const sortedPageNumbers = useMemo(() => {
-      return Object.keys(pages).sort((a, b) => parseInt(a) - parseInt(b));
-    }, [pages]);
-
-    const highlightedPage = useMemo(() => {
-      if (!highlightedAyahNumber || !verses) return null;
-
-      const verse = verses.find(
-        (v) => v.verse_key.split(":")[1] === highlightedAyahNumber.toString(),
-      );
-
-      return verse?.page_number || null;
-    }, [highlightedAyahNumber, verses]);
-
-    useEffect(() => {
-      if (highlightedPage && sortedPageNumbers.length > 0) {
-        const pageIndex = sortedPageNumbers.indexOf(highlightedPage.toString());
-        if (pageIndex !== -1) {
-          const pagesToLoad = Math.max(3, pageIndex + 2);
-          setVisiblePages(pagesToLoad);
-        }
-      }
-    }, [highlightedPage, sortedPageNumbers]);
-
-    useEffect(() => {
-      const handleScroll = () => {
-        if (loadingMoreRef.current) return;
-
-        const scrollPercentage =
-          (window.scrollY + window.innerHeight) /
-          document.documentElement.scrollHeight;
-
-        if (scrollPercentage > 0.7 && visiblePages < sortedPageNumbers.length) {
-          loadingMoreRef.current = true;
-          requestAnimationFrame(() => {
-            setVisiblePages((prev) =>
-              Math.min(prev + 2, sortedPageNumbers.length),
-            );
-            loadingMoreRef.current = false;
-          });
-        }
-      };
-
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, [visiblePages, sortedPageNumbers.length]);
-
-    useEffect(() => {
-      if (!highlightedPage) {
-        setVisiblePages(3);
-      }
-    }, [verses, highlightedPage]);
-
-    useEffect(() => {
-      if (onLoadedPagesChange) {
-        const loaded = Math.min(visiblePages, sortedPageNumbers.length);
-        const total = sortedPageNumbers.length;
-        onLoadedPagesChange(loaded, total);
-      }
-    }, [visiblePages, sortedPageNumbers, onLoadedPagesChange]);
-
-    useEffect(() => {
-      if (highlightedAyahNumber && highlightedPage && !hasScrolledRef.current) {
-        const timer = setTimeout(() => {
-          const ayahElement = document.getElementById(
-            `ayah-${highlightedAyahNumber}`,
-          );
-          if (ayahElement) {
-            hasScrolledRef.current = true;
-            ayahElement.scrollIntoView({ behavior: "smooth", block: "center" });
-          } else {
-            const pageElement = document.getElementById(
-              `page-${highlightedPage}`,
-            );
-            if (pageElement) {
-              hasScrolledRef.current = true;
-              pageElement.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }
-          }
-        }, 500);
-        return () => clearTimeout(timer);
-      }
-    }, [highlightedPage, highlightedAyahNumber, visiblePages]);
+      return surahHeadersMap;
+    }, [verses, pages]);
 
     return (
       <div
