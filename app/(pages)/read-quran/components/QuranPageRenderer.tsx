@@ -22,7 +22,7 @@ interface QuranPageRendererProps {
   lineHeight: number;
   pageNumber?: number;
   highlightedAyahNumber?: number;
-  surahHeader?: SurahHeaderInfo;
+  surahHeaders?: SurahHeaderInfo[];
 }
 
 const SKELETON_LINE_WIDTHS = [
@@ -76,7 +76,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     lineHeight,
     pageNumber,
     highlightedAyahNumber = 0,
-    surahHeader,
+    surahHeaders,
   }) => {
     const { fontReady, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
@@ -96,19 +96,22 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     } = useAyahInteraction(verses);
 
     if (!fontReady && pageNumber) {
-      return <QuranPageSkeleton hasSurahHeader={!!surahHeader} />;
+      return <QuranPageSkeleton hasSurahHeader={!!surahHeaders?.length} />;
     }
 
-    const firstAyah1Line = surahHeader
-      ? (lineOrder.find((ln) =>
+    const headerLineMap = new Map<string, SurahHeaderInfo>();
+    if (surahHeaders?.length) {
+      surahHeaders.forEach((header) => {
+        const line = lineOrder.find((ln) =>
           lines[ln]?.some(
             (chunk) =>
-              chunk.verseKey?.split(":")[0] ===
-                surahHeader.surahNumber.toString() &&
+              chunk.verseKey?.split(":")[0] === header.surahNumber.toString() &&
               chunk.verseKey?.split(":")[1] === "1",
           ),
-        ) ?? null)
-      : null;
+        );
+        if (line) headerLineMap.set(line, header);
+      });
+    }
 
     return (
       <div
@@ -127,14 +130,14 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           }}
         >
           {lineOrder.map((lineNumber) => {
-            const isHeaderLine = surahHeader && lineNumber === firstAyah1Line;
-            const surahHeaderInfo = isHeaderLine
-              ? surahNames.find((s) => s.number === surahHeader!.surahNumber)
+            const headerForLine = headerLineMap.get(lineNumber) ?? null;
+            const surahHeaderInfo = headerForLine
+              ? surahNames.find((s) => s.number === headerForLine.surahNumber)
               : null;
 
             return (
               <Fragment key={lineNumber}>
-                {surahHeaderInfo && (
+                {surahHeaderInfo && headerForLine && (
                   <div
                     key={`header-${lineNumber}`}
                     className="w-full mb-4 mt-6"
@@ -142,7 +145,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                   >
                     <QuranSurahHeader
                       surahNameAr={surahHeaderInfo.arTashkeel}
-                      surahNumber={surahHeader!.surahNumber}
+                      surahNumber={headerForLine.surahNumber}
                     />
                   </div>
                 )}

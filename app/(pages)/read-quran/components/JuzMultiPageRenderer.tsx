@@ -26,12 +26,12 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
       if (!verses)
         return {} as Record<
           number,
-          { surahNumber: number; firstAyah: number; lastAyah: number }
+          { surahNumber: number; firstAyah: number; lastAyah: number }[]
         >;
 
       const surahHeadersMap: Record<
         number,
-        { surahNumber: number; firstAyah: number; lastAyah: number }
+        { surahNumber: number; firstAyah: number; lastAyah: number }[]
       > = {};
 
       Object.keys(pages).forEach((pageNumStr) => {
@@ -40,31 +40,33 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
           verse.words.some((word: any) => word.page_number === pageNum),
         );
 
-        const newSurahVerse = versesOnPage.find((verse) => {
+        const newSurahVerses = versesOnPage.filter((verse) => {
           const ayahNum = parseInt(verse.verse_key.split(":")[1]);
           return ayahNum === 1;
         });
 
-        if (newSurahVerse) {
-          const surahNum = newSurahVerse.verse_key.split(":")[0];
-          const ayahNum = parseInt(newSurahVerse.verse_key.split(":")[1]);
-          const sameSurahVerses = verses.filter(
-            (v) => v.verse_key.split(":")[0] === surahNum,
-          );
-          const lastAyah =
-            sameSurahVerses.length > 0
-              ? parseInt(
-                  sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(
-                    ":",
-                  )[1],
-                )
-              : ayahNum;
+        if (newSurahVerses.length > 0) {
+          surahHeadersMap[pageNum] = newSurahVerses.map((surahVerse) => {
+            const surahNum = surahVerse.verse_key.split(":")[0];
+            const ayahNum = parseInt(surahVerse.verse_key.split(":")[1]);
+            const sameSurahVerses = verses.filter(
+              (v) => v.verse_key.split(":")[0] === surahNum,
+            );
+            const lastAyah =
+              sameSurahVerses.length > 0
+                ? parseInt(
+                    sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(
+                      ":",
+                    )[1],
+                  )
+                : ayahNum;
 
-          surahHeadersMap[pageNum] = {
-            surahNumber: parseInt(surahNum),
-            firstAyah: ayahNum,
-            lastAyah,
-          };
+            return {
+              surahNumber: parseInt(surahNum),
+              firstAyah: ayahNum,
+              lastAyah,
+            };
+          });
         }
       });
 
@@ -79,7 +81,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
       >
         {sortedPageNumbers.slice(0, visiblePages).map((pageNum) => {
           const pageNumber = parseInt(pageNum);
-          const surahHeader = surahHeaders[pageNumber];
+          const pageHeaders = surahHeaders[pageNumber];
 
           return (
             <div
@@ -95,7 +97,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
                 highlightedAyahNumber={
                   pageNumber === highlightedPage ? highlightedAyahNumber : 0
                 }
-                surahHeader={surahHeader}
+                surahHeaders={pageHeaders}
               />
             </div>
           );

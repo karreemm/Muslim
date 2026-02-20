@@ -14,12 +14,12 @@ interface QuranMultiPageRendererProps {
   verses: any[];
   fontSize: number;
   lineHeight: number;
-  surahHeader?: SurahHeaderInfo;
+  surahHeaders?: SurahHeaderInfo[];
   onLoadedPagesChange?: (loadedPages: number, totalPages: number) => void;
 }
 
 const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
-  ({ verses, fontSize, lineHeight, surahHeader, onLoadedPagesChange }) => {
+  ({ verses, fontSize, lineHeight, surahHeaders, onLoadedPagesChange }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const {
       pages,
@@ -50,7 +50,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
                   ? highlightedAyahNumber
                   : 0
               }
-              surahHeader={surahHeader}
+              surahHeaders={surahHeaders}
             />
           </div>
         ))}

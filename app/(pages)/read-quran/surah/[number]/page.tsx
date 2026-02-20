@@ -8,9 +8,7 @@ import Navbar from "@/components/general/Navbar";
 import GetSurah from "../../service/GetSurah";
 import { showPopover, hidePopover } from "@/utils/helpers";
 import Footer from "@/components/general/Footer";
-import {
-  useQuranNavigation,
-} from "@/hooks/readQuran";
+import { useQuranNavigation } from "@/hooks/readQuran";
 import QuranMultiPageRenderer from "../../components/QuranMultiPageRenderer";
 import ReadingProgressBar from "@/components/general/ReadingProgressBar";
 import { useContainerFontSize } from "@/hooks/readQuran/useContainerFontSize";
@@ -31,7 +29,6 @@ export default function SurahPage() {
   const [surahVerses, setSurahVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
   const { fontSize, lineHeight } = useContainerFontSize(quranContentRef);
-  
 
   const [loadedPages, setLoadedPages] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -136,13 +133,15 @@ export default function SurahPage() {
                 verses={surahVerses}
                 fontSize={fontSize}
                 lineHeight={lineHeight}
-                surahHeader={
+                surahHeaders={
                   currentSurah
-                    ? {
-                        surahNumber: currentSurah.number,
-                        firstAyah: 1,
-                        lastAyah: currentSurah.ayahs,
-                      }
+                    ? [
+                        {
+                          surahNumber: currentSurah.number,
+                          firstAyah: 1,
+                          lastAyah: currentSurah.ayahs,
+                        },
+                      ]
                     : undefined
                 }
                 onLoadedPagesChange={handleLoadedPagesChange}
