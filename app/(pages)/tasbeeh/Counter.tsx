@@ -114,7 +114,7 @@ const Counter = () => {
           } `}
           style={{ clipPath: "circle(50% at 50% 50%)" }}
         >
-          <FontAwesomeIcon icon={faAngleUp} className=" Big" />
+          <FontAwesomeIcon icon={faAngleUp} className="text-9xl" />
         </button>
 
         <button
@@ -126,7 +126,7 @@ const Counter = () => {
           } `}
           style={{ clipPath: "circle(50% at 50% 50%)" }}
         >
-          <FontAwesomeIcon icon={faAngleDown} className=" text-5xl" />
+          <FontAwesomeIcon icon={faAngleDown} className="text-5xl" />
         </button>
       </div>
     </div>
