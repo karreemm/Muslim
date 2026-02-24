@@ -47,7 +47,7 @@ export default function AyahsTable() {
   };
 
   return (
-    <div className="mt-32 max-w-(--breakpoint-xl) min-h-screen mx-auto px-4 md:px-8">
+    <div className="mt-10 max-w-(--breakpoint-xl) min-h-screen mx-auto px-4 md:px-8">
       {isEmpty && (
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
           {t("savedAyahs.noSavedAyahs")}

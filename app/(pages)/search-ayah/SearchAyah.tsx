@@ -10,8 +10,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { useSearchAyah } from "@/hooks/searchAyah";
 import { AyahSearchCard } from "./components/AyahSearchCard";
 import { AyahSearchCardSkeleton } from "./components/AyahSearchCardSkeleton";
-import Navbar from "@/components/general/Navbar";
-import Footer from "@/components/general/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function SearchAyah() {
   const { language } = useLanguage();
@@ -60,12 +60,11 @@ export default function SearchAyah() {
 
   return (
     <>
-      <Navbar />
       <div
         dir={language === "ar" ? "rtl" : "ltr"}
         className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col items-center gap-10"
       >
-        <div className="w-full mt-32">
+        <div className="w-full mt-10">
           <div className="w-[90%] mx-auto">
             <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-3 sm:p-6 border border-transparent hover:border-teal-600 dark:hover:border-teal-500 transition-all">
               <div className="flex items-center gap-2 sm:gap-3">
@@ -93,11 +92,10 @@ export default function SearchAyah() {
                     />
                     <div className="w-5 h-5 border-2 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-slate-700 peer-checked:bg-teal-600 peer-checked:border-teal-600 dark:peer-checked:bg-teal-500 dark:peer-checked:border-teal-500 transition-all duration-200 flex items-center justify-center group-hover:border-teal-500 dark:group-hover:border-teal-400">
                       <svg
-                        className={`w-3 h-3 text-white transition-all duration-200 ${
-                          wholeWord
+                        className={`w-3 h-3 text-white transition-all duration-200 ${wholeWord
                             ? "opacity-100 scale-100"
                             : "opacity-0 scale-50"
-                        }`}
+                          }`}
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -137,7 +135,7 @@ export default function SearchAyah() {
           </div>
         </div>
 
-        <div className="w-[90%] bg-[#FFF5E4] dark:bg-slate-900 text-[#134B70] dark:text-white p-5 rounded-lg min-h-[400px]">
+        <div className="w-[90%] flex-1 flex flex-col justify-center bg-[#FFF5E4] dark:bg-slate-900 text-[#134B70] dark:text-white p-5 rounded-lg min-h-[400px]">
           {isLoading ? (
             <div className="grid grid-cols-1 gap-5">
               <AyahSearchCardSkeleton />
@@ -169,7 +167,7 @@ export default function SearchAyah() {
               <div className="grid grid-cols-1 gap-5">
                 {results.matches.map((ayah, index) => (
                   <AyahSearchCard
-                      key={`${ayah.number}-${index}`}
+                    key={`${ayah.number}-${index}`}
                     ayah={ayah}
                     highlightKeyword={searchedKeyword}
                   />
@@ -211,7 +209,7 @@ export default function SearchAyah() {
               </p>
             </div>
           ) : (
-            <div className="text-center py-20 flex justify-center items-center flex-col">
+            <div className="flex-1 text-center py-20 flex justify-center items-center flex-col">
               <FontAwesomeIcon
                 icon={faSearch}
                 className="text-6xl text-teal-600 dark:text-teal-500 mb-4"
@@ -222,10 +220,8 @@ export default function SearchAyah() {
             </div>
           )}
         </div>
-
-        <div className="h-20"></div>
+        <div className="h-10"></div>
       </div>
-      <Footer />
     </>
   );
 }

@@ -20,8 +20,8 @@ export default function SadaqaGaryaPage() {
   } = useSadaqaGaryaForm();
 
   return (
-    <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 p-8 flex items-center">
-      <div className="w-[90%] md:w-[60%] mx-auto mt-20">
+    <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 flex items-center">
+      <div className="w-[90%] md:w-[60%] mx-auto mt-10">
         <h1 className="text-3xl mb-8 text-center text-[#134B70] dark:text-white">
           {t("sadaqa.form.title")}
         </h1>

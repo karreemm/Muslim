@@ -27,7 +27,7 @@ export default function ReadQuran() {
 
   return (
     <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col items-center gap-20">
-      <div className="w-full mt-32">
+      <div className="w-full mt-10">
         <QuranNavbar
           onTabChange={(tabName) => setActiveTab(tabName)}
           searchTerm={searchTerm}

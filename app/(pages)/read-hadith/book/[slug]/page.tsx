@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/general/Navbar";
-import Footer from "@/components/general/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { ClipLoader } from "react-spinners";
 import { useBookChapters } from "@/hooks/readHadith/useBookChapters";
 import { hadithBooks } from "@/constants/hadithData";
@@ -33,9 +33,8 @@ export default function BookChaptersPage() {
 
   return (
     <>
-      <Navbar />
       <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-        <div className="w-full flex justify-center mt-24">
+        <div className="w-full flex justify-center mt-10">
           <div className="w-[95%] max-w-[1500px] mx-auto flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-4">
               {book && (
@@ -106,9 +105,8 @@ export default function BookChaptersPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {language === "ar"
                   ? `تم العثور على ${chapters.length} باب`
-                  : `Found ${chapters.length} chapter${
-                      chapters.length !== 1 ? "s" : ""
-                    }`}
+                  : `Found ${chapters.length} chapter${chapters.length !== 1 ? "s" : ""
+                  }`}
               </p>
             )}
 
@@ -172,9 +170,8 @@ export default function BookChaptersPage() {
 
                           <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg
-                              className={`w-5 h-5 text-teal-600 dark:text-teal-400 ${
-                                language === "ar" ? "rotate-180" : ""
-                              }`}
+                              className={`w-5 h-5 text-teal-600 dark:text-teal-400 ${language === "ar" ? "rotate-180" : ""
+                                }`}
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -208,7 +205,6 @@ export default function BookChaptersPage() {
         </div>
         <div className="h-10"></div>
       </div>
-      <Footer />
     </>
   );
 }

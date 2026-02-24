@@ -4,16 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/general/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import GetJuz from "../../service/GetJuz";
 import { showPopover, hidePopover } from "@/utils/helpers";
-import Footer from "@/components/general/Footer";
+import Footer from "@/components/layout/Footer";
 import {
   useQuranNavigation,
   useContainerFontSize,
 } from "@/hooks/readQuran";
 import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
-import ReadingProgressBar from "@/components/general/ReadingProgressBar";
+import ReadingProgressBar from "@/components/layout/ReadingProgressBar";
 
 interface JuzData {
   number: number;
@@ -61,13 +61,12 @@ export default function JuzPage() {
 
   return (
     <>
-      <Navbar />
       <ReadingProgressBar
         totalPages={totalPages || undefined}
         loadedPages={loadedPages || undefined}
       />
       <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-        <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
+        <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && nextJuz && (
               <>
@@ -123,7 +122,7 @@ export default function JuzPage() {
 
           <div
             className={`w-full mt-6 flex flex-col items-center transition-all duration-300`}
-            >
+          >
             <div
               ref={quranContentRef}
               className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden`}
@@ -138,7 +137,6 @@ export default function JuzPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

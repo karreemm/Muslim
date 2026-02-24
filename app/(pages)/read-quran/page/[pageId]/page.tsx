@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/general/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import GetPage from "../../service/GetPage";
 import {
     toArabicNumber,
@@ -15,7 +15,7 @@ import {
     hidePopover,
 } from "@/utils/helpers";
 import QuranPageRenderer from "../../components/QuranPageRenderer";
-import Footer from "@/components/general/Footer";
+import Footer from "@/components/layout/Footer";
 import {
     useQuranNavigation,
     useContainerFontSize
@@ -26,7 +26,7 @@ export default function PageView() {
     const navigation = useQuranNavigation("page");
     const [pageVerses, setPageVerses] = useState<any>(null);
     const quranContentRef = useRef<HTMLDivElement>(null);
-    const {fontSize, lineHeight} = useContainerFontSize(quranContentRef);
+    const { fontSize, lineHeight } = useContainerFontSize(quranContentRef);
 
     useEffect(() => {
         if (navigation.number) {
@@ -44,9 +44,8 @@ export default function PageView() {
 
     return (
         <>
-            <Navbar />
             <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-                <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
+                <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
                     <div>
                         {navigation.hasNext && (
                             <>
@@ -122,7 +121,6 @@ export default function PageView() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 }

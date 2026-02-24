@@ -79,7 +79,7 @@ const PrayerTimes: React.FC = () => {
       {prayerTimes && (
         <>
           <div className="w-full flex flex-col gap-20 items-center">
-            <h2 className="lg:mt-0 mt-28 w-[80%] text-3xl lg:text-5xl text-teal-600 dark:text-white text-center">
+            <h2 className="lg:mt-0 mt-10 w-[80%] text-3xl lg:text-5xl text-teal-600 dark:text-white text-center">
               {t("prayerTimes.error")}
             </h2>
             <div className="w-[90%] bg-[#FFE0B2] dark:bg-[#2d3748] dark:shadow-lg shadow-lg p-6 rounded-lg flex flex-col gap-5 text-black dark:text-white">

@@ -2,8 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/general/Navbar";
-import Footer from "@/components/general/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import TranslationPair from "@/types";
 import { ClipLoader } from "react-spinners";
 import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
@@ -52,9 +52,8 @@ export default function ChapterHadithsPage() {
 
   return (
     <>
-      <Navbar />
       <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-        <div className="w-full flex justify-center mt-24">
+        <div className="w-full flex justify-center mt-10">
           <div className="w-[95%] max-w-5xl flex flex-col items-center gap-6">
             <div className="w-full flex flex-col items-center gap-4">
               <h1 className="text-3xl md:text-4xl font-bold text-center">
@@ -86,21 +85,19 @@ export default function ChapterHadithsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setSearchType("content")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        searchType === "content"
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${searchType === "content"
                           ? "bg-teal-600 text-white"
                           : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                      }`}
+                        }`}
                     >
                       {t("hadith.chapter.byContent")}
                     </button>
                     <button
                       onClick={() => setSearchType("number")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        searchType === "number"
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${searchType === "number"
                           ? "bg-teal-600 text-white"
                           : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                      }`}
+                        }`}
                     >
                       {t("hadith.chapter.byNumber")}
                     </button>
@@ -166,9 +163,8 @@ export default function ChapterHadithsPage() {
                       >
                         <button
                           onClick={() => toggleFavorite(hadith)}
-                          className={`absolute ${
-                            language === "ar" ? "left-4" : "right-4"
-                          } top-4 text-2xl hover:scale-110 transition-transform`}
+                          className={`absolute ${language === "ar" ? "left-4" : "right-4"
+                            } top-4 text-2xl hover:scale-110 transition-transform`}
                         >
                           <FontAwesomeIcon
                             icon={
@@ -185,9 +181,8 @@ export default function ChapterHadithsPage() {
                         </button>
 
                         <div
-                          className={`absolute ${
-                            language === "ar" ? "left-14" : "right-14"
-                          } top-4`}
+                          className={`absolute ${language === "ar" ? "left-14" : "right-14"
+                            } top-4`}
                         >
                           <ShareModal
                             size="2xl"
@@ -203,13 +198,12 @@ export default function ChapterHadithsPage() {
                           {hadith.status && (
                             <>
                               <span
-                                className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${
-                                  hadith.status.toLowerCase() === "sahih"
+                                className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${hadith.status.toLowerCase() === "sahih"
                                     ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                     : hadith.status.toLowerCase() === "hasan"
                                       ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
-                                }`}
+                                  }`}
                               >
                                 {hadith.status.toLowerCase() === "sahih"
                                   ? t("hadith.chapter.sahih")
@@ -270,7 +264,6 @@ export default function ChapterHadithsPage() {
         </div>
         <div className="h-10"></div>
       </div>
-      <Footer />
     </>
   );
 }

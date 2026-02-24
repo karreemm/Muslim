@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation";
 import { useLanguage } from "../../../../context/LanguageContext";
 import { duas, DiedSurahs } from "../../../../constants/sadaqaData";
-import Navbar from "@/components/general/Navbar";
-import Footer from "@/components/general/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { ClipLoader } from "react-spinners";
 import ShareModal from "../../../../components/modals/ShareModal";
 import {
@@ -38,7 +38,7 @@ export default function DeceasedPage() {
 
   if (!deceased) {
     return (
-      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 p-8 flex justify-center items-center">
+      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 flex justify-center items-center">
         <div className="text-center text-[#134B70] dark:text-white">
           <h1 className="text-2xl mb-4">Person not found</h1>
           <button
@@ -54,9 +54,8 @@ export default function DeceasedPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 p-8">
-        <div className="w-[90%] max-w-[1500px] mx-auto mt-20">
+      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900">
+        <div className="w-[90%] max-w-[1500px] mx-auto mt-10">
           <h1
             className={`${language === "ar" ? "leading-10" : ""
               } flex flex-col justify-center text-3xl mb-4 text-center text-[#134B70] dark:text-white`}
@@ -147,7 +146,6 @@ export default function DeceasedPage() {
         </div>
         <div className="h-10"></div>
       </div>
-      <Footer />
     </>
   );
 }

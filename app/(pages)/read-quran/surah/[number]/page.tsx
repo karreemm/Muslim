@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/general/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import GetSurah from "../../service/GetSurah";
 import { showPopover, hidePopover } from "@/utils/helpers";
-import Footer from "@/components/general/Footer";
+import Footer from "@/components/layout/Footer";
 import { useQuranNavigation } from "@/hooks/readQuran";
 import QuranMultiPageRenderer from "../../components/QuranMultiPageRenderer";
-import ReadingProgressBar from "@/components/general/ReadingProgressBar";
+import ReadingProgressBar from "@/components/layout/ReadingProgressBar";
 import { useContainerFontSize } from "@/hooks/readQuran/useContainerFontSize";
 
 interface SurahData {
@@ -62,13 +62,12 @@ export default function SurahPage() {
 
   return (
     <>
-      <Navbar />
       <ReadingProgressBar
         totalPages={totalPages || undefined}
         loadedPages={loadedPages || undefined}
       />
       <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
-        <div className="relative mt-20 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
+        <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && nextSurah && (
               <>
@@ -136,12 +135,12 @@ export default function SurahPage() {
                 surahHeaders={
                   currentSurah
                     ? [
-                        {
-                          surahNumber: currentSurah.number,
-                          firstAyah: 1,
-                          lastAyah: currentSurah.ayahs,
-                        },
-                      ]
+                      {
+                        surahNumber: currentSurah.number,
+                        firstAyah: 1,
+                        lastAyah: currentSurah.ayahs,
+                      },
+                    ]
                     : undefined
                 }
                 onLoadedPagesChange={handleLoadedPagesChange}
@@ -150,7 +149,6 @@ export default function SurahPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

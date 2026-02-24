@@ -84,7 +84,7 @@ export default function Navbar() {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full z-50 fixed px-4 py-3 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md">
+      <div className="w-full z-50 sticky top-0 px-4 py-3 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md">
         <div className="flex w-full max-w-[1500px] mx-auto items-center justify-between">
           <Link href="/" className="flex gap-2 text-xl">
             <FontAwesomeIcon

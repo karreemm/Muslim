@@ -9,6 +9,7 @@ import { FavoriteAzkarProvider } from "../context/FavoriteAzkarContext";
 import { SadaqaGaryaProvider } from "../context/SadaqatContext";
 import TasbeehContextProvider from "../context/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
+import PageLayout from "@/components/layout/pageLayout";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -47,7 +48,9 @@ export default function RootLayout({
                   <FavoriteAzkarProvider>
                     <SadaqaGaryaProvider>
                       <TasbeehContextProvider>
-                        {children}
+                        <PageLayout>
+                          {children}
+                        </PageLayout>
                       </TasbeehContextProvider>
                     </SadaqaGaryaProvider>
                   </FavoriteAzkarProvider>

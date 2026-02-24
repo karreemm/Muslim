@@ -16,19 +16,15 @@ import {
   faStepForward,
   faRedo,
   faDownload,
-  faChevronLeft,
-  faChevronRight,
   faCheck,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
-import ShareModal from "@/components/modals/ShareModal";
 import { ClipLoader } from "react-spinners";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
 import {
   useSurahData,
   useAudioPlayer,
-  useFavoriteSurahActions,
   useSurahDownload,
 } from "@/hooks/listenQuran";
 
@@ -36,12 +32,14 @@ interface SurahAudioPlayerProps {
   reciterId: string;
   surahNumber: number;
   onSurahChange?: (surahNumber: number) => void;
+  isSidebarExpanded: boolean;
 }
 
 const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   reciterId,
   surahNumber,
   onSurahChange,
+  isSidebarExpanded,
 }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
@@ -80,14 +78,6 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     isBuffering,
   } = useAudioPlayer(surah, reciterId, surahNumber);
 
-  const { isFavorite, toggleFavorite } = useFavoriteSurahActions(
-    surahNumber,
-    reciterId,
-    selectedSurahNameEn,
-    selectedSurahNameAr,
-    reciterNameEn,
-    reciterNameAr
-  );
   const { downloadSurah, isDownloading } = useSurahDownload(surah, surahNumber);
 
   const handleDownload = async () => {
@@ -107,234 +97,168 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     }
   };
 
-  const handlePreviousSurah = () => {
-    if (surahNumber > 1 && onSurahChange) {
-      onSurahChange(surahNumber - 1);
-    }
-  };
-
-  const handleNextSurah = () => {
-    if (surahNumber < 114 && onSurahChange) {
-      onSurahChange(surahNumber + 1);
-    }
-  };
-
   const handleTogglePlayPause = () => {
     console.log("Button clicked, current isPlaying:", isPlaying);
     togglePlayPause();
   };
 
-  const canGoPreviousSurah = surahNumber > 1;
-  const canGoNextSurah = surahNumber < 114;
-
   return (
-    <div>
+    <div className="w-full">
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
         </div>
       ) : surah ? (
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center w-full">
           <div>
             <audio ref={audioPlayer} controls className="hidden" />
             <audio ref={nextAudioPlayer} controls className="hidden" />
           </div>
 
-          {/* Enhanced Audio Player Controls */}
-          <div className="bg-gray-100 dark:bg-[#2d3748] rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-700 w-full max-w-md">
-            {/* Current Ayah Info */}
-            <div className="text-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
-                {language === "ar" ? "آية" : "Ayah"} {currentAyahIndex + 1}{" "}
-                {language === "ar" ? "من" : "of"} {totalAyahs}
-              </h3>
-            </div>
+          {/* Sticky Bottom Bar */}
+          <div
+            className="w-full mb-8 z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300"
+          >
+            <div className="max-w-[1500px] mx-auto flex flex-col gap-2 md:gap-4">
 
-            {/* Interactive Slider */}
-            <div dir="ltr" className="mb-4">
-              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-
-              <input
-                type="range"
-                min="0"
-                max={duration || 0}
-                step="0.1"
-                value={currentTime}
-                onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
-                onMouseDown={handleSliderMouseDown}
-                onMouseUp={handleSliderMouseUp}
-                onTouchStart={handleSliderMouseDown}
-                onTouchEnd={handleSliderMouseUp}
-                className={`w-full h-2 bg-gray-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer ${styles.audioSlider}`}
-                style={{
-                  background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100
-                    }%, #d1d5db ${(currentTime / duration) * 100
-                    }%, #d1d5db 100%)`,
-                }}
-              />
-            </div>
-
-            {/* Surah Navigation */}
-            <div dir="ltr" className="flex items-center justify-between mb-4">
-              <button
-                onClick={handlePreviousSurah}
-                disabled={!canGoPreviousSurah}
-                className={`p-2 rounded-lg transition-all flex justify-center items-center ${canGoPreviousSurah
-                  ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                  : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                  }`}
-                title={language === "ar" ? "السورة السابقة" : "Previous Surah"}
-              >
-                <FontAwesomeIcon icon={faChevronLeft} className={`text-lg`} />
-              </button>
-
-              <div className="text-center flex-1 mx-4">
-                <p className="text-sm md:text-lg text-gray-600 dark:text-gray-400">
-                  {language === "ar" ? "سورة" : "Surah"}{" "}
-                  {language === "ar"
-                    ? selectedSurahNameAr
-                    : selectedSurahNameEn}
-                </p>
-              </div>
-
-              <button
-                onClick={handleNextSurah}
-                disabled={!canGoNextSurah}
-                className={`p-2 rounded-lg transition-all flex justify-center items-center ${canGoNextSurah
-                  ? "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                  : "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                  }`}
-                title={language === "ar" ? "السورة التالية" : "Next Surah"}
-              >
-                <FontAwesomeIcon icon={faChevronRight} className={`text-lg`} />
-              </button>
-            </div>
-
-            {/* Ayah Navigation Controls */}
-            <div
-              dir="ltr"
-              className="flex items-center justify-center gap-4 mb-4"
-            >
-              <button
-                onClick={previous}
-                disabled={isFirstAyah}
-                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${isFirstAyah
-                  ? "bg-gray-300 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                  : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                  }`}
-                title={language === "ar" ? "الآية السابقة" : "Previous Ayah"}
-              >
-                <FontAwesomeIcon icon={faStepBackward} className={`text-lg`} />
-              </button>
-
-              {/* Play/Pause Toggle Button */}
-              <button
-                onClick={handleTogglePlayPause}
-                className={`p-4 rounded-full bg-teal-600 dark:bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500 transition-all transform hover:scale-105 flex items-center justify-center h-14 w-14 ${isBuffering ? styles.loadingButton : ""}`}
-                title={
-                  isPlaying
-                    ? language === "ar"
-                      ? "إيقاف"
-                      : "Pause"
-                    : language === "ar"
-                      ? "تشغيل"
-                      : "Play"
-                }
-                disabled={isDownloading || isBuffering}
-              >
-                <FontAwesomeIcon
-                  icon={isPlaying ? faPause : faPlay}
-                  className="text-2xl"
+              {/* Progress Slider */}
+              <div dir="ltr" className="w-full flex justify-between gap-4 items-center px-2">
+                <span className="text-sm font-medium text-teal-600 dark:text-teal-400">{formatTime(currentTime)}</span>
+                <input
+                  type="range"
+                  min="0"
+                  max={duration || 0}
+                  step="0.1"
+                  value={currentTime}
+                  onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                  onMouseDown={handleSliderMouseDown}
+                  onMouseUp={handleSliderMouseUp}
+                  onTouchStart={handleSliderMouseDown}
+                  onTouchEnd={handleSliderMouseUp}
+                  className={`flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-teal-600 ${styles.audioSlider}`}
+                  style={{
+                    background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100}%, #e5e7eb ${(currentTime / duration) * 100}%, #e5e7eb 100%)`,
+                  }}
                 />
-              </button>
+                <span className="text-sm font-medium text-teal-600 dark:text-teal-400">{formatTime(duration)}</span>
+              </div>
 
-              <button
-                onClick={restart}
-                className="p-4 rounded-full bg-teal-600 dark:bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500 transition-all transform hover:scale-105 flex items-center justify-center h-14 w-14"
-                title={language === "ar" ? "إعادة تشغيل" : "Restart"}
-                disabled={isDownloading}
-              >
-                <FontAwesomeIcon icon={faRedo} className="text-2xl" />
-              </button>
+              <div className="flex items-center justify-between">
+                {/* Ayah Info — md+ only, left side */}
+                <div className="hidden md:flex flex-col items-start gap-1 w-1/4">
+                  <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
+                    {language === "ar" ? "الآية الحالية" : "Current Ayah"}
+                  </span>
+                  <span className="text-lg font-semibold text-teal-700 dark:text-white">
+                    {currentAyahIndex + 1} / {totalAyahs}
+                  </span>
+                </div>
 
-              <button
-                onClick={next}
-                disabled={isLastAyah}
-                className={`p-3 rounded-full transition-all flex justify-center items-center w-10 h-10 ${isLastAyah
-                  ? "bg-gray-100 dark:bg-slate-700 text-gray-400 cursor-not-allowed"
-                  : "bg-emerald-200 dark:bg-teal-900 text-emerald-600 dark:text-teal-400 hover:bg-emerald-300 dark:hover:bg-teal-800"
-                  }`}
-                title={language === "ar" ? "الآية التالية" : "Next Ayah"}
-              >
-                <FontAwesomeIcon icon={faStepForward} className={`text-lg`} />
-              </button>
+                {/* Mobile only: ayah index on the left */}
+                <div className="flex md:hidden flex-col items-center justify-center min-w-[48px] gap-1">
+                  <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none">
+                    {language === "ar" ? "آية" : "Ayah"}
+                  </span>
+                  <span className="text-base font-semibold text-teal-700 dark:text-white">
+                    {currentAyahIndex + 1}/{totalAyahs}
+                  </span>
+                </div>
+
+                {/* Main Controls */}
+                <div dir="ltr" className="flex items-center justify-center gap-2 md:gap-8 flex-1">
+                  <button
+                    onClick={previous}
+                    disabled={isFirstAyah}
+                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${isFirstAyah
+                      ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
+                      : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                      }`}
+                  >
+                    <FontAwesomeIcon icon={faStepBackward} className="text-xl md:text-2xl" />
+                  </button>
+
+                  <button
+                    onClick={handleTogglePlayPause}
+                    className={`p-5 rounded-full bg-teal-600 text-white shadow-lg hover:shadow-teal-500/40 hover:bg-teal-500 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center h-14 w-14 md:h-16 md:w-16 ${isBuffering ? styles.loadingButton : ""}`}
+                    disabled={isDownloading || isBuffering}
+                  >
+                    <FontAwesomeIcon
+                      icon={isPlaying ? faPause : faPlay}
+                      className="text-2xl md:text-3xl"
+                    />
+                  </button>
+
+                  <button
+                    onClick={restart}
+                    className="p-3 rounded-full text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center"
+                    disabled={isDownloading}
+                  >
+                    <FontAwesomeIcon icon={faRedo} className="text-xl md:text-2xl" />
+                  </button>
+
+                  <button
+                    onClick={next}
+                    disabled={isLastAyah}
+                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${isLastAyah
+                      ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
+                      : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                      }`}
+                  >
+                    <FontAwesomeIcon icon={faStepForward} className="text-xl md:text-2xl" />
+                  </button>
+
+                  {/* Download icon — mobile only, inline with controls, no background */}
+                  <button
+                    onClick={handleDownload}
+                    className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${
+                      downloadStatus === "success"
+                        ? "text-green-500"
+                        : downloadStatus === "error"
+                          ? "text-red-500"
+                          : "text-teal-600 dark:text-teal-400"
+                    } ${
+                      downloadStatus === "downloading" || downloadStatus === "success"
+                        ? "cursor-not-allowed opacity-70"
+                        : ""
+                    }`}
+                    disabled={downloadStatus === "downloading" || downloadStatus === "success"}
+                  >
+                    <FontAwesomeIcon
+                      icon={downloadStatus === "success" ? faCheck : downloadStatus === "error" ? faExclamationTriangle : faDownload}
+                      className={`text-xl ${downloadStatus === "downloading" ? "animate-bounce" : ""}`}
+                    />
+                  </button>
+                </div>
+
+                {/* Download Button — md+ with full pill styling */}
+                <div className="hidden md:flex w-1/4 justify-end">
+                  <button
+                    onClick={handleDownload}
+                    className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${downloadStatus === "success"
+                      ? "bg-green-500 text-white"
+                      : downloadStatus === "error"
+                        ? "bg-red-500 text-white"
+                        : "bg-teal-600 text-white"
+                      } ${downloadStatus === "downloading" || downloadStatus === "success"
+                        ? "cursor-not-allowed opacity-90"
+                        : "transform hover:scale-105"
+                      }`}
+                    disabled={downloadStatus === "downloading" || downloadStatus === "success"}
+                  >
+                    <FontAwesomeIcon
+                      icon={downloadStatus === "success" ? faCheck : (downloadStatus === "error" ? faExclamationTriangle : faDownload)}
+                      className={downloadStatus === "downloading" ? "animate-bounce" : ""}
+                    />
+                    <span>
+                      {downloadStatus === "downloading" && t("common.downloading")}
+                      {downloadStatus === "success" && t("common.downloadedSuccess")}
+                      {downloadStatus === "error" && t("common.downloadError")}
+                      {downloadStatus === "idle" && t("common.download")}
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* Download Button */}
-            <button
-              onClick={handleDownload}
-              className={`w-full py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${downloadStatus === "success"
-                ? "bg-green-600 text-white hover:bg-green-700"
-                : downloadStatus === "error"
-                  ? "bg-red-600 text-white hover:bg-red-700"
-                  : "bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500"
-                } ${downloadStatus === "downloading" || downloadStatus === "success"
-                  ? "cursor-not-allowed opacity-90"
-                  : "transform hover:scale-105 cursor-pointer"
-                }`}
-              disabled={
-                downloadStatus === "downloading" || downloadStatus === "success"
-              }
-            >
-              <FontAwesomeIcon
-                icon={
-                  downloadStatus === "success"
-                    ? faCheck
-                    : downloadStatus === "error"
-                      ? faExclamationTriangle
-                      : faDownload
-                }
-                className={
-                  downloadStatus === "downloading" ? "animate-bounce" : ""
-                }
-              />
-              {downloadStatus === "downloading" && t("common.downloading")}
-              {downloadStatus === "success" && t("common.downloadedSuccess")}
-              {downloadStatus === "error" && t("common.downloadError")}
-              {downloadStatus === "idle" && t("common.download")}
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 mt-5">
-            <h1 className="text-xl md:text-3xl">
-              {isFavorite ? t("listenQuran.surahPlayer.saved") : t("listenQuran.surahPlayer.loveIt")}
-            </h1>
-            <button
-              id={`love-button-${surahNumber}`}
-              onClick={toggleFavorite}
-              className="text-red-500 hover:text-red-600"
-            >
-              <FontAwesomeIcon
-                icon={isFavorite ? loved : notLoved}
-                className={
-                  !isFavorite
-                    ? `${animationStyles.vibrate} text-lg md:text-2xl`
-                    : "text-lg md:text-2xl"
-                }
-              />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 mt-5">
-            <h1 className="text-xl md:text-3xl">{t("listenQuran.surahPlayer.shareIt")}</h1>
-
-            <ShareModal
-              size="2xl"
-              url={`https://muslim-one.vercel.app/listen-quran/reciter/${reciterId}?surah=${surahNumber}`}
-            />
           </div>
         </div>
       ) : error ? (
