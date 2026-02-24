@@ -1,5 +1,8 @@
 import { removeDiacritics } from "@/utils/helpers";
 
+const searchCache = new Map<string, SearchResponse>();
+const ayahCache = new Map<number, any>();
+
 export interface SearchAyah {
   number: number;
   text: string;
@@ -43,9 +46,10 @@ const filterWholeWordMatches = (
     const normalizedText = removeDiacritics(match.text);
 
     return searchWords.every((word) => {
+      const escapedWord = escapeRegex(word);
       const regex = new RegExp(
-        `(^|\\s|[\\u060C\\u061B\\u061F\\u0640])${escapeRegex(word)}($|\\s|[\\u060C\\u061B\\u061F\\u0640])`,
-        "g",
+        `(^|[\\s\\p{P}])${escapedWord}($|[\\s\\p{P}])`,
+        "u",
       );
       return regex.test(normalizedText);
     });
@@ -55,6 +59,8 @@ const filterWholeWordMatches = (
 const escapeRegex = (str: string): string => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const searchAyahs = async (
   keyword: string,
@@ -82,6 +88,12 @@ export const searchAyahs = async (
       );
     }
 
+    const cacheKey = `${normalizedKeyword}-${surah}-${page}-${limit}-${wholeWord}`;
+    if (searchCache.has(cacheKey)) {
+      console.log("Returning cached search results for:", cacheKey);
+      return searchCache.get(cacheKey)!;
+    }
+
     console.log("Original Keyword:", keyword);
     console.log("Normalized Keyword:", normalizedKeyword);
     console.log("Page:", page, "Limit:", limit);
@@ -102,37 +114,28 @@ export const searchAyahs = async (
 
     clearTimeout(timeoutId);
 
+    if (response.status === 429) {
+      console.error("Too many requests (429)");
+      if (language === "en") {
+        throw new Error("Rate limit exceeded. Please wait a moment and try again.");
+      }
+      throw new Error("تجاوزت حد الطلبات. يرجى الانتظار لحظة والمحاولة مرة أخرى.");
+    }
+
     if (response.status === 404) {
       console.log("No results found (404)");
       return { count: 0, matches: [] };
     }
 
-    if (response.status === 500) {
-      console.error("Server error (500) - API cannot process this search");
-      if (language === "en") {
-        throw new Error(
-          "The API server is having trouble processing this search. Try using a longer or more specific search term.",
-        );
-      }
-      throw new Error(
-        "خادم API يواجه مشكلة في معالجة هذا البحث. حاول استخدام مصطلح بحث أطول أو أكثر تحديدًا.",
-      );
-    }
-
     if (!response.ok) {
       console.error("Response not OK:", response.status, response.statusText);
       if (language === "en") {
-        throw new Error(
-          `Failed to search ayahs: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`Search failed: ${response.statusText}`);
       }
-      throw new Error(
-        `فشل في البحث عن الآيات: ${response.status} ${response.statusText}`,
-      );
+      throw new Error(`فشل البحث: ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log("API Response:", data);
 
     if (!data.data || data.data.count === 0) {
       return { count: 0, matches: [] };
@@ -142,8 +145,6 @@ export const searchAyahs = async (
       (match: SearchAyah) => match.edition.type === "quran",
     );
 
-    console.log("Quran Matches:", quranMatches.length);
-
     if (quranMatches.length === 0) {
       return { count: 0, matches: [] };
     }
@@ -152,20 +153,13 @@ export const searchAyahs = async (
       ? filterWholeWordMatches(quranMatches, normalizedKeyword)
       : quranMatches;
 
-    console.log(
-      `After ${wholeWord ? "whole word" : "substring"} filter:`,
-      filteredMatches.length,
-    );
-
     if (filteredMatches.length === 0) {
       return { count: 0, matches: [] };
     }
 
     const uniqueAyahNumbers = Array.from(
       new Set(filteredMatches.map((match: SearchAyah) => match.number)),
-    );
-
-    console.log("Total unique ayahs:", uniqueAyahNumbers.length);
+    ) as number[];
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
@@ -173,28 +167,53 @@ export const searchAyahs = async (
 
     console.log("Fetching ayahs for page:", paginatedAyahNumbers);
 
-    const fullAyahs = [];
-    for (const num of paginatedAyahNumbers) {
+    const fullAyahs: any[] = [];
+
+    for (let i = 0; i < paginatedAyahNumbers.length; i++) {
+      const num = paginatedAyahNumbers[i];
+
+      if (ayahCache.has(num)) {
+        fullAyahs.push(ayahCache.get(num));
+        continue;
+      }
+
       try {
+        if (i > 0 && i % 3 === 0) {
+          await sleep(100);
+        }
+
         const ayahResponse = await fetch(
           `https://api.alquran.cloud/v1/ayah/${num}/quran-uthmani`,
         );
 
         if (ayahResponse.ok) {
           const ayahData = await ayahResponse.json();
+          ayahCache.set(num, ayahData.data);
           fullAyahs.push(ayahData.data);
-        }
+        } else if (ayahResponse.status === 429) {
+          console.warn(`429 encountered for ayah ${num}, waiting longer...`);
+          await sleep(1000);
 
-        await new Promise((resolve) => setTimeout(resolve, 50));
+          const retryResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${num}/quran-uthmani`);
+          if (retryResponse.ok) {
+            const retryData = await retryResponse.json();
+            ayahCache.set(num, retryData.data);
+            fullAyahs.push(retryData.data);
+          }
+        }
       } catch (error) {
         console.error(`Error fetching ayah ${num}:`, error);
       }
     }
 
-    return {
+    const finalResponse = {
       count: uniqueAyahNumbers.length,
       matches: fullAyahs,
     };
+
+    searchCache.set(cacheKey, finalResponse);
+
+    return finalResponse;
   } catch (error) {
     if (error instanceof Error) {
       if (error.name === "AbortError") {
