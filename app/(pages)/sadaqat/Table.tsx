@@ -116,10 +116,19 @@ export default function DeceasedPersonsTable() {
                 </tr>
               </thead>
               <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
-                {deceasedPersons.map((person, idx) => (
+                {[...deceasedPersons].reverse().map((person, idx) => (
                   <tr key={idx} className="">
                     <td className="px-6 py-4 text-center">
-                      {language === "ar" ? person.nameAr : person.nameEn}
+                      <div className="flex flex-col items-center gap-1">
+                        {idx === 0 && (
+                          <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                            {t("common.latest")}
+                          </span>
+                        )}
+                        <span>
+                          {language === "ar" ? person.nameAr : person.nameEn}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                       <button

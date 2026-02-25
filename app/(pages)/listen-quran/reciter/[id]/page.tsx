@@ -62,7 +62,7 @@ export default function ReciterPage() {
           onToggle={setIsSidebarExpanded}
         />
         <div
-          className={`flex-1 min-h-screen flex flex-col items-center gap-5 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white transition-all duration-300 ${isSidebarExpanded ? (language === "en" ? "md:pl-80" : "md:pr-80") : (language === "en" ? "md:pl-16" : "md:pr-16")
+          className={`flex-1 min-h-screen flex flex-col items-center gap-5 py-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white transition-all duration-300 ${isSidebarExpanded ? (language === "en" ? "md:pl-80" : "md:pr-80") : (language === "en" ? "md:pl-16" : "md:pr-16")
             }`}
         >
           <div className="flex-1 w-full flex flex-col items-center">

@@ -75,16 +75,25 @@ export default function HadithTable() {
                 </tr>
               </thead>
               <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
-                {favoriteAzkar.map((item, idx) => {
+                {[...favoriteAzkar].reverse().map((item, idx) => {
                   const zekr = AzkarCategories.find(
                     (b) => b.ar === item.category
                   );
                   return (
-                    <tr key={idx}>
+                    <tr key={idx} className="">
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        {language === "en"
-                          ? item.number
-                          : toArabicNumber(item.number)}
+                        <div className="flex flex-col items-center gap-1">
+                          {idx === 0 && (
+                            <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                              {t("common.latest")}
+                            </span>
+                          )}
+                          <span>
+                            {language === "en"
+                              ? item.number
+                              : toArabicNumber(item.number)}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         {language === "ar" ? zekr?.ar : zekr?.en}

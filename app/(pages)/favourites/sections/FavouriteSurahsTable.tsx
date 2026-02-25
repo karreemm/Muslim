@@ -71,10 +71,17 @@ export default function AyahsTable() {
                 </tr>
               </thead>
               <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
-                {favoriteSurahs.map((item, idx) => (
-                  <tr key={idx}>
+                {[...favoriteSurahs].reverse().map((item, idx) => (
+                  <tr key={idx} className="">
                     <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
-                      {language === "ar" ? item.nameAr : item.nameEn}
+                      <div className="flex flex-col items-center gap-1">
+                        {idx === 0 && (
+                          <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                            {t("common.latest")}
+                          </span>
+                        )}
+                        <span>{language === "ar" ? item.nameAr : item.nameEn}</span>
+                      </div>
                     </td>
                     <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
                       {language === "ar"

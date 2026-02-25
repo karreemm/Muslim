@@ -81,12 +81,21 @@ export default function HadithTable() {
                 </tr>
               </thead>
               <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
-                {favoriteHadiths.map((item, idx) => {
+                {[...favoriteHadiths].reverse().map((item, idx) => {
                   const book = hadithBooks.find((b) => b.id === item.bookId);
                   return (
-                    <tr key={idx}>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        {language === "ar" ? item.numberAr : item.numberEn}
+                    <tr key={idx} className="">
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm md:text-base">
+                        <div className="flex flex-col items-center gap-1">
+                          {idx === 0 && (
+                            <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                              {t("common.latest")}
+                            </span>
+                          )}
+                          <span>
+                            {language === "ar" ? item.numberAr : item.numberEn}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         {language === "ar" ? book?.name_ar : book?.name_en}
