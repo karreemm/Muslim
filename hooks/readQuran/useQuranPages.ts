@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useQuranAudio } from "@/context/QuranAudioContext";
 
 export const useQuranPages = (
   verses: any[],
@@ -9,6 +10,7 @@ export const useQuranPages = (
 ) => {
   const searchParams = useSearchParams();
   const highlightedAyahNumber = parseInt(searchParams.get("ayah") || "0", 10);
+  const { activeAyahIndex, surahNumber: audioSurahNumber, isPlayerVisible, isAutoScrollEnabled, scrollToAyahTrigger } = useQuranAudio();
   const [visiblePages, setVisiblePages] = useState(3);
   const loadingMoreRef = useRef(false);
   const hasScrolledRef = useRef(false);
@@ -37,12 +39,28 @@ export const useQuranPages = (
   }, [pages]);
 
   const highlightedPage = useMemo(() => {
-    if (!highlightedAyahNumber || !verses) return null;
-    const verse = verses.find(
-      (v) => v.verse_key.split(":")[1] === highlightedAyahNumber.toString(),
-    );
-    return verse?.page_number ?? null;
-  }, [highlightedAyahNumber, verses]);
+    if (!verses || verses.length === 0) return null;
+
+    if (isAutoScrollEnabled && isPlayerVisible && audioSurahNumber && activeAyahIndex !== undefined) {
+      const targetAyahStr = (activeAyahIndex + 1).toString();
+      const targetSurahStr = audioSurahNumber.toString();
+      const verse = verses.find(v => {
+        if (!v.verse_key) return false;
+        const [vSurah, vAyah] = v.verse_key.split(":");
+        return vSurah === targetSurahStr && vAyah === targetAyahStr;
+      });
+      if (verse?.page_number) return verse.page_number;
+    }
+
+    if (highlightedAyahNumber) {
+      const verse = verses.find(
+        (v) => v.verse_key?.split(":")[1] === highlightedAyahNumber.toString(),
+      );
+      return verse?.page_number ?? null;
+    }
+
+    return null;
+  }, [isAutoScrollEnabled, isPlayerVisible, audioSurahNumber, activeAyahIndex, highlightedAyahNumber, verses]);
 
   useEffect(() => {
     if (highlightedPage && sortedPageNumbers.length > 0) {
@@ -111,6 +129,25 @@ export const useQuranPages = (
       return () => clearTimeout(timer);
     }
   }, [highlightedPage, highlightedAyahNumber, visiblePages]);
+
+  useEffect(() => {
+    if (isPlayerVisible && audioSurahNumber && activeAyahIndex !== undefined && scrollToAyahTrigger > 0) {
+      let retries = 0;
+      const targetAyah = activeAyahIndex + 1;
+      const targetSurah = audioSurahNumber;
+
+      const tryScroll = () => {
+        const element = document.getElementById(`ayah-${targetAyah}-${targetSurah}`);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else if (retries < 10) {
+          retries++;
+          setTimeout(tryScroll, 100);
+        }
+      };
+      tryScroll();
+    }
+  }, [scrollToAyahTrigger]);
 
   return {
     pages,

@@ -44,33 +44,57 @@ export function useAudioPlayer(
     };
   }, []);
 
+  const isPlayingRef = useRef(isPlaying);
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  const prevSurahNumberRef = useRef<number | undefined>(undefined);
+  const prevReciterIdRef = useRef<string | undefined>(undefined);
+
   useEffect(() => {
     if (surah) {
-      console.log("Surah changed, resetting state");
-      setCurrentAyahIndex(0);
-      setShouldAutoPlay(true);
-      setIsPlaying(false);
-      setIsUsingPrimary(true);
-      setCurrentTime(0);
-      setDuration(0);
-      setAyahDurations([]);
-      setCumulativeDurations([]);
-      transitionTriggeredRef.current = false;
-      isTransitioningRef.current = false;
-      seekingRef.current = false;
+      if (prevSurahNumberRef.current !== surahNumber) {
+        console.log("Surah changed, resetting state");
+        setCurrentAyahIndex(0);
+        setShouldAutoPlay(true);
+        setIsPlaying(false);
+        setIsUsingPrimary(true);
+        setCurrentTime(0);
+        setDuration(0);
+        setAyahDurations([]);
+        setCumulativeDurations([]);
+        transitionTriggeredRef.current = false;
+        isTransitioningRef.current = false;
+        seekingRef.current = false;
 
-      if (audioPlayer.current) {
-        audioPlayer.current.pause();
-        audioPlayer.current.currentTime = 0;
-        audioPlayer.current.src = "";
+        if (audioPlayer.current) {
+          audioPlayer.current.pause();
+          audioPlayer.current.currentTime = 0;
+          audioPlayer.current.src = "";
+        }
+        if (nextAudioPlayer.current) {
+          nextAudioPlayer.current.pause();
+          nextAudioPlayer.current.currentTime = 0;
+          nextAudioPlayer.current.src = "";
+        }
+      } else if (prevReciterIdRef.current !== reciterId) {
+        console.log("Reciter changed, keeping ayah index");
+        setShouldAutoPlay(isPlayingRef.current || shouldAutoPlay);
+        if (audioPlayer.current) {
+          audioPlayer.current.pause();
+          audioPlayer.current.src = "";
+        }
+        if (nextAudioPlayer.current) {
+          nextAudioPlayer.current.pause();
+          nextAudioPlayer.current.src = "";
+        }
       }
-      if (nextAudioPlayer.current) {
-        nextAudioPlayer.current.pause();
-        nextAudioPlayer.current.currentTime = 0;
-        nextAudioPlayer.current.src = "";
-      }
+      prevSurahNumberRef.current = surahNumber;
+      prevReciterIdRef.current = reciterId;
     }
-  }, [surah]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [surah, surahNumber, reciterId]);
 
   useEffect(() => {
     if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;

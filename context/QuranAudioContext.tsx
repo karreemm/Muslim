@@ -24,6 +24,10 @@ interface QuranAudioContextType {
     setShowDetails: (show: boolean) => void;
     setSurahNumber: (num: number) => void;
     playTrigger: number;
+    scrollToAyahTrigger: number;
+    triggerScrollToAyah: () => void;
+    isAutoScrollEnabled: boolean;
+    setIsAutoScrollEnabled: (enabled: boolean) => void;
 }
 
 const QuranAudioContext = createContext<QuranAudioContextType | null>(null);
@@ -40,6 +44,12 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [showProgressBar, setShowProgressBar] = useState<boolean>(true);
     const [showDetails, setShowDetails] = useState<boolean>(true);
     const [playTrigger, setPlayTrigger] = useState<number>(0);
+    const [scrollToAyahTrigger, setScrollToAyahTrigger] = useState<number>(0);
+    const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState<boolean>(true);
+
+    const triggerScrollToAyah = useCallback(() => {
+        setScrollToAyahTrigger(t => t + 1);
+    }, []);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -60,7 +70,8 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setActiveAyahIndex(0);
         setIsPlayerVisible(true);
         setIsPlaying(true);
-        setPlayTrigger(t => t + 1); 
+        setPlayTrigger(t => t + 1);
+        setScrollToAyahTrigger(t => t + 1);
     }, []);
 
     return (
@@ -77,6 +88,9 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 showProgressBar,
                 showDetails,
                 playTrigger,
+                scrollToAyahTrigger,
+                triggerScrollToAyah,
+                isAutoScrollEnabled,
                 playSurah,
                 setIsPlaying,
                 setActiveAyahIndex,
@@ -87,6 +101,7 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 setShowProgressBar,
                 setShowDetails,
                 setSurahNumber,
+                setIsAutoScrollEnabled,
             }}
         >
             {children}

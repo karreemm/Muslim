@@ -18,6 +18,8 @@ import {
     faXmark,
     faMicrophone,
     faRedo,
+    faLocationDot,
+    faArrowUp
 } from "@fortawesome/free-solid-svg-icons";
 import { useSurahData, useAudioPlayer, useSurahDownload } from "@/hooks/listenQuran";
 import { ClipLoader } from "react-spinners";
@@ -37,11 +39,15 @@ export const GlobalSurahPlayer = () => {
         surahQueue,
         playSurah,
         playTrigger,
+        triggerScrollToAyah,
+        isAutoScrollEnabled,
+        setIsAutoScrollEnabled,
     } = useQuranAudio();
 
     const pathname = usePathname();
     const { language } = useLanguage();
     const isListenPage = pathname.includes("/listen-quran");
+    const isReadQuranPage = pathname.includes("/read-quran");
 
     const [showReciterDropdown, setShowReciterDropdown] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState<"idle" | "downloading" | "success" | "error">("idle");
@@ -71,6 +77,10 @@ export const GlobalSurahPlayer = () => {
             surahQueue={surahQueue}
             playSurah={playSurah}
             playTrigger={playTrigger}
+            triggerScrollToAyah={triggerScrollToAyah}
+            isAutoScrollEnabled={isAutoScrollEnabled}
+            setIsAutoScrollEnabled={setIsAutoScrollEnabled}
+            isReadQuranPage={isReadQuranPage}
         />
     );
 };
@@ -95,6 +105,10 @@ interface InnerProps {
     surahQueue: number[];
     playSurah: (surahNumber: number, reciterId?: string, queue?: number[]) => void;
     playTrigger: number;
+    triggerScrollToAyah: () => void;
+    isAutoScrollEnabled: boolean;
+    setIsAutoScrollEnabled: (v: boolean) => void;
+    isReadQuranPage: boolean;
 }
 
 const GlobalPlayerInner: React.FC<InnerProps> = ({
@@ -117,6 +131,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
     surahQueue,
     playSurah,
     playTrigger,
+    triggerScrollToAyah,
+    isAutoScrollEnabled,
+    setIsAutoScrollEnabled,
+    isReadQuranPage,
 }) => {
     const { surah, loading } = useSurahData(surahNumber, reciterId);
     const {
@@ -160,11 +178,17 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
         setCurrentAyahDuration(currentAyahTotalDuration);
     }, [currentAyahIndex, currentAyahElapsedTime, currentAyahTotalDuration, setActiveAyahIndex, setCurrentAyahTime, setCurrentAyahDuration]);
 
+    useEffect(() => {
+        if (isAutoScrollEnabled && isPlaying) {
+            triggerScrollToAyah();
+        }
+    }, [currentAyahIndex, isAutoScrollEnabled, isPlaying]);
+
     const isFirstTrigger = React.useRef(true);
     useEffect(() => {
         if (isFirstTrigger.current) {
             isFirstTrigger.current = false;
-            return; 
+            return;
         }
         restart();
     }, [playTrigger]);
@@ -234,9 +258,15 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                             value={currentTime}
                             onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
                             onMouseDown={handleSliderMouseDown}
-                            onMouseUp={handleSliderMouseUp}
+                            onMouseUp={(e) => {
+                                handleSliderMouseUp();
+                                triggerScrollToAyah();
+                            }}
                             onTouchStart={handleSliderMouseDown}
-                            onTouchEnd={handleSliderMouseUp}
+                            onTouchEnd={(e) => {
+                                handleSliderMouseUp();
+                                triggerScrollToAyah();
+                            }}
                             className={`w-full h-1.5 rounded-full appearance-none cursor-pointer ${styles.audioSlider}`}
                             style={{
                                 background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
@@ -306,6 +336,25 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                         >
                             <FontAwesomeIcon icon={faRedo} className="text-sm" />
                         </button>
+
+                        {isReadQuranPage && (
+                            <button
+                                onClick={() => {
+                                    const nextState = !isAutoScrollEnabled;
+                                    setIsAutoScrollEnabled(nextState);
+                                    if (nextState) {
+                                        triggerScrollToAyah();
+                                    }
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${isAutoScrollEnabled
+                                        ? "text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30"
+                                        : "text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                                    }`}
+                                title={language === "ar" ? "تتبع التلاوة تلقائياً" : "Auto-Scroll"}
+                            >
+                                <FontAwesomeIcon icon={faArrowUp} className="text-sm" />
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-1 md:gap-2 flex-1 justify-end">
@@ -330,7 +379,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                         <div className="">
                             <div className="group">
                                 <button
-                                    disabled={isListenPage} 
+                                    disabled={isListenPage}
                                     ref={micBtnRef}
                                     onClick={() => setShowReciterDropdown(!showReciterDropdown)}
                                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${showReciterDropdown && !isListenPage

@@ -137,7 +137,7 @@ export default function JuzPage() {
           </div>
 
           <div
-            className={`w-full mt-6 flex flex-col items-center transition-all duration-300`}
+            className={`w-full mt-14 flex flex-col items-center transition-all duration-300`}
           >
             <div
               ref={quranContentRef}

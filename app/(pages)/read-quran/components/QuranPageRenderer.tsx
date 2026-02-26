@@ -86,20 +86,12 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       surahNumber,
       activeAyahIndex,
       currentAyahTime,
-      currentAyahDuration
+      currentAyahDuration,
+      isPlayerVisible,
     } = useQuranAudio();
 
-    const playingSurahStr = surahNumber?.toString();
+    const playingSurahStr = isPlayerVisible ? surahNumber?.toString() : undefined;
     const highlightedAyah = activeAyahIndex + 1;
-
-    useEffect(() => {
-      if (playingSurahStr && highlightedAyah > 0) {
-        const element = document.getElementById(`ayah-${highlightedAyah}-${playingSurahStr}`);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }
-    }, [highlightedAyah, playingSurahStr]);
 
     const {
       hoveredVerseKey,
@@ -136,35 +128,8 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const firstLineOfPage = lineOrder[0];
     let isFirstChunkOfPage = true;
 
-    const ayahLineNumbers: string[] = [];
-    if (playingSurahStr) {
-      for (const ln of lineOrder) {
-        const hasIt = lines[ln]?.some(
-          (c) =>
-            c.verseKey?.split(":")[0] === playingSurahStr &&
-            c.verseKey?.split(":")[1] === highlightedAyah.toString()
-        );
-        if (hasIt) ayahLineNumbers.push(ln);
-      }
-    }
-    const totalAyahLines = ayahLineNumbers.length || 1;
-    const overallProgress =
-      currentAyahDuration > 0
-        ? Math.min(1, currentAyahTime / currentAyahDuration)
-        : 0;
-    const lineFillPctMap = new Map<string, number>();
-    ayahLineNumbers.forEach((ln, idx) => {
-      const lineStart = idx / totalAyahLines;       
-      const lineEnd = (idx + 1) / totalAyahLines; 
-      let pct = 0;
-      if (overallProgress >= lineEnd) {
-        pct = 100; 
-      } else if (overallProgress > lineStart) {
-        pct = ((overallProgress - lineStart) / (lineEnd - lineStart)) * 100;
-      }
-      lineFillPctMap.set(ln, pct);
-    });
-    // ─────────────────────────────────────────────────────────────────────────
+    const seenAyahs = new Set<string>();
+
 
     return (
       <div
@@ -240,31 +205,25 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                     const applySpaceFix = isFirstChunkOfPage;
                     if (isFirstChunkOfPage) isFirstChunkOfPage = false;
 
+                    const isFirstChunkOfThisAyah = chunk.verseKey && !seenAyahs.has(chunk.verseKey);
+                    if (chunk.verseKey) seenAyahs.add(chunk.verseKey);
+
                     return (
                       <span
                         key={`${lineNumber}-${chunkIndex}`}
                         id={
-                          isHighlighted
-                            ? `ayah-${highlightedAyah}-${playingSurahStr}`
+                          isFirstChunkOfThisAyah
+                            ? `ayah-${chunkAyah}-${chunkSurah}`
                             : undefined
                         }
                         className={`cursor-pointer rounded ${isHighlighted
-                          ? "" 
-                          : "transition-colors duration-200"
+                          ? "text-teal-500 dark:text-teal-400"
+                          : ""
                           } ${hoveredVerseKey === chunk.verseKey ||
                             selectedVerseKey === chunk.verseKey
                             ? "text-teal-500 dark:text-teal-400"
                             : ""
                           }`}
-                        style={isHighlighted ? (() => {
-                          const linePct = lineFillPctMap.get(lineNumber) ?? 0;
-                          return {
-                            backgroundImage: `linear-gradient(to left, #0d9488 ${linePct}%, var(--quran-karaoke-base) ${linePct}%)`,
-                            backgroundClip: "text",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                          };
-                        })() : {}}
                         onMouseEnter={() =>
                           chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
                         }
