@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/app/styles/modules/AudioPlayer.module.css";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
 import { useLanguage } from "@/context/LanguageContext";
@@ -18,6 +18,10 @@ import {
   faDownload,
   faCheck,
   faExclamationTriangle,
+  faEye,
+  faEyeSlash,
+  faMusic,
+  faSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { ClipLoader } from "react-spinners";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -27,11 +31,14 @@ import {
   useAudioPlayer,
   useSurahDownload,
 } from "@/hooks/listenQuran";
+import { useQuranAudio } from "@/context/QuranAudioContext";
 
 interface SurahAudioPlayerProps {
   reciterId: string;
   surahNumber: number;
   onSurahChange?: (surahNumber: number) => void;
+  onAyahChange?: (ayahIndex: number) => void;
+  onPlayPause?: (isPlaying: boolean) => void;
   isSidebarExpanded: boolean;
 }
 
@@ -39,6 +46,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   reciterId,
   surahNumber,
   onSurahChange,
+  onAyahChange,
+  onPlayPause,
   isSidebarExpanded,
 }) => {
   const { language } = useLanguage();
@@ -80,6 +89,18 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
   const { downloadSurah, isDownloading } = useSurahDownload(surah, surahNumber);
 
+  const {
+    showProgressBar,
+    setShowProgressBar,
+    showDetails,
+    setShowDetails,
+    setCurrentAyahTime,
+    setCurrentAyahDuration,
+    surahQueue,
+    playSurah,
+    reciterId: contextReciterId,
+  } = useQuranAudio();
+
   const handleDownload = async () => {
     setDownloadStatus("downloading");
     const result = await downloadSurah();
@@ -102,6 +123,37 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     togglePlayPause();
   };
 
+  useEffect(() => {
+    if (onAyahChange) {
+      onAyahChange(currentAyahIndex);
+    }
+  }, [currentAyahIndex, onAyahChange]);
+
+  useEffect(() => {
+    if (onPlayPause) {
+      onPlayPause(isPlaying);
+    }
+  }, [isPlaying, onPlayPause]);
+
+  useEffect(() => {
+    setCurrentAyahTime(currentTime);
+    setCurrentAyahDuration(duration);
+  }, [currentTime, duration, setCurrentAyahTime, setCurrentAyahDuration]);
+
+  // Handle sequential playback for Juz/Queue
+  useEffect(() => {
+    if (!isPlaying && isLastAyah && surahQueue.length > 0) {
+      const currentSurahIndex = surahQueue.indexOf(surahNumber);
+      if (currentSurahIndex !== -1 && currentSurahIndex < surahQueue.length - 1) {
+        const nextSurahNumber = surahQueue[currentSurahIndex + 1];
+        setTimeout(() => {
+          playSurah(nextSurahNumber, contextReciterId, surahQueue);
+          if (onSurahChange) onSurahChange(nextSurahNumber);
+        }, 1000);
+      }
+    }
+  }, [isPlaying, isLastAyah, surahQueue, surahNumber, playSurah, contextReciterId, onSurahChange]);
+
   return (
     <div className="w-full">
       {loading ? (
@@ -117,52 +169,107 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
           {/* Sticky Bottom Bar */}
           <div
-            className="w-full mb-8 z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300"
+            className="w-full h-fit z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300"
           >
             <div className="max-w-[1500px] mx-auto flex flex-col gap-2 md:gap-4">
 
-              {/* Progress Slider */}
-              <div dir="ltr" className="w-full flex justify-between gap-4 items-center px-2">
-                <span className="text-sm font-medium text-teal-600 dark:text-teal-400">{formatTime(currentTime)}</span>
-                <input
-                  type="range"
-                  min="0"
-                  max={duration || 0}
-                  step="0.1"
-                  value={currentTime}
-                  onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
-                  onMouseDown={handleSliderMouseDown}
-                  onMouseUp={handleSliderMouseUp}
-                  onTouchStart={handleSliderMouseDown}
-                  onTouchEnd={handleSliderMouseUp}
-                  className={`flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-teal-600 ${styles.audioSlider}`}
-                  style={{
-                    background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100}%, #e5e7eb ${(currentTime / duration) * 100}%, #e5e7eb 100%)`,
-                  }}
-                />
-                <span className="text-sm font-medium text-teal-600 dark:text-teal-400">{formatTime(duration)}</span>
-              </div>
+              {/* Progress Slider Row */}
+              {showProgressBar && (
+                <div dir="ltr" className="w-full flex justify-between gap-4 items-center px-2">
+                  <div className="flex items-center gap-2 mr-2">
+                    <div className="relative group">
+                      <button
+                        onClick={() => setShowProgressBar(false)}
+                        className="text-slate-400 hover:text-teal-600 transition-colors"
+                        title={language === "ar" ? "إخفاء شريط التقدم" : "Hide Progress Bar"}
+                      >
+                        <span className="fa-layers fa-fw">
+                          <FontAwesomeIcon icon={faMusic} />
+                          <FontAwesomeIcon icon={faSlash} className="text-red-500 opacity-70" />
+                        </span>
+                      </button>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                        {language === "ar" ? "إخفاء شريط التقدم" : "Hide Progress Bar"}
+                      </div>
+                    </div>
 
-              <div className="flex items-center justify-between">
-                {/* Ayah Info — md+ only, left side */}
-                <div className="hidden md:flex flex-col items-start gap-1 w-1/4">
-                  <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
-                    {language === "ar" ? "الآية الحالية" : "Current Ayah"}
-                  </span>
-                  <span className="text-lg font-semibold text-teal-700 dark:text-white">
-                    {currentAyahIndex + 1} / {totalAyahs}
-                  </span>
-                </div>
+                    <div className="relative group">
+                      <button
+                        onClick={() => setShowDetails(!showDetails)}
+                        className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
+                      >
+                        <FontAwesomeIcon icon={showDetails ? faEye : faEyeSlash} />
+                      </button>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                        {showDetails
+                          ? (language === "ar" ? "إخفاء التفاصيل" : "Hide Details")
+                          : (language === "ar" ? "إظهار التفاصيل" : "Show Details")}
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Mobile only: ayah index on the left */}
-                <div className="flex md:hidden flex-col items-center justify-center min-w-[48px] gap-1">
-                  <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none">
-                    {language === "ar" ? "آية" : "Ayah"}
-                  </span>
-                  <span className="text-base font-semibold text-teal-700 dark:text-white">
-                    {currentAyahIndex + 1}/{totalAyahs}
-                  </span>
+                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">{formatTime(currentTime)}</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    step="0.1"
+                    value={currentTime}
+                    onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                    onMouseDown={handleSliderMouseDown}
+                    onMouseUp={handleSliderMouseUp}
+                    onTouchStart={handleSliderMouseDown}
+                    onTouchEnd={handleSliderMouseUp}
+                    className={`flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-teal-600 ${styles.audioSlider}`}
+                    style={{
+                      background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100}%, #e5e7eb ${(currentTime / duration) * 100}%, #e5e7eb 100%)`,
+                    }}
+                  />
+                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">{formatTime(duration)}</span>
                 </div>
+              )}
+
+              {/* Controls and Info Row */}
+              <div className={`flex items-center justify-between ${!showDetails ? "justify-center" : ""}`}>
+                {!showProgressBar && (
+                  <div className="flex items-center gap-4 mr-4">
+                    <button
+                      onClick={() => setShowProgressBar(true)}
+                      className="text-slate-400 hover:text-teal-600 transition-colors"
+                      title={language === "ar" ? "إظهار شريط التقدم" : "Show Progress Bar"}
+                    >
+                      <FontAwesomeIcon icon={faMusic} />
+                    </button>
+                    <button
+                      onClick={() => setShowDetails(!showDetails)}
+                      className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
+                    >
+                      <FontAwesomeIcon icon={showDetails ? faEye : faEyeSlash} />
+                    </button>
+                  </div>
+                )}
+
+                {showDetails && (
+                  <div className="hidden md:flex flex-col items-start gap-1 w-1/4">
+                    <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
+                      {language === "ar" ? "الآية الحالية" : "Current Ayah"}
+                    </span>
+                    <span className="text-lg font-semibold text-teal-700 dark:text-white">
+                      {currentAyahIndex + 1} / {totalAyahs}
+                    </span>
+                  </div>
+                )}
+
+                {showDetails && (
+                  <div className="flex md:hidden flex-col items-center justify-center min-w-[48px] gap-1">
+                    <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none">
+                      {language === "ar" ? "آية" : "Ayah"}
+                    </span>
+                    <span className="text-base font-semibold text-teal-700 dark:text-white">
+                      {currentAyahIndex + 1}/{totalAyahs}
+                    </span>
+                  </div>
+                )}
 
                 {/* Main Controls */}
                 <div dir="ltr" className="flex items-center justify-center gap-2 md:gap-8 flex-1">
@@ -207,20 +314,17 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     <FontAwesomeIcon icon={faStepForward} className="text-xl md:text-2xl" />
                   </button>
 
-                  {/* Download icon — mobile only, inline with controls, no background */}
                   <button
                     onClick={handleDownload}
-                    className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${
-                      downloadStatus === "success"
-                        ? "text-green-500"
-                        : downloadStatus === "error"
-                          ? "text-red-500"
-                          : "text-teal-600 dark:text-teal-400"
-                    } ${
-                      downloadStatus === "downloading" || downloadStatus === "success"
+                    className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${downloadStatus === "success"
+                      ? "text-green-500"
+                      : downloadStatus === "error"
+                        ? "text-red-500"
+                        : "text-teal-600 dark:text-teal-400"
+                      } ${downloadStatus === "downloading" || downloadStatus === "success"
                         ? "cursor-not-allowed opacity-70"
                         : ""
-                    }`}
+                      }`}
                     disabled={downloadStatus === "downloading" || downloadStatus === "success"}
                   >
                     <FontAwesomeIcon
@@ -230,33 +334,34 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                   </button>
                 </div>
 
-                {/* Download Button — md+ with full pill styling */}
-                <div className="hidden md:flex w-1/4 justify-end">
-                  <button
-                    onClick={handleDownload}
-                    className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${downloadStatus === "success"
-                      ? "bg-green-500 text-white"
-                      : downloadStatus === "error"
-                        ? "bg-red-500 text-white"
-                        : "bg-teal-600 text-white"
-                      } ${downloadStatus === "downloading" || downloadStatus === "success"
-                        ? "cursor-not-allowed opacity-90"
-                        : "transform hover:scale-105"
-                      }`}
-                    disabled={downloadStatus === "downloading" || downloadStatus === "success"}
-                  >
-                    <FontAwesomeIcon
-                      icon={downloadStatus === "success" ? faCheck : (downloadStatus === "error" ? faExclamationTriangle : faDownload)}
-                      className={downloadStatus === "downloading" ? "animate-bounce" : ""}
-                    />
-                    <span>
-                      {downloadStatus === "downloading" && t("common.downloading")}
-                      {downloadStatus === "success" && t("common.downloadedSuccess")}
-                      {downloadStatus === "error" && t("common.downloadError")}
-                      {downloadStatus === "idle" && t("common.download")}
-                    </span>
-                  </button>
-                </div>
+                {showDetails && (
+                  <div className="hidden md:flex w-1/4 justify-end">
+                    <button
+                      onClick={handleDownload}
+                      className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${downloadStatus === "success"
+                        ? "bg-green-500 text-white"
+                        : downloadStatus === "error"
+                          ? "bg-red-500 text-white"
+                          : "bg-teal-600 text-white"
+                        } ${downloadStatus === "downloading" || downloadStatus === "success"
+                          ? "cursor-not-allowed opacity-90"
+                          : "transform hover:scale-105"
+                        }`}
+                      disabled={downloadStatus === "downloading" || downloadStatus === "success"}
+                    >
+                      <FontAwesomeIcon
+                        icon={downloadStatus === "success" ? faCheck : (downloadStatus === "error" ? faExclamationTriangle : faDownload)}
+                        className={downloadStatus === "downloading" ? "animate-bounce" : ""}
+                      />
+                      <span>
+                        {downloadStatus === "downloading" && t("common.downloading")}
+                        {downloadStatus === "success" && t("common.downloadedSuccess")}
+                        {downloadStatus === "error" && t("common.downloadError")}
+                        {downloadStatus === "idle" && t("common.download")}
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,8 +1,9 @@
-"use client"; 
+"use client";
 
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { usePathname } from "next/navigation";
+import { GlobalSurahPlayer } from "../general/GlobalSurahPlayer";
 
 export default function PageLayout({ children }: { children: React.ReactNode }) {
 
@@ -15,6 +16,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1 flex flex-col">
                 {children}
             </main>
+            <GlobalSurahPlayer />
             {!listenQuranPage && <Footer />}
         </div>
     );

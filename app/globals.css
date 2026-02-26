@@ -28,6 +28,13 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  :root {
+    --quran-karaoke-base: #1e293b; 
+  }
+  .dark {
+    --quran-karaoke-base: #f8fafc; 
+  }
 }
 
 .fontAmiri {

@@ -17,6 +17,8 @@ export function useAudioPlayer(
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [ayahDurations, setAyahDurations] = useState<number[]>([]);
   const [cumulativeDurations, setCumulativeDurations] = useState<number[]>([]);
+  const [currentAyahElapsedTime, setCurrentAyahElapsedTime] = useState<number>(0);
+  const [currentAyahTotalDuration, setCurrentAyahTotalDuration] = useState<number>(0);
 
   const audioPlayer = useRef<HTMLAudioElement>(null);
   const nextAudioPlayer = useRef<HTMLAudioElement>(null);
@@ -200,6 +202,8 @@ export function useAudioPlayer(
           const absoluteTime =
             cumulativeDurations[currentAyahIndex] + activePlayer.currentTime;
           setCurrentTime(absoluteTime);
+          setCurrentAyahElapsedTime(activePlayer.currentTime);
+          setCurrentAyahTotalDuration(activePlayer.duration || ayahDurations[currentAyahIndex] || 1);
         }
 
         const timeLeft = activePlayer.duration - activePlayer.currentTime;
@@ -407,6 +411,8 @@ export function useAudioPlayer(
       transitionTriggeredRef.current = false;
       isTransitioningRef.current = false;
       seekingRef.current = false;
+      setCurrentAyahElapsedTime(0);
+      setCurrentAyahTotalDuration(0);
     }
   };
 
@@ -419,6 +425,8 @@ export function useAudioPlayer(
       transitionTriggeredRef.current = false;
       isTransitioningRef.current = false;
       seekingRef.current = false;
+      setCurrentAyahElapsedTime(0);
+      setCurrentAyahTotalDuration(0);
     }
   };
 
@@ -535,6 +543,11 @@ export function useAudioPlayer(
 
     transitionTriggeredRef.current = false;
     isTransitioningRef.current = false;
+    setCurrentAyahElapsedTime(timeWithinAyah);
+    const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
+    if (activePlayer && activePlayer.duration) {
+      setCurrentAyahTotalDuration(activePlayer.duration);
+    }
   };
 
   const formatTime = (time: number) => {
@@ -576,5 +589,7 @@ export function useAudioPlayer(
     handleSliderMouseUp,
     formatTime,
     isBuffering,
+    currentAyahElapsedTime,
+    currentAyahTotalDuration,
   };
 }

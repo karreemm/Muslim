@@ -10,6 +10,7 @@ import { SadaqaGaryaProvider } from "../context/SadaqatContext";
 import TasbeehContextProvider from "../context/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
+import { QuranAudioProvider } from "../context/QuranAudioContext";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -42,21 +43,23 @@ export default function RootLayout({
       >
         <LanguageContextProvider>
           <ThemeContextProvider>
-            <SavedAyahsProvider>
-              <FavoriteSurahsProvider>
-                <FavoriteHadithsProvider>
-                  <FavoriteAzkarProvider>
-                    <SadaqaGaryaProvider>
-                      <TasbeehContextProvider>
-                        <PageLayout>
-                          {children}
-                        </PageLayout>
-                      </TasbeehContextProvider>
-                    </SadaqaGaryaProvider>
-                  </FavoriteAzkarProvider>
-                </FavoriteHadithsProvider>
-              </FavoriteSurahsProvider>
-            </SavedAyahsProvider>
+            <QuranAudioProvider>
+              <SavedAyahsProvider>
+                <FavoriteSurahsProvider>
+                  <FavoriteHadithsProvider>
+                    <FavoriteAzkarProvider>
+                      <SadaqaGaryaProvider>
+                        <TasbeehContextProvider>
+                          <PageLayout>
+                            {children}
+                          </PageLayout>
+                        </TasbeehContextProvider>
+                      </SadaqaGaryaProvider>
+                    </FavoriteAzkarProvider>
+                  </FavoriteHadithsProvider>
+                </FavoriteSurahsProvider>
+              </SavedAyahsProvider>
+            </QuranAudioProvider>
           </ThemeContextProvider>
         </LanguageContextProvider>
       </body>

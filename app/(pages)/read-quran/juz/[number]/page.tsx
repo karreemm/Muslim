@@ -1,8 +1,9 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faArrowLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useQuranAudio } from "@/context/QuranAudioContext";
 import { useLanguage } from "@/context/LanguageContext";
 import Navbar from "@/components/layout/Navbar";
 import GetJuz from "../../service/GetJuz";
@@ -28,6 +29,7 @@ interface JuzData {
 export default function JuzPage() {
   const { language } = useLanguage();
   const navigation = useQuranNavigation("juz");
+  const { playSurah } = useQuranAudio();
   const [juzVerses, setJuzVerses] = useState<any>(null);
   const quranContentRef = useRef<HTMLDivElement>(null);
   const { fontSize, lineHeight } = useContainerFontSize(quranContentRef);
@@ -93,6 +95,20 @@ export default function JuzPage() {
                 </div>
               </>
             )}
+
+            {juzVerses && juzVerses.length > 0 && (
+              <button
+                onClick={() => {
+                  const uniqueSurahs = Array.from(new Set(juzVerses.map((v: any) => parseInt(v.verse_key.split(":")[0])))) as number[];
+                  playSurah(uniqueSurahs[0], undefined, uniqueSurahs);
+                }}
+                className="absolute top-0 left-1/2 -translate-x-1/2 bg-teal-600 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-teal-500 hover:scale-105 transition-all flex items-center gap-2"
+              >
+                <FontAwesomeIcon icon={faPlay} />
+                <span>{language === "ar" ? "استماع" : "Listen"}</span>
+              </button>
+            )}
+
             {navigation.hasPrev && prevJuz && (
               <>
                 <button
