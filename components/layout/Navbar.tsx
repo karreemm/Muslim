@@ -1,13 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMosque,
-  faSun,
-  faMoon,
-  faEarthAfrica,
   faBookmark,
   faHeart,
   faBars,
@@ -21,10 +18,11 @@ import {
   faSearch,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { useTheme } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageContext";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import LanguageDropdown from "./LanguageDropdown";
+import ThemeDropdown from "./ThemeDropdown";
 
 const mainNavLinks = (t: (key: string) => string) => [
   { href: "/", label: t("navbar.home"), icon: faHouse, exactMatch: true },
@@ -48,18 +46,14 @@ const utilityLinks = (t: (key: string) => string) => [
 ];
 
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
   const { t } = useTranslation();
-  const { language, toggleLanguage } = useLanguage();
+  const { language } = useLanguage();
   const pathname = usePathname();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isQuranDropdownOpen, setIsQuranDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const quranDropdownRef = useRef<HTMLDivElement>(null);
   const quranButtonRef = useRef<HTMLButtonElement>(null);
   const lastScrollY = useRef(0);
@@ -85,7 +79,6 @@ export default function Navbar() {
       } else {
         setIsNavVisible(false);
         setIsQuranDropdownOpen(false);
-        setIsDropdownOpen(false);
       }
       lastScrollY.current = currentY;
     };
@@ -96,14 +89,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        buttonRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
       if (
         quranDropdownRef.current &&
         quranButtonRef.current &&
@@ -117,11 +102,6 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleLanguageChange = (lang: string) => {
-    if (lang !== language) toggleLanguage();
-    setIsDropdownOpen(false);
-  };
 
   const mainLinks = mainNavLinks(t);
   const quranRoutes = quranLinks(t);
@@ -218,46 +198,8 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 relative">
-            <button
-              onClick={toggleTheme}
-              className="flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out"
-              aria-label="Toggle Theme"
-            >
-              <FontAwesomeIcon icon={theme ? faSun : faMoon} size="lg" />
-            </button>
-
-            <div className="relative">
-              <button
-                ref={buttonRef}
-                onClick={() => setIsDropdownOpen((v) => !v)}
-                className="flex items-center justify-center w-10 h-10 duration-500 hover:scale-125 transition-all ease-in-out"
-                aria-label="Change Language"
-              >
-                <FontAwesomeIcon icon={faEarthAfrica} size="lg" />
-              </button>
-              {isDropdownOpen && (
-                <div
-                  ref={dropdownRef}
-                  className={`absolute ${
-                    language === "ar" ? "left-0" : "right-0"
-                  } mt-2 w-32 bg-background text-primary dark:bg-background
-                    dark:text-foreground rounded-sm shadow-lg border border-border/10
-                    dark:border-border/10`}
-                >
-                  {["ar", "en"].map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => handleLanguageChange(lang)}
-                      className={`block w-full px-4 py-2 text-left ${
-                        language === lang ? "bg-secondary" : ""
-                      }`}
-                    >
-                      {lang === "ar" ? "العربية" : "English"}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ThemeDropdown />
+            <LanguageDropdown />
 
             <div className="hidden lg:block h-6 border-l border-border" />
 

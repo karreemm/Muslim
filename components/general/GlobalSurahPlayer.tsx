@@ -27,6 +27,7 @@ import {
   useAudioPlayer,
   useSurahDownload,
 } from "@/hooks/listenQuran";
+import PlayerIconButton from "@/components/general/PlayerIconButton";
 import { ClipLoader } from "react-spinners";
 import styles from "@/app/styles/modules/AudioPlayer.module.css";
 
@@ -359,9 +360,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
           </div>
 
           <div dir="ltr" className="flex items-center gap-1 md:gap-3 shrink-0">
-            <button
+            <PlayerIconButton
               onClick={previous}
               disabled={isFirstAyah}
+              tooltip={language === "ar" ? "الآية السابقة" : "Previous ayah"}
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 isFirstAyah
                   ? "text-muted-foreground/40 cursor-not-allowed"
@@ -369,26 +371,44 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               }`}
             >
               <FontAwesomeIcon icon={faStepBackward} className="text-sm" />
-            </button>
+            </PlayerIconButton>
 
-            <button
+            <PlayerIconButton
               onClick={togglePlayPause}
               disabled={isBuffering}
-              className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 hover:scale-105 transition-all active:scale-95 ${isBuffering ? styles.loadingButton : ""}`}
+              tooltip={
+                isPlaying
+                  ? language === "ar"
+                    ? "إيقاف مؤقت"
+                    : "Pause"
+                  : language === "ar"
+                    ? "تشغيل"
+                    : "Play"
+              }
+              className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md transition-all active:scale-95 ${
+                isBuffering
+                  ? "cursor-wait ring-2 ring-primary/40"
+                  : "hover:bg-primary/90 hover:scale-105"
+              }`}
             >
               {isBuffering ? (
-                <ClipLoader color="hsl(var(--primary-foreground))" size={16} />
+                <span className="relative flex items-center justify-center w-6 h-6">
+                  <span className="absolute inset-0 rounded-full border-2 border-primary-foreground/25" />
+                  <span className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary-foreground border-r-primary-foreground animate-spin" />
+                  <span className="w-2 h-2 rounded-full bg-primary-foreground/90 animate-pulse" />
+                </span>
               ) : (
                 <FontAwesomeIcon
                   icon={isPlaying ? faPause : faPlay}
                   className="text-sm"
                 />
               )}
-            </button>
+            </PlayerIconButton>
 
-            <button
+            <PlayerIconButton
               onClick={next}
               disabled={isLastAyah}
+              tooltip={language === "ar" ? "الآية التالية" : "Next ayah"}
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 isLastAyah
                   ? "text-muted-foreground/40 cursor-not-allowed"
@@ -396,10 +416,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               }`}
             >
               <FontAwesomeIcon icon={faStepForward} className="text-sm" />
-            </button>
+            </PlayerIconButton>
 
-            <button
-              ref={mobileMenuBtnRef}
+            <PlayerIconButton
+              buttonRef={mobileMenuBtnRef}
               onClick={() => {
                 setShowMobileMenu((prev) => {
                   const next = !prev;
@@ -409,83 +429,82 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                   return next;
                 });
               }}
+              tooltip={language === "ar" ? "المزيد" : "More"}
               className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary transition-all hover:scale-110"
-              title={language === "ar" ? "المزيد" : "More"}
+              tooltipClassName="md:hidden"
             >
               <FontAwesomeIcon icon={faEllipsisVertical} className="text-sm" />
-            </button>
+            </PlayerIconButton>
 
             {!isListenPage && (
-              <button
+              <PlayerIconButton
                 onClick={handleClose}
+                tooltip={language === "ar" ? "إغلاق" : "Close"}
                 className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-muted-foreground hover:text-destructive transition-all hover:scale-110 hover:bg-destructive/10"
-                title={language === "ar" ? "إغلاق" : "Close"}
+                tooltipClassName="md:hidden"
               >
                 <FontAwesomeIcon icon={faXmark} className="text-base" />
-              </button>
+              </PlayerIconButton>
             )}
           </div>
 
           <div className="hidden md:flex items-center gap-1 md:gap-2 flex-1 justify-end">
             {isReadQuranPage && (
-              <button
+              <PlayerIconButton
                 onClick={triggerScrollToAyah}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 text-muted-foreground hover:text-primary hover:bg-secondary"
-                title={
+                tooltip={
                   language === "ar"
                     ? "الانتقال للآية الحالية"
                     : "Jump to current ayah"
                 }
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 text-muted-foreground hover:text-primary hover:bg-secondary"
               >
                 <FontAwesomeIcon icon={faArrowUp} className="text-sm" />
-              </button>
+              </PlayerIconButton>
             )}
 
-            <div className="group">
-              <button
-                onClick={handleDownload}
-                disabled={
-                  downloadStatus === "downloading" ||
+            <PlayerIconButton
+              onClick={handleDownload}
+              disabled={
+                downloadStatus === "downloading" || downloadStatus === "success"
+              }
+              tooltip={language === "ar" ? "تنزيل السورة" : "Download surah"}
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
+                downloadStatus === "success"
+                  ? "text-accent"
+                  : downloadStatus === "error"
+                    ? "text-destructive"
+                    : "text-muted-foreground hover:text-primary"
+              }`}
+            >
+              <FontAwesomeIcon
+                icon={
                   downloadStatus === "success"
-                }
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
-                  downloadStatus === "success"
-                    ? "text-accent"
+                    ? faCheck
                     : downloadStatus === "error"
-                      ? "text-destructive"
+                      ? faExclamationTriangle
+                      : faDownload
+                }
+                className={`text-sm ${downloadStatus === "downloading" ? "animate-bounce" : ""}`}
+              />
+            </PlayerIconButton>
+
+            <div className="relative">
+              <PlayerIconButton
+                disabled={isListenPage}
+                buttonRef={micBtnRef}
+                onClick={() => setShowReciterDropdown(!showReciterDropdown)}
+                tooltip={language === "ar" ? "تغيير القارئ" : "Change reciter"}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
+                  showReciterDropdown && !isListenPage
+                    ? "text-primary bg-secondary"
+                    : isListenPage
+                      ? "cursor-not-allowed text-muted-foreground hover:text-muted-foreground"
                       : "text-muted-foreground hover:text-primary"
                 }`}
               >
-                <FontAwesomeIcon
-                  icon={
-                    downloadStatus === "success"
-                      ? faCheck
-                      : downloadStatus === "error"
-                        ? faExclamationTriangle
-                        : faDownload
-                  }
-                  className={`text-sm ${downloadStatus === "downloading" ? "animate-bounce" : ""}`}
-                />
-              </button>
-            </div>
-
-            <div className="relative">
-              <div className="group">
-                <button
-                  disabled={isListenPage}
-                  ref={micBtnRef}
-                  onClick={() => setShowReciterDropdown(!showReciterDropdown)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
-                    showReciterDropdown && !isListenPage
-                      ? "text-primary bg-secondary"
-                      : isListenPage
-                        ? "cursor-not-allowed text-muted-foreground hover:text-muted-foreground"
-                        : "text-muted-foreground hover:text-primary"
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faMicrophone} className="text-sm" />
-                </button>
-              </div>
+                <FontAwesomeIcon icon={faMicrophone} className="text-sm" />
+              </PlayerIconButton>
 
               {showReciterDropdown && (
                 <div
@@ -530,17 +549,13 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
             </div>
 
             {!isListenPage && (
-              <div className="relative group">
-                <button
-                  onClick={handleClose}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive transition-all hover:scale-110 hover:bg-destructive/10"
-                >
-                  <FontAwesomeIcon icon={faXmark} className="text-base" />
-                </button>
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[300]">
-                  {language === "ar" ? "إغلاق" : "Close"}
-                </div>
-              </div>
+              <PlayerIconButton
+                onClick={handleClose}
+                tooltip={language === "ar" ? "إغلاق" : "Close"}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive transition-all hover:scale-110 hover:bg-destructive/10"
+              >
+                <FontAwesomeIcon icon={faXmark} className="text-base" />
+              </PlayerIconButton>
             )}
           </div>
 

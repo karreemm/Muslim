@@ -336,13 +336,25 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
                   <button
                     onClick={handleTogglePlayPause}
-                    className={`p-5 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-primary/40 hover:bg-primary/90 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center h-14 w-14 md:h-16 md:w-16 ${isBuffering ? styles.loadingButton : ""}`}
+                    className={`p-5 rounded-full bg-primary text-primary-foreground shadow-lg transition-all transform active:scale-95 flex items-center justify-center h-14 w-14 md:h-16 md:w-16 ${
+                      isBuffering
+                        ? "cursor-wait ring-2 ring-primary/40"
+                        : "hover:shadow-primary/40 hover:bg-primary/90 hover:scale-110"
+                    }`}
                     disabled={isDownloading || isBuffering}
                   >
-                    <FontAwesomeIcon
-                      icon={isPlaying ? faPause : faPlay}
-                      className="text-2xl md:text-3xl"
-                    />
+                    {isBuffering ? (
+                      <span className="relative flex items-center justify-center w-8 h-8">
+                        <span className="absolute inset-0 rounded-full border-2 border-primary-foreground/25" />
+                        <span className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary-foreground border-r-primary-foreground animate-spin" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary-foreground/90 animate-pulse" />
+                      </span>
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={isPlaying ? faPause : faPlay}
+                        className="text-2xl md:text-3xl"
+                      />
+                    )}
                   </button>
 
                   <button
