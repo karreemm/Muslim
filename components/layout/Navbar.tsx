@@ -16,13 +16,13 @@ import {
   faClock,
   faSeedling,
   faSearch,
-  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../context/LanguageContext";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import LanguageDropdown from "./LanguageDropdown";
 import ThemeDropdown from "./ThemeDropdown";
+import QuranDropdown from "./QuranDropdown";
 
 const mainNavLinks = (t: (key: string) => string) => [
   { href: "/", label: t("navbar.home"), icon: faHouse, exactMatch: true },
@@ -50,12 +50,9 @@ export default function Navbar() {
   const { language } = useLanguage();
   const pathname = usePathname();
 
-  const [isQuranDropdownOpen, setIsQuranDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
 
-  const quranDropdownRef = useRef<HTMLDivElement>(null);
-  const quranButtonRef = useRef<HTMLButtonElement>(null);
   const lastScrollY = useRef(0);
 
   const isActive = (path: string, exact = false) =>
@@ -67,7 +64,6 @@ export default function Navbar() {
     );
 
   useEffect(() => {
-    setIsQuranDropdownOpen(false);
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
@@ -78,29 +74,12 @@ export default function Navbar() {
         setIsNavVisible(true);
       } else {
         setIsNavVisible(false);
-        setIsQuranDropdownOpen(false);
       }
       lastScrollY.current = currentY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        quranDropdownRef.current &&
-        quranButtonRef.current &&
-        !quranDropdownRef.current.contains(event.target as Node) &&
-        !quranButtonRef.current.contains(event.target as Node)
-      ) {
-        setIsQuranDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const mainLinks = mainNavLinks(t);
@@ -111,74 +90,44 @@ export default function Navbar() {
     <div className="w-full flex justify-center">
       <div
         className={`w-full z-50 fixed top-0 left-0 right-0 px-4 py-3
-          bg-background text-primary dark:bg-background dark:text-foreground
-          shadow-md border-b border-border/20 dark:border-border/10
+          bg-background/90 text-foreground backdrop-blur-md
+          shadow-lg border-b border-border/40
           transition-transform duration-300 ease-in-out
           ${isNavVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
-        <div className="flex w-full max-w-[1500px] mx-auto items-center justify-between">
-          <Link href="/" className="flex gap-2 text-xl">
-            <FontAwesomeIcon
-              icon={faMosque}
-              className={language === "ar" ? "mt-2" : "mt-1"}
-            />
-            <span className="text-2xl font-semibold">{t("navbar.title")}</span>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/10" />
+
+        <div className="relative z-10 flex w-full max-w-[1500px] mx-auto items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl text-foreground"
+          >
+            <FontAwesomeIcon icon={faMosque} className={`text-primary`} />
+            <span className="text-2xl font-semibold tracking-wide">
+              {t("navbar.title")}
+            </span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-14 text-xl font-semibold">
+          <div className="hidden lg:flex items-center gap-3 text-lg font-semibold">
             <Link
               href="/"
-              className={`hidden xl:inline-block no-underline transition-all duration-300 ${
+              className={`hidden xl:inline-flex items-center rounded-xl border px-3 py-2 no-underline transition-all duration-200 ${
                 isActive("/", true)
-                  ? "text-accent underline underline-offset-8"
-                  : "hover:underline hover:underline-offset-8"
+                  ? "border-primary/40 bg-primary/10 text-primary"
+                  : "border-transparent text-foreground/90 hover:border-border/60 hover:bg-secondary/70 hover:text-primary"
               }`}
             >
               {t("navbar.home")}
             </Link>
 
-            <div className="relative">
-              <button
-                ref={quranButtonRef}
-                onClick={() => setIsQuranDropdownOpen((v) => !v)}
-                className={`flex items-center gap-1 transition-all duration-300 ${
-                  isQuranActive()
-                    ? "text-accent underline underline-offset-8"
-                    : "hover:underline hover:underline-offset-8"
-                }`}
-              >
-                {t("navbar.quran")}
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className={`text-sm transition-transform duration-200 ${
-                    isQuranDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {isQuranDropdownOpen && (
-                <div
-                  ref={quranDropdownRef}
-                  className={`absolute ${
-                    language === "ar"
-                      ? "left-0 text-right"
-                      : "right-0 text-left"
-                  } mt-2 w-40 bg-background text-primary dark:bg-background
-                    dark:text-foreground rounded-sm shadow-lg border border-border/10
-                    dark:border-border/10`}
-                >
-                  {quranRoutes.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      className={`text-lg block w-full px-4 py-2 hover:bg-secondary
-                        ${isActive(href) ? "text-accent font-bold" : ""}`}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            <QuranDropdown
+              label={t("navbar.quran")}
+              language={language}
+              pathname={pathname}
+              routes={quranRoutes}
+              isActive={isActive}
+              isQuranActive={isQuranActive()}
+            />
 
             {mainLinks
               .filter((l) => l.href !== "/")
@@ -186,10 +135,10 @@ export default function Navbar() {
                 <Link
                   key={href}
                   href={href}
-                  className={`no-underline transition-all duration-300 ${
+                  className={`inline-flex items-center rounded-xl border px-3 py-2 no-underline transition-all duration-200 ${
                     isActive(href)
-                      ? "text-accent underline underline-offset-8"
-                      : "hover:underline hover:underline-offset-8"
+                      ? "border-primary/40 bg-primary/10 text-primary"
+                      : "border-transparent text-foreground/90 hover:border-border/60 hover:bg-secondary/70 hover:text-primary"
                   }`}
                 >
                   {label}
@@ -201,15 +150,17 @@ export default function Navbar() {
             <ThemeDropdown />
             <LanguageDropdown />
 
-            <div className="hidden lg:block h-6 border-l border-border" />
+            <div className="hidden lg:block h-6 border-l border-border/60 mx-1" />
 
             {utilityRoutes.map(({ href, icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={`hidden lg:flex items-center justify-center w-10 h-10
-                  duration-500 hover:scale-125 transition-all ease-in-out ${
-                    isActive(href) ? "text-accent" : ""
+                className={`hidden lg:flex items-center justify-center w-10 h-10 rounded-xl border
+                  transition-all duration-200 ${
+                    isActive(href)
+                      ? "border-primary/40 bg-primary/10 text-primary"
+                      : "border-transparent text-foreground/90 hover:border-border/60 hover:bg-secondary/70 hover:text-primary"
                   }`}
               >
                 <FontAwesomeIcon icon={icon} size="lg" />
@@ -218,7 +169,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMobileMenuOpen((v) => !v)}
-              className={`flex items-center justify-center w-10 h-10 transition-transform duration-300 lg:hidden ${
+              className={`flex items-center justify-center w-10 h-10 rounded-xl border border-border/40 bg-card/80 text-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary lg:hidden ${
                 isMobileMenuOpen ? "rotate-90" : "rotate-0"
               }`}
               aria-label="Toggle Mobile Menu"
@@ -234,18 +185,19 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <div
             className={`absolute top-full left-0 w-full px-5 py-2
-              border-b border-border/20 dark:border-border/10
-              bg-background text-primary dark:bg-background dark:text-foreground
-              shadow-md lg:hidden ${language === "ar" ? "text-right" : "text-left"}`}
+              border-b border-border/40 bg-background/95 text-foreground backdrop-blur-md
+              shadow-lg lg:hidden ${language === "ar" ? "text-right" : "text-left"}`}
           >
             {[mainLinks[0], ...quranRoutes, ...mainLinks.slice(1)].map(
               ({ href, label, icon }) => (
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-3 px-4 py-2 text-lg
-                  hover:bg-secondary ${
-                    isActive(href, href === "/") ? "text-accent font-bold" : ""
+                  className={`flex items-center gap-3 rounded-xl px-4 py-2 text-lg transition-colors
+                  ${
+                    isActive(href, href === "/")
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-foreground/90 hover:bg-secondary hover:text-primary"
                   }`}
                 >
                   <FontAwesomeIcon icon={icon} />
@@ -254,15 +206,17 @@ export default function Navbar() {
               ),
             )}
 
-            <hr className="border border-border w-full my-3" />
+            <hr className="border border-border/70 w-full my-3" />
 
             {utilityRoutes.map(({ href, label, icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 px-4 py-2 text-lg
-                  hover:bg-secondary ${
-                    isActive(href) ? "text-accent font-bold" : ""
+                className={`flex items-center gap-3 rounded-xl px-4 py-2 text-lg transition-colors
+                  ${
+                    isActive(href)
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-foreground/90 hover:bg-secondary hover:text-primary"
                   }`}
               >
                 <FontAwesomeIcon icon={icon} />
