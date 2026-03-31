@@ -13,7 +13,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../../context/LanguageContext";
 import { useTheme } from "../../../../context/ThemeContext";
-import { reciters } from "../../../../constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "../../../../components/modals/TafseerModal";
 import { TranslationModal } from "../../../../components/modals/TranslationModal";
@@ -56,16 +55,11 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
       handleSaveClick,
     } = useAyahPopover({ isOpen, onClose, onSave });
 
-    const {
-      selectedReciter,
-      showReciterMenu,
-      setShowReciterMenu,
-      isPlaying,
-      isLoadingAudio,
-      handleListenClick,
-      handleReciterChange,
-      reciterName,
-    } = useAyahAudio(surahNumber, ayahNumber, isOpen);
+    const { isPlaying, isLoadingAudio, handleListenClick } = useAyahAudio(
+      surahNumber,
+      ayahNumber,
+      onClose,
+    );
 
     if (!isOpen) return null;
 
@@ -209,76 +203,6 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                 {t("readQuran.popover.viewTranslation")}
               </span>
             </button>
-
-            <div className="relative">
-              <button
-                onClick={() => setShowReciterMenu(!showReciterMenu)}
-                className={`
-                w-full px-4 py-3 flex items-center gap-3 transition-colors
-                ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
-              `}
-              >
-                <div className="w-5 flex items-center justify-center">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      theme ? "bg-teal-600" : "bg-teal-500"
-                    }`}
-                  ></div>
-                </div>
-                <div className="flex-1 text-start">
-                  <div className="dynamic-font text-sm">
-                    {t("readQuran.popover.selectReciter")}
-                  </div>
-                  <div
-                    className={`text-xs mt-0.5 ${
-                      theme ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {reciterName}
-                  </div>
-                </div>
-              </button>
-
-              {showReciterMenu && (
-                <div
-                  className={`
-                  absolute ${language === "ar" ? "left-0" : "right-0"}
-                  mt-1 w-full rounded-lg shadow-xl border max-h-64 overflow-y-auto
-                  ${
-                    theme
-                      ? "bg-slate-800 border-slate-600"
-                      : "bg-white border-gray-200"
-                  }
-                `}
-                  style={{
-                    bottom: "100%",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  {reciters.map((reciter) => (
-                    <button
-                      key={reciter.id}
-                      onClick={() => handleReciterChange(reciter.id)}
-                      className={`
-                      w-full px-4 py-2 text-start transition-colors
-                      ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
-                      ${
-                        selectedReciter === reciter.id
-                          ? theme
-                            ? "bg-slate-700"
-                            : "bg-gray-100"
-                          : ""
-                      }
-                    `}
-                    >
-                      <div className="dynamic-font text-sm">
-                        {language === "ar" ? reciter.NameAr : reciter.NameEn}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </div>
 

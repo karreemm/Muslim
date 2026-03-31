@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     let absoluteAyahNumber;
 
     if (surahNumber && ayahNumber) {
-      const surahIndex = parseInt(surahNumber) - 1; 
+      const surahIndex = parseInt(surahNumber) - 1;
       const relativeAyahNumber = parseInt(ayahNumber);
 
       if (surahIndex < 0 || surahIndex >= cumulativeAyahCounts.length) {
@@ -32,7 +32,6 @@ export async function GET(req: Request) {
 
       absoluteAyahNumber =
         cumulativeAyahCounts[surahIndex] + relativeAyahNumber;
-
     } else if (ayahNumber && !surahNumber) {
       absoluteAyahNumber = parseInt(ayahNumber);
     } else {

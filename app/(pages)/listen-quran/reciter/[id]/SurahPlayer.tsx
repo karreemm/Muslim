@@ -14,7 +14,6 @@ import {
   faPause,
   faStepBackward,
   faStepForward,
-  faRedo,
   faDownload,
   faCheck,
   faExclamationTriangle,
@@ -69,7 +68,6 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   const {
     audioPlayer,
     nextAudioPlayer,
-    restart,
     currentAyahIndex,
     totalAyahs,
     next,
@@ -144,7 +142,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
   useEffect(() => {
     if (!isPlaying && isLastAyah && surahQueue.length > 0) {
       const currentSurahIndex = surahQueue.indexOf(surahNumber);
-      if (currentSurahIndex !== -1 && currentSurahIndex < surahQueue.length - 1) {
+      if (
+        currentSurahIndex !== -1 &&
+        currentSurahIndex < surahQueue.length - 1
+      ) {
         const nextSurahNumber = surahQueue[currentSurahIndex + 1];
         setTimeout(() => {
           playSurah(nextSurahNumber, contextReciterId, surahQueue);
@@ -152,7 +153,15 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
         }, 1000);
       }
     }
-  }, [isPlaying, isLastAyah, surahQueue, surahNumber, playSurah, contextReciterId, onSurahChange]);
+  }, [
+    isPlaying,
+    isLastAyah,
+    surahQueue,
+    surahNumber,
+    playSurah,
+    contextReciterId,
+    onSurahChange,
+  ]);
 
   return (
     <div className="w-full">
@@ -168,28 +177,37 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
           </div>
 
           {/* Sticky Bottom Bar */}
-          <div
-            className="w-full h-fit z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300"
-          >
+          <div className="w-full h-fit z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300">
             <div className="max-w-[1500px] mx-auto flex flex-col gap-2 md:gap-4">
-
               {/* Progress Slider Row */}
               {showProgressBar && (
-                <div dir="ltr" className="w-full flex justify-between gap-4 items-center px-2">
+                <div
+                  dir="ltr"
+                  className="w-full flex justify-between gap-4 items-center px-2"
+                >
                   <div className="flex items-center gap-2 mr-2">
                     <div className="relative group">
                       <button
                         onClick={() => setShowProgressBar(false)}
                         className="text-slate-400 hover:text-teal-600 transition-colors"
-                        title={language === "ar" ? "إخفاء شريط التقدم" : "Hide Progress Bar"}
+                        title={
+                          language === "ar"
+                            ? "إخفاء شريط التقدم"
+                            : "Hide Progress Bar"
+                        }
                       >
                         <span className="fa-layers fa-fw">
                           <FontAwesomeIcon icon={faMusic} />
-                          <FontAwesomeIcon icon={faSlash} className="text-red-500 opacity-70" />
+                          <FontAwesomeIcon
+                            icon={faSlash}
+                            className="text-red-500 opacity-70"
+                          />
                         </span>
                       </button>
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                        {language === "ar" ? "إخفاء شريط التقدم" : "Hide Progress Bar"}
+                        {language === "ar"
+                          ? "إخفاء شريط التقدم"
+                          : "Hide Progress Bar"}
                       </div>
                     </div>
 
@@ -198,24 +216,34 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                         onClick={() => setShowDetails(!showDetails)}
                         className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
                       >
-                        <FontAwesomeIcon icon={showDetails ? faEye : faEyeSlash} />
+                        <FontAwesomeIcon
+                          icon={showDetails ? faEye : faEyeSlash}
+                        />
                       </button>
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                         {showDetails
-                          ? (language === "ar" ? "إخفاء التفاصيل" : "Hide Details")
-                          : (language === "ar" ? "إظهار التفاصيل" : "Show Details")}
+                          ? language === "ar"
+                            ? "إخفاء التفاصيل"
+                            : "Hide Details"
+                          : language === "ar"
+                            ? "إظهار التفاصيل"
+                            : "Show Details"}
                       </div>
                     </div>
                   </div>
 
-                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">{formatTime(currentTime)}</span>
+                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">
+                    {formatTime(currentTime)}
+                  </span>
                   <input
                     type="range"
                     min="0"
                     max={duration || 0}
                     step="0.1"
                     value={currentTime}
-                    onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                    onChange={(e) =>
+                      handleSliderChange(parseFloat(e.target.value))
+                    }
                     onMouseDown={handleSliderMouseDown}
                     onMouseUp={handleSliderMouseUp}
                     onTouchStart={handleSliderMouseDown}
@@ -225,18 +253,26 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                       background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100}%, #e5e7eb ${(currentTime / duration) * 100}%, #e5e7eb 100%)`,
                     }}
                   />
-                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">{formatTime(duration)}</span>
+                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">
+                    {formatTime(duration)}
+                  </span>
                 </div>
               )}
 
               {/* Controls and Info Row */}
-              <div className={`flex items-center justify-between ${!showDetails ? "justify-center" : ""}`}>
+              <div
+                className={`flex items-center justify-between ${!showDetails ? "justify-center" : ""}`}
+              >
                 {!showProgressBar && (
                   <div className="flex items-center gap-4 mr-4">
                     <button
                       onClick={() => setShowProgressBar(true)}
                       className="text-slate-400 hover:text-teal-600 transition-colors"
-                      title={language === "ar" ? "إظهار شريط التقدم" : "Show Progress Bar"}
+                      title={
+                        language === "ar"
+                          ? "إظهار شريط التقدم"
+                          : "Show Progress Bar"
+                      }
                     >
                       <FontAwesomeIcon icon={faMusic} />
                     </button>
@@ -244,7 +280,9 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                       onClick={() => setShowDetails(!showDetails)}
                       className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
                     >
-                      <FontAwesomeIcon icon={showDetails ? faEye : faEyeSlash} />
+                      <FontAwesomeIcon
+                        icon={showDetails ? faEye : faEyeSlash}
+                      />
                     </button>
                   </div>
                 )}
@@ -272,16 +310,23 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                 )}
 
                 {/* Main Controls */}
-                <div dir="ltr" className="flex items-center justify-center gap-2 md:gap-8 flex-1">
+                <div
+                  dir="ltr"
+                  className="flex items-center justify-center gap-2 md:gap-8 flex-1"
+                >
                   <button
                     onClick={previous}
                     disabled={isFirstAyah}
-                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${isFirstAyah
-                      ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                      : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
-                      }`}
+                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${
+                      isFirstAyah
+                        ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
+                        : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                    }`}
                   >
-                    <FontAwesomeIcon icon={faStepBackward} className="text-xl md:text-2xl" />
+                    <FontAwesomeIcon
+                      icon={faStepBackward}
+                      className="text-xl md:text-2xl"
+                    />
                   </button>
 
                   <button
@@ -296,39 +341,47 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                   </button>
 
                   <button
-                    onClick={restart}
-                    className="p-3 rounded-full text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center"
-                    disabled={isDownloading}
-                  >
-                    <FontAwesomeIcon icon={faRedo} className="text-xl md:text-2xl" />
-                  </button>
-
-                  <button
                     onClick={next}
                     disabled={isLastAyah}
-                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${isLastAyah
-                      ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                      : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
-                      }`}
+                    className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${
+                      isLastAyah
+                        ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
+                        : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                    }`}
                   >
-                    <FontAwesomeIcon icon={faStepForward} className="text-xl md:text-2xl" />
+                    <FontAwesomeIcon
+                      icon={faStepForward}
+                      className="text-xl md:text-2xl"
+                    />
                   </button>
 
                   <button
                     onClick={handleDownload}
-                    className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${downloadStatus === "success"
-                      ? "text-green-500"
-                      : downloadStatus === "error"
-                        ? "text-red-500"
-                        : "text-teal-600 dark:text-teal-400"
-                      } ${downloadStatus === "downloading" || downloadStatus === "success"
+                    className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${
+                      downloadStatus === "success"
+                        ? "text-green-500"
+                        : downloadStatus === "error"
+                          ? "text-red-500"
+                          : "text-teal-600 dark:text-teal-400"
+                    } ${
+                      downloadStatus === "downloading" ||
+                      downloadStatus === "success"
                         ? "cursor-not-allowed opacity-70"
                         : ""
-                      }`}
-                    disabled={downloadStatus === "downloading" || downloadStatus === "success"}
+                    }`}
+                    disabled={
+                      downloadStatus === "downloading" ||
+                      downloadStatus === "success"
+                    }
                   >
                     <FontAwesomeIcon
-                      icon={downloadStatus === "success" ? faCheck : downloadStatus === "error" ? faExclamationTriangle : faDownload}
+                      icon={
+                        downloadStatus === "success"
+                          ? faCheck
+                          : downloadStatus === "error"
+                            ? faExclamationTriangle
+                            : faDownload
+                      }
                       className={`text-xl ${downloadStatus === "downloading" ? "animate-bounce" : ""}`}
                     />
                   </button>
@@ -338,25 +391,44 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                   <div className="hidden md:flex w-1/4 justify-end">
                     <button
                       onClick={handleDownload}
-                      className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${downloadStatus === "success"
-                        ? "bg-green-500 text-white"
-                        : downloadStatus === "error"
-                          ? "bg-red-500 text-white"
-                          : "bg-teal-600 text-white"
-                        } ${downloadStatus === "downloading" || downloadStatus === "success"
+                      className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${
+                        downloadStatus === "success"
+                          ? "bg-green-500 text-white"
+                          : downloadStatus === "error"
+                            ? "bg-red-500 text-white"
+                            : "bg-teal-600 text-white"
+                      } ${
+                        downloadStatus === "downloading" ||
+                        downloadStatus === "success"
                           ? "cursor-not-allowed opacity-90"
                           : "transform hover:scale-105"
-                        }`}
-                      disabled={downloadStatus === "downloading" || downloadStatus === "success"}
+                      }`}
+                      disabled={
+                        downloadStatus === "downloading" ||
+                        downloadStatus === "success"
+                      }
                     >
                       <FontAwesomeIcon
-                        icon={downloadStatus === "success" ? faCheck : (downloadStatus === "error" ? faExclamationTriangle : faDownload)}
-                        className={downloadStatus === "downloading" ? "animate-bounce" : ""}
+                        icon={
+                          downloadStatus === "success"
+                            ? faCheck
+                            : downloadStatus === "error"
+                              ? faExclamationTriangle
+                              : faDownload
+                        }
+                        className={
+                          downloadStatus === "downloading"
+                            ? "animate-bounce"
+                            : ""
+                        }
                       />
                       <span>
-                        {downloadStatus === "downloading" && t("common.downloading")}
-                        {downloadStatus === "success" && t("common.downloadedSuccess")}
-                        {downloadStatus === "error" && t("common.downloadError")}
+                        {downloadStatus === "downloading" &&
+                          t("common.downloading")}
+                        {downloadStatus === "success" &&
+                          t("common.downloadedSuccess")}
+                        {downloadStatus === "error" &&
+                          t("common.downloadError")}
                         {downloadStatus === "idle" && t("common.download")}
                       </span>
                     </button>
