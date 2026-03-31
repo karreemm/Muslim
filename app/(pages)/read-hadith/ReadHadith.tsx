@@ -23,7 +23,7 @@ export default function ReadHadithPage() {
   });
 
   return (
-    <div className="bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white min-h-screen w-full flex justify-center">
+    <div className="bg-background text-primary dark:bg-background dark:text-foreground min-h-screen w-full flex justify-center">
       <div className="w-[95%] mt-10 flex flex-col items-center gap-10">
         <h1 className="text-2xl md:text-4xl text-center font-bold">
           {t("hadith.title")}
@@ -39,7 +39,7 @@ export default function ReadHadithPage() {
             <BookCardSkeleton />
           </div>
         ) : error ? (
-          <div className="text-red-500 text-center text-xl mt-10">
+          <div className="text-destructive text-center text-xl mt-10">
             {t("hadith.error")}
           </div>
         ) : (
@@ -48,11 +48,11 @@ export default function ReadHadithPage() {
               <Link
                 key={book.id}
                 href={`/read-hadith/book/${book.slug}`}
-                className="group relative overflow-hidden bg-white dark:bg-slate-800 text-[#134B70] dark:text-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-teal-500"
+                className="group relative overflow-hidden bg-card text-foreground rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-primary"
               >
                 <div className="p-6 flex flex-col gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 flex-shrink-0 bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl p-2 shadow-md">
+                    <div className="w-20 h-20 flex-shrink-0 bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl p-2 shadow-md">
                       <img
                         loading="lazy"
                         decoding="async"
@@ -62,32 +62,32 @@ export default function ReadHadithPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                      <h2 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
                         {language === "en" ? book.name_en : book.name_ar}
                       </h2>
                     </div>
                   </div>
 
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
+                  <p className="text-sm md:text-base text-muted-foreground">
                     {language === "en"
                       ? book.description_en
                       : book.description_ar}
                   </p>
 
-                  <div className="flex justify-between items-center pt-4 border-t border-gray-800 dark:border-gray-300">
+                  <div className="flex justify-between items-center pt-4 border-t border-border">
                     <div className="flex flex-col items-center">
-                      <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                      <span className="text-2xl font-bold text-primary">
                         {book.chapters_count}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-muted-foreground">
                         {t("common.chapters")}
                       </span>
                     </div>
                     <div className="flex flex-col items-center">
-                      <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                      <span className="text-2xl font-bold text-primary">
                         {book.hadiths_count}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-muted-foreground">
                         {t("common.hadiths")}
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export default function ReadHadithPage() {
                     }`}
                   >
                     <svg
-                      className="w-6 h-6 text-teal-600 dark:text-teal-400"
+                      className="w-6 h-6 text-primary"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

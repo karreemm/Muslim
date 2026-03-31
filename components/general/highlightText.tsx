@@ -82,7 +82,7 @@ export const highlightText = ({
           parts.push(
             <span
               key={`highlight-${segmentKey++}`}
-              className={`${isDarkMode ? "text-teal-300" : "text-teal-600"}`}
+              className="text-primary"
               style={{ fontWeight: "700" }}
             >
               {currentSegment}
@@ -105,9 +105,7 @@ export const highlightText = ({
       parts.push(
         <span
           key={`highlight-${segmentKey++}`}
-          className={`px-1.5 py-0.5 rounded mx-0.5 ${
-            isDarkMode ? "text-teal-300" : "text-teal-600"
-          }`}
+          className="px-1.5 py-0.5 rounded mx-0.5 text-primary"
           style={{ fontWeight: "700" }}
         >
           {currentSegment}

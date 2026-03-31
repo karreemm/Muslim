@@ -16,7 +16,7 @@ export default function Header() {
     <>
       <div className="w-full flex justify-center">
         <div className="mt-32 lg:mt-0 min-h-screen w-[90%] max-w-[1500px] flex flex-col gap-10">
-          <div className="w-full lg:min-h-screen mx-auto flex flex-col items-center gap-14 lg:flex lg:flex-row lg:justify-between lg:p-4 bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white">
+          <div className="w-full lg:min-h-screen mx-auto flex flex-col items-center gap-14 lg:flex lg:flex-row lg:justify-between lg:p-4 bg-background text-primary dark:bg-background dark:text-foreground">
             <div className="lg:w-1/2 flex flex-col gap-5">
               <h1 className="text-2xl lg:text-4xl font-bold">
                 {t("home.welcome")}

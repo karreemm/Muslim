@@ -5,7 +5,7 @@ import Footer from "../../../components/layout/Footer";
 export default function App() {
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="flex flex-col min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
         <ReadAzkar />
       </div>
     </>

@@ -33,12 +33,12 @@ export default function BookChaptersPage() {
 
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center mt-10">
           <div className="w-[95%] max-w-[1500px] mx-auto flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-4">
               {book && (
-                <div className="w-24 h-24 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-3 shadow-lg">
+                <div className="w-24 h-24 bg-primary rounded-xl p-3 shadow-lg">
                   <img
                     src={book.image?.src}
                     alt={book.name_en}
@@ -58,13 +58,13 @@ export default function BookChaptersPage() {
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder={t("hadith.book.searchPlaceholder")}
-                className="w-full px-5 py-3 pr-12 rounded-lg border-2 border-teal-200 dark:border-teal-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                className="w-full px-5 py-3 pr-12 rounded-lg border-2 border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 dir={language === "ar" ? "rtl" : "ltr"}
               />
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute top-1/2 -translate-y-1/2 right-4 text-muted-foreground hover:text-foreground"
                   aria-label="Clear search"
                 >
                   <svg
@@ -83,7 +83,7 @@ export default function BookChaptersPage() {
                 </button>
               )}
               {!searchQuery && (
-                <div className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400">
+                <div className="absolute top-1/2 -translate-y-1/2 right-4 text-muted-foreground">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -102,11 +102,12 @@ export default function BookChaptersPage() {
             </div>
 
             {searchQuery && !loading && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {language === "ar"
                   ? `تم العثور على ${chapters.length} باب`
-                  : `Found ${chapters.length} chapter${chapters.length !== 1 ? "s" : ""
-                  }`}
+                  : `Found ${chapters.length} chapter${
+                      chapters.length !== 1 ? "s" : ""
+                    }`}
               </p>
             )}
 
@@ -122,7 +123,7 @@ export default function BookChaptersPage() {
             )}
 
             {error && (
-              <div className="text-red-500 text-center text-xl mt-10">
+              <div className="text-destructive text-center text-xl mt-10">
                 {t("hadith.book.error")}
               </div>
             )}
@@ -139,29 +140,29 @@ export default function BookChaptersPage() {
                       <Link
                         key={chapter.id}
                         href={`/read-hadith/book/${bookSlug}/chapter/${chapter.chapterNumber}`}
-                        className="group bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-5 border border-transparent hover:border-teal-500"
+                        className="group bg-card rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-5 border border-transparent hover:border-primary"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                          <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg">
                             {chapter.chapterNumber}
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                            <h3 className="text-sm text-muted-foreground mb-2">
                               {t("hadith.book.chapterLabel")}{" "}
                               {chapter.chapterNumber}
                             </h3>
                             {language === "ar" ? (
                               <p
                                 dir="rtl"
-                                className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
+                                className="text-base font-semibold text-foreground group-hover:text-primary transition-colors leading-relaxed line-clamp-3"
                               >
                                 {chapter.chapterArabic}
                               </p>
                             ) : (
                               <p
                                 dir="ltr"
-                                className="text-base font-semibold text-gray-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-relaxed line-clamp-3"
+                                className="text-base font-semibold text-foreground group-hover:text-primary transition-colors leading-relaxed line-clamp-3"
                               >
                                 {chapter.chapterEnglish}
                               </p>
@@ -170,8 +171,9 @@ export default function BookChaptersPage() {
 
                           <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg
-                              className={`w-5 h-5 text-teal-600 dark:text-teal-400 ${language === "ar" ? "rotate-180" : ""
-                                }`}
+                              className={`w-5 h-5 text-primary ${
+                                language === "ar" ? "rotate-180" : ""
+                              }`}
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"

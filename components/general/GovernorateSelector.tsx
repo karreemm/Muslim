@@ -16,7 +16,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = egyptianGovernorates.find(
-      (gov) => gov.en === e.target.value
+      (gov) => gov.en === e.target.value,
     );
     if (selected) {
       onGovernorateChange(selected);
@@ -27,7 +27,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
     <select
       value={selectedGovernorate.en}
       onChange={handleChange}
-      className="px-4 py-2 text-lg md:text-xl rounded-lg bg-white dark:bg-slate-800 border-2 border-teal-500 dark:border-teal-400 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 cursor-pointer transition-all hover:border-teal-600 dark:hover:border-teal-300"
+      className="px-4 py-2 text-lg md:text-xl rounded-lg bg-card border-2 border-primary text-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer transition-all hover:border-ring"
       dir={language === "ar" ? "rtl" : "ltr"}
     >
       {egyptianGovernorates.map((gov) => (

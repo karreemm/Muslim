@@ -8,7 +8,6 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/LanguageContext";
-import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
   getAyahTranslation,
@@ -29,7 +28,6 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
   ({ isOpen, onClose, surahNumber, ayahNumber, surahNameAr, surahNameEn }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
-    const { theme } = useTheme();
 
     const [selectedEditionId, setSelectedEditionId] =
       useState<string>("en.sahih");
@@ -82,7 +80,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
+            <div className="fixed inset-0 bg-background/60 backdrop-blur-md" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -97,19 +95,17 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                 leaveTo="opacity-0 scale-90 translate-y-4"
               >
                 <Dialog.Panel
-                  className={`w-full max-w-3xl transform rounded-2xl shadow-2xl transition-all ${
-                    theme ? "bg-slate-800" : "bg-white"
-                  }`}
+                  className="w-full max-w-3xl transform rounded-2xl bg-card text-card-foreground shadow-2xl transition-all"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div
                     dir={language === "ar" ? "rtl" : "ltr"}
-                    className="relative bg-gradient-to-br from-teal-500 to-teal-600 px-6 pt-6 pb-8 rounded-t-2xl"
+                    className="relative bg-gradient-to-br from-primary to-primary/90 px-6 pt-6 pb-8 rounded-t-2xl"
                   >
                     <button
                       onClick={onClose}
                       type="button"
-                      className={`absolute top-6 text-white hover:text-white hover:bg-white/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${
+                      className={`absolute top-6 text-primary-foreground hover:text-primary-foreground hover:bg-card/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${
                         language === "ar" ? "left-4" : "right-4"
                       }`}
                       aria-label="Close"
@@ -118,17 +114,17 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                     </button>
 
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center">
+                      <div className="bg-card/20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center">
                         <FontAwesomeIcon
                           icon={faLanguage}
-                          className="text-white text-xl"
+                          className="text-primary-foreground text-xl"
                         />
                       </div>
-                      <Dialog.Title className="text-2xl font-bold text-white dynamic-font">
+                      <Dialog.Title className="text-2xl font-bold text-primary-foreground dynamic-font">
                         {t("readQuran.translation.title")}
                       </Dialog.Title>
                     </div>
-                    <p className="text-teal-50 text-sm mt-1 dynamic-font">
+                    <p className="text-primary-foreground/80 text-sm mt-1 dynamic-font">
                       {language === "ar"
                         ? `${surahNameAr} - الآية ${ayahNumber}`
                         : `${surahNameEn} - Ayah ${ayahNumber}`}
@@ -137,9 +133,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
 
                   <div
                     dir={"ltr"}
-                    className={`px-6 py-4 border-b ${
-                      theme ? "border-slate-700" : "border-gray-200"
-                    }`}
+                    className="px-6 py-4 border-b border-border"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex flex-wrap gap-2">
@@ -151,10 +145,8 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           type="button"
                           className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${
                             selectedEditionId === edition.id
-                              ? "bg-teal-600 text-white shadow-md scale-105"
-                              : theme
-                                ? "bg-slate-700 text-gray-300 hover:bg-slate-600"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              ? "bg-primary text-primary-foreground shadow-md scale-105"
+                              : "bg-secondary text-secondary-foreground hover:bg-muted"
                           }`}
                         >
                           {edition.englishName}
@@ -171,16 +163,12 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                       <div className="flex items-center justify-center h-40">
                         <FontAwesomeIcon
                           icon={faSpinner}
-                          className="text-4xl text-teal-600 animate-spin"
+                          className="text-4xl text-primary animate-spin"
                         />
                       </div>
                     ) : error ? (
                       <div className="flex items-center justify-center overflow-y-auto h-40">
-                        <p
-                          className={`dynamic-font text-center ${
-                            theme ? "text-gray-400" : "text-gray-600"
-                          }`}
-                        >
+                        <p className="dynamic-font text-center text-muted-foreground">
                           {error}
                         </p>
                       </div>
@@ -188,23 +176,13 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                       <div>
                         <div
                           dir="ltr"
-                          className={`rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto ${
-                            theme ? "bg-[#0f172b]" : "bg-[#fff5e4]"
-                          }`}
+                          className="rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto bg-background"
                         >
-                          <p
-                            className={`text-lg leading-relaxed dynamic-font ${
-                              theme ? "text-gray-100" : "text-gray-800"
-                            }`}
-                          >
+                          <p className="text-lg leading-relaxed dynamic-font text-foreground">
                             {currentTranslation.text}
                           </p>
                           {currentTranslation.edition && (
-                            <p
-                              className={`mt-4 text-sm font-medium dynamic-font ${
-                                theme ? "text-gray-400" : "text-gray-600"
-                              }`}
-                            >
+                            <p className="mt-4 text-sm font-medium dynamic-font text-muted-foreground">
                               — {currentTranslation.edition.name}
                             </p>
                           )}
@@ -212,11 +190,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                       </div>
                     ) : (
                       <div className="flex items-center justify-center h-40">
-                        <p
-                          className={`dynamic-font text-center ${
-                            theme ? "text-gray-400" : "text-gray-600"
-                          }`}
-                        >
+                        <p className="dynamic-font text-center text-muted-foreground">
                           {t("readQuran.translation.noData")}
                         </p>
                       </div>
@@ -225,14 +199,12 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
 
                   <div
                     dir={language === "ar" ? "rtl" : "ltr"}
-                    className={`px-6 py-4 border-t ${
-                      theme ? "border-slate-700" : "border-gray-200"
-                    }`}
+                    className="px-6 py-4 border-t border-border"
                   >
                     <button
                       onClick={onClose}
                       type="button"
-                      className="w-full py-3 rounded-xl transition-all duration-200 dynamic-font font-medium bg-teal-600 hover:bg-teal-700 text-white"
+                      className="w-full py-3 rounded-xl transition-all duration-200 dynamic-font font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
                       {t("common.close")}
                     </button>

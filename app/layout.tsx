@@ -39,7 +39,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`dynamic-font bg-[#FFF5E4] dark:bg-slate-900`}
+        className={`dynamic-font bg-background dark:bg-background`}
       >
         <LanguageContextProvider>
           <ThemeContextProvider>

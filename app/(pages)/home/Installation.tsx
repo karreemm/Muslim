@@ -9,7 +9,7 @@ export default function Installation() {
   return (
     <>
       <div className="w-full flex justify-center">
-        <div className="w-[90%] bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white flex flex-col gap-10 md:flex md:flex-row md:justify-between md:items-center">
+        <div className="w-[90%] bg-background text-primary dark:bg-background dark:text-foreground flex flex-col gap-10 md:flex md:flex-row md:justify-between md:items-center">
           <div className="w-full md:w-[70%] flex flex-col">
             <h1 className="text-2xl font-bold">{t("home.install")}</h1>
 

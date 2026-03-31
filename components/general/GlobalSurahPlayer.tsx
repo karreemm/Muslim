@@ -286,6 +286,9 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
     setTimeout(() => setDownloadStatus("idle"), 3000);
   };
 
+  const progressPercentage =
+    duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
+
   const handleClose = () => {
     setIsPlayerVisible(false);
     setContextIsPlaying(false);
@@ -299,16 +302,14 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
     }
   };
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-white/95 dark:bg-slate-900/98 backdrop-blur-xl border-t border-teal-600/20 shadow-[0_-8px_32px_rgba(0,0,0,0.15)]">
+    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-[hsl(var(--player-bg))] backdrop-blur-xl border-t border-border/20 shadow-xl">
       <audio ref={audioPlayer} className="hidden" />
       <audio ref={nextAudioPlayer} className="hidden" />
 
       <div className="max-w-[1500px] mx-auto px-3 py-2">
         <div dir="ltr" className="flex items-center gap-2 mb-1.5">
-          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 min-w-[36px]">
+          <span className="text-[11px] font-mono text-muted-foreground min-w-[36px]">
             {formatTime(currentTime)}
           </span>
           <div className="flex-1 relative group">
@@ -331,29 +332,30 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               }}
               className={`w-full h-1.5 rounded-full appearance-none cursor-pointer ${styles.audioSlider}`}
               style={{
-                background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
+                accentColor: "hsl(var(--player-track-active))",
+                background: `linear-gradient(to right, hsl(var(--player-track-active)) 0%, hsl(var(--player-track-active)) ${progressPercentage}%, hsl(var(--player-track)) ${progressPercentage}%, hsl(var(--player-track)) 100%)`,
               }}
             />
           </div>
-          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 min-w-[36px] text-right">
+          <span className="text-[11px] font-mono text-muted-foreground min-w-[36px] text-right">
             {formatTime(duration)}
           </span>
         </div>
 
         <div className="relative flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
               {surahNumber}
             </div>
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-teal-700 dark:text-teal-400 truncate">
+              <div className="text-sm font-semibold text-primary truncate">
                 {language === "ar" ? `سورة ${surahName}` : `Surah ${surahName}`}
               </div>
-              <div className="text-[11px] text-slate-400 truncate">
+              <div className="text-[11px] text-muted-foreground truncate">
                 {reciterName} · {currentAyahIndex + 1}/{totalAyahs}
               </div>
             </div>
-            {loading && <ClipLoader color="#0d9488" size={16} />}
+            {loading && <ClipLoader color="hsl(var(--primary))" size={16} />}
           </div>
 
           <div dir="ltr" className="flex items-center gap-1 md:gap-3 shrink-0">
@@ -362,8 +364,8 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               disabled={isFirstAyah}
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 isFirstAyah
-                  ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                  : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:scale-110"
+                  ? "text-muted-foreground/40 cursor-not-allowed"
+                  : "text-primary hover:bg-secondary hover:scale-110"
               }`}
             >
               <FontAwesomeIcon icon={faStepBackward} className="text-sm" />
@@ -372,10 +374,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
             <button
               onClick={togglePlayPause}
               disabled={isBuffering}
-              className={`w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center shadow-md hover:bg-teal-500 hover:scale-105 transition-all active:scale-95 ${isBuffering ? styles.loadingButton : ""}`}
+              className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 hover:scale-105 transition-all active:scale-95 ${isBuffering ? styles.loadingButton : ""}`}
             >
               {isBuffering ? (
-                <ClipLoader color="white" size={16} />
+                <ClipLoader color="hsl(var(--primary-foreground))" size={16} />
               ) : (
                 <FontAwesomeIcon
                   icon={isPlaying ? faPause : faPlay}
@@ -389,8 +391,8 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               disabled={isLastAyah}
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 isLastAyah
-                  ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                  : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:scale-110"
+                  ? "text-muted-foreground/40 cursor-not-allowed"
+                  : "text-primary hover:bg-secondary hover:scale-110"
               }`}
             >
               <FontAwesomeIcon icon={faStepForward} className="text-sm" />
@@ -407,7 +409,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                   return next;
                 });
               }}
-              className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all hover:scale-110"
+              className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary transition-all hover:scale-110"
               title={language === "ar" ? "المزيد" : "More"}
             >
               <FontAwesomeIcon icon={faEllipsisVertical} className="text-sm" />
@@ -416,7 +418,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
             {!isListenPage && (
               <button
                 onClick={handleClose}
-                className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-slate-400 hover:text-red-500 transition-all hover:scale-110 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="w-8 h-8 rounded-full flex md:hidden items-center justify-center text-muted-foreground hover:text-destructive transition-all hover:scale-110 hover:bg-destructive/10"
                 title={language === "ar" ? "إغلاق" : "Close"}
               >
                 <FontAwesomeIcon icon={faXmark} className="text-base" />
@@ -428,7 +430,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
             {isReadQuranPage && (
               <button
                 onClick={triggerScrollToAyah}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 text-muted-foreground hover:text-primary hover:bg-secondary"
                 title={
                   language === "ar"
                     ? "الانتقال للآية الحالية"
@@ -448,10 +450,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                 }
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
                   downloadStatus === "success"
-                    ? "text-green-500"
+                    ? "text-accent"
                     : downloadStatus === "error"
-                      ? "text-red-500"
-                      : "text-slate-400 hover:text-teal-600 dark:hover:text-teal-400"
+                      ? "text-destructive"
+                      : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 <FontAwesomeIcon
@@ -475,10 +477,10 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                   onClick={() => setShowReciterDropdown(!showReciterDropdown)}
                   className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
                     showReciterDropdown && !isListenPage
-                      ? "text-teal-600 bg-teal-50 dark:bg-teal-900/30"
+                      ? "text-primary bg-secondary"
                       : isListenPage
-                        ? "cursor-not-allowed text-slate-400 hover:text-slate-400"
-                        : "text-slate-400 hover:text-teal-600 dark:hover:text-teal-400"
+                        ? "cursor-not-allowed text-muted-foreground hover:text-muted-foreground"
+                        : "text-muted-foreground hover:text-primary"
                   }`}
                 >
                   <FontAwesomeIcon icon={faMicrophone} className="text-sm" />
@@ -488,11 +490,11 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               {showReciterDropdown && (
                 <div
                   ref={dropdownRef}
-                  className="absolute bottom-[calc(100%+10px)] left-0 w-[min(22rem,calc(100vw-1rem))] bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[500]"
+                  className="absolute bottom-[calc(100%+10px)] left-0 w-[min(22rem,calc(100vw-1rem))] bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border overflow-hidden z-[500]"
                 >
-                  <div className="px-4 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                  <div className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider border-b border-border flex items-center justify-between">
                     {language === "ar" ? "القراء" : "Reciters"}
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-muted-foreground">
                       {language === "ar" ? "اختيار القارئ" : "Choose reciter"}
                     </span>
                   </div>
@@ -505,16 +507,16 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                           localStorage.setItem("preferredReciter", r.id);
                           setShowReciterDropdown(false);
                         }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center gap-2 ${
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-secondary flex items-center gap-2 ${
                           r.id === reciterId
-                            ? "bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 font-semibold"
-                            : "text-slate-700 dark:text-slate-300"
+                            ? "bg-secondary text-primary font-semibold"
+                            : "text-foreground"
                         }`}
                       >
                         {r.id === reciterId && (
                           <FontAwesomeIcon
                             icon={faCheck}
-                            className="text-teal-600 text-xs shrink-0"
+                            className="text-primary text-xs shrink-0"
                           />
                         )}
                         <span className={r.id === reciterId ? "" : "pl-4"}>
@@ -531,11 +533,11 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
               <div className="relative group">
                 <button
                   onClick={handleClose}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 transition-all hover:scale-110 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive transition-all hover:scale-110 hover:bg-destructive/10"
                 >
                   <FontAwesomeIcon icon={faXmark} className="text-base" />
                 </button>
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[300]">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[300]">
                   {language === "ar" ? "إغلاق" : "Close"}
                 </div>
               </div>
@@ -545,11 +547,11 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
           {showMobileMenu && (
             <div
               ref={mobileMenuRef}
-              className="absolute bottom-[calc(100%+8px)] right-0 w-72 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[500] md:hidden"
+              className="absolute bottom-[calc(100%+8px)] right-0 w-72 bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border overflow-hidden z-[500] md:hidden"
             >
-              <div className="px-4 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+              <div className="px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider border-b border-border flex items-center justify-between">
                 {language === "ar" ? "خيارات المشغل" : "Player Options"}
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[10px] text-muted-foreground">
                   {language === "ar" ? "إجراءات سريعة" : "Quick Actions"}
                 </span>
               </div>
@@ -565,9 +567,9 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                       downloadStatus === "downloading" ||
                       downloadStatus === "success"
                     }
-                    className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
+                    className="w-full text-left px-4 py-3 text-sm text-foreground transition-colors hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700/60 flex items-center justify-center text-slate-500 dark:text-slate-300 shrink-0">
+                    <span className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
                       <FontAwesomeIcon
                         icon={
                           downloadStatus === "success"
@@ -588,9 +590,9 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                         triggerScrollToAyah();
                         setShowMobileMenu(false);
                       }}
-                      className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center gap-3"
+                      className="w-full text-left px-4 py-3 text-sm text-foreground transition-colors hover:bg-secondary flex items-center gap-3"
                     >
-                      <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700/60 flex items-center justify-center text-slate-500 dark:text-slate-300 shrink-0">
+                      <span className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
                         <FontAwesomeIcon icon={faArrowUp} className="text-xs" />
                       </span>
                       {language === "ar"
@@ -602,9 +604,9 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                   <button
                     disabled={isListenPage}
                     onClick={() => setShowMobileReciterMenu(true)}
-                    className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
+                    className="w-full text-left px-4 py-3 text-sm text-foreground transition-colors hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700/60 flex items-center justify-center text-slate-500 dark:text-slate-300 shrink-0">
+                    <span className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
                       <FontAwesomeIcon
                         icon={faMicrophone}
                         className="text-xs"
@@ -615,7 +617,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                     </span>
                     <FontAwesomeIcon
                       icon={language === "ar" ? faChevronLeft : faChevronRight}
-                      className="text-[11px] text-slate-400"
+                      className="text-[11px] text-muted-foreground"
                     />
                   </button>
                 </div>
@@ -623,7 +625,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                 <div>
                   <button
                     onClick={() => setShowMobileReciterMenu(false)}
-                    className="w-full text-left px-4 py-3 text-sm font-semibold text-teal-600 dark:text-teal-400 border-b border-slate-100 dark:border-slate-700 hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center gap-2"
+                    className="w-full text-left px-4 py-3 text-sm font-semibold text-primary border-b border-border hover:bg-secondary flex items-center gap-2"
                   >
                     <FontAwesomeIcon
                       icon={language === "ar" ? faChevronRight : faChevronLeft}
@@ -641,16 +643,16 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
                           setShowMobileReciterMenu(false);
                           setShowMobileMenu(false);
                         }}
-                        className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center gap-2 ${
+                        className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-secondary flex items-center gap-2 ${
                           r.id === reciterId
-                            ? "bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 font-semibold"
-                            : "text-slate-700 dark:text-slate-300"
+                            ? "bg-secondary text-primary font-semibold"
+                            : "text-foreground"
                         }`}
                       >
                         {r.id === reciterId && (
                           <FontAwesomeIcon
                             icon={faCheck}
-                            className="text-teal-600 text-xs shrink-0"
+                            className="text-primary text-xs shrink-0"
                           />
                         )}
                         <span className={r.id === reciterId ? "" : "pl-4"}>

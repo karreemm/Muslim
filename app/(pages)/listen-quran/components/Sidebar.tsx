@@ -15,7 +15,12 @@ interface SidebarProps {
   onToggle: (expanded: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah, isExpanded, onToggle }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  onSurahSelect,
+  selectedSurah,
+  isExpanded,
+  onToggle,
+}) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -44,29 +49,27 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah, isExpan
   return (
     <>
       <aside
-        className={`z-20 fixed top-16 bottom-0 shadow-lg border-black dark:border-white bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white transition-all duration-300 ${isExpanded ? "w-[80%] md:w-80" : "w-16"
-          } ${language === "ar" ? `right-0 border-l` : `left-0 border-r`}`}
+        className={`z-20 fixed top-16 bottom-0 shadow-lg border-border bg-background text-primary transition-all duration-300 ${
+          isExpanded ? "w-[80%] md:w-80" : "w-16"
+        } ${language === "ar" ? `right-0 border-l` : `left-0 border-r`}`}
       >
         <div className={`flex flex-col h-full ${isExpanded ? "mt-7" : ""}`}>
           <div className="h-20 flex items-center justify-between px-4">
             <button onClick={toggleSidebar} className="">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
-                className="text-2xl text-teal-600 dark:text-white"
+                className="text-2xl text-primary"
               />
             </button>
             {isExpanded && (
-              <button
-                onClick={toggleSidebar}
-                className="text-xl text-teal-600 dark:text-white"
-              >
+              <button onClick={toggleSidebar} className="text-xl text-primary">
                 <FontAwesomeIcon icon={faX} />
               </button>
             )}
           </div>
           {isExpanded && (
             <div className="px-4 flex flex-col gap-8 h-full">
-              <h1 className="mt-5 text-2xl text-center text-slate-800 dark:text-white">
+              <h1 className="mt-5 text-2xl text-center text-foreground">
                 {t("listenQuran.sidebar.title")}
               </h1>
               <div>
@@ -75,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah, isExpan
                   placeholder={t("listenQuran.sidebar.searchPlaceholder")}
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-teal-600 dark:focus:ring-teal-600 text-slate-900 dark:text-white"
+                  className="w-full p-2 border border-input rounded-lg focus:outline-hidden focus:ring-2 focus:ring-ring text-foreground"
                 />
               </div>
               <div className="flex flex-col gap-3 overflow-y-auto h-full px-2">
@@ -83,17 +86,16 @@ const Sidebar: React.FC<SidebarProps> = ({ onSurahSelect, selectedSurah, isExpan
                   <button
                     key={surah.number}
                     onClick={() => handleSurahClick(surah.number)}
-                    className={`w-full px-5 py-3 border border-[#134B70] dark:border-white shadow-lg rounded-lg flex items-center gap-5 group hover:border-teal-600 hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:hover:border-teal-500 ${selectedSurah === surah.number
-                      ? "bg-teal-100 dark:bg-teal-700"
-                      : ""
-                      }`}
+                    className={`w-full px-5 py-3 border border-border shadow-lg rounded-lg flex items-center gap-5 group hover:border-border hover:bg-opacity-70 ${
+                      selectedSurah === surah.number ? "bg-secondary" : ""
+                    }`}
                   >
-                    <div className="w-[65px] h-[45px] flex items-center justify-center bg-[#134B70] text-white group-hover:bg-teal-600 dark:group-hover:bg-teal-600 rounded-md text-xl">
+                    <div className="w-[65px] h-[45px] flex items-center justify-center bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
                       {language === "en"
                         ? surah.number
                         : toArabicNumber(surah.number)}
                     </div>
-                    <span className="text-lg md:text-xl text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-white">
+                    <span className="text-lg md:text-xl text-foreground group-hover:text-primary">
                       {language === "en" ? `${surah.en}` : `${surah.ar}`}
                     </span>
                   </button>

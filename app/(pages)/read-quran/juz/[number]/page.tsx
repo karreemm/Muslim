@@ -1,7 +1,11 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faArrowLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faArrowLeft,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useQuranAudio } from "@/context/QuranAudioContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -9,10 +13,7 @@ import Navbar from "@/components/layout/Navbar";
 import GetJuz from "../../service/GetJuz";
 import { showPopover, hidePopover } from "@/utils/helpers";
 import Footer from "@/components/layout/Footer";
-import {
-  useQuranNavigation,
-  useContainerFontSize,
-} from "@/hooks/readQuran";
+import { useQuranNavigation, useContainerFontSize } from "@/hooks/readQuran";
 import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
 import ReadingProgressBar from "@/components/layout/ReadingProgressBar";
 
@@ -67,14 +68,14 @@ export default function JuzPage() {
         totalPages={totalPages || undefined}
         loadedPages={loadedPages || undefined}
       />
-      <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && nextJuz && (
               <>
                 <button
                   onClick={() => navigation.handleNavigation("next")}
-                  className="absolute top-0 right-0 text-2xl text-teal-600 dark:text-white hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
+                  className="absolute top-0 right-0 text-2xl text-primary hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                   onMouseEnter={() => showPopover("popover-next")}
                   onMouseLeave={() => hidePopover("popover-next")}
                 >
@@ -85,10 +86,10 @@ export default function JuzPage() {
                   data-popover
                   id="popover-next"
                   role="tooltip"
-                  className="absolute top-10 right-0 z-10 invisible inline-block w-32 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                  className="absolute top-10 right-0 z-10 invisible inline-block w-32 text-sm text-muted-foreground transition-opacity duration-300 bg-popover border border-border rounded-lg shadow-xs opacity-0"
                 >
-                  <div className="flex justify-center px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <div className="flex justify-center px-3 py-2 bg-secondary border-b border-border rounded-t-lg">
+                    <h3 className="font-semibold text-popover-foreground">
                       {nextJuz.name[language as keyof typeof nextJuz.name]}
                     </h3>
                   </div>
@@ -99,10 +100,16 @@ export default function JuzPage() {
             {juzVerses && juzVerses.length > 0 && (
               <button
                 onClick={() => {
-                  const uniqueSurahs = Array.from(new Set(juzVerses.map((v: any) => parseInt(v.verse_key.split(":")[0])))) as number[];
+                  const uniqueSurahs = Array.from(
+                    new Set(
+                      juzVerses.map((v: any) =>
+                        parseInt(v.verse_key.split(":")[0]),
+                      ),
+                    ),
+                  ) as number[];
                   playSurah(uniqueSurahs[0], undefined, uniqueSurahs);
                 }}
-                className="absolute top-0 left-1/2 -translate-x-1/2 bg-teal-600 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-teal-500 hover:scale-105 transition-all flex items-center gap-2"
+                className="absolute top-0 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-6 py-2 rounded-full font-bold shadow-md hover:bg-primary/90 hover:scale-105 transition-all flex items-center gap-2"
               >
                 <FontAwesomeIcon icon={faPlay} />
                 <span>{language === "ar" ? "استماع" : "Listen"}</span>
@@ -113,7 +120,7 @@ export default function JuzPage() {
               <>
                 <button
                   onClick={() => navigation.handleNavigation("prev")}
-                  className="absolute top-0 left-0 text-2xl text-teal-600 dark:text-white"
+                  className="absolute top-0 left-0 text-2xl text-primary hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
                   onMouseEnter={() => showPopover("popover-prev")}
                   onMouseLeave={() => hidePopover("popover-prev")}
                 >
@@ -124,10 +131,10 @@ export default function JuzPage() {
                   data-popover
                   id="popover-prev"
                   role="tooltip"
-                  className="absolute top-10 left-0 z-10 invisible inline-block w-32 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                  className="absolute top-10 left-0 z-10 invisible inline-block w-32 text-sm text-muted-foreground transition-opacity duration-300 bg-popover border border-border rounded-lg shadow-xs opacity-0"
                 >
-                  <div className="flex justify-center px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <div className="flex justify-center px-3 py-2 bg-secondary border-b border-border rounded-t-lg">
+                    <h3 className="font-semibold text-popover-foreground">
                       {prevJuz.name[language as keyof typeof prevJuz.name]}
                     </h3>
                   </div>

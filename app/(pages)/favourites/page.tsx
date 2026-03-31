@@ -15,7 +15,7 @@ export default function ParentComponent() {
 
   return (
     <>
-      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex justify-center bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full mt-10">
           <ButtonGroup onSelectionChange={handleSelectionChange} />
           {selectedButton === "Surahs" && <FavouriteSurahsTable />}

@@ -79,10 +79,10 @@ const PrayerTimes: React.FC = () => {
       {prayerTimes && (
         <>
           <div className="w-full flex flex-col gap-20 items-center">
-            <h2 className="lg:mt-0 mt-10 w-[80%] text-3xl lg:text-5xl text-teal-600 dark:text-white text-center">
+            <h2 className="lg:mt-0 mt-10 w-[80%] text-3xl lg:text-5xl text-primary dark:text-foreground text-center">
               {t("prayerTimes.error")}
             </h2>
-            <div className="w-[90%] bg-[#FFE0B2] dark:bg-[#2d3748] dark:shadow-lg shadow-lg p-6 rounded-lg flex flex-col gap-5 text-black dark:text-white">
+            <div className="w-[90%] bg-card shadow-lg p-6 rounded-lg flex flex-col gap-5 text-foreground">
               <div className="flex flex-col gap-4 lg:flex lg:flex-row lg:justify-between lg:gap-4">
                 <div className="flex flex-row items-center gap-3 lg:gap-4">
                   <h2 className="text-2xl lg:text-4xl whitespace-nowrap">
@@ -132,8 +132,8 @@ const PrayerTimes: React.FC = () => {
                       key={prayer}
                       className={`w-[90%] lg:w-[15%] rounded-lg shadow-lg py-6 px-3 flex flex-col justify-center items-center gap-2 transition-all duration-300 relative overflow-hidden ${
                         isNext
-                          ? "text-white transform scale-110 shadow-xl border-2 border-teal-400"
-                          : "bg-[#FFF5E4] dark:bg-slate-900"
+                          ? "text-primary-foreground transform scale-110 shadow-xl border-2 border-primary"
+                          : "bg-background dark:bg-background"
                       }`}
                       style={
                         isNext
@@ -146,20 +146,25 @@ const PrayerTimes: React.FC = () => {
                       }
                     >
                       {isNext && (
-                        <div className="absolute inset-0 bg-black/40 -z-10"></div>
+                        <div className="absolute inset-0 bg-prayer-times-next-bg/40 -z-10"></div>
                       )}
                       <p
                         className={`text-xl font-bold ${
-                          isNext ? "text-teal-300" : ""
+                          isNext ? "text-prayer-times-next" : ""
                         }`}
                       >
                         {prayer} :
                       </p>
-                      <p dir="ltr" className="text-xl">
+                      <p
+                        dir="ltr"
+                        className={`text-xl ${
+                          isNext ? "text-prayer-times-next-foreground" : ""
+                        }`}
+                      >
                         {time}
                       </p>
                       {isNext && (
-                        <div className="mt-2 text-sm font-bold bg-black/20 px-3 py-1 rounded-full animate-pulse">
+                        <div className="mt-2 text-sm font-bold text-prayer-times-next-foreground bg-background/20 px-3 py-1 rounded-full animate-pulse">
                           - {timeRemaining}
                         </div>
                       )}

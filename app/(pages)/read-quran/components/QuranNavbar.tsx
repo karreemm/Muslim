@@ -23,11 +23,11 @@ export default function QuranNavbar({
   };
 
   return (
-    <div className="bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white border-b-2 border-teal-600 w-full flex justify-center">
+    <div className="bg-background text-foreground border-b-2 border-border w-full flex justify-center">
       <div className="w-[90%] md:w-[80%] flex flex-col gap-10 items-center justify-normal md:flex-row md:items-center md:justify-between px-10 py-5">
         <div className="w-full md:w-[50%] flex flex-row gap-10">
           <input
-            className="w-full md:w-[70%] rounded-xl bg-white dark:bg-slate-800 text-black dark:text-white dark:outline-hidden outline-hidden py-2 pl-10 pr-4 placeholder:text-[#03045e] dark:placeholder:text-slate-200 border border-[#134B70] dark:border-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600"
+            className="w-full md:w-[70%] rounded-xl bg-card text-foreground outline-hidden py-2 pl-10 pr-4 placeholder:text-muted-foreground border border-border focus:border-ring focus:ring-2 focus:ring-ring"
             placeholder={t("readQuran.sidebar.title")}
             type="search"
             value={searchTerm}
@@ -36,7 +36,7 @@ export default function QuranNavbar({
           <button>
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
-              className="text-2xl text-teal-600 dark:text-white"
+              className="text-2xl text-primary"
             />
           </button>
         </div>
@@ -44,7 +44,7 @@ export default function QuranNavbar({
           <button
             onClick={() => handleTabClick("Surahs")}
             className={`${
-              activeTab === "Surahs" ? "bg-teal-600 text-white" : ""
+              activeTab === "Surahs" ? "bg-primary text-primary-foreground" : ""
             } px-3 py-1 rounded-md`}
           >
             {t("common.surahs")}
@@ -52,7 +52,7 @@ export default function QuranNavbar({
           <button
             onClick={() => handleTabClick("Juzs")}
             className={`${
-              activeTab === "Juzs" ? "bg-teal-600 text-white" : ""
+              activeTab === "Juzs" ? "bg-primary text-primary-foreground" : ""
             } px-3 py-1 rounded-md`}
           >
             {t("common.juzs")}

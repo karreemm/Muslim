@@ -145,11 +145,11 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
       <>
         <div
           dir={language === "ar" ? "rtl" : "ltr"}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-transparent hover:border-teal-600 dark:hover:border-teal-500 transition-all duration-300 p-5"
+          className="bg-card rounded-lg shadow-lg border border-transparent hover:border-border transition-all duration-300 p-5"
         >
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
             <div>
-              <h3 className="text-xl font-semibold dynamic-font text-[#134B70] dark:text-white">
+              <h3 className="text-xl font-semibold dynamic-font text-foreground">
                 {language === "ar"
                   ? `${ayah.surah.name}`
                   : ayah.surah.englishName}
@@ -160,14 +160,14 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                   : `Ayah ${ayah.numberInSurah}`}
               </p>
             </div>
-            <div className="px-3 py-1 rounded-full text-sm font-medium bg-teal-600 text-white">
+            <div className="px-3 py-1 rounded-full text-sm font-medium bg-primary text-primary-foreground">
               {t("searchAyah.page")} {ayah.page}
             </div>
           </div>
 
           <div className="mb-5">
             <p
-              className="text-2xl leading-loose dynamic-font text-[#134B70] dark:text-white"
+              className="text-2xl leading-loose dynamic-font text-foreground"
               dir="rtl"
             >
               {highlightKeyword
@@ -186,8 +186,8 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               disabled={isLoadingAudio}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:cursor-pointer ${
                 isPlaying
-                  ? "bg-teal-600 text-white"
-                  : "bg-[#FFF5E4] dark:bg-slate-700 text-[#134B70] dark:text-white hover:bg-teal-600 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <FontAwesomeIcon
@@ -217,7 +217,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
             <button
               onClick={() => setShowTafseerModal(true)}
-              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-[#FFF5E4] dark:bg-slate-700 text-[#134B70] dark:text-white hover:bg-teal-600 hover:text-white"
+              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
             >
               <FontAwesomeIcon icon={faBook} />
               <span className="dynamic-font text-sm">
@@ -227,7 +227,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
             <button
               onClick={() => setShowTranslationModal(true)}
-              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-[#FFF5E4] dark:bg-slate-700 text-[#134B70] dark:text-white hover:bg-teal-600 hover:text-white"
+              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
             >
               <FontAwesomeIcon icon={faLanguage} />
               <span className="dynamic-font text-sm">
@@ -240,9 +240,9 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
             >
               <button
                 onClick={() => setShowReciterMenu(!showReciterMenu)}
-                className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-[#FFF5E4] dark:bg-slate-700 text-[#134B70] dark:text-white hover:bg-teal-600 hover:text-white"
+                className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
               >
-                <div className="w-2 h-2 rounded-full bg-teal-600"></div>
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
                 <span className="dynamic-font text-sm">{reciterName}</span>
               </button>
 
@@ -250,19 +250,17 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 <div
                   className={`absolute ${
                     language === "ar" ? "left-0" : "right-0"
-                  } bottom-full mb-2 w-64 rounded-lg shadow-xl border max-h-64 overflow-y-auto z-10 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-600`}
+                  } bottom-full mb-2 w-64 rounded-lg shadow-xl border max-h-64 overflow-y-auto z-10 bg-card border-border`}
                 >
                   {reciters.map((reciter) => (
                     <button
                       key={reciter.id}
                       onClick={() => handleReciterChange(reciter.id)}
-                      className={`w-full px-4 py-2 text-start transition-colors hover:bg-[#FFF5E4] dark:hover:bg-slate-700 ${
-                        selectedReciter === reciter.id
-                          ? "bg-[#FFF5E4] dark:bg-slate-700"
-                          : ""
+                      className={`w-full px-4 py-2 text-start transition-colors hover:bg-muted ${
+                        selectedReciter === reciter.id ? "bg-muted" : ""
                       }`}
                     >
-                      <div className="dynamic-font text-sm text-[#134B70] dark:text-white">
+                      <div className="dynamic-font text-sm text-foreground">
                         {language === "ar" ? reciter.NameAr : reciter.NameEn}
                       </div>
                     </button>

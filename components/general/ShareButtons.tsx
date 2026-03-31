@@ -57,19 +57,19 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
   }, [isShareOpen]);
 
   return (
-    <div className="flex flex-col relative text-slate-900 text-xl md:text-2xl">
+    <div className="flex flex-col relative text-foreground text-xl md:text-2xl">
       <FontAwesomeIcon
         icon={faShareNodes}
-        className="text-teal-600 hover:opacity-80 cursor-pointer"
+        className="text-primary hover:opacity-80 cursor-pointer"
         onClick={handleShare}
       />
       {isShareOpen && (
         <div
           ref={shareMenuRef}
-          className="z-50 py-2 px-3 absolute text-xl md:text-2xl w-48 flex flex-col gap-3 md:gap-7 top-10 left-0 bg-white rounded-lg shadow-md"
+          className="z-50 py-2 px-3 absolute text-xl md:text-2xl w-48 flex flex-col gap-3 md:gap-7 top-10 left-0 bg-card rounded-lg shadow-md"
         >
           <button
-            className="flex items-center gap-3 text-teal-600 hover:opacity-80"
+            className="flex items-center gap-3 text-primary hover:opacity-80"
             onClick={handleCopy}
           >
             <FontAwesomeIcon icon={faCopy} />
@@ -81,14 +81,14 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
               onClick={() =>
                 window.open(
                   `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                    url
+                    url,
                   )}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >
               <FontAwesomeIcon
-                className="text-blue-600 hover:opacity-80"
+                className="text-primary hover:opacity-80"
                 icon={faFacebook}
               />
             </button>
@@ -97,14 +97,14 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
               onClick={() =>
                 window.open(
                   `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                    url
+                    url,
                   )}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >
               <FontAwesomeIcon
-                className="text-green-600 hover:opacity-80"
+                className="text-primary hover:opacity-80"
                 icon={faWhatsapp}
               />
             </button>
@@ -113,12 +113,12 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
               onClick={() =>
                 window.open(
                   `https://t.me/share/url?url=${encodeURIComponent(url)}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >
               <FontAwesomeIcon
-                className="text-blue-600 hover:opacity-80"
+                className="text-primary hover:opacity-80"
                 icon={faTelegram}
               />
             </button>
@@ -127,14 +127,14 @@ export default function ShareButtons({ url }: ShareButtonsProps) {
               onClick={() =>
                 window.open(
                   `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    url
+                    url,
                   )}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >
               <FontAwesomeIcon
-                className="text-blue-600 hover:opacity-80"
+                className="text-primary hover:opacity-80"
                 icon={faLinkedin}
               />
             </button>

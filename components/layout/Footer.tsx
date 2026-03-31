@@ -13,17 +13,17 @@ export default function Footer() {
 
   return (
     <>
-      <div className="z-50 w-full flex flex-col gap-5 px-10 pt-10 md:pt-4 pb-2 border-t border-slate-900 dark:border-white bg-[#FFF5E4] text-teal-600 dark:bg-slate-900 dark:text-white shadow-md">
+      <div className="z-50 w-full flex flex-col gap-5 px-10 pt-10 md:pt-4 pb-2 border-t border-border bg-background text-primary dark:bg-background dark:text-foreground shadow-md">
         <div className="w-full max-w-[1500px] mx-auto">
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center gap-5">
               <div className="flex items-center gap-4">
                 <FontAwesomeIcon
                   icon={faMosque}
-                  className="text-4xl dark:text-white"
+                  className="text-4xl dark:text-foreground"
                 />
                 <span
-                  className={`text-4xl font-semibold dark:text-white text-center`}
+                  className={`text-4xl font-semibold dark:text-foreground text-center`}
                 >
                   {t("footer.title")}
                 </span>
@@ -31,7 +31,7 @@ export default function Footer() {
 
               <div className="w-full md:w-[60%] flex justify-center">
                 <p
-                  className={`w-full  text-2xl flex flex-col dark:text-white items-center gap-2 text-center `}
+                  className={`w-full  text-2xl flex flex-col dark:text-foreground items-center gap-2 text-center `}
                 >
                   {t("footer.description")}
                 </p>
@@ -39,7 +39,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mb-3 mt-10 flex flex-col gap-2 items-center md:flex md:flex-row md:justify-between md:items-start  dark:text-white">
+          <div className="mb-3 mt-10 flex flex-col gap-2 items-center md:flex md:flex-row md:justify-between md:items-start  dark:text-foreground">
             <p className="md:text-xl">{t("footer.copyright")}</p>
             <div className="flex items-center gap-5">
               <a
@@ -48,10 +48,11 @@ export default function Footer() {
               >
                 <FontAwesomeIcon icon={faCode} className="" />
                 <span
-                  className={`group-hover:underline ${language === "ar"
-                    ? "underline-offset-14"
-                    : "underline-offset-8"
-                    }`}
+                  className={`group-hover:underline ${
+                    language === "ar"
+                      ? "underline-offset-14"
+                      : "underline-offset-8"
+                  }`}
                 >
                   {t("footer.madeWith")}
                 </span>

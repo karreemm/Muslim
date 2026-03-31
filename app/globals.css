@@ -3,9 +3,57 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-player-bg: hsl(var(--player-bg));
+  --color-player-foreground: hsl(var(--player-foreground));
+  --color-player-control: hsl(var(--player-control));
+  --color-player-track: hsl(var(--player-track));
+  --color-player-track-active: hsl(var(--player-track-active));
+  --color-quran-surface: hsl(var(--quran-surface));
+  --color-quran-surface-foreground: hsl(var(--quran-surface-foreground));
+  --color-quran-highlight: hsl(var(--quran-highlight));
+  --color-quran-highlight-soft: hsl(var(--quran-highlight-soft));
+  --color-scrollbar-track: hsl(var(--scrollbar-track));
+  --color-scrollbar-thumb: hsl(var(--scrollbar-thumb));
+  --color-scrollbar-thumb-hover: hsl(var(--scrollbar-thumb-hover));
+  --color-celebration-1: hsl(var(--celebration-1));
+  --color-celebration-2: hsl(var(--celebration-2));
+  --color-celebration-3: hsl(var(--celebration-3));
+  --color-celebration-4: hsl(var(--celebration-4));
+  --color-celebration-5: hsl(var(--celebration-5));
+  --color-celebration-6: hsl(var(--celebration-6));
+  --color-celebration-7: hsl(var(--celebration-7));
+  --color-surah-header-foreground: hsl(var(--surah-header-foreground));
+  --color-prayer-times-next: hsl(var(--prayer-times-next));
+  --color-prayer-times-next-bg: hsl(var(--prayer-times-next-bg));
+  --color-prayer-times-next-foreground: hsl(
+    var(--prayer-times-next-foreground)
+  );
+
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --background-image-gradient-conic: conic-gradient(from 180deg at 50% 50%,
-      var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
 
   --animate-slide-up: slideUp 0.3s ease-out;
 
@@ -20,7 +68,6 @@
 }
 
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -30,10 +77,114 @@
   }
 
   :root {
-    --quran-karaoke-base: #1e293b; 
+    --background: 37 100% 94%;
+    --foreground: 204 70% 26%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 204 70% 26%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 204 70% 26%;
+
+    --primary: 176 83% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 37 44% 92%;
+    --secondary-foreground: 204 70% 26%;
+    --muted: 210 16% 93%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 43 89% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 73% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 206 24% 74%;
+    --input: 210 16% 90%;
+    --ring: 176 83% 32%;
+
+    --player-bg: 0 0% 100% / 0.95;
+    --player-foreground: 204 70% 26%;
+    --player-control: 176 83% 32%;
+    --player-track: 214 20% 91%;
+    --player-track-active: 176 83% 32%;
+
+    --quran-surface: 0 0% 100%;
+    --quran-surface-foreground: 204 70% 26%;
+    --quran-highlight: 176 83% 45%;
+    --quran-highlight-soft: 176 83% 96%;
+
+    --scrollbar-track: 37 100% 94%;
+    --scrollbar-thumb: 176 83% 32%;
+    --scrollbar-thumb-hover: 176 79% 27%;
+
+    --quran-karaoke-base: 215 28% 17%;
+
+    --celebration-1: 43 96% 56%;
+    --celebration-2: 160 84% 39%;
+    --celebration-3: 213 94% 68%;
+    --celebration-4: 327 87% 70%;
+    --celebration-5: 258 90% 76%;
+    --celebration-6: 0 0% 100%;
+    --celebration-7: 45 97% 77%;
+
+    --surah-header-foreground: 0 0% 100%;
+    --surah-header-shadow: 0 0% 0% / 0.55;
+
+    --prayer-times-next: 176 75% 49%;
+    --prayer-times-next-bg: 0 0% 0%;
+    --prayer-times-next-foreground: 0 0% 100%;
   }
   .dark {
-    --quran-karaoke-base: #f8fafc; 
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 176 75% 49%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 22%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 27% 25%;
+    --muted-foreground: 214 20% 74%;
+    --accent: 43 96% 56%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 27% 30%;
+    --input: 215 27% 25%;
+    --ring: 176 75% 49%;
+
+    --player-bg: 222 47% 11% / 0.98;
+    --player-foreground: 210 40% 98%;
+    --player-control: 176 75% 49%;
+    --player-track: 215 27% 26%;
+    --player-track-active: 176 75% 49%;
+
+    --quran-surface: 215 35% 18%;
+    --quran-surface-foreground: 210 40% 98%;
+    --quran-highlight: 176 75% 49%;
+    --quran-highlight-soft: 175 84% 15%;
+
+    --scrollbar-track: 222 47% 11%;
+    --scrollbar-thumb: 175 74% 41%;
+    --scrollbar-thumb-hover: 174 81% 39%;
+
+    --quran-karaoke-base: 210 40% 98%;
+
+    --celebration-1: 43 96% 56%;
+    --celebration-2: 160 84% 39%;
+    --celebration-3: 213 94% 68%;
+    --celebration-4: 327 87% 70%;
+    --celebration-5: 258 90% 76%;
+    --celebration-6: 210 40% 98%;
+    --celebration-7: 45 97% 77%;
+
+    --surah-header-foreground: 0 0% 100%;
+    --surah-header-shadow: 0 0% 0% / 0.55;
+
+    --prayer-times-next: 176 75% 49%;
+    --prayer-times-next-bg: 0 0% 0%;
+    --prayer-times-next-foreground: 0 0% 100%;
   }
 }
 
@@ -58,35 +209,35 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff5e4;
+  background: hsl(var(--scrollbar-track));
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #0d9488;
+  background-color: hsl(var(--scrollbar-thumb));
   border-radius: 10px;
-  border: 2px solid #fff5e4;
+  border: 2px solid hsl(var(--scrollbar-track));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0e7b72;
+  background: hsl(var(--scrollbar-thumb-hover));
 }
 
 :root.dark ::-webkit-scrollbar-track,
 html.dark ::-webkit-scrollbar-track,
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: hsl(var(--scrollbar-track));
 }
 
 :root.dark ::-webkit-scrollbar-thumb,
 html.dark ::-webkit-scrollbar-thumb,
 .dark ::-webkit-scrollbar-thumb {
-  background-color: #14b8a6;
+  background-color: hsl(var(--scrollbar-thumb));
   border-radius: 10px;
-  border: 2px solid #0f172a;
+  border: 2px solid hsl(var(--scrollbar-track));
 }
 
 :root.dark ::-webkit-scrollbar-thumb:hover,
 html.dark ::-webkit-scrollbar-thumb:hover,
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #12b7a9;
+  background: hsl(var(--scrollbar-thumb-hover));
 }

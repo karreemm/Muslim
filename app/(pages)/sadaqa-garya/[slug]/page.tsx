@@ -18,32 +18,27 @@ export default function DeceasedPage() {
   const { language } = useLanguage();
   const { t } = useTranslation();
 
-  const {
-    deceased,
-    expandedSurah,
-    loading,
-    toggleSurahExpansion,
-    goHome,
-  } = useDeceasedPage(slug.toString());
+  const { deceased, expandedSurah, loading, toggleSurahExpansion, goHome } =
+    useDeceasedPage(slug.toString());
 
   const { shareableUrl } = useShareableUrl(slug.toString());
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
       </div>
     );
   }
 
   if (!deceased) {
     return (
-      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 flex justify-center items-center">
-        <div className="text-center text-[#134B70] dark:text-white">
+      <div className="min-h-screen bg-background dark:bg-background flex justify-center items-center">
+        <div className="text-center text-foreground dark:text-foreground">
           <h1 className="text-2xl mb-4">Person not found</h1>
           <button
             onClick={goHome}
-            className="bg-teal-600 text-white px-4 py-2 rounded-sm hover:bg-teal-700"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-sm hover:bg-primary/90"
           >
             Return Home
           </button>
@@ -54,11 +49,12 @@ export default function DeceasedPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900">
+      <div className="min-h-screen bg-background dark:bg-background">
         <div className="w-[90%] max-w-[1500px] mx-auto mt-10">
           <h1
-            className={`${language === "ar" ? "leading-10" : ""
-              } flex flex-col justify-center text-3xl mb-4 text-center text-[#134B70] dark:text-white`}
+            className={`${
+              language === "ar" ? "leading-10" : ""
+            } flex flex-col justify-center text-3xl mb-4 text-center text-foreground dark:text-foreground`}
           >
             {t("sadaqa.title")}
             <p className={`text-5xl font-semibold mb-5 mt-8`}>
@@ -67,12 +63,12 @@ export default function DeceasedPage() {
           </h1>
 
           {/* Custom Message */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-8 mt-5 flex flex-col gap-3 items-center">
-            <p className="text-center text-lg md:text-2xl text-[#134B70] dark:text-white mb-4">
+          <div className="bg-card p-6 rounded-lg shadow-md mb-8 mt-5 flex flex-col gap-3 items-center">
+            <p className="text-center text-lg md:text-2xl text-foreground mb-4">
               {language === "en" ? deceased.messageEn : deceased.messageAr}
             </p>
 
-            <p className="text-center text-lg md:text-2xl text-[#134B70] dark:text-white mb-4 flex items-center gap-4">
+            <p className="text-center text-lg md:text-2xl text-foreground mb-4 flex items-center gap-4">
               {t("sadaqa.shareIt")}
               <ShareModal url={shareableUrl} size="2xl" />
             </p>
@@ -80,23 +76,20 @@ export default function DeceasedPage() {
 
           {/* Recommended Surahs */}
           <div className="mb-8">
-            <h2 className="text-2xl text-center text-[#134B70] dark:text-white mb-6">
+            <h2 className="text-2xl text-center text-foreground dark:text-foreground mb-6">
               {t("sadaqa.recommendedSurahs")}
             </h2>
             <div className="grid gap-4">
               {DiedSurahs.map((surah, index) => (
-                <div
-                  key={index}
-                  className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md"
-                >
+                <div key={index} className="bg-card p-6 rounded-lg shadow-md">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl text-[#134B70] dark:text-white flex gap-1">
-                      {t("common.surahWithNoAll")}:{' '}
+                    <h3 className="text-xl text-foreground dark:text-foreground flex gap-1">
+                      {t("common.surahWithNoAll")}:{" "}
                       {language === "en" ? surah.name.en : surah.name.ar}
                     </h3>
                     <button
                       onClick={() => toggleSurahExpansion(index)}
-                      className="text-teal-600 dark:text-teal-400 hover:text-teal-700"
+                      className="text-primary hover:opacity-80"
                     >
                       {expandedSurah === index
                         ? language === "en"
@@ -112,7 +105,7 @@ export default function DeceasedPage() {
                     <div className="mt-4">
                       <div
                         dir="rtl"
-                        className="fontAmiri text-lg font-arabic leading-10 text-[#134B70] dark:text-white whitespace-pre-line"
+                        className="fontAmiri text-lg font-arabic leading-10 text-foreground dark:text-foreground whitespace-pre-line"
                       >
                         <p className="fontAmiri text-center text-2xl md:text-3xl font-semibold mt-10 md:mt-5">
                           بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ
@@ -127,7 +120,7 @@ export default function DeceasedPage() {
           </div>
 
           {/* Duas Section */}
-          <h2 className="text-2xl text-center text-[#134B70] dark:text-white mt-12 mb-6">
+          <h2 className="text-2xl text-center text-foreground dark:text-foreground mt-12 mb-6">
             {t("sadaqa.duaTitle")}
           </h2>
 
@@ -135,9 +128,9 @@ export default function DeceasedPage() {
             {duas.map((dua, index) => (
               <div
                 key={index}
-                className="relative bg-white dark:bg-slate-800 rounded-lg shadow-md p-6"
+                className="relative bg-card rounded-lg shadow-md p-6"
               >
-                <p className="fontAmiri text-lg font-arabic leading-loose text-[#134B70] dark:text-white">
+                <p className="fontAmiri text-lg font-arabic leading-loose text-foreground">
                   {dua}
                 </p>
               </div>

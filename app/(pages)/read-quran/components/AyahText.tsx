@@ -42,9 +42,9 @@ export const AyahText = memo<AyahTextProps>(
         } cursor-pointer ${
           isHighlighted
             ? theme
-              ? `bg-yellow-700 rounded px-1`
-              : `bg-yellow-200 rounded px-1`
-            : `hover:bg-teal-50 dark:hover:bg-slate-700 rounded px-1`
+              ? `bg-[hsl(var(--quran-highlight))] rounded px-1`
+              : `bg-[hsl(var(--quran-highlight-soft))] rounded px-1`
+            : `hover:bg-muted rounded px-1`
         }`}
         onClick={handleClick}
         id={`ayah-${ayah.numberInSurah}`}
@@ -63,7 +63,7 @@ export const AyahText = memo<AyahTextProps>(
         }
       >
         {ayah.text}{" "}
-        <span className="verse-number text-teal-600 dark:text-teal-400">
+        <span className="verse-number text-primary">
           <span>{toArabicNumber(ayah.numberInSurah)}</span>
         </span>{" "}
       </span>

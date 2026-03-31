@@ -20,64 +20,64 @@ export default function SadaqaGaryaPage() {
   } = useSadaqaGaryaForm();
 
   return (
-    <div className="min-h-screen bg-[#FFF5E4] dark:bg-slate-900 flex items-center">
+    <div className="min-h-screen bg-background dark:bg-background flex items-center">
       <div className="w-[90%] md:w-[60%] mx-auto mt-10">
-        <h1 className="text-3xl mb-8 text-center text-[#134B70] dark:text-white">
+        <h1 className="text-3xl mb-8 text-center text-foreground dark:text-foreground">
           {t("sadaqa.form.title")}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-[#134B70] dark:text-white mb-2">
+            <label className="block text-foreground mb-2">
               {t("sadaqa.form.nameEnLabel")}{" "}
-              <span className="text-red-500">*</span>
+              <span className="text-destructive">*</span>
             </label>
             <input
               type="text"
               value={nameEn}
               onChange={(e) => setNameEn(e.target.value)}
-              className="w-full p-2 border rounded-md bg-white dark:bg-slate-800 text-[#134B70] dark:text-white"
+              className="w-full p-2 border rounded-md bg-card text-foreground"
               required
               dir="ltr"
             />
           </div>
 
           <div>
-            <label className="block text-[#134B70] dark:text-white mb-2">
+            <label className="block text-foreground mb-2">
               {t("sadaqa.form.nameArLabel")}{" "}
-              <span className="text-red-500">*</span>
+              <span className="text-destructive">*</span>
             </label>
             <input
               type="text"
               value={nameAr}
               onChange={(e) => setNameAr(e.target.value)}
-              className="fontAmiri w-full p-2 border rounded-md bg-white dark:bg-slate-800 text-[#134B70] dark:text-white"
+              className="fontAmiri w-full p-2 border rounded-md bg-card text-foreground"
               required
               dir="rtl"
             />
           </div>
 
           <div>
-            <label className="block text-[#134B70] dark:text-white mb-2">
+            <label className="block text-foreground mb-2">
               {t("sadaqa.form.messageEnLabel")}
             </label>
             <textarea
               value={messageEn}
               onChange={(e) => setMessageEn(e.target.value)}
-              className="w-full p-2 border rounded-md bg-white dark:bg-slate-800 text-[#134B70] dark:text-white min-h-[100px]"
+              className="w-full p-2 border rounded-md bg-card text-foreground min-h-[100px]"
               dir="ltr"
               rows={4}
             />
           </div>
 
           <div>
-            <label className="block text-[#134B70] dark:text-white mb-2">
+            <label className="block text-foreground mb-2">
               {t("sadaqa.form.messageArLabel")}
             </label>
             <textarea
               value={messageAr}
               onChange={(e) => setMessageAr(e.target.value)}
-              className="fontAmiri w-full p-2 border rounded-md bg-white dark:bg-slate-800 text-[#134B70] dark:text-white min-h-[100px]"
+              className="fontAmiri w-full p-2 border rounded-md bg-card text-foreground min-h-[100px]"
               dir="rtl"
               rows={4}
             />
@@ -86,10 +86,11 @@ export default function SadaqaGaryaPage() {
           <button
             type="submit"
             disabled={!validateForm()}
-            className={`w-full bg-teal-600 text-white p-3 rounded-md transition ${isSubmitting
+            className={`w-full bg-primary text-primary-foreground p-3 rounded-md transition ${
+              isSubmitting
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-teal-700"
-              }`}
+                : "hover:bg-primary/90"
+            }`}
           >
             {isSubmitting ? "Processing..." : t("sadaqa.form.generate")}
           </button>

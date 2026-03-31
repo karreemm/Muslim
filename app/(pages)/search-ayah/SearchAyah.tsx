@@ -1,10 +1,7 @@
 "use client";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { useSearchAyah } from "@/hooks/searchAyah";
@@ -66,11 +63,11 @@ export default function SearchAyah() {
       >
         <div className="w-full mt-10">
           <div className="w-[90%] mx-auto">
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-3 sm:p-6 border border-transparent hover:border-teal-600 dark:hover:border-teal-500 transition-all">
+            <div className="bg-card rounded-lg shadow-lg p-3 sm:p-6 border border-transparent hover:border-border transition-all">
               <div className="flex items-center gap-2 sm:gap-3">
                 <FontAwesomeIcon
                   icon={faSearch}
-                  className="text-lg sm:text-2xl text-teal-600 dark:text-teal-500 flex-shrink-0"
+                  className="text-lg sm:text-2xl text-primary flex-shrink-0"
                 />
                 <input
                   type="text"
@@ -78,7 +75,7 @@ export default function SearchAyah() {
                   onChange={(e) => setKeyword(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder={t("searchAyah.placeholder")}
-                  className="flex-1 text-base sm:text-xl dynamic-font outline-none bg-transparent text-[#134B70] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 min-w-0"
+                  className="flex-1 text-base sm:text-xl dynamic-font outline-none bg-transparent text-foreground placeholder:text-muted-foreground min-w-0"
                   dir={language === "ar" ? "rtl" : "ltr"}
                 />
 
@@ -90,12 +87,13 @@ export default function SearchAyah() {
                       onChange={(e) => setWholeWord(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-5 h-5 border-2 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-slate-700 peer-checked:bg-teal-600 peer-checked:border-teal-600 dark:peer-checked:bg-teal-500 dark:peer-checked:border-teal-500 transition-all duration-200 flex items-center justify-center group-hover:border-teal-500 dark:group-hover:border-teal-400">
+                    <div className="w-5 h-5 border-2 border-border rounded bg-background peer-checked:bg-primary peer-checked:border-primary transition-all duration-200 flex items-center justify-center group-hover:border-primary">
                       <svg
-                        className={`w-3 h-3 text-white transition-all duration-200 ${wholeWord
+                        className={`w-3 h-3 text-primary-foreground transition-all duration-200 ${
+                          wholeWord
                             ? "opacity-100 scale-100"
                             : "opacity-0 scale-50"
-                          }`}
+                        }`}
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -107,7 +105,7 @@ export default function SearchAyah() {
                       </svg>
                     </div>
                   </div>
-                  <span className="text-sm sm:text-base dynamic-font text-gray-700 dark:text-gray-300 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors select-none">
+                  <span className="text-sm sm:text-base dynamic-font text-muted-foreground group-hover:text-primary transition-colors select-none">
                     {t("searchAyah.exactPhrase")}
                   </span>
                 </label>
@@ -115,7 +113,7 @@ export default function SearchAyah() {
                 {keyword && (
                   <button
                     onClick={handleClearSearch}
-                    className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-400 transition-colors flex-shrink-0"
+                    className="p-1.5 sm:p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors flex-shrink-0"
                   >
                     <FontAwesomeIcon
                       icon={faTimes}
@@ -126,7 +124,7 @@ export default function SearchAyah() {
                 <button
                   onClick={handleSearch}
                   disabled={!keyword.trim() || isLoading}
-                  className="px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font text-sm sm:text-base flex-shrink-0 whitespace-nowrap"
+                  className="px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font text-sm sm:text-base flex-shrink-0 whitespace-nowrap"
                 >
                   {t("searchAyah.searchButton")}
                 </button>
@@ -135,7 +133,7 @@ export default function SearchAyah() {
           </div>
         </div>
 
-        <div className="w-[90%] flex-1 flex flex-col justify-center bg-[#FFF5E4] dark:bg-slate-900 text-[#134B70] dark:text-white p-5 rounded-lg min-h-[400px]">
+        <div className="w-[90%] flex-1 flex flex-col bg-background dark:bg-background text-foreground dark:text-foreground p-5 rounded-lg min-h-[400px]">
           {isLoading ? (
             <div className="grid grid-cols-1 gap-5">
               <AyahSearchCardSkeleton />
@@ -143,10 +141,8 @@ export default function SearchAyah() {
               <AyahSearchCardSkeleton />
             </div>
           ) : error ? (
-            <div className="text-center py-20">
-              <p className="text-lg dynamic-font text-red-600 dark:text-red-400">
-                {error}
-              </p>
+            <div className="flex-1 flex items-center justify-center text-center py-20">
+              <p className="text-lg dynamic-font text-destructive">{error}</p>
             </div>
           ) : results && totalResults > 0 ? (
             <>
@@ -180,7 +176,7 @@ export default function SearchAyah() {
                       handlePageChange(Math.max(1, currentPage - 1))
                     }
                     disabled={currentPage === 1 || isLoading}
-                    className="px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
                   >
                     {t("searchAyah.previous")}
                   </button>
@@ -192,7 +188,7 @@ export default function SearchAyah() {
                       handlePageChange(Math.min(totalPages, currentPage + 1))
                     }
                     disabled={currentPage === totalPages || isLoading}
-                    className="px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
                   >
                     {t("searchAyah.next")}
                   </button>
@@ -200,7 +196,7 @@ export default function SearchAyah() {
               )}
             </>
           ) : hasSearched && totalResults === 0 ? (
-            <div className="text-center py-20">
+            <div className="flex-1 flex items-center justify-center text-center py-20">
               <p className="text-lg dynamic-font">
                 {t("searchAyah.noResults")}
               </p>
@@ -212,7 +208,7 @@ export default function SearchAyah() {
             <div className="flex-1 text-center py-20 flex justify-center items-center flex-col">
               <FontAwesomeIcon
                 icon={faSearch}
-                className="text-6xl text-teal-600 dark:text-teal-500 mb-4"
+                className="text-6xl text-primary mb-4"
               />
               <p className="text-xl dynamic-font">
                 {t("searchAyah.startSearch")}

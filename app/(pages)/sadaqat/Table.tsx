@@ -22,7 +22,7 @@ export default function DeceasedPersonsTable() {
   const [isEmpty, setIsEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [shareableUrls, setShareableUrls] = useState<{ [key: string]: string }>(
-    {}
+    {},
   );
   const { language } = useLanguage();
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export default function DeceasedPersonsTable() {
   const shortenURL = async (url: string) => {
     try {
       const response = await fetch(
-        `https://tinyurl.com/api-create.php?url=${url}`
+        `https://tinyurl.com/api-create.php?url=${url}`,
       );
       const shortUrl = await response.text();
       console.log("Short URL:", shortUrl);
@@ -55,7 +55,7 @@ export default function DeceasedPersonsTable() {
     if (person) {
       const encodedData = safeEncode(person);
       const shortenedUrl = await shortenURL(
-        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`
+        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`,
       );
       return shortenedUrl || "";
     }
@@ -90,7 +90,7 @@ export default function DeceasedPersonsTable() {
   if (!isMounted || loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
       </div>
     );
   }
@@ -107,21 +107,21 @@ export default function DeceasedPersonsTable() {
       )}
       {!isEmpty && (
         <>
-          <div className="mt-10 shadow-xs border border-teal-600 dark:border-white rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
+          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
             <table className="w-full table-auto text-sm">
-              <thead className="bg-teal-600 text-white font-medium border-b sticky top-0 z-10">
+              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
                 <tr>
                   <th className="py-3 px-6">{t("common.name")}</th>
                   <th className="py-3 px-6">{t("common.actions")}</th>
                 </tr>
               </thead>
-              <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
+              <tbody className="text-foreground divide-y divide-border">
                 {[...deceasedPersons].reverse().map((person, idx) => (
                   <tr key={idx} className="">
                     <td className="px-6 py-4 text-center">
                       <div className="flex flex-col items-center gap-1">
                         {idx === 0 && (
-                          <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                          <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
                             {t("common.latest")}
                           </span>
                         )}
@@ -132,7 +132,7 @@ export default function DeceasedPersonsTable() {
                     </td>
                     <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                       <button
-                        className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                        className="text-primary hover:opacity-80"
                         onClick={() => handleNavigation(person.slug)}
                       >
                         <FontAwesomeIcon icon={faLocationArrow} />
@@ -141,7 +141,7 @@ export default function DeceasedPersonsTable() {
                         <ShareModal url={shareableUrls[person.slug]} />
                       )}
                       <button
-                        className="text-red-600 dark:text-red-500 hover:opacity-80"
+                        className="text-destructive hover:opacity-80"
                         onClick={() => removeDeceasedPerson(person.id)}
                       >
                         <FontAwesomeIcon icon={faTrashCan} />
@@ -153,7 +153,7 @@ export default function DeceasedPersonsTable() {
             </table>
           </div>
           <button
-            className="mt-10 bg-teal-600 text-white px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
+            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
             onClick={clearAllDeceasedPersons}
           >
             <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />

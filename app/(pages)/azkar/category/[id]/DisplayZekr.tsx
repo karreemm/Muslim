@@ -27,19 +27,23 @@ export default function SingleZekr({
   };
 
   return (
-    <div className="w-full flex justify-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900">
+    <div className="w-full flex justify-center bg-background text-foreground dark:bg-background">
       <div className="w-[95%] flex flex-col items-center gap-10">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+            <ClipLoader
+              color={"hsl(var(--primary))"}
+              loading={loading}
+              size={50}
+            />
           </div>
         ) : (
           zekr && (
-            <div className="relative bg-white dark:bg-slate-800 dark:text-white w-full rounded-lg flex flex-col px-4 py-4">
+            <div className="relative bg-card text-card-foreground w-full rounded-lg flex flex-col px-4 py-4">
               <button
                 id={`love-button-${zekr.number}`}
                 onClick={handleLoveClick}
-                className={`text-red-500 hover:text-red-600 absolute ${
+                className={`text-destructive hover:text-destructive/80 absolute ${
                   language === "ar" ? `top-4 left-4` : `top-4 right-4`
                 } `}
               >
@@ -47,8 +51,8 @@ export default function SingleZekr({
                   icon={isFav ? loved : notLoved}
                   className={
                     !isFav
-                      ? "text-red-500 text-xl md:text-2xl"
-                      : "text-gray-400 hover:text-red-500 text-xl md:text-2xl"
+                      ? "text-destructive text-xl md:text-2xl"
+                      : "text-muted-foreground hover:text-destructive text-xl md:text-2xl"
                   }
                 />
               </button>
@@ -64,7 +68,7 @@ export default function SingleZekr({
                 />
               </div>
 
-              <span className="inline-block bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-semibold w-fit">
+              <span className="inline-block bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold w-fit">
                 {ZekrNumber[language]}{" "}
                 {language === "en" ? zekr.number : zekr.number}
               </span>

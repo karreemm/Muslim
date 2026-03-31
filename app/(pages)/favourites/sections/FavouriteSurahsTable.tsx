@@ -40,7 +40,7 @@ export default function AyahsTable() {
   if (!isMounted || loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function AyahsTable() {
   const handleGoToSurah = (surah: any) => {
     const surahNumber = surah.number;
     router.push(
-      `/listen-quran/reciter/${surah.reciterId}?surah=${surahNumber}`
+      `/listen-quran/reciter/${surah.reciterId}?surah=${surahNumber}`,
     );
   };
 
@@ -61,26 +61,28 @@ export default function AyahsTable() {
       )}
       {!isEmpty && (
         <>
-          <div className="mt-10 shadow-xs border border-teal-600 dark:border-white rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
+          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
             <table className="w-full table-auto text-sm">
-              <thead className="bg-teal-600 text-white font-medium border-b sticky top-0 z-10">
+              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
                 <tr>
                   <th className="py-3 px-6">{t("common.surah")}</th>
                   <th className="py-3 px-6">{t("common.reciter")}</th>
                   <th className="py-3 px-6">{t("common.actions")}</th>
                 </tr>
               </thead>
-              <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
+              <tbody className="text-foreground divide-y divide-border">
                 {[...favoriteSurahs].reverse().map((item, idx) => (
                   <tr key={idx} className="">
                     <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex flex-col items-center gap-1">
                         {idx === 0 && (
-                          <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                          <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
                             {t("common.latest")}
                           </span>
                         )}
-                        <span>{language === "ar" ? item.nameAr : item.nameEn}</span>
+                        <span>
+                          {language === "ar" ? item.nameAr : item.nameEn}
+                        </span>
                       </div>
                     </td>
                     <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
@@ -90,7 +92,7 @@ export default function AyahsTable() {
                     </td>
                     <td className="px-2 md:px-6 py-4 flex items-center justify-center gap-3 text-lg">
                       <button
-                        className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                        className="text-primary hover:opacity-80"
                         onClick={() => handleGoToSurah(item)}
                       >
                         <FontAwesomeIcon icon={faLocationArrow} />
@@ -99,7 +101,7 @@ export default function AyahsTable() {
                         url={`https://muslim-one.vercel.app/listen-quran/reciter/${item.reciterId}?surah=${item.number}`}
                       />
                       <button
-                        className="text-red-600 dark:text-red-500 hover:opacity-80"
+                        className="text-destructive hover:opacity-80"
                         onClick={() =>
                           removeFavoriteSurah(item.number, item.reciterId)
                         }
@@ -113,10 +115,10 @@ export default function AyahsTable() {
             </table>
           </div>
           <button
-            className="mt-10 bg-teal-600 text-white px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
+            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
             onClick={() =>
               favoriteSurahs.forEach((surah) =>
-                removeFavoriteSurah(surah.number, surah.reciterId)
+                removeFavoriteSurah(surah.number, surah.reciterId),
               )
             }
           >

@@ -46,7 +46,7 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
       >
         <FontAwesomeIcon
           icon={faShareNodes}
-          className="text-teal-600 hover:text-teal-700 hover:scale-110 transition-all duration-200"
+          className="text-primary hover:text-primary/80 hover:scale-110 transition-all duration-200"
         />
       </button>
 
@@ -61,7 +61,7 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
+            <div className="fixed inset-0 bg-background/60 backdrop-blur-md" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -75,12 +75,12 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                 leaveFrom="opacity-100 scale-100 translate-y-0"
                 leaveTo="opacity-0 scale-90 translate-y-4"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-                  <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 px-6 pt-6 pb-8">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card text-card-foreground shadow-2xl transition-all">
+                  <div className="relative bg-gradient-to-br from-primary to-primary/90 px-6 pt-6 pb-8">
                     <button
                       onClick={() => setIsShareOpen(false)}
                       type="button"
-                      className={`absolute top-6 text-white hover:text-white hover:bg-white/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${
+                      className={`absolute top-6 text-primary-foreground hover:text-primary-foreground hover:bg-card/10 rounded-full w-8 h-8 inline-flex justify-center items-center transition-all duration-200 ${
                         language === "ar" ? "left-4" : "right-4"
                       }`}
                       aria-label="Close"
@@ -101,17 +101,17 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                     </button>
 
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center">
+                      <div className="bg-card/20 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center">
                         <FontAwesomeIcon
                           icon={faShareNodes}
-                          className="text-white text-xl"
+                          className="text-primary-foreground text-xl"
                         />
                       </div>
-                      <Dialog.Title className="text-2xl font-bold text-white">
+                      <Dialog.Title className="text-2xl font-bold text-primary-foreground">
                         {t("common.share")}
                       </Dialog.Title>
                     </div>
-                    <p className="text-teal-50 text-sm mt-1">
+                    <p className="text-primary-foreground/80 text-sm mt-1">
                       {t("common.shareDescription")}
                     </p>
                   </div>
@@ -122,18 +122,18 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                       onClick={handleCopy}
                       className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 transition-all duration-200 ${
                         copied
-                          ? "bg-green-50 border-green-500 text-green-700"
-                          : "bg-gray-50 border-gray-200 hover:border-teal-500 hover:bg-teal-50 text-gray-700"
+                          ? "bg-accent/15 border-accent text-accent"
+                          : "bg-secondary border-border hover:border-primary hover:bg-muted text-secondary-foreground"
                       }`}
                     >
                       <div
                         className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 ${
-                          copied ? "bg-green-500" : "bg-teal-500"
+                          copied ? "bg-accent" : "bg-primary"
                         }`}
                       >
                         <FontAwesomeIcon
                           icon={copied ? faCheck : faCopy}
-                          className="text-white text-lg"
+                          className="text-primary-foreground text-lg"
                         />
                       </div>
                       <div className="flex-1 text-left">
@@ -141,7 +141,7 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                           {copied ? t("common.copied") : t("common.copyLink")}
                         </span>
                         {!copied && (
-                          <span className="text-xs text-gray-500 mt-0.5 block w-fit">
+                          <span className="text-xs text-muted-foreground mt-0.5 block w-fit">
                             {language === "en" ? "Click to copy" : "انقر للنسخ"}
                           </span>
                         )}
@@ -151,7 +151,7 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                     <div dir="ltr">
                       <p
                         dir={`${language === "ar" ? "rtl" : "ltr"}`}
-                        className="text-base font-semibold text-gray-500 uppercase tracking-wider mb-3"
+                        className="text-base font-semibold text-muted-foreground uppercase tracking-wider mb-3"
                       >
                         {language === "en" ? "Or share via" : "أو شارك عبر"}
                       </p>
@@ -160,20 +160,20 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                           onClick={() =>
                             window.open(
                               `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                                url
+                                url,
                               )}`,
-                              "_blank"
+                              "_blank",
                             )
                           }
-                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-all duration-200 hover:scale-105"
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary hover:bg-muted transition-all duration-200 hover:scale-105"
                         >
-                          <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center group-hover:bg-blue-700 transition-colors">
+                          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors">
                             <FontAwesomeIcon
                               icon={faFacebook}
-                              className="text-white text-xl"
+                              className="text-primary-foreground text-xl"
                             />
                           </div>
-                          <span className="text-xs font-medium text-gray-700">
+                          <span className="text-xs font-medium text-secondary-foreground">
                             Facebook
                           </span>
                         </button>
@@ -182,20 +182,20 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                           onClick={() =>
                             window.open(
                               `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                                url
+                                url,
                               )}`,
-                              "_blank"
+                              "_blank",
                             )
                           }
-                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-green-50 hover:bg-green-100 transition-all duration-200 hover:scale-105"
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary hover:bg-muted transition-all duration-200 hover:scale-105"
                         >
-                          <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center group-hover:bg-green-700 transition-colors">
+                          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors">
                             <FontAwesomeIcon
                               icon={faWhatsapp}
-                              className="text-white text-xl"
+                              className="text-primary-foreground text-xl"
                             />
                           </div>
-                          <span className="text-xs font-medium text-gray-700">
+                          <span className="text-xs font-medium text-secondary-foreground">
                             WhatsApp
                           </span>
                         </button>
@@ -204,20 +204,20 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                           onClick={() =>
                             window.open(
                               `https://t.me/share/url?url=${encodeURIComponent(
-                                url
+                                url,
                               )}`,
-                              "_blank"
+                              "_blank",
                             )
                           }
-                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-sky-50 hover:bg-sky-100 transition-all duration-200 hover:scale-105"
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary hover:bg-muted transition-all duration-200 hover:scale-105"
                         >
-                          <div className="w-12 h-12 rounded-xl bg-sky-500 flex items-center justify-center group-hover:bg-sky-600 transition-colors">
+                          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors">
                             <FontAwesomeIcon
                               icon={faTelegram}
-                              className="text-white text-xl"
+                              className="text-primary-foreground text-xl"
                             />
                           </div>
-                          <span className="text-xs font-medium text-gray-700">
+                          <span className="text-xs font-medium text-secondary-foreground">
                             Telegram
                           </span>
                         </button>
@@ -226,20 +226,20 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                           onClick={() =>
                             window.open(
                               `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                                url
+                                url,
                               )}`,
-                              "_blank"
+                              "_blank",
                             )
                           }
-                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-all duration-200 hover:scale-105"
+                          className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary hover:bg-muted transition-all duration-200 hover:scale-105"
                         >
-                          <div className="w-12 h-12 rounded-xl bg-blue-700 flex items-center justify-center group-hover:bg-blue-800 transition-colors">
+                          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-colors">
                             <FontAwesomeIcon
                               icon={faLinkedin}
-                              className="text-white text-xl"
+                              className="text-primary-foreground text-xl"
                             />
                           </div>
-                          <span className="text-xs font-medium text-gray-700">
+                          <span className="text-xs font-medium text-secondary-foreground">
                             LinkedIn
                           </span>
                         </button>

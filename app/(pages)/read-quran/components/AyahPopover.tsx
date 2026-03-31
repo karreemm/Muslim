@@ -12,7 +12,6 @@ import {
   faLanguage,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../../context/LanguageContext";
-import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "../../../../components/modals/TafseerModal";
 import { TranslationModal } from "../../../../components/modals/TranslationModal";
@@ -43,7 +42,6 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
   }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
-    const { theme } = useTheme();
 
     const {
       popoverRef,
@@ -71,11 +69,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           className={`
           fixed z-50 rounded-lg shadow-2xl border
           top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-          ${
-            theme
-              ? "bg-slate-800 border-slate-600 text-white"
-              : "bg-white border-gray-200 text-gray-800"
-          }
+          bg-card border-border text-card-foreground
           min-w-[240px] max-w-[280px]
           transition-all duration-200 ease-in-out
         `}
@@ -84,7 +78,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           <div
             className={`
           flex items-center justify-between px-4 py-3 border-b
-          ${theme ? "border-slate-600" : "border-gray-200"}
+          border-border
         `}
           >
             <span className="dynamic-font font-semibold text-sm">
@@ -94,11 +88,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               onClick={onClose}
               className={`
               rounded-md transition-colors w-6 h-6 flex items-center justify-center
-              ${
-                theme
-                  ? "hover:bg-slate-700 text-gray-300"
-                  : "hover:bg-gray-100 text-gray-600"
-              }
+              hover:bg-secondary text-muted-foreground
             `}
             >
               <FontAwesomeIcon icon={faTimes} className="text-sm" />
@@ -111,17 +101,13 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               disabled={isSaved}
               className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${
-                theme
-                  ? "hover:bg-slate-700 disabled:bg-green-900/30"
-                  : "hover:bg-gray-100 disabled:bg-green-100"
-              }
+              hover:bg-secondary disabled:bg-accent/20
               disabled:cursor-not-allowed
             `}
             >
               <FontAwesomeIcon
                 icon={isSaved ? faCheck : faBookmark}
-                className={`w-5 ${isSaved ? "text-green-500" : ""}`}
+                className={`w-5 ${isSaved ? "text-accent" : ""}`}
               />
               <span className="dynamic-font flex-1 text-start">
                 {isSaved ? t("common.saved") : t("readQuran.popover.saveAyah")}
@@ -133,18 +119,14 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               disabled={isLoadingAudio}
               className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${
-                theme
-                  ? "hover:bg-slate-700 disabled:opacity-50"
-                  : "hover:bg-gray-100 disabled:opacity-50"
-              }
+              hover:bg-secondary disabled:opacity-50
               disabled:cursor-not-allowed
             `}
             >
               <FontAwesomeIcon
                 icon={isLoadingAudio ? faSpinner : faHeadphones}
                 className={`w-5 ${isLoadingAudio ? "animate-spin" : ""} ${
-                  isPlaying ? "text-teal-600 dark:text-teal-500" : ""
+                  isPlaying ? "text-primary" : ""
                 }`}
               />
               <span className="dynamic-font flex-1 text-start">
@@ -180,7 +162,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               }}
               className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
+              hover:bg-secondary
             `}
             >
               <FontAwesomeIcon icon={faBook} className="w-5" />
@@ -195,7 +177,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               }}
               className={`
               w-full px-4 py-3 flex items-center gap-3 transition-colors
-              ${theme ? "hover:bg-slate-700" : "hover:bg-gray-100"}
+              hover:bg-secondary
             `}
             >
               <FontAwesomeIcon icon={faLanguage} className="w-5" />

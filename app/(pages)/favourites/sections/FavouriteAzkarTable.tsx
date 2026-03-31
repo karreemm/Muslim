@@ -42,7 +42,7 @@ export default function HadithTable() {
   if (!isMounted || loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
       </div>
     );
   }
@@ -62,9 +62,9 @@ export default function HadithTable() {
       )}
       {!isEmpty && (
         <>
-          <div className="mt-10 shadow-xs border border-teal-600 dark:border-white rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
+          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
             <table className="w-full table-auto text-sm">
-              <thead className="bg-teal-600 text-white font-medium border-b sticky top-0 z-10">
+              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
                 <tr>
                   <th className="py-3 px-6">{t("favourites.azkar.zekrNo")}</th>
                   <th className="py-3 px-6">{t("common.category")}</th>
@@ -74,17 +74,17 @@ export default function HadithTable() {
                   <th className="py-3 px-6">{t("common.actions")}</th>
                 </tr>
               </thead>
-              <tbody className="text-black dark:text-white divide-y divide-teal-600 dark:divide-white">
+              <tbody className="text-foreground divide-y divide-border">
                 {[...favoriteAzkar].reverse().map((item, idx) => {
                   const zekr = AzkarCategories.find(
-                    (b) => b.ar === item.category
+                    (b) => b.ar === item.category,
                   );
                   return (
                     <tr key={idx} className="">
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         <div className="flex flex-col items-center gap-1">
                           {idx === 0 && (
-                            <span className="bg-teal-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
+                            <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
                               {t("common.latest")}
                             </span>
                           )}
@@ -106,7 +106,7 @@ export default function HadithTable() {
                       </td>
                       <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
                         <button
-                          className="text-blue-600 dark:text-blue-500 hover:opacity-80"
+                          className="text-primary hover:opacity-80"
                           onClick={() => handleGoToZekr(item)}
                         >
                           <FontAwesomeIcon icon={faLocationArrow} />
@@ -115,11 +115,11 @@ export default function HadithTable() {
                           url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${item.number}`}
                         />
                         <button
-                          className="text-red-600 dark:text-red-500 hover:opacity-80"
+                          className="text-destructive hover:opacity-80"
                           onClick={() =>
                             removeFavoriteAzkar(
                               item?.number ?? 0,
-                              item.category
+                              item.category,
                             )
                           }
                         >
@@ -133,10 +133,10 @@ export default function HadithTable() {
             </table>
           </div>
           <button
-            className="mt-10 bg-teal-600 text-white px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
+            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
             onClick={() =>
               favoriteAzkar.forEach((zekr) =>
-                removeFavoriteAzkar(zekr?.number ?? 0, zekr.category)
+                removeFavoriteAzkar(zekr?.number ?? 0, zekr.category),
               )
             }
           >

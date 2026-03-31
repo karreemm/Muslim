@@ -81,7 +81,7 @@ export default function ReadingProgressBar({
       aria-hidden="true"
     >
       <div
-        className="h-full bg-gradient-to-r from-teal-500 to-teal-400 transition-[width] duration-75 ease-out"
+        className="h-full bg-player-track-active transition-[width] duration-75 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

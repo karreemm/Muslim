@@ -167,7 +167,11 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
     <div className="w-full">
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+          <ClipLoader
+            color={"hsl(var(--primary))"}
+            loading={loading}
+            size={50}
+          />
         </div>
       ) : surah ? (
         <div className="flex flex-col items-center w-full">
@@ -177,7 +181,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
           </div>
 
           {/* Sticky Bottom Bar */}
-          <div className="w-full h-fit z-[100] bg-white/90 dark:bg-slate-900/95 backdrop-blur-lg border-t border-teal-600/20 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] px-4 py-4 md:py-6 animate-slide-up transition-all duration-300">
+          <div className="w-full h-fit z-[100] bg-[hsl(var(--player-bg))] backdrop-blur-lg border-t border-border/20 shadow-xl px-4 py-4 md:py-6 animate-slide-up transition-all duration-300">
             <div className="max-w-[1500px] mx-auto flex flex-col gap-2 md:gap-4">
               {/* Progress Slider Row */}
               {showProgressBar && (
@@ -189,7 +193,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     <div className="relative group">
                       <button
                         onClick={() => setShowProgressBar(false)}
-                        className="text-slate-400 hover:text-teal-600 transition-colors"
+                        className="text-muted-foreground hover:text-primary transition-colors"
                         title={
                           language === "ar"
                             ? "إخفاء شريط التقدم"
@@ -200,11 +204,11 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                           <FontAwesomeIcon icon={faMusic} />
                           <FontAwesomeIcon
                             icon={faSlash}
-                            className="text-red-500 opacity-70"
+                            className="text-destructive opacity-70"
                           />
                         </span>
                       </button>
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                         {language === "ar"
                           ? "إخفاء شريط التقدم"
                           : "Hide Progress Bar"}
@@ -214,13 +218,13 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     <div className="relative group">
                       <button
                         onClick={() => setShowDetails(!showDetails)}
-                        className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
+                        className={`${showDetails ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors`}
                       >
                         <FontAwesomeIcon
                           icon={showDetails ? faEye : faEyeSlash}
                         />
                       </button>
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                         {showDetails
                           ? language === "ar"
                             ? "إخفاء التفاصيل"
@@ -232,7 +236,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     </div>
                   </div>
 
-                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">
+                  <span className="text-sm font-medium text-primary min-w-[45px]">
                     {formatTime(currentTime)}
                   </span>
                   <input
@@ -248,12 +252,13 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     onMouseUp={handleSliderMouseUp}
                     onTouchStart={handleSliderMouseDown}
                     onTouchEnd={handleSliderMouseUp}
-                    className={`flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full appearance-none cursor-pointer accent-teal-600 ${styles.audioSlider}`}
+                    className={`flex-1 h-2 bg-input rounded-full appearance-none cursor-pointer accent-primary ${styles.audioSlider}`}
                     style={{
-                      background: `linear-gradient(to right, #0d9488 0%, #0d9488 ${(currentTime / duration) * 100}%, #e5e7eb ${(currentTime / duration) * 100}%, #e5e7eb 100%)`,
+                      accentColor: "hsl(var(--player-track-active))",
+                      background: "hsl(var(--player-track))",
                     }}
                   />
-                  <span className="text-sm font-medium text-teal-600 dark:text-teal-400 min-w-[45px]">
+                  <span className="text-sm font-medium text-primary min-w-[45px]">
                     {formatTime(duration)}
                   </span>
                 </div>
@@ -267,7 +272,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                   <div className="flex items-center gap-4 mr-4">
                     <button
                       onClick={() => setShowProgressBar(true)}
-                      className="text-slate-400 hover:text-teal-600 transition-colors"
+                      className="text-muted-foreground hover:text-primary transition-colors"
                       title={
                         language === "ar"
                           ? "إظهار شريط التقدم"
@@ -278,7 +283,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     </button>
                     <button
                       onClick={() => setShowDetails(!showDetails)}
-                      className={`${showDetails ? "text-teal-600" : "text-slate-400"} hover:text-teal-600 transition-colors`}
+                      className={`${showDetails ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors`}
                     >
                       <FontAwesomeIcon
                         icon={showDetails ? faEye : faEyeSlash}
@@ -289,10 +294,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
                 {showDetails && (
                   <div className="hidden md:flex flex-col items-start gap-1 w-1/4">
-                    <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
+                    <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold">
                       {language === "ar" ? "الآية الحالية" : "Current Ayah"}
                     </span>
-                    <span className="text-lg font-semibold text-teal-700 dark:text-white">
+                    <span className="text-lg font-semibold text-primary">
                       {currentAyahIndex + 1} / {totalAyahs}
                     </span>
                   </div>
@@ -300,10 +305,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
                 {showDetails && (
                   <div className="flex md:hidden flex-col items-center justify-center min-w-[48px] gap-1">
-                    <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none">
+                    <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest leading-none">
                       {language === "ar" ? "آية" : "Ayah"}
                     </span>
-                    <span className="text-base font-semibold text-teal-700 dark:text-white">
+                    <span className="text-base font-semibold text-primary">
                       {currentAyahIndex + 1}/{totalAyahs}
                     </span>
                   </div>
@@ -319,8 +324,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     disabled={isFirstAyah}
                     className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${
                       isFirstAyah
-                        ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                        : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                        ? "text-muted-foreground/40 cursor-not-allowed"
+                        : "text-primary hover:bg-secondary"
                     }`}
                   >
                     <FontAwesomeIcon
@@ -331,7 +336,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
                   <button
                     onClick={handleTogglePlayPause}
-                    className={`p-5 rounded-full bg-teal-600 text-white shadow-lg hover:shadow-teal-500/40 hover:bg-teal-500 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center h-14 w-14 md:h-16 md:w-16 ${isBuffering ? styles.loadingButton : ""}`}
+                    className={`p-5 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-primary/40 hover:bg-primary/90 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center h-14 w-14 md:h-16 md:w-16 ${isBuffering ? styles.loadingButton : ""}`}
                     disabled={isDownloading || isBuffering}
                   >
                     <FontAwesomeIcon
@@ -345,8 +350,8 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     disabled={isLastAyah}
                     className={`p-3 rounded-full transition-all flex justify-center items-center hover:scale-110 active:scale-95 ${
                       isLastAyah
-                        ? "text-gray-300 dark:text-slate-700 cursor-not-allowed"
-                        : "text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                        ? "text-muted-foreground/40 cursor-not-allowed"
+                        : "text-primary hover:bg-secondary"
                     }`}
                   >
                     <FontAwesomeIcon
@@ -359,10 +364,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                     onClick={handleDownload}
                     className={`md:hidden p-3 rounded-full transition-all flex items-center justify-center hover:scale-110 active:scale-95 ${
                       downloadStatus === "success"
-                        ? "text-green-500"
+                        ? "text-accent"
                         : downloadStatus === "error"
-                          ? "text-red-500"
-                          : "text-teal-600 dark:text-teal-400"
+                          ? "text-destructive"
+                          : "text-primary"
                     } ${
                       downloadStatus === "downloading" ||
                       downloadStatus === "success"
@@ -393,10 +398,10 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
                       onClick={handleDownload}
                       className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold shadow-md hover:shadow-lg active:scale-95 ${
                         downloadStatus === "success"
-                          ? "bg-green-500 text-white"
+                          ? "bg-accent text-accent-foreground"
                           : downloadStatus === "error"
-                            ? "bg-red-500 text-white"
-                            : "bg-teal-600 text-white"
+                            ? "bg-destructive text-destructive-foreground"
+                            : "bg-primary text-primary-foreground"
                       } ${
                         downloadStatus === "downloading" ||
                         downloadStatus === "success"
@@ -439,7 +444,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
           </div>
         </div>
       ) : error ? (
-        <p className="text-red-500">Error: {error}</p>
+        <p className="text-destructive">Error: {error}</p>
       ) : (
         <p>No surah data available...</p>
       )}

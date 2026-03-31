@@ -52,19 +52,19 @@ export default function ChapterHadithsPage() {
 
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center mt-10">
           <div className="w-[95%] max-w-5xl flex flex-col items-center gap-6">
             <div className="w-full flex flex-col items-center gap-4">
               <h1 className="text-3xl md:text-4xl font-bold text-center">
                 {t("hadith.chapter.title")}
               </h1>
-              <p className="text-lg text-center text-gray-600 dark:text-gray-300">
+              <p className="text-lg text-center text-muted-foreground">
                 {language === "en" ? book?.name_en : book?.name_ar} -{" "}
                 {t("hadith.book.chapterLabel")} {chapterNumber}
               </p>
               {!loading && totalHadiths > 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   {t("hadith.chapter.totalResults")}: {totalHadiths}
                 </p>
               )}
@@ -72,7 +72,7 @@ export default function ChapterHadithsPage() {
               {showingSingleHadith && (
                 <button
                   onClick={clearHadithFilter}
-                  className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
+                  className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
                 >
                   {language === "ar" ? "عرض جميع الأحاديث" : "View All Hadiths"}
                 </button>
@@ -80,24 +80,26 @@ export default function ChapterHadithsPage() {
             </div>
 
             {!showingSingleHadith && (
-              <div className="w-full bg-white dark:bg-slate-800 rounded-lg shadow-md p-5">
+              <div className="w-full bg-card rounded-lg shadow-md p-5">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex gap-2">
                     <button
                       onClick={() => setSearchType("content")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${searchType === "content"
-                          ? "bg-teal-600 text-white"
-                          : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                        }`}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        searchType === "content"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-primary/50 hover:text-primary-foreground"
+                      }`}
                     >
                       {t("hadith.chapter.byContent")}
                     </button>
                     <button
                       onClick={() => setSearchType("number")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${searchType === "number"
-                          ? "bg-teal-600 text-white"
-                          : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
-                        }`}
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        searchType === "number"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-primary/50 hover:text-primary-foreground"
+                      }`}
                     >
                       {t("hadith.chapter.byNumber")}
                     </button>
@@ -110,19 +112,19 @@ export default function ChapterHadithsPage() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                      className="flex-1 min-w-0 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 dark:bg-slate-700 dark:text-white"
+                      className="flex-1 min-w-0 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={handleSearch}
-                        className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                       >
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                       </button>
                       {isSearching && (
                         <button
                           onClick={clearSearch}
-                          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                          className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition-colors"
                           title={t("hadith.chapter.clearSearch")}
                         >
                           <FontAwesomeIcon icon={faXmark} />
@@ -143,7 +145,7 @@ export default function ChapterHadithsPage() {
             )}
 
             {error && (
-              <div className="text-red-500 text-center text-xl mt-10">
+              <div className="text-destructive text-center text-xl mt-10">
                 {t("hadith.chapter.error")}
               </div>
             )}
@@ -159,12 +161,13 @@ export default function ChapterHadithsPage() {
                     {hadiths.map((hadith) => (
                       <div
                         key={hadith.id}
-                        className="relative bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                        className="relative bg-card rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
                       >
                         <button
                           onClick={() => toggleFavorite(hadith)}
-                          className={`absolute ${language === "ar" ? "left-4" : "right-4"
-                            } top-4 text-2xl hover:scale-110 transition-transform`}
+                          className={`absolute ${
+                            language === "ar" ? "left-4" : "right-4"
+                          } top-4 text-2xl hover:scale-110 transition-transform`}
                         >
                           <FontAwesomeIcon
                             icon={
@@ -174,15 +177,16 @@ export default function ChapterHadithsPage() {
                             }
                             className={
                               isFavorite(hadith.hadithNumber, bookSlug)
-                                ? "text-red-500"
-                                : "text-gray-400 hover:text-red-500"
+                                ? "text-destructive"
+                                : "text-muted-foreground hover:text-destructive"
                             }
                           />
                         </button>
 
                         <div
-                          className={`absolute ${language === "ar" ? "left-14" : "right-14"
-                            } top-4`}
+                          className={`absolute ${
+                            language === "ar" ? "left-14" : "right-14"
+                          } top-4`}
                         >
                           <ShareModal
                             size="2xl"
@@ -191,19 +195,20 @@ export default function ChapterHadithsPage() {
                         </div>
 
                         <div className="flex items-center gap-2 mb-4">
-                          <span className="inline-block bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                          <span className="inline-block bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
                             {t("hadith.chapter.hadithNo")}:{" "}
                             {hadith.hadithNumber}
                           </span>
                           {hadith.status && (
                             <>
                               <span
-                                className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${hadith.status.toLowerCase() === "sahih"
-                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${
+                                  hadith.status.toLowerCase() === "sahih"
+                                    ? "bg-secondary text-secondary-foreground"
                                     : hadith.status.toLowerCase() === "hasan"
-                                      ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
-                                  }`}
+                                      ? "bg-accent text-accent-foreground"
+                                      : "bg-muted text-muted-foreground"
+                                }`}
                               >
                                 {hadith.status.toLowerCase() === "sahih"
                                   ? t("hadith.chapter.sahih")
@@ -219,27 +224,27 @@ export default function ChapterHadithsPage() {
                           {hadith.headingArabic && (
                             <h3
                               dir="rtl"
-                              className="text-xl font-bold text-teal-700 dark:text-teal-400 mb-3"
+                              className="text-xl font-bold text-primary mb-3"
                             >
                               {hadith.headingArabic}
                             </h3>
                           )}
                           <p
                             dir="rtl"
-                            className="text-lg leading-loose text-gray-800 dark:text-gray-100 fontAmiri"
+                            className="text-lg leading-loose text-foreground fontAmiri"
                           >
                             {hadith.hadithArabic}
                           </p>
                         </div>
 
                         {language === "en" && hadith.hadithEnglish && (
-                          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <div className="mt-4 pt-4 border-t border-border">
                             {hadith.headingEnglish && (
-                              <h3 className="text-lg font-bold text-teal-700 dark:text-teal-400 mb-2">
+                              <h3 className="text-lg font-bold text-primary mb-2">
                                 {hadith.headingEnglish}
                               </h3>
                             )}
-                            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <p className="text-base text-muted-foreground leading-relaxed">
                               {hadith.hadithEnglish}
                             </p>
                           </div>

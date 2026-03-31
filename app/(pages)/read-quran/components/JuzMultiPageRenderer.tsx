@@ -104,7 +104,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
         })}
         {visiblePages < sortedPageNumbers.length && (
           <div className="w-full text-center py-6">
-            <p className="text-gray-500 dark:text-gray-400">...</p>
+            <p className="text-muted-foreground">...</p>
           </div>
         )}
       </div>

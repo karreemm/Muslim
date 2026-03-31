@@ -22,7 +22,6 @@ const Pagination: React.FC<PaginationProps> = ({
   const { language } = useLanguage() as { language: "ar" | "en" };
   const { t } = useTranslation();
 
-
   const [internalCurrentPage, setInternalCurrentPage] = useState(1);
 
   const currentPage =
@@ -68,26 +67,23 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === 1}
         className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
                  transition-all duration-200 ease-in-out
-                 bg-white text-gray-700 hover:bg-gray-100
-                 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700
+                 bg-card text-foreground hover:bg-secondary
                  disabled:opacity-50 disabled:cursor-not-allowed
-                 border border-gray-200 dark:border-gray-700
+                 border border-border
                  shadow-xs hover:shadow-md"
       >
         <FontAwesomeIcon
           icon={language === "en" ? faArrowLeft : faArrowRight}
           className="h-4 w-4"
         />
-        <span className="hidden sm:inline">
-          {t("common.previous")}
-        </span>
+        <span className="hidden sm:inline">{t("common.previous")}</span>
       </button>
 
       <div className="flex items-center gap-2">
         {generatePages().map((item, idx) => (
           <div key={idx}>
             {item === "..." ? (
-              <span className="px-2 text-gray-400 dark:text-gray-500">•••</span>
+              <span className="px-2 text-muted-foreground">•••</span>
             ) : (
               <button
                 onClick={() => handlePageClick(Number(item))}
@@ -97,8 +93,8 @@ const Pagination: React.FC<PaginationProps> = ({
                   font-medium transition-all duration-200 ease-in-out
                   ${
                     currentPage === item
-                      ? "bg-teal-600 text-white scale-110 shadow-lg hover:bg-teal-600"
-                      : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-xs hover:shadow-md dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700"
+                      ? "bg-primary text-primary-foreground scale-110 shadow-lg hover:bg-primary"
+                      : "bg-card text-foreground hover:bg-secondary border border-border shadow-xs hover:shadow-md"
                   }
                 `}
               >
@@ -114,10 +110,9 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === totalPages}
         className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
                  transition-all duration-200 ease-in-out
-                 bg-white text-gray-700 hover:bg-gray-100
-                 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700
+                 bg-card text-foreground hover:bg-secondary
                  disabled:opacity-50 disabled:cursor-not-allowed
-                 border border-gray-200 dark:border-gray-700
+                 border border-border
                  shadow-xs hover:shadow-md"
       >
         <span className="hidden sm:inline">{t("common.next")}</span>

@@ -24,7 +24,7 @@ export default function CategoryPage() {
   const [categoryNameAr, setCategoryNameAr] = useState<string>("");
   const [zekrNumberEn, setZekrNumberEn] = useState<number | null>(null);
   const [zekrNumberAr, setZekrNumberAr] = useState<number | string | null>(
-    null
+    null,
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -71,17 +71,21 @@ export default function CategoryPage() {
 
   return (
     <>
-      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col gap-5 p-5 bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col gap-5 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center">
           <h1 className="mt-10 text-4xl font-bold flex gap-1 text-center">
             {t("common.category")}{" "}
             {language === "en" ? categoryNameEn : categoryNameAr}
           </h1>
         </div>
-        <div className="flex-1 mt-10 w-full bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+        <div className="flex-1 mt-10 w-full bg-background text-foreground dark:bg-background dark:text-foreground">
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <ClipLoader color={"#36D7B7"} loading={loading} size={50} />
+              <ClipLoader
+                color={"hsl(var(--primary))"}
+                loading={loading}
+                size={50}
+              />
             </div>
           ) : zekrNumberEn !== null ? (
             <DisplayZekr

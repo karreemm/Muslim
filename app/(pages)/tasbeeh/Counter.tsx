@@ -13,9 +13,14 @@ const Counter = () => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const {
-    count, goal, inputValue,
-    incrementCount, decrementCount,
-    setGoalAndResetCount, setInputValue, resetAll,
+    count,
+    goal,
+    inputValue,
+    incrementCount,
+    decrementCount,
+    setGoalAndResetCount,
+    setInputValue,
+    resetAll,
   } = useTasbeeh();
 
   const [isButtonUpClicked, setIsButtonUpClicked] = useState(false);
@@ -52,7 +57,7 @@ const Counter = () => {
   };
 
   return (
-    <div className="w-full min-h-screen px-2 flex flex-col gap-10 items-center bg-[#FFF5E4] text-[#134B70] dark:bg-slate-900 dark:text-white">
+    <div className="w-full min-h-screen px-2 flex flex-col gap-10 items-center bg-background text-foreground dark:bg-background dark:text-foreground">
       <GoalCelebration
         show={showCelebration}
         message={t("tasbeeh.sucess")}
@@ -63,7 +68,7 @@ const Counter = () => {
 
       <div className="flex flex-col gap-4 md:flex md:flex-row md:gap-8">
         <input
-          className="w-80 p-4 bg-[#FFF5E4] dark:bg-slate-900 dark:text-white text-[#134B70] border-2 border-[#134B70] dark:border-white rounded-lg focus:outline-hidden placeholder:text-slate-700 dark:placeholder-slate-100"
+          className="w-80 p-4 bg-background text-foreground border-2 border-border rounded-lg focus:outline-hidden placeholder:text-muted-foreground"
           name="goal"
           id="goal"
           value={inputValue}
@@ -73,14 +78,14 @@ const Counter = () => {
         />
         <button
           onClick={resetAll}
-          className="px-4 py-2 font-semibold bg-teal-600 text-white rounded-lg"
+          className="px-4 py-2 font-semibold bg-primary text-primary-foreground rounded-lg"
         >
           {t("tasbeeh.reset")}
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg px-4 py-2 w-80">
-        <h2 className="text-4xl font-bold text-center text-black">
+      <div className="bg-card rounded-lg shadow-lg px-4 py-2 w-80">
+        <h2 className="text-4xl font-bold text-center text-foreground">
           {language === "ar" ? toArabicNumber(count) : count}
         </h2>
       </div>
@@ -88,10 +93,10 @@ const Counter = () => {
       <div className="relative flex flex-col items-center">
         <button
           onClick={handleUp}
-          className={`border-8 rounded-full flex justify-center items-center w-60 h-60 bg-teal-600 shadow-lg ${
+          className={`border-8 rounded-full flex justify-center items-center w-60 h-60 bg-primary shadow-lg ${
             isButtonUpClicked
-              ? "border-[#ffea00] dark:border-[#ffea00] text-[#ffea00]"
-              : "border-[#FFF5E4] text-white dark:border-slate-900"
+              ? "border-accent dark:border-accent text-accent"
+              : "border-secondary text-primary-foreground"
           }`}
           style={{ clipPath: "circle(50% at 50% 50%)" }}
         >
@@ -100,10 +105,10 @@ const Counter = () => {
 
         <button
           onClick={handleDown}
-          className={`absolute border-8 -bottom-14 rounded-full flex justify-center items-center w-28 h-28 bg-teal-600 shadow-lg ${
+          className={`absolute border-8 -bottom-14 rounded-full flex justify-center items-center w-28 h-28 bg-primary shadow-lg ${
             isButtonDownClicked
-              ? "border-[#ffea00] dark:border-[#ffea00] text-[#ffea00]"
-              : "border-[#FFF5E4] text-white dark:border-slate-900"
+              ? "border-accent dark:border-accent text-accent"
+              : "border-secondary text-primary-foreground"
           }`}
           style={{ clipPath: "circle(50% at 50% 50%)" }}
         >
