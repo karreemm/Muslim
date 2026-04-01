@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import Mosque from "@/assets/general/mosque.webp";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
@@ -16,6 +15,17 @@ const prayerNames = {
   en: ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"],
   ar: ["الفجر", "الشروق", "الظهر", "العصر", "المغرب", "العشاء"],
 };
+
+const prayerKeys = [
+  "Fajr",
+  "Sunrise",
+  "Dhuhr",
+  "Asr",
+  "Maghrib",
+  "Isha",
+] as const;
+
+type PrayerKey = (typeof prayerKeys)[number];
 
 const PrayerTimes: React.FC = () => {
   const { language } = useLanguage() as { language: "en" | "ar" };
@@ -38,7 +48,7 @@ const PrayerTimes: React.FC = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem(
         "selectedGovernorate",
-        JSON.stringify(selectedGovernorate)
+        JSON.stringify(selectedGovernorate),
       );
     }
   }, [selectedGovernorate]);
@@ -48,7 +58,7 @@ const PrayerTimes: React.FC = () => {
       city: selectedGovernorate,
       country: { en: "Egypt", ar: "مصر" },
     }),
-    [selectedGovernorate]
+    [selectedGovernorate],
   );
 
   const { formattedDates, date } = useDateFormatting();
@@ -74,18 +84,25 @@ const PrayerTimes: React.FC = () => {
 
   if (prayerTimesError) return <div>{prayerTimesError}</div>;
 
+  const nextPrayerIndex = nextPrayer
+    ? prayerKeys.indexOf(nextPrayer as PrayerKey)
+    : -1;
+  const nextPrayerLabel =
+    nextPrayerIndex >= 0 ? prayerNames[language][nextPrayerIndex] : undefined;
+  const nextPrayerTime =
+    nextPrayer && prayerTimes
+      ? prayerTimes[nextPrayer as keyof typeof prayerTimes]
+      : "--:--";
+
   return (
-    <div>
+    <div className="w-full pb-20 lg:pb-0">
       {prayerTimes && (
         <>
-          <div className="w-full flex flex-col gap-20 items-center">
-            <h2 className="lg:mt-0 mt-10 w-[80%] text-3xl lg:text-5xl text-primary dark:text-foreground text-center">
-              {t("prayerTimes.error")}
-            </h2>
-            <div className="w-[90%] bg-card shadow-lg p-6 rounded-lg flex flex-col gap-5 text-foreground">
-              <div className="flex flex-col gap-4 lg:flex lg:flex-row lg:justify-between lg:gap-4">
-                <div className="flex flex-row items-center gap-3 lg:gap-4">
-                  <h2 className="text-2xl lg:text-4xl whitespace-nowrap">
+          <div className="mx-auto mt-8 w-[92%] max-w-6xl space-y-6 text-foreground">
+            <div className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur-sm lg:p-7">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+                  <h2 className="text-2xl lg:text-4xl font-semibold whitespace-nowrap">
                     {t("prayerTimes.title")}
                   </h2>
                   <GovernorateSelector
@@ -95,34 +112,53 @@ const PrayerTimes: React.FC = () => {
                   />
                 </div>
                 <div
-                  className={`mt-3 lg:mt-0 lg:flex lg:flex-col ${
+                  className={`text-sm lg:text-base ${
                     language === "ar"
-                      ? `flex flex-row justify-between`
-                      : `flex flex-col items-center`
+                      ? `flex flex-col items-end gap-1`
+                      : `flex flex-col items-start lg:items-end gap-1`
                   }`}
                 >
-                  <h2 className="text-base lg:text-lg font-bold">
+                  <h2 className="font-semibold text-muted-foreground">
                     {language === "en"
                       ? formattedDates.gregorian.en
                       : formattedDates.gregorian.ar}
                   </h2>
-                  <h2 className="text-base lg:text-lg font-bold">
+                  <h2 className="font-semibold text-muted-foreground">
                     {language === "en"
                       ? formattedDates.hijri.en
                       : formattedDates.hijri.ar}
                   </h2>
                 </div>
               </div>
-              <div className="mt-10 w-full flex flex-col items-center lg:flex lg:flex-row lg:items-center lg:justify-center gap-5 lg:gap-10">
+            </div>
+
+            <div className="rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-secondary p-5 shadow-lg lg:p-6">
+              <div
+                className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between `}
+              >
+                <div className="space-y-1">
+                  <p className="text-sm lg:text-base font-semibold text-primary/90">
+                    {t("prayerTimes.nextPrayer")}
+                  </p>
+                  <h3 className="text-3xl lg:text-4xl font-bold text-foreground">
+                    {nextPrayerLabel || "--"}
+                  </h3>
+                </div>
+
+                <div className="flex flex-col items-center gap-3">
+                  <p dir="ltr" className="text-3xl font-bold text-primary">
+                    {nextPrayerTime}
+                  </p>
+                  <span className="text-sm lg:text-base font-semibold">
+                    {t("prayerTimes.remaining")}: {timeRemaining}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/70 bg-card/80 p-4 shadow-xl backdrop-blur-sm lg:p-6">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {prayerNames[language].map((prayer, index) => {
-                  const prayerKeys: (keyof typeof prayerTimes)[] = [
-                    "Fajr",
-                    "Sunrise",
-                    "Dhuhr",
-                    "Asr",
-                    "Maghrib",
-                    "Isha",
-                  ];
                   const prayerKey = prayerKeys[index];
                   const time = prayerTimes[prayerKey];
                   const isNext = prayerKey === nextPrayer;
@@ -130,42 +166,30 @@ const PrayerTimes: React.FC = () => {
                   return (
                     <div
                       key={prayer}
-                      className={`w-[90%] lg:w-[15%] rounded-lg shadow-lg py-6 px-3 flex flex-col justify-center items-center gap-2 transition-all duration-300 relative overflow-hidden ${
+                      className={`rounded-xl border px-4 py-5 flex flex-col justify-center items-center gap-2 transition-all duration-300 ${
                         isNext
-                          ? "text-primary-foreground transform scale-110 shadow-xl border-2 border-primary"
-                          : "bg-background dark:bg-background"
+                          ? "border-primary bg-primary/10 shadow-lg"
+                          : "border-border bg-background/80"
                       }`}
-                      style={
-                        isNext
-                          ? {
-                              backgroundImage: `url(${Mosque.src})`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center",
-                            }
-                          : undefined
-                      }
                     >
-                      {isNext && (
-                        <div className="absolute inset-0 bg-prayer-times-next-bg/40 -z-10"></div>
-                      )}
                       <p
                         className={`text-xl font-bold ${
-                          isNext ? "text-prayer-times-next" : ""
+                          isNext ? "text-primary" : "text-foreground"
                         }`}
                       >
-                        {prayer} :
+                        {prayer}
                       </p>
                       <p
                         dir="ltr"
                         className={`text-xl ${
-                          isNext ? "text-prayer-times-next-foreground" : ""
+                          isNext ? "text-primary" : "text-muted-foreground"
                         }`}
                       >
                         {time}
                       </p>
                       {isNext && (
-                        <div className="mt-2 text-sm font-bold text-prayer-times-next-foreground bg-background/20 px-3 py-1 rounded-full animate-pulse">
-                          - {timeRemaining}
+                        <div className="mt-1 text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                          {t("prayerTimes.remaining")}: {timeRemaining}
                         </div>
                       )}
                     </div>
@@ -174,7 +198,6 @@ const PrayerTimes: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="h-20 lg:h-0"></div>
         </>
       )}
     </div>

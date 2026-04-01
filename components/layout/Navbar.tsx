@@ -103,7 +103,7 @@ export default function Navbar() {
             className="flex items-center gap-2 text-xl text-foreground"
           >
             <FontAwesomeIcon icon={faMosque} className={`text-primary`} />
-            <span className="text-2xl font-semibold tracking-wide">
+            <span className="text-2xl font-semibold tracking-wide text-primary">
               {t("navbar.title")}
             </span>
           </Link>

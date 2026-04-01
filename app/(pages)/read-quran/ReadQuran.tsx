@@ -43,7 +43,7 @@ export default function ReadQuran() {
                 className="bg-card max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
               >
                 <div className="flex gap-2 items-center">
-                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
+                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-background group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary rounded-md text-xl">
                     {surah.number}
                   </div>
                   <h1>
@@ -65,7 +65,7 @@ export default function ReadQuran() {
                 className="bg-card max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
               >
                 <div className="flex gap-2 items-center">
-                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
+                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-background group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary rounded-md text-xl">
                     {juz.number}
                   </div>
                   <h1>

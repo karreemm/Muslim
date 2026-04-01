@@ -11,7 +11,9 @@
     "nameArLabel": "Deceased's Name (in Arabic)",
     "messageEnLabel": "Message (in English)",
     "messageArLabel": "Message (in Arabic)",
-    "generate": "Create"
+    "generate": "Create",
+    "processing": "Creating...",
+    "requiredHint": "Fields marked with * are required"
   },
   "table": {
     "title": "Your Sadaqat",

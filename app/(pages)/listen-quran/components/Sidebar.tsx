@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faX,
+  faMagnifyingGlass,
+  faBookOpen,
+} from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "../../../../constants/quranData";
 import { useLanguage } from "../../../../context/LanguageContext";
 import { toArabicNumber } from "../../../../utils/helpers";
@@ -46,67 +50,88 @@ const Sidebar: React.FC<SidebarProps> = ({
     );
   });
 
+  const sidebarDirectionClass =
+    language === "ar" ? "right-0 border-l" : "left-0 border-r";
+
   return (
-    <>
-      <aside
-        className={`z-20 fixed top-16 bottom-0 shadow-lg border-border bg-background text-primary transition-all duration-300 ${
-          isExpanded ? "w-[80%] md:w-80" : "w-16"
-        } ${language === "ar" ? `right-0 border-l` : `left-0 border-r`}`}
-      >
-        <div className={`flex flex-col h-full ${isExpanded ? "mt-7" : ""}`}>
-          <div className="h-20 flex items-center justify-between px-4">
-            <button onClick={toggleSidebar} className="">
+    <aside
+      className={`z-20 fixed top-16 bottom-0 ${sidebarDirectionClass} border-border/80 bg-background/95 text-primary shadow-2xl backdrop-blur-md transition-[width,box-shadow] duration-300 ease-out ${
+        isExpanded ? "w-[84vw] sm:w-80 md:w-[21rem]" : "w-16"
+      }`}
+      aria-label={t("listenQuran.sidebar.title")}
+    >
+      <div className="flex h-full min-h-0 flex-col pb-24 md:pb-28">
+        <div className="sticky top-0 z-10 border-b border-border/70 bg-background/90 px-3 py-3 backdrop-blur-md">
+          <div className="flex items-center justify-between gap-2">
+            <button
+              onClick={toggleSidebar}
+              className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-card text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+              aria-label={
+                isExpanded ? "Collapse surah list" : "Expand surah list"
+              }
+            >
               <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                className="text-2xl text-primary"
+                icon={isExpanded ? faX : faMagnifyingGlass}
+                className="text-lg"
               />
             </button>
-            {isExpanded && (
-              <button onClick={toggleSidebar} className="text-xl text-primary">
-                <FontAwesomeIcon icon={faX} />
-              </button>
-            )}
           </div>
+
           {isExpanded && (
-            <div className="px-4 flex flex-col gap-8 h-full">
-              <h1 className="mt-5 text-2xl text-center text-foreground">
-                {t("listenQuran.sidebar.title")}
-              </h1>
-              <div>
-                <input
-                  type="search"
-                  placeholder={t("listenQuran.sidebar.searchPlaceholder")}
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className="w-full p-2 border border-input rounded-lg focus:outline-hidden focus:ring-2 focus:ring-ring text-foreground"
-                />
-              </div>
-              <div className="flex flex-col gap-3 overflow-y-auto h-full px-2">
-                {filteredSurahNames.map((surah) => (
-                  <button
-                    key={surah.number}
-                    onClick={() => handleSurahClick(surah.number)}
-                    className={`w-full px-5 py-3 border border-border shadow-lg rounded-lg flex items-center gap-5 group hover:border-border hover:bg-opacity-70 ${
-                      selectedSurah === surah.number ? "bg-secondary" : ""
-                    }`}
-                  >
-                    <div className="w-[65px] h-[45px] flex items-center justify-center bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
-                      {language === "en"
-                        ? surah.number
-                        : toArabicNumber(surah.number)}
-                    </div>
-                    <span className="text-lg md:text-xl text-foreground group-hover:text-primary">
-                      {language === "en" ? `${surah.en}` : `${surah.ar}`}
-                    </span>
-                  </button>
-                ))}
-                <div className="mt-32">{""}</div>
-              </div>
+            <div className="mt-3">
+              <input
+                type="search"
+                placeholder={t("listenQuran.sidebar.searchPlaceholder")}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full rounded-xl border border-input bg-card px-3 py-2 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
+                aria-label={t("listenQuran.sidebar.searchPlaceholder")}
+              />
             </div>
           )}
         </div>
-      </aside>
-    </>
+
+        {isExpanded && (
+          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-4">
+            <div className="flex flex-col gap-2">
+              {filteredSurahNames.length > 0 ? (
+                filteredSurahNames.map((surah) => (
+                  <button
+                    key={surah.number}
+                    onClick={() => handleSurahClick(surah.number)}
+                    className={`w-full rounded-xl border px-3 py-2.5 shadow-sm transition-all duration-200 text-start ${
+                      selectedSurah === surah.number
+                        ? "border-primary/60 bg-primary/10"
+                        : "border-border/80 bg-card/40 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-secondary"
+                    }`}
+                    aria-current={
+                      selectedSurah === surah.number ? "true" : "false"
+                    }
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="inline-flex h-10 min-w-12 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+                        {language === "en"
+                          ? surah.number
+                          : toArabicNumber(surah.number)}
+                      </span>
+                      <span className="truncate text-base md:text-lg text-foreground">
+                        {language === "en" ? surah.en : surah.ar}
+                      </span>
+                    </span>
+                  </button>
+                ))
+              ) : (
+                <p className="rounded-xl border border-border/80 bg-card/40 px-3 py-4 text-center text-sm text-muted-foreground">
+                  {language === "ar"
+                    ? "لا توجد نتائج مطابقة"
+                    : "No matching surahs found"}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </aside>
   );
 };
 

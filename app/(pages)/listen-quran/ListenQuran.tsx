@@ -23,7 +23,7 @@ export default function ListenQuranPage() {
               className="bg-card px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
             >
               <div className="flex gap-5 items-center">
-                <div className="w-[65px] h-[65px] flex items-center justify-center bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
+                <div className="w-[65px] h-[65px] flex items-center justify-center bg-background group-hover:text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
                   <img
                     loading="lazy"
                     decoding="async"

@@ -37,15 +37,6 @@ export default function BookChaptersPage() {
         <div className="w-full flex justify-center mt-10">
           <div className="w-[95%] max-w-[1500px] mx-auto flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-4">
-              {book && (
-                <div className="w-24 h-24 bg-primary rounded-xl p-3 shadow-lg">
-                  <img
-                    src={book.image?.src}
-                    alt={book.name_en}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-              )}
               <h1 className="text-3xl md:text-4xl font-bold text-center">
                 {t("hadith.book.title")}{" "}
                 {language === "en" ? book?.name_en : book?.name_ar}
@@ -143,7 +134,7 @@ export default function BookChaptersPage() {
                         className="group bg-card rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-5 border border-transparent hover:border-primary"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg">
+                          <div className="flex-shrink-0 w-12 h-12 bg-background rounded-lg flex items-center justify-center group-hover:text-primary-foreground group-hover:bg-primary font-bold text-lg">
                             {chapter.chapterNumber}
                           </div>
 

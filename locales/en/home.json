@@ -1,12 +1,83 @@
 {
-  "welcome": "Your Way to the Right Way",
-  "description": "We are here to help you: ",
-  "item1": "Read the Holy Quran",
-  "item2": "Listen to the Holy Quran with your favorite reciters",
-  "item3": "Read the Hadiths of the Prophet from Sunnah Books",
-  "item4": "Read and Learn Azkar and Duaa",
-  "install": "How to Install it on your Phone?",
-  "step1": "Tap the menu icon (3 dots in upper right-hand corner)",
-  "step2": "Tap Add to Home screen",
-  "step3": "Choose a name for the website shortcut, then Chrome will add it to your home screen."
+  "welcome": "Your path toward what truly matters",
+  "description": "We’re here to help you stay connected to your faith through:",
+  "item1": "Reading the Holy Quran anytime, anywhere",
+  "item2": "Listening to the Quran with reciters you love",
+  "item3": "Exploring the Hadith of the Prophet (PBUH) from trusted books",
+  "item4": "Keeping up with your daily Azkar and heartfelt duaa",
+  "install": "How to add it to your phone?",
+  "step1": "Open your browser menu (the three dots at the top right)",
+  "step2": "Tap “Add to Home screen”",
+  "step3": "Choose a name, and it will appear on your phone like a normal app",
+  "hero": {
+    "badge": "Your companion in every moment",
+    "title": "A simple space for your daily worship",
+    "description": "Whether you want to read, listen, or remember Allah, this app is designed to make your journey with the Quran and your daily ibadah easier and more consistent.",
+    "primaryCta": "Start reading",
+    "secondaryCta": "Start listening",
+    "imageAlt": "App preview"
+  },
+  "features": {
+    "heading": "What you’ll use every day",
+    "subheading": "Everything you need to stay close to the Quran and your عبادات, all in one place.",
+    "readQuran": {
+      "title": "Read Quran",
+      "desc": "Move through surahs, juz, or pages in a calm and clear reading experience."
+    },
+    "listenQuran": {
+      "title": "Listen to Quran",
+      "desc": "Choose your favorite reciter and listen with ease wherever you are."
+    },
+    "searchAyah": {
+      "title": "Find an Ayah",
+      "desc": "Search by words and quickly reach the verses you’re looking for."
+    },
+    "prayerTimes": {
+      "title": "Prayer Times",
+      "desc": "Stay aware of your prayers with accurate timings based on your location."
+    },
+    "azkar": {
+      "title": "Azkar & Duaa",
+      "desc": "Keep your daily remembrance alive with organized and easy access."
+    },
+    "hadith": {
+      "title": "Read Hadith",
+      "desc": "Browse authentic hadith in a simple and focused way."
+    }
+  },
+  "tools": {
+    "heading": "Small tools that make a big difference",
+    "subheading": "To help you stay consistent, even on busy days.",
+    "tasbeeh": {
+      "title": "Tasbeeh Counter",
+      "desc": "Keep track of your dhikr quietly and simply."
+    },
+    "sadaqaGarya": {
+      "title": "Ongoing Charity",
+      "desc": "Find and share opportunities for sadaqa jariya."
+    },
+    "favourites": {
+      "title": "Favourites",
+      "desc": "Save what touches your heart for easy return anytime."
+    },
+    "sadaqat": {
+      "title": "My Sadaqat",
+      "desc": "Keep a personal record of your charity and intentions."
+    }
+  },
+  "installFlow": {
+    "badge": "Add it as an app",
+    "heading": "Keep it one tap away",
+    "subheading": "Install it once, and it will always be there when you need a moment with Allah.",
+    "step1": "Open your browser menu.",
+    "step2": "Tap “Add to Home screen”.",
+    "step3": "Confirm and access it anytime with one tap.",
+    "imageAlt": "Install app on phone"
+  },
+  "cta": {
+    "heading": "Take a small step today",
+    "description": "Start with a few verses, a short listen, or simple dhikr — and let consistency grow over time.",
+    "primary": "Read Quran",
+    "secondary": "Search for an Ayah"
+  }
 }

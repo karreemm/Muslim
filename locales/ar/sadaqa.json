@@ -11,7 +11,9 @@
     "nameArLabel": "اسم المتوفى (بالعربية)",
     "messageEnLabel": "رسالة (بالإنجليزية)",
     "messageArLabel": "رسالة (بالعربية)",
-    "generate": "إنشاء"
+    "generate": "إنشاء",
+    "processing": "جاري الإنشاء...",
+    "requiredHint": "الحقول التي تحمل * مطلوبة"
   },
   "table": {
     "title": "صدقاتك الجارية",

@@ -52,7 +52,7 @@ export default function ReadHadithPage() {
               >
                 <div className="p-6 flex flex-col gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 flex-shrink-0 bg-primary text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl p-2 shadow-md">
+                    <div className="w-20 h-20 flex-shrink-0 bg-background group-hover:text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl p-2 shadow-md">
                       <img
                         loading="lazy"
                         decoding="async"

@@ -1,13 +1,9 @@
 import SadaqaGaryaPage from "./SadaqaGarya";
-import Navbar from "../../../components/layout/Navbar";
-import Footer from "../../../components/layout/Footer";
 
 export default function App() {
   return (
-    <>
-      <div className="flex flex-col min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
-        <SadaqaGaryaPage />
-      </div>
-    </>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <SadaqaGaryaPage />
+    </div>
   );
 }

@@ -84,16 +84,16 @@ export default function ReciterPage() {
         className={`flex-1 flex flex-col min-h-0 bg-background text-foreground dark:bg-background dark:text-foreground transition-all duration-300 ${
           isSidebarExpanded
             ? language === "en"
-              ? "md:pl-80"
-              : "md:pr-80"
+              ? "pl-16 md:pl-80"
+              : "pr-16 md:pr-80"
             : language === "en"
-              ? "md:pl-16"
-              : "md:pr-16"
+              ? "pl-16"
+              : "pr-16"
         }`}
       >
-        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center gap-5 py-5 px-4">
-          <div className="scale-75 md:scale-100 w-full flex flex-col items-center gap-5">
-            <div className="flex items-center justify-center gap-10 w-full max-w-4xl px-5">
+        <div className="w-full flex-1 overflow-y-auto flex flex-col items-center justify-center gap-5 py-5 px-4">
+          <div className="w-full max-w-none md:max-w-4xl flex flex-col items-center gap-5">
+            <div className="flex items-center justify-center gap-4 sm:gap-10 w-full px-0 sm:px-5">
               <button
                 onClick={handlePreviousSurah}
                 disabled={!canGoPreviousSurah}

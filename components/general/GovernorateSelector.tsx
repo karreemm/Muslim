@@ -24,18 +24,29 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
   };
 
   return (
-    <select
-      value={selectedGovernorate.en}
-      onChange={handleChange}
-      className="px-4 py-2 text-lg md:text-xl rounded-lg bg-card border-2 border-primary text-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer transition-all hover:border-ring"
-      dir={language === "ar" ? "rtl" : "ltr"}
-    >
-      {egyptianGovernorates.map((gov) => (
-        <option key={gov.en} value={gov.en}>
-          {gov[language]}
-        </option>
-      ))}
-    </select>
+    <div className="relative min-w-52">
+      <select
+        value={selectedGovernorate.en}
+        onChange={handleChange}
+        className="h-12 w-full appearance-none rounded-xl border border-border bg-background/90 px-4 text-base md:text-lg text-foreground shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring hover:border-primary/60"
+        dir={language === "ar" ? "rtl" : "ltr"}
+        aria-label={language === "ar" ? "اختر المحافظة" : "Select governorate"}
+      >
+        {egyptianGovernorates.map((gov) => (
+          <option key={gov.en} value={gov.en}>
+            {gov[language]}
+          </option>
+        ))}
+      </select>
+
+      <span
+        className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground ${
+          language === "ar" ? "left-3" : "right-3"
+        }`}
+      >
+        ▾
+      </span>
+    </div>
   );
 };
 

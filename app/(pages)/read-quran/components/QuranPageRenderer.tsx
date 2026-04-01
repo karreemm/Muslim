@@ -75,7 +75,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     highlightedAyahNumber = 0,
     surahHeaders,
   }) => {
-    const { fontReady, pageFontName, isSpecialPage } =
+    const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
     const { lineOrder, lines } = useQuranPageLines(verses, pageNumber);
     const {
@@ -105,7 +105,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       selectedSurahNameEn,
     } = useAyahInteraction(verses);
 
-    if (!fontReady && pageNumber) {
+    if (!fontLoadTried && pageNumber) {
       return <QuranPageSkeleton hasSurahHeader={!!surahHeaders?.length} />;
     }
 

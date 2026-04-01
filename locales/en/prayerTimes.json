@@ -1,4 +1,6 @@
 {
   "title": "Prayer Times in",
-  "error": "These Times Might have an Error of ± Minute"
+  "error": "These Times Might have an Error of ± Minute",
+  "nextPrayer": "Next Prayer",
+  "remaining": "Starting in"
 }
