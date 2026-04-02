@@ -1,94 +1,125 @@
+"use client";
+
 import { useLanguage } from "@/context/general/LanguageContext";
-import { ClipLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as loved } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as loved, faShareNodes, faHashtag } from "@fortawesome/free-solid-svg-icons";
 import ShareModal from "@/components/modals/ShareModal";
 import useMediaQuery from "@/hooks/general/useMediaQuery";
-import { useAzkarCategory } from "../../../../../hooks/azkar/useAzkarCategory";
+import { useAzkarCategory } from "@/hooks/azkar/useAzkarCategory";
 import { useAzkarData } from "@/hooks/azkar/useAzkarData";
 import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import { AzkarCategories } from "@/constants/azkarData";
+import { AzkarCardSkeleton } from "../../components/AzkarCardSkeleton";
+import { toArabicNumber } from "@/utils/helpers";
 
-export default function AzkarPage({
-  startingNumber,
-  categoryId,
-}: {
+interface AzkarPageProps {
   startingNumber: number;
   categoryId: string;
-}) {
+}
+
+export default function DisplayAzkar({
+  startingNumber,
+  categoryId,
+}: AzkarPageProps) {
   const { language } = useLanguage();
   const isMdOrLarger = useMediaQuery("(min-width: 768px)");
+  const isArabic = language === "ar";
 
   useAzkarCategory(categoryId);
   const { azkarItems, loading } = useAzkarData(categoryId, startingNumber);
   const { handleLoveClick, isFavorite } = useFavoriteZekrActions(categoryId);
 
-  return (
-    <div className="w-full flex justify-center bg-background text-foreground dark:bg-background">
-      <div className="w-[95%] flex flex-col items-center gap-10">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <ClipLoader
-              color={"hsl(var(--primary))"}
-              loading={loading}
-              size={50}
-            />
-          </div>
-        ) : (
-          azkarItems &&
-          azkarItems.map((azkar, index) => {
-            const zekr = AzkarCategories.find((b) => b.ar === azkar.category);
-            return (
-              <div
-                key={index}
-                className="relative bg-card text-card-foreground w-full rounded-lg flex flex-col px-4 py-4"
-              >
-                <button
-                  id={`love-button-${azkar.number}`}
-                  onClick={() => handleLoveClick(azkar)}
-                  className={`text-destructive hover:text-destructive/80 absolute ${
-                    language === "ar" ? `top-4 left-4` : `top-4 right-4`
-                  } `}
-                >
-                  <FontAwesomeIcon
-                    icon={isFavorite(azkar.number!) ? loved : notLoved}
-                    className={
-                      isFavorite(azkar.number!)
-                        ? "text-destructive text-xl md:text-2xl"
-                        : "text-muted-foreground hover:text-destructive text-xl md:text-2xl"
-                    }
-                  />
-                </button>
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-6">
+        {[...Array(3)].map((_, i) => (
+          <AzkarCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
 
-                <div
-                  className={`absolute ${
-                    language === "ar" ? "left-14" : "right-14"
-                  } ${isMdOrLarger ? "top-4" : "top-4"}`}
-                >
-                  <div className={`${language === "ar" ? "mr-2" : "ml-2"}`}>
+  return (
+    <div className="flex flex-col gap-6">
+      {azkarItems &&
+        azkarItems.map((azkar, index) => {
+          const zekr = AzkarCategories.find((b) => b.ar === azkar.category);
+          const fav = isFavorite(azkar.number!);
+          
+          return (
+            <div
+              key={index}
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 
+                transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 
+                hover:border-primary/30 backdrop-blur-sm"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative z-10 p-6">
+                <div className="flex items-start justify-between mb-5">
+                  <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
+                    <FontAwesomeIcon icon={faHashtag} className="text-xs" />
+                    <span>
+                      {isArabic 
+                        ? `${toArabicNumber(azkar.number!)}`
+                        : `${azkar.number}`
+                      }
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
                     <ShareModal
-                      size="2xl"
+                      size="xl"
                       url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${azkar.number}`}
+                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary/50 text-muted-foreground 
+                        hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                     />
+                    
+                    <button
+                      onClick={() => handleLoveClick(azkar)}
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300 ${
+                        fav
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-secondary/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        icon={fav ? loved : notLoved}
+                        className="text-lg"
+                      />
+                    </button>
                   </div>
                 </div>
 
-                <span className="inline-block bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold w-fit">
-                  {language === "en"
-                    ? `Zekr Number ${azkar.number}`
-                    : `ذكر رقم ${azkar.number}`}
-                </span>
-                <p dir="rtl" className="leading-9 mt-5 text-lg text-center">
-                  {azkar.content}
-                </p>
-                <p className="text-center mt-2">{azkar.description}</p>
+                <div className="space-y-4">
+                  <p 
+                    dir="rtl" 
+                    className="text-xl md:text-2xl leading-loose text-foreground text-center dynamic-font font-medium"
+                  >
+                    {azkar.content}
+                  </p>
+                  
+                  {azkar.description && (
+                    <p className="text-center text-muted-foreground text-sm md:text-base leading-relaxed pt-4 border-t border-border/30">
+                      {azkar.description}
+                    </p>
+                  )}
+                </div>
+
+                {azkar.count && azkar.count > 1 && (
+                  <div className="mt-5 flex justify-center">
+                    <span className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-bold">
+                      <span>{isArabic ? "التكرار:" : "Repeat:"}</span>
+                      <span>{isArabic ? toArabicNumber(azkar.count) : azkar.count}</span>
+                      <span>{isArabic ? "مرات" : "times"}</span>
+                    </span>
+                  </div>
+                )}
               </div>
-            );
-          })
-        )}
-        <div className=""></div>
-      </div>
+            </div>
+          );
+        })}
     </div>
   );
 }

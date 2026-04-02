@@ -9,5 +9,7 @@
   "counter": "Count",
   "reset": "Reset",
   "addToFavorites": "Add to Favorites",
-  "removeFromFavorites": "Remove from Favorites"
+  "removeFromFavorites": "Remove from Favorites",
+  "repeat": "Repeat",
+  "times": "times"
 }

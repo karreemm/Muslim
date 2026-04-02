@@ -3,29 +3,26 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/general/LanguageContext";
-import Nvbar from "@/components/layout/navbar/Navbar";
-import Footer from "@/components/layout/footer/Footer";
 import { AzkarCategories } from "@/constants/azkarData";
-import Pagination from "../../../../../components/general/Pagination";
+import Pagination from "@/components/general/Pagination";
 import { toArabicNumber } from "@/utils/helpers";
 import DisplayZekr from "./DisplayZekr";
 import DisplayAzkar from "./DisplayAzkar";
-import { ClipLoader } from "react-spinners";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPrayingHands, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export default function CategoryPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { language } = useLanguage();
   const { t } = useTranslation();
+  const isArabic = language === "ar";
 
   const [categoryId, setCategoryId] = useState<string>("");
   const [categoryNameEn, setCategoryNameEn] = useState<string>("");
   const [categoryNameAr, setCategoryNameAr] = useState<string>("");
   const [zekrNumberEn, setZekrNumberEn] = useState<number | null>(null);
-  const [zekrNumberAr, setZekrNumberAr] = useState<number | string | null>(
-    null,
-  );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +42,8 @@ export default function CategoryPage() {
 
     if (zekrNumber) {
       setZekrNumberEn(parseInt(zekrNumber, 10));
-      setZekrNumberAr(toArabicNumber(parseInt(zekrNumber, 10)));
+    } else {
+      setZekrNumberEn(null);
     }
   }, [pathname, searchParams]);
 
@@ -55,8 +53,6 @@ export default function CategoryPage() {
       if (zekr) {
         setCategoryNameEn(zekr.en);
         setCategoryNameAr(zekr.ar);
-      } else {
-        console.log("error");
       }
     }
   }, [categoryId]);
@@ -64,28 +60,32 @@ export default function CategoryPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setZekrNumberEn(null);
-    setZekrNumberAr(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    console.log(`Current Page: ${page}`);
   };
 
   return (
-    <>
-      <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col gap-5 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
-        <div className="w-full flex justify-center">
-          <h1 className="mt-10 text-4xl font-bold flex gap-1 text-center">
-            {t("common.category")}{" "}
-            {language === "en" ? categoryNameEn : categoryNameAr}
+    <div className="w-full min-h-screen bg-background text-foreground pb-20">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10 w-[92%] max-w-[1500px] mx-auto pt-10">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground dynamic-font">
+            {isArabic ? categoryNameAr : categoryNameEn}
           </h1>
         </div>
-        <div className="flex-1 mt-10 w-full bg-background text-foreground dark:bg-background dark:text-foreground">
+
+        <div className="max-w-4xl mx-auto">
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <ClipLoader
-                color={"hsl(var(--primary))"}
-                loading={loading}
-                size={50}
-              />
+              <div className="flex flex-col items-center gap-4">
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="text-4xl text-primary animate-spin"
+                />
+                <p className="text-muted-foreground">{t("common.loading")}</p>
+              </div>
             </div>
           ) : zekrNumberEn !== null ? (
             <DisplayZekr
@@ -94,16 +94,24 @@ export default function CategoryPage() {
             />
           ) : (
             <DisplayAzkar
-              startingNumber={(currentPage - 1) * 3 + 1}
+              startingNumber={(currentPage - 1) * 5 + 1}
               categoryId={categoryNameAr}
             />
           )}
         </div>
-        <div className="w-full">
-          <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
-        </div>
-        <div className="h-10"></div>
+
+        {totalPages > 1 && zekrNumberEn === null && (
+          <div className="mt-12">
+            <Pagination
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              currentPage={currentPage}
+            />
+          </div>
+        )}
       </div>
-    </>
+
+      <div className="h-10" />
+    </div>
   );
 }

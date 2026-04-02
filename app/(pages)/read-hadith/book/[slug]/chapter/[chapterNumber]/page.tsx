@@ -216,11 +216,15 @@ export default function ChapterHadithsPage() {
                         />
                         <button
                           onClick={() => toggleFavorite(hadith)}
-                          className="text-2xl hover:scale-110 transition-transform duration-300"
+                          className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300 ${
+                            isFavorite(hadith.hadithNumber, bookSlug)
+                              ? "bg-destructive/10 text-destructive"
+                              : "bg-secondary/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                          }`}
                         >
                           <FontAwesomeIcon
                             icon={isFavorite(hadith.hadithNumber, bookSlug) ? solidHeart : regularHeart}
-                            className={isFavorite(hadith.hadithNumber, bookSlug) ? "text-destructive" : "text-muted-foreground hover:text-destructive"}
+                            className="text-lg"
                           />
                         </button>
                       </div>
