@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useLanguage } from "../../context/general/LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronRight,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { toArabicNumber } from "../../utils/helpers";
-import React from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface PaginationProps {
@@ -21,84 +23,103 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const { language } = useLanguage() as { language: "ar" | "en" };
   const { t } = useTranslation();
+  const isArabic = language === "ar";
 
   const [internalCurrentPage, setInternalCurrentPage] = useState(1);
-
-  const currentPage =
-    externalCurrentPage !== undefined
-      ? externalCurrentPage
-      : internalCurrentPage;
+  const currentPage = externalCurrentPage ?? internalCurrentPage;
 
   const handlePageClick = (page: number) => {
+    if (page < 1 || page > totalPages) return;
     if (externalCurrentPage === undefined) {
       setInternalCurrentPage(page);
     }
     onPageChange(page);
   };
 
-  const generatePages = (): (number | string)[] => {
+  const generateDesktopPages = (): (number | string)[] => {
     const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
 
     pages.push(1);
 
-    if (currentPage > 3) {
-      pages.push("...");
+    if (currentPage > 3) pages.push("...");
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      if (!pages.includes(i)) pages.push(i);
     }
 
-    if (currentPage !== 1 && currentPage !== totalPages) {
-      pages.push(currentPage);
-    }
-
-    if (currentPage < totalPages - 2) {
-      pages.push("...");
-    }
-
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
+    if (currentPage < totalPages - 2) pages.push("...");
+    if (!pages.includes(totalPages)) pages.push(totalPages);
 
     return pages;
   };
 
+  const formatNumber = (num: number) => (isArabic ? toArabicNumber(num) : num);
+
   return (
-    <div className="mx-auto mt-8 flex items-center justify-center gap-2 px-4">
+    <div className="mx-auto mt-10 flex items-center justify-center gap-2 px-4">
       <button
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
-                 transition-all duration-200 ease-in-out
-                 bg-card text-foreground hover:bg-secondary
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 border border-border
-                 shadow-xs hover:shadow-md"
+        className="group flex h-11 w-11 sm:h-11 sm:w-auto sm:px-4 items-center justify-center gap-2 rounded-xl font-semibold text-sm
+          transition-all duration-300 ease-out
+          bg-card text-foreground border border-border/50
+          hover:bg-secondary hover:border-primary/30 hover:shadow-md hover:shadow-primary/10
+          disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none
+          active:scale-95 shrink-0"
+        aria-label={t("common.previous")}
       >
         <FontAwesomeIcon
-          icon={language === "en" ? faArrowLeft : faArrowRight}
-          className="h-4 w-4"
+          icon={isArabic ? faChevronRight : faChevronLeft}
+          className="h-4 w-4 transition-transform group-hover:-translate-x-0.5"
         />
-        <span className="hidden sm:inline">{t("common.previous")}</span>
+        <span className="hidden sm:inline dynamic-font">
+          {t("common.previous")}
+        </span>
       </button>
 
-      <div className="flex items-center gap-2">
-        {generatePages().map((item, idx) => (
+      <div className="flex items-center gap-1.5 sm:hidden">
+        <div
+          className="flex h-11 min-w-[4.5rem] px-3 items-center justify-center rounded-xl font-bold text-sm
+          bg-primary text-primary-foreground shadow-lg shadow-primary/30 mx-1"
+        >
+          <span className="dynamic-font">
+            {isArabic
+              ? `${formatNumber(currentPage)} / ${formatNumber(totalPages)}`
+              : `${currentPage} / ${totalPages}`}
+          </span>
+        </div>
+      </div>
+
+      <div className="hidden sm:flex items-center gap-1.5">
+        {generateDesktopPages().map((item, idx) => (
           <div key={idx}>
             {item === "..." ? (
-              <span className="px-2 text-muted-foreground">•••</span>
+              <span className="px-2 text-muted-foreground text-lg font-bold">
+                •••
+              </span>
             ) : (
               <button
                 onClick={() => handlePageClick(Number(item))}
                 aria-current={currentPage === item ? "page" : undefined}
                 className={`
-                  flex h-10 w-10 items-center justify-center rounded-full
-                  font-medium transition-all duration-200 ease-in-out
+                  flex h-11 w-11 items-center justify-center rounded-xl
+                  font-bold text-sm transition-all duration-300 ease-out
                   ${
                     currentPage === item
-                      ? "bg-primary text-primary-foreground scale-110 shadow-lg hover:bg-primary"
-                      : "bg-card text-foreground hover:bg-secondary border border-border shadow-xs hover:shadow-md"
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105"
+                      : "bg-card text-foreground border border-border/50 hover:border-primary/30 hover:bg-secondary/50 hover:shadow-md active:scale-95"
                   }
                 `}
               >
-                {language === "ar" ? toArabicNumber(Number(item)) : item}
+                {formatNumber(Number(item))}
               </button>
             )}
           </div>
@@ -108,17 +129,20 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => handlePageClick(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex h-10 items-center gap-2 rounded-full px-4 font-medium
-                 transition-all duration-200 ease-in-out
-                 bg-card text-foreground hover:bg-secondary
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 border border-border
-                 shadow-xs hover:shadow-md"
+        className="group flex h-11 w-11 sm:h-11 sm:w-auto sm:px-4 items-center justify-center gap-2 rounded-xl font-semibold text-sm
+          transition-all duration-300 ease-out
+          bg-card text-foreground border border-border/50
+          hover:bg-secondary hover:border-primary/30 hover:shadow-md hover:shadow-primary/10
+          disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none
+          active:scale-95 shrink-0"
+        aria-label={t("common.next")}
       >
-        <span className="hidden sm:inline">{t("common.next")}</span>
+        <span className="hidden sm:inline dynamic-font">
+          {t("common.next")}
+        </span>
         <FontAwesomeIcon
-          icon={language === "en" ? faArrowRight : faArrowLeft}
-          className="h-4 w-4"
+          icon={isArabic ? faChevronLeft : faChevronRight}
+          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
         />
       </button>
     </div>

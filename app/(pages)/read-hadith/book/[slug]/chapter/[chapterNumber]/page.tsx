@@ -2,12 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useLanguage } from "@/context/general/LanguageContext";
-import Navbar from "@/components/layout/navbar/Navbar";
-import Footer from "@/components/layout/footer/Footer";
-import TranslationPair from "@/types";
-import { ClipLoader } from "react-spinners";
-import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
 import { hadithBooks } from "@/constants/hadithData";
+import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
 import Pagination from "@/components/general/Pagination";
 import { HadithCardSkeleton } from "../../../../components/HadithCardSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,6 +11,10 @@ import {
   faMagnifyingGlass,
   faHeart as solidHeart,
   faXmark,
+  faBookOpen,
+  faCheckCircle,
+  faExclamationCircle,
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import ShareModal from "../../../../../../../components/modals/ShareModal";
@@ -50,225 +50,224 @@ export default function ChapterHadithsPage() {
 
   const book = hadithBooks.find((b) => b.slug === bookSlug);
 
+  const getStatusIcon = (status: string) => {
+    const s = status.toLowerCase();
+    if (s === "sahih") return faCheckCircle;
+    if (s === "hasan") return faExclamationCircle;
+    return faQuestionCircle;
+  };
+
   return (
-    <>
-      <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
-        <div className="w-full flex justify-center mt-10">
-          <div className="w-[95%] max-w-7xl flex flex-col items-center gap-6">
-            <div className="w-full flex flex-col items-center gap-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-center">
-                {t("hadith.chapter.title")}
-              </h1>
-              <p className="text-lg text-center text-muted-foreground">
-                {language === "en" ? book?.name_en : book?.name_ar} -{" "}
-                {t("hadith.book.chapterLabel")} {chapterNumber}
-              </p>
-              {!loading && totalHadiths > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  {t("hadith.chapter.totalResults")}: {totalHadiths}
-                </p>
-              )}
+    <div className="w-full min-h-screen bg-background text-foreground pb-20">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/5 rounded-full blur-3xl" />
+      </div>
 
-              {showingSingleHadith && (
-                <button
-                  onClick={clearHadithFilter}
-                  className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-                >
-                  {language === "ar" ? "عرض جميع الأحاديث" : "View All Hadiths"}
-                </button>
-              )}
-            </div>
+      <div className="relative z-10 w-[92%] max-w-7xl mx-auto pt-10">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground dynamic-font mb-2">
+            {language === "en" ? book?.name_en : book?.name_ar}
+          </h1>
+          <p className="text-muted-foreground">
+             {t("hadith.book.chapterLabel")} {chapterNumber}
+          </p>
+          {!loading && totalHadiths > 0 && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("hadith.chapter.totalResults")}: <span className="font-semibold text-foreground">{totalHadiths}</span>
+            </p>
+          )}
+        </div>
 
-            {!showingSingleHadith && (
-              <div className="w-full bg-card rounded-lg shadow-md p-5">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setSearchType("content")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        searchType === "content"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-primary/50 hover:text-primary-foreground"
-                      }`}
-                    >
-                      {t("hadith.chapter.byContent")}
-                    </button>
-                    <button
-                      onClick={() => setSearchType("number")}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        searchType === "number"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-primary/50 hover:text-primary-foreground"
-                      }`}
-                    >
-                      {t("hadith.chapter.byNumber")}
-                    </button>
-                  </div>
+        {!showingSingleHadith && (
+          <div className="max-w-4xl mx-auto mb-10">
+            <div className="bg-card/70 backdrop-blur-sm border border-border/50 rounded-2xl p-5 shadow-lg">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex gap-2 p-1 rounded-xl bg-muted/50 w-fit">
+                  <button
+                    onClick={() => setSearchType("content")}
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                      searchType === "content"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    }`}
+                  >
+                    {t("hadith.chapter.byContent")}
+                  </button>
+                  <button
+                    onClick={() => setSearchType("number")}
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                      searchType === "number"
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    }`}
+                  >
+                    {t("hadith.chapter.byNumber")}
+                  </button>
+                </div>
 
-                  <div className="flex-1 flex gap-2 flex-wrap">
+                <div className="flex-1 flex gap-2">
+                  <div className="relative flex-1">
                     <input
                       type={searchType === "number" ? "number" : "text"}
                       placeholder={t("hadith.chapter.searchPlaceholder")}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                      className="flex-1 min-w-0 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
+                      className="w-full rounded-xl bg-background border border-border text-foreground py-2.5 px-4 
+                        placeholder:text-muted-foreground/60 
+                        focus:border-primary/50 focus:ring-2 focus:ring-primary/20 
+                        transition-all duration-300 dynamic-font"
                     />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleSearch}
-                        className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                      >
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
-                      </button>
-                      {isSearching && (
-                        <button
-                          onClick={clearSearch}
-                          className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition-colors"
-                          title={t("hadith.chapter.clearSearch")}
-                        >
-                          <FontAwesomeIcon icon={faXmark} />
-                        </button>
-                      )}
-                    </div>
                   </div>
+                  <button
+                    onClick={handleSearch}
+                    className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-semibold 
+                      shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 
+                      hover:-translate-y-0.5 transition-all duration-300 active:translate-y-0"
+                  >
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  </button>
+                  {isSearching && (
+                    <button
+                      onClick={clearSearch}
+                      className="px-4 py-2.5 bg-destructive/10 text-destructive border border-destructive/20 
+                        rounded-xl hover:bg-destructive/20 transition-all duration-300"
+                      title={t("hadith.chapter.clearSearch")}
+                    >
+                      <FontAwesomeIcon icon={faXmark} />
+                    </button>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
+          </div>
+        )}
 
-            {loading && (
-              <div className="w-full flex flex-col gap-6 mt-6">
-                <HadithCardSkeleton />
-                <HadithCardSkeleton />
-                <HadithCardSkeleton />
+        {showingSingleHadith && (
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-accent/10 border border-accent/20 rounded-2xl p-4 flex items-center justify-between">
+              <span className="text-accent font-medium">{t("hadith.chapter.showingSingle")}</span>
+              <button
+                onClick={clearHadithFilter}
+                className="px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold 
+                  hover:bg-accent/90 transition-all duration-300 text-sm"
+              >
+                {language === "ar" ? "عرض جميع الأحاديث" : "View All Hadiths"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="max-w-4xl mx-auto flex flex-col gap-6">
+            {[...Array(3)].map((_, i) => <HadithCardSkeleton key={i} />)}
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 text-destructive text-xl">
+            {t("hadith.chapter.error")}
+          </div>
+        ) : (
+          <>
+            {hadiths.length === 0 ? (
+              <div className="text-center py-20">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted text-muted-foreground mb-4">
+                  <FontAwesomeIcon icon={faBookOpen} className="text-2xl" />
+                </div>
+                <p className="text-xl text-muted-foreground">{t("hadith.chapter.noHadithsFound")}</p>
               </div>
-            )}
-
-            {error && (
-              <div className="text-destructive text-center text-xl mt-10">
-                {t("hadith.chapter.error")}
-              </div>
-            )}
-
-            {!loading && !error && (
-              <>
-                {hadiths.length === 0 ? (
-                  <p className="text-center text-xl mt-10">
-                    {t("hadith.chapter.noHadithsFound")}
-                  </p>
-                ) : (
-                  <div className="w-full flex flex-col gap-6 mt-6">
-                    {hadiths.map((hadith) => (
-                      <div
-                        key={hadith.id}
-                        className="relative bg-card rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
-                      >
-                        <button
-                          onClick={() => toggleFavorite(hadith)}
-                          className={`absolute ${
-                            language === "ar" ? "left-4" : "right-4"
-                          } top-4 text-2xl hover:scale-110 transition-transform`}
-                        >
-                          <FontAwesomeIcon
-                            icon={
-                              isFavorite(hadith.hadithNumber, bookSlug)
-                                ? solidHeart
-                                : regularHeart
-                            }
-                            className={
-                              isFavorite(hadith.hadithNumber, bookSlug)
-                                ? "text-destructive"
-                                : "text-muted-foreground hover:text-destructive"
-                            }
-                          />
-                        </button>
-
-                        <div
-                          className={`absolute ${
-                            language === "ar" ? "left-14" : "right-14"
-                          } top-4`}
-                        >
-                          <ShareModal
-                            size="2xl"
-                            url={`${window.location.origin}/read-hadith/book/${bookSlug}/chapter/${chapterNumber}?hadith=${hadith.hadithNumber}`}
-                          />
-                        </div>
-
-                        <div className="flex items-center gap-2 mb-4">
-                          <span className="inline-block bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
-                            {t("hadith.chapter.hadithNo")}:{" "}
-                            {hadith.hadithNumber}
+            ) : (
+              <div className="max-w-4xl mx-auto flex flex-col gap-6">
+                {hadiths.map((hadith) => (
+                  <div
+                    key={hadith.id}
+                    className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-6 
+                      transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 
+                      hover:border-primary/30 backdrop-blur-sm"
+                  >
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-bold">
+                          <span>#{hadith.hadithNumber}</span>
+                        </span>
+                        
+                        {hadith.status && (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${
+                            hadith.status.toLowerCase() === "sahih"
+                              ? "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20"
+                              : hadith.status.toLowerCase() === "hasan"
+                                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                                : "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20"
+                          }`}>
+                            <FontAwesomeIcon icon={getStatusIcon(hadith.status)} className="text-xs" />
+                            {hadith.status.toLowerCase() === "sahih"
+                              ? t("hadith.chapter.sahih")
+                              : hadith.status.toLowerCase() === "hasan"
+                                ? t("hadith.chapter.hasan")
+                                : t("hadith.chapter.da`eef")}
                           </span>
-                          {hadith.status && (
-                            <>
-                              <span
-                                className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${
-                                  hadith.status.toLowerCase() === "sahih"
-                                    ? "bg-secondary text-secondary-foreground"
-                                    : hadith.status.toLowerCase() === "hasan"
-                                      ? "bg-accent text-accent-foreground"
-                                      : "bg-muted text-muted-foreground"
-                                }`}
-                              >
-                                {hadith.status.toLowerCase() === "sahih"
-                                  ? t("hadith.chapter.sahih")
-                                  : hadith.status.toLowerCase() === "hasan"
-                                    ? t("hadith.chapter.hasan")
-                                    : t("hadith.chapter.da`eef")}
-                              </span>
-                            </>
-                          )}
-                        </div>
-
-                        <div className="mb-4">
-                          {hadith.headingArabic && (
-                            <h3
-                              dir="rtl"
-                              className="text-xl font-bold text-primary mb-3"
-                            >
-                              {hadith.headingArabic}
-                            </h3>
-                          )}
-                          <p
-                            dir="rtl"
-                            className="text-lg leading-loose text-foreground"
-                          >
-                            {hadith.hadithArabic}
-                          </p>
-                        </div>
-
-                        {language === "en" && hadith.hadithEnglish && (
-                          <div className="mt-4 pt-4 border-t border-border">
-                            {hadith.headingEnglish && (
-                              <h3 className="text-lg font-bold text-primary mb-2">
-                                {hadith.headingEnglish}
-                              </h3>
-                            )}
-                            <p className="text-base text-muted-foreground leading-relaxed">
-                              {hadith.hadithEnglish}
-                            </p>
-                          </div>
                         )}
                       </div>
-                    ))}
-                  </div>
-                )}
 
-                {totalPages > 1 && !showingSingleHadith && (
-                  <div className="w-full mt-8">
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
-                    />
+                      <div className="flex items-center gap-2">
+                        <ShareModal
+                          size="xl"
+                          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/read-hadith/book/${bookSlug}/chapter/${chapterNumber}?hadith=${hadith.hadithNumber}`}
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        />
+                        <button
+                          onClick={() => toggleFavorite(hadith)}
+                          className="text-2xl hover:scale-110 transition-transform duration-300"
+                        >
+                          <FontAwesomeIcon
+                            icon={isFavorite(hadith.hadithNumber, bookSlug) ? solidHeart : regularHeart}
+                            className={isFavorite(hadith.hadithNumber, bookSlug) ? "text-destructive" : "text-muted-foreground hover:text-destructive"}
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      {hadith.headingArabic && (
+                        <h3 dir="rtl" className="text-xl font-bold text-primary mb-3 dynamic-font">
+                          {hadith.headingArabic}
+                        </h3>
+                      )}
+                      <p dir="rtl" className="text-lg leading-loose text-foreground dynamic-font">
+                        {hadith.hadithArabic}
+                      </p>
+                    </div>
+
+                    {language === "en" && hadith.hadithEnglish && (
+                      <div className="mt-6 pt-6 border-t border-border/30">
+                        {hadith.headingEnglish && (
+                          <h3 className="text-lg font-bold text-primary mb-2">
+                            {hadith.headingEnglish}
+                          </h3>
+                        )}
+                        <p className="text-base text-muted-foreground leading-relaxed">
+                          {hadith.hadithEnglish}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </>
+                ))}
+              </div>
             )}
-          </div>
-        </div>
-        <div className="h-10"></div>
+
+            {totalPages > 1 && !showingSingleHadith && (
+              <div className="mt-10">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </>
+      
+      <div className="h-20" />
+    </div>
   );
 }

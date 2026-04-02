@@ -234,3 +234,7 @@ html.dark ::-webkit-scrollbar-thumb:hover,
 .dark ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--scrollbar-thumb-hover));
 }
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
