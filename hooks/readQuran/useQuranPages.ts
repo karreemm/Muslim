@@ -18,7 +18,6 @@ export const useQuranPages = (
   } = useQuranAudio();
   const [visiblePages, setVisiblePages] = useState(3);
   const loadingMoreRef = useRef(false);
-  const hasScrolledRef = useRef(false);
 
   const pages = useMemo(() => {
     if (!verses) return {} as Record<number, any[]>;
@@ -117,29 +116,6 @@ export const useQuranPages = (
       onLoadedPagesChange(loaded, sortedPageNumbers.length);
     }
   }, [visiblePages, sortedPageNumbers, onLoadedPagesChange]);
-
-  useEffect(() => {
-    if (highlightedAyahNumber && highlightedPage && !hasScrolledRef.current) {
-      const timer = setTimeout(() => {
-        const ayahElement = document.getElementById(
-          `ayah-${highlightedAyahNumber}`,
-        );
-        if (ayahElement) {
-          hasScrolledRef.current = true;
-          ayahElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        } else {
-          const pageElement = document.getElementById(
-            `page-${highlightedPage}`,
-          );
-          if (pageElement) {
-            hasScrolledRef.current = true;
-            pageElement.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [highlightedPage, highlightedAyahNumber, visiblePages]);
 
   useEffect(() => {
     if (

@@ -3,9 +3,10 @@
 import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
 import { surahNames, juzNames } from "../../../constants/quranData";
-import QuranNavbar from "./components/QuranNavbar";
+import QuranNavbar from "./components/general/QuranNavbar";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
+
 
 export default function ReadQuran() {
   const { language } = useLanguage();
@@ -26,62 +27,101 @@ export default function ReadQuran() {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col items-center gap-20">
-      <div className="w-full mt-10">
-        <QuranNavbar
-          onTabChange={(tabName) => setActiveTab(tabName)}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-        />
-      </div>
-      <div className="w-[90%] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 bg-background text-foreground p-5">
-        {activeTab === "Surahs"
-          ? filteredSurahs.map((surah) => (
-              <Link
-                key={surah.number}
-                href={`/read-quran/surah/${surah.number}`}
-                className="bg-card max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
-              >
-                <div className="flex gap-2 items-center">
-                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-background group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary rounded-md text-xl">
-                    {surah.number}
+    <div className="w-full min-h-screen bg-background text-foreground pb-20">
+      <QuranNavbar
+        onTabChange={(tabName) => setActiveTab(tabName)}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+
+      <div className="relative z-10 w-[92%] max-w-7xl mx-auto mt-8">
+        <div className="mb-6 text-sm text-muted-foreground">
+          {activeTab === "Surahs"
+            ? `${filteredSurahs.length} ${t("common.surahs")}`
+            : `${filteredJuzs.length} ${t("common.juzs")}`}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {activeTab === "Surahs"
+            ? filteredSurahs.map((surah) => (
+                <Link
+                  key={surah.number}
+                  href={`/read-quran/surah/${surah.number}`}
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 
+                    transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 
+                    hover:border-primary/30 backdrop-blur-sm"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className="flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/50 text-foreground font-bold text-lg
+                        transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110"
+                      >
+                        {surah.number}
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors dynamic-font">
+                          {surah[language as keyof typeof surah]}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-0.5">
+                          {surah.en}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-2xl font-bold text-primary/80 group-hover:text-primary transition-colors">
+                        {surah.ayahs}
+                      </span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                        {t("common.ayahs")}
+                      </span>
+                    </div>
                   </div>
-                  <h1>
-                    <span className="text-2xl group-hover:text-primary">
-                      {surah[language as keyof typeof surah]}
-                    </span>
-                  </h1>
-                </div>
-                <div className="flex flex-col gap-0 items-center group-hover:text-primary">
-                  <span className="text-xl">{t("common.ayahs")}</span>
-                  <span className="text-xl font-bold">{surah.ayahs}</span>
-                </div>
-              </Link>
-            ))
-          : filteredJuzs.map((juz) => (
-              <Link
-                key={juz.number}
-                href={`/read-quran/juz/${juz.number}`}
-                className="bg-card max-h-[90px] px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
-              >
-                <div className="flex gap-2 items-center">
-                  <div className="w-[65px] h-[45px] flex items-center justify-center bg-background group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary rounded-md text-xl">
-                    {juz.number}
+                </Link>
+              ))
+            : filteredJuzs.map((juz) => (
+                <Link
+                  key={juz.number}
+                  href={`/read-quran/juz/${juz.number}`}
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 
+                    transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 
+                    hover:border-primary/30 backdrop-blur-sm"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className="flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/50 text-foreground font-bold text-lg
+                        transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110"
+                      >
+                        {juz.number}
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors dynamic-font">
+                          {juz.name[language as keyof typeof juz.name]}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-0.5">
+                          {juz.surahs} {t("common.surahs")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h1>
-                    <span className="text-2xl group-hover:text-primary">
-                      {juz.name[language as keyof typeof juz.name]}
-                    </span>
-                  </h1>
-                </div>
-                <div className="flex flex-col gap-0 items-center group-hover:text-primary">
-                  <span className="text-xl">{t("common.surahs")}</span>
-                  <span className="text-xl font-bold">{juz.surahs}</span>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+        </div>
+
+        {activeTab === "Surahs" && filteredSurahs.length === 0 && (
+          <div className="text-center py-20 text-muted-foreground">
+            <p className="text-lg">{t("common.noResults")}</p>
+          </div>
+        )}
       </div>
-      <div className="h-20"></div>
     </div>
   );
 }

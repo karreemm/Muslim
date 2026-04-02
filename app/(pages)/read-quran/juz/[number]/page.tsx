@@ -1,21 +1,15 @@
 "use client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faArrowLeft,
-  faPlay,
-} from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import { useLanguage } from "@/context/general/LanguageContext";
-import Navbar from "@/components/layout/navbar/Navbar";
 import GetJuz from "../../service/GetJuz";
-import { showPopover, hidePopover } from "@/utils/helpers";
-import Footer from "@/components/layout/footer/Footer";
-import { useQuranNavigation, useContainerFontSize } from "@/hooks/readQuran";
-import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
+import { useQuranNavigation } from "@/hooks/readQuran";
+import JuzMultiPageRenderer from "../../components/juz/JuzMultiPageRenderer";
+import QuranReadingControls from "../../components/general/QuranReadingControls";
 import ReadingProgressBar from "@/components/layout/navbar/ReadingProgressBar";
+import { useContainerFontSize } from "@/hooks/readQuran/useContainerFontSize";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface JuzData {
   number: number;
@@ -29,6 +23,7 @@ interface JuzData {
 
 export default function JuzPage() {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const navigation = useQuranNavigation("juz");
   const { playSurah } = useQuranAudio();
   const [juzVerses, setJuzVerses] = useState<any>(null);
@@ -68,95 +63,65 @@ export default function JuzPage() {
         totalPages={totalPages || undefined}
         loadedPages={loadedPages || undefined}
       />
-      <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
-        <div className="relative mt-10 w-[90%] max-w-7xl mx-auto flex flex-col items-center">
-          <div>
-            {navigation.hasNext && nextJuz && (
-              <>
-                <button
-                  onClick={() => navigation.handleNavigation("next")}
-                  className="absolute top-0 right-0 text-2xl text-primary hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
-                  onMouseEnter={() => showPopover("popover-next")}
-                  onMouseLeave={() => hidePopover("popover-next")}
-                >
-                  <FontAwesomeIcon icon={faArrowRight} />
-                </button>
 
-                <div
-                  data-popover
-                  id="popover-next"
-                  role="tooltip"
-                  className="absolute top-10 right-0 z-10 invisible inline-block w-32 text-sm text-muted-foreground transition-opacity duration-300 bg-popover border border-border rounded-lg shadow-xs opacity-0"
-                >
-                  <div className="flex justify-center px-3 py-2 bg-secondary border-b border-border rounded-t-lg">
-                    <h3 className="font-semibold text-popover-foreground">
-                      {nextJuz.name[language as keyof typeof nextJuz.name]}
-                    </h3>
-                  </div>
-                </div>
-              </>
-            )}
+      <div className="w-full min-h-screen bg-background text-foreground pb-20">
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-accent/5 rounded-full blur-3xl" />
+        </div>
 
-            {juzVerses && juzVerses.length > 0 && (
-              <button
-                onClick={() => {
-                  const uniqueSurahs = Array.from(
-                    new Set(
-                      juzVerses.map((v: any) =>
-                        parseInt(v.verse_key.split(":")[0]),
-                      ),
-                    ),
-                  ) as number[];
-                  playSurah(uniqueSurahs[0], undefined, uniqueSurahs);
-                }}
-                className="absolute top-0 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-6 py-2 rounded-full font-bold shadow-md hover:bg-primary/90 hover:scale-105 transition-all flex items-center gap-2"
-              >
-                <FontAwesomeIcon icon={faPlay} />
-                <span>{language === "ar" ? "استماع" : "Listen"}</span>
-              </button>
-            )}
+        <div className="relative z-10 w-full mx-auto">
+          <QuranReadingControls
+            language={language}
+            title={
+              language === "ar"
+                ? `الجزء ${navigation.number}`
+                : `Juz ${navigation.number}`
+            }
+            playLabel={language === "ar" ? "استماع" : "Listen"}
+            playDisabled={!juzVerses || juzVerses.length === 0}
+            onPlay={() => {
+              if (!juzVerses || juzVerses.length === 0) return;
 
-            {navigation.hasPrev && prevJuz && (
-              <>
-                <button
-                  onClick={() => navigation.handleNavigation("prev")}
-                  className="absolute top-0 left-0 text-2xl text-primary hover:cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out"
-                  onMouseEnter={() => showPopover("popover-prev")}
-                  onMouseLeave={() => hidePopover("popover-prev")}
-                >
-                  <FontAwesomeIcon icon={faArrowLeft} />
-                </button>
-
-                <div
-                  data-popover
-                  id="popover-prev"
-                  role="tooltip"
-                  className="absolute top-10 left-0 z-10 invisible inline-block w-32 text-sm text-muted-foreground transition-opacity duration-300 bg-popover border border-border rounded-lg shadow-xs opacity-0"
-                >
-                  <div className="flex justify-center px-3 py-2 bg-secondary border-b border-border rounded-t-lg">
-                    <h3 className="font-semibold text-popover-foreground">
-                      {prevJuz.name[language as keyof typeof prevJuz.name]}
-                    </h3>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+              const uniqueSurahs = Array.from(
+                new Set(
+                  juzVerses.map((v: any) =>
+                    parseInt(v.verse_key.split(":")[0]),
+                  ),
+                ),
+              ) as number[];
+              playSurah(uniqueSurahs[0], undefined, uniqueSurahs);
+            }}
+            previousLabel={t("common.previous")}
+            nextLabel={t("common.next")}
+            previous={
+              navigation.hasPrev && prevJuz
+                ? {
+                    href: `/read-quran/juz/${prevJuz.number}`,
+                    title: prevJuz.name[language as keyof typeof prevJuz.name],
+                  }
+                : undefined
+            }
+            next={
+              navigation.hasNext && nextJuz
+                ? {
+                    href: `/read-quran/juz/${nextJuz.number}`,
+                    title: nextJuz.name[language as keyof typeof nextJuz.name],
+                  }
+                : undefined
+            }
+            playVariant="primary"
+          />
 
           <div
-            className={`w-full mt-14 flex flex-col items-center transition-all duration-300`}
+            ref={quranContentRef}
+            className="w-[92%] lg:w-full max-w-4xl mx-auto mt-8"
           >
-            <div
-              ref={quranContentRef}
-              className={`w-full md:w-[90%] lg:w-[800px] py-4 px-2 overflow-hidden`}
-            >
-              <JuzMultiPageRenderer
-                verses={juzVerses}
-                fontSize={fontSize}
-                lineHeight={lineHeight}
-                onLoadedPagesChange={handleLoadedPagesChange}
-              />
-            </div>
+            <JuzMultiPageRenderer
+              verses={juzVerses}
+              fontSize={fontSize}
+              lineHeight={lineHeight}
+              onLoadedPagesChange={handleLoadedPagesChange}
+            />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import { memo, Fragment, useEffect } from "react";
+import { memo, Fragment } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
 import QuranSurahHeader from "@/components/general/QuranSurahHeader";
@@ -44,23 +44,17 @@ const SKELETON_LINE_WIDTHS = [
   "88%",
 ];
 
-interface QuranPageSkeletonProps {
-  hasSurahHeader?: boolean;
-}
-
-const QuranPageSkeleton: React.FC<QuranPageSkeletonProps> = ({
-  hasSurahHeader,
-}) => (
-  <div className="w-full flex flex-col items-center py-4 px-2 lg:p-4 bg-card rounded-lg border-2 border-border shadow-inner mb-4">
-    <div className="mt-3 w-full max-w-[800px] flex flex-col items-center gap-3 animate-pulse">
+const QuranPageSkeleton = ({ hasSurahHeader = false }) => (
+  <div className="w-full flex flex-col items-center py-6 px-4 bg-card/50 rounded-2xl border-2 border-border/50 shadow-inner mb-6 animate-pulse">
+    <div className="w-full max-w-[800px] flex flex-col items-center gap-3">
       {hasSurahHeader && (
         <>
-          <div className="w-full h-14 bg-muted rounded mb-2" />
-          <div className="w-[60%] h-8 bg-muted rounded mb-4" />
+          <div className="w-full h-16 bg-muted rounded-xl mb-2" />
+          <div className="w-[60%] h-8 bg-muted rounded-lg mb-4" />
         </>
       )}
       {SKELETON_LINE_WIDTHS.map((width, i) => (
-        <div key={i} className="h-8 bg-muted rounded" style={{ width }} />
+        <div key={i} className="h-8 bg-muted rounded-lg" style={{ width }} />
       ))}
     </div>
   </div>
@@ -78,13 +72,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
     const { lineOrder, lines } = useQuranPageLines(verses, pageNumber);
-    const {
-      surahNumber,
-      activeAyahIndex,
-      currentAyahTime,
-      currentAyahDuration,
-      isPlayerVisible,
-    } = useQuranAudio();
+    const { surahNumber, activeAyahIndex, isPlayerVisible } = useQuranAudio();
 
     const playingSurahStr = isPlayerVisible
       ? surahNumber?.toString()
@@ -125,16 +113,16 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
 
     const firstLineOfPage = lineOrder[0];
     let isFirstChunkOfPage = true;
-
     const seenAyahs = new Set<string>();
 
     return (
       <div
-        className="w-full flex flex-col items-center justify-center py-4 px-2 lg:p-4 bg-card rounded-lg border-2 border-border shadow-inner mb-4 relative"
+        className="w-full flex flex-col items-center justify-center py-6 px-4 bg-card/40 rounded-2xl border border-border/50 shadow-lg shadow-primary/5 mb-6 relative backdrop-blur-sm"
         style={{ direction: "rtl" }}
       >
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 rounded-2xl pointer-events-none" />
         <div
-          className="mt-3 text-center w-full max-w-[800px]"
+          className="relative z-10 text-center w-full max-w-[800px]"
           style={{
             fontFamily:
               pageFontName && fontReady
@@ -157,7 +145,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 {surahHeaderInfo && headerForLine && (
                   <div
                     key={`header-${lineNumber}`}
-                    className={`w-full mb-4 ${isHeaderAtTop ? "" : "mt-6"}`}
+                    className={`w-full mb-6 ${isHeaderAtTop ? "" : "mt-8"}`}
                     style={{ fontFamily: "'Amiri', serif" }}
                   >
                     <QuranSurahHeader
@@ -168,7 +156,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 )}
                 <div
                   key={lineNumber}
-                  className="w-full px-4 mb-2 block"
+                  className="w-full px-4 mb-2 block leading-loose"
                   style={
                     pageFontName && fontReady
                       ? {
@@ -219,14 +207,14 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                             ? `ayah-${chunkAyah}-${chunkSurah}`
                             : undefined
                         }
-                        className={`cursor-pointer rounded ${
-                          isHighlighted ? "text-primary" : ""
-                        } ${
-                          hoveredVerseKey === chunk.verseKey ||
-                          selectedVerseKey === chunk.verseKey
-                            ? "text-primary"
-                            : ""
-                        }`}
+                        className={`cursor-pointer rounded transition-all duration-200 px-0.5
+                          ${isHighlighted ? "bg-primary/20 text-primary shadow-[0_0_10px_rgba(var(--primary)/0.2)]" : ""}
+                          ${
+                            hoveredVerseKey === chunk.verseKey ||
+                            selectedVerseKey === chunk.verseKey
+                              ? "text-primary"
+                              : "hover:text-primary"
+                          }`}
                         onMouseEnter={() =>
                           chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
                         }
@@ -248,13 +236,21 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                           : chunk.words.map((word, wordIndex) => (
                               <span key={`${word.id}-${wordIndex}`}>
                                 {word.char_type_name === "end" ? (
-                                  <span className={styles.ayahNumberWrapper}>
+                                  <span
+                                    className={`${styles.ayahNumberWrapper} inline-flex items-center gap-1 mx-1`}
+                                  >
+                                    <span className="text-primary/60 text-sm">
+                                      ﴿
+                                    </span>
                                     <span
                                       dangerouslySetInnerHTML={{
                                         __html: word.text_uthmani,
                                       }}
                                       className={styles.ayahNumberText}
                                     />
+                                    <span className="text-primary/60 text-sm">
+                                      ﴾
+                                    </span>
                                   </span>
                                 ) : (
                                   <span
@@ -275,8 +271,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             );
           })}
         </div>
+
         {pageNumber && (
-          <div className="mt-3 text-sm text-muted-foreground font-sans w-full text-center">
+          <div className="mt-6 pt-4 border-t border-border/30 text-sm text-muted-foreground font-medium w-full text-center">
             {pageNumber}
           </div>
         )}

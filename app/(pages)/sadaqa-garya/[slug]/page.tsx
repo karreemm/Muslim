@@ -15,7 +15,7 @@ import {
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { useContainerFontSize } from "@/hooks/readQuran";
 import type { SadaqaQuranVerse } from "@/hooks/sadaqaGarya/useSadaqaSurahVerses";
-import QuranPageRenderer from "@/app/(pages)/read-quran/components/QuranPageRenderer";
+import QuranPageRenderer from "@/app/(pages)/read-quran/components/general/QuranPageRenderer";
 
 function ConcatenatedQuranPages({
   verses,

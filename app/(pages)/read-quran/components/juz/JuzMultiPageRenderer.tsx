@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, memo, useRef } from "react";
-import QuranPageRenderer from "./QuranPageRenderer";
+import { useMemo, memo, useRef, useEffect } from "react";
+import QuranPageRenderer from "../general/QuranPageRenderer";
 import { useQuranPages } from "@/hooks/readQuran/useQuranPages";
 
 interface JuzMultiPageRendererProps {
@@ -14,6 +14,7 @@ interface JuzMultiPageRendererProps {
 const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
   ({ verses, fontSize, lineHeight, onLoadedPagesChange }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const lastScrolledTargetRef = useRef<string | null>(null);
     const {
       pages,
       sortedPageNumbers,
@@ -21,6 +22,54 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
       highlightedAyahNumber,
       highlightedPage,
     } = useQuranPages(verses, onLoadedPagesChange);
+
+    useEffect(() => {
+      lastScrolledTargetRef.current = null;
+    }, [highlightedAyahNumber, highlightedPage]);
+
+    useEffect(() => {
+      if (highlightedAyahNumber > 0 && highlightedPage > 0) {
+        const pageIndex = sortedPageNumbers.indexOf(highlightedPage.toString());
+        if (pageIndex === -1 || visiblePages < pageIndex + 1) {
+          return;
+        }
+
+        const matchingVerse = verses?.find(
+          (verse) =>
+            parseInt(verse.verse_key?.split(":")[1] || "0") ===
+            highlightedAyahNumber,
+        );
+
+        if (matchingVerse) {
+          const surahNum = matchingVerse.verse_key?.split(":")[0];
+          const ayahId = `ayah-${highlightedAyahNumber}-${surahNum}`;
+          const targetKey = `${ayahId}:${highlightedPage}`;
+
+          if (lastScrolledTargetRef.current === targetKey) {
+            return;
+          }
+
+          const scrollTimer = setTimeout(() => {
+            const ayahElement = document.getElementById(ayahId);
+            if (ayahElement) {
+              lastScrolledTargetRef.current = targetKey;
+              ayahElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+          }, 120);
+
+          return () => clearTimeout(scrollTimer);
+        }
+      }
+    }, [
+      highlightedPage,
+      highlightedAyahNumber,
+      verses,
+      visiblePages,
+      sortedPageNumbers,
+    ]);
 
     const surahHeaders = useMemo(() => {
       if (!verses)

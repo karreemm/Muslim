@@ -35,9 +35,8 @@ export default function QuranSurahHeader({
         {imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
-              className="text-surah-header-foreground font-bold drop-shadow-[0_2px_4px_hsl(var(--surah-header-shadow))] text-[clamp(0.9rem,3vw,2rem)] leading-none"
+              className="text-surah-header-foreground font-bold font drop-shadow-[0_2px_4px_hsl(var(--surah-header-shadow))] text-[clamp(0.9rem,3vw,2rem)] leading-none"
               style={{
-                fontFamily: "'Amiri', serif",
                 transform: "translateY(0.18em)",
               }}
             >
@@ -49,8 +48,7 @@ export default function QuranSurahHeader({
 
       {!isFatiha && !isAtTawbah && (
         <p
-          className="mt-2 text-center text-surah-header-foreground text-[clamp(1.2rem,5vw,3rem)]"
-          style={{ fontFamily: "'Amiri', serif" }}
+          className="mt-2 text-center text-[clamp(1.2rem,5vw,3rem)]"
         >
           ﷽
         </p>

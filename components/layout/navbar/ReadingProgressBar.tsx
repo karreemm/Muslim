@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useMainNavbarOffset } from "@/hooks/general/useMainNavbarOffset";
 
 interface ReadingProgressBarProps {
   totalPages?: number;
@@ -12,10 +13,9 @@ export default function ReadingProgressBar({
   loadedPages,
 }: ReadingProgressBarProps = {}) {
   const [progress, setProgress] = useState(0);
-  const [isNavVisible, setIsNavVisible] = useState(true);
+  const mainNavbarOffset = useMainNavbarOffset();
   const isScrollingRef = useRef(false);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastScrollY = useRef(0);
   const totalPagesRef = useRef(totalPages);
   const loadedPagesRef = useRef(loadedPages);
 
@@ -41,15 +41,6 @@ export default function ReadingProgressBar({
     };
 
     const onScroll = () => {
-      const currentY = window.scrollY;
-
-      if (currentY < lastScrollY.current || currentY < 10) {
-        setIsNavVisible(true);
-      } else {
-        setIsNavVisible(false);
-      }
-      lastScrollY.current = currentY;
-
       isScrollingRef.current = true;
       if (scrollTimerRef.current !== null) clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = setTimeout(() => {
@@ -76,8 +67,10 @@ export default function ReadingProgressBar({
 
   return (
     <div
-      className="fixed left-0 right-0 z-50 h-1 bg-transparent transition-[top] duration-300 ease-in-out"
-      style={{ top: isNavVisible ? "64px" : "0px" }}
+      className="fixed left-0 right-0 z-30 h-1 bg-transparent transition-[top] duration-300 ease-in-out"
+      style={{
+        top: `calc(${mainNavbarOffset}px + var(--quran-reading-controls-height, 0px))`,
+      }}
       aria-hidden="true"
     >
       <div
