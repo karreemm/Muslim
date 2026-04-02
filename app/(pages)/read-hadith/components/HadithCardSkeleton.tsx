@@ -1,5 +1,5 @@
 import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 
 export const HadithCardSkeleton: React.FC = () => {
   const { language } = useLanguage();

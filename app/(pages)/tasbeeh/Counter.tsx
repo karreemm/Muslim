@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "../../../context/LanguageContext";
-import { useTasbeeh } from "../../../context/TasbeehContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
+import { useTasbeeh } from "../../../context/features/TasbeehContext";
 import { toArabicNumber, toEnglishNumber } from "../../../utils/helpers";
 import GoalCelebration from "./GoalCelebration";
 import { useTranslation } from "@/hooks/general/useTranslation";

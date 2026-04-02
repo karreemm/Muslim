@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { DeceasedPerson } from "../types";
+import { DeceasedPerson } from "../../types";
 
 interface SadaqaGaryaContextProps {
   deceasedPersons: DeceasedPerson[];
@@ -12,7 +12,7 @@ interface SadaqaGaryaContextProps {
 }
 
 const SadaqaGaryaContext = createContext<SadaqaGaryaContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -25,7 +25,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
         return stored ? JSON.parse(stored) : [];
       }
       return [];
-    }
+    },
   );
 
   useEffect(() => {

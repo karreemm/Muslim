@@ -1,8 +1,8 @@
 "use client";
 
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { useState, useEffect } from "react";
-import Navbar from "@/components/layout/Navbar";
+import Navbar from "@/components/layout/navbar/Navbar";
 import Sidebar from "../../components/Sidebar";
 import {
   useReciterSurahSelection,
@@ -17,7 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import ShareModal from "@/components/modals/ShareModal";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
 
 export default function ReciterPage() {
@@ -92,7 +92,7 @@ export default function ReciterPage() {
         }`}
       >
         <div className="w-full flex-1 overflow-y-auto flex flex-col items-center justify-center gap-5 py-5 px-4">
-          <div className="w-full max-w-none md:max-w-4xl flex flex-col items-center gap-5">
+          <div className="w-full max-w-none md:max-w-7xl flex flex-col items-center gap-5">
             <div className="flex items-center justify-center gap-4 sm:gap-10 w-full px-0 sm:px-5">
               <button
                 onClick={handlePreviousSurah}

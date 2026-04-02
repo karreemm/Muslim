@@ -2,9 +2,9 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/context/general/LanguageContext";
+import Navbar from "@/components/layout/navbar/Navbar";
+import Footer from "@/components/layout/footer/Footer";
 import { ClipLoader } from "react-spinners";
 import { useBookChapters } from "@/hooks/readHadith/useBookChapters";
 import { hadithBooks } from "@/constants/hadithData";
@@ -35,7 +35,7 @@ export default function BookChaptersPage() {
     <>
       <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center mt-10">
-          <div className="w-[95%] max-w-[1500px] mx-auto flex flex-col items-center gap-6">
+          <div className="w-[95%] max-w-7xl mx-auto flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-4">
               <h1 className="text-3xl md:text-4xl font-bold text-center">
                 {t("hadith.book.title")}{" "}

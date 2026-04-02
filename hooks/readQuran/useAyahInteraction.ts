@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { surahNames } from "@/constants/quranData";
-import { useSavedAyahs } from "@/context/SavedAyahsContext";
+import { useSavedAyahs } from "@/context/features/SavedAyahsContext";
 import { toArabicNumber } from "@/utils/helpers";
 import type { QuranVerse } from "./useQuranPageLines";
 

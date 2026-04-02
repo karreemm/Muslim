@@ -7,15 +7,15 @@ import {
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useQuranAudio } from "@/context/QuranAudioContext";
-import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/layout/Navbar";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
+import { useLanguage } from "@/context/general/LanguageContext";
+import Navbar from "@/components/layout/navbar/Navbar";
 import GetJuz from "../../service/GetJuz";
 import { showPopover, hidePopover } from "@/utils/helpers";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/footer/Footer";
 import { useQuranNavigation, useContainerFontSize } from "@/hooks/readQuran";
 import JuzMultiPageRenderer from "../../components/JuzMultiPageRenderer";
-import ReadingProgressBar from "@/components/layout/ReadingProgressBar";
+import ReadingProgressBar from "@/components/layout/navbar/ReadingProgressBar";
 
 interface JuzData {
   number: number;
@@ -69,7 +69,7 @@ export default function JuzPage() {
         loadedPages={loadedPages || undefined}
       />
       <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
-        <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
+        <div className="relative mt-10 w-[90%] max-w-7xl mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && nextJuz && (
               <>

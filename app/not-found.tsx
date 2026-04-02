@@ -2,7 +2,7 @@
 
 import NotFoundLight from "../assets/general/notFoundLight.webp";
 import TranslationPair from "../types";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/general/LanguageContext";
 
 export default function NotFound() {
   const { language } = useLanguage();

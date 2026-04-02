@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
-import { useLanguage } from "../../../../context/LanguageContext";
+import { useLanguage } from "../../../../context/general/LanguageContext";
 import { duas, DiedSurahs } from "../../../../constants/sadaqaData";
 import { ClipLoader } from "react-spinners";
 import ShareModal from "../../../../components/modals/ShareModal";
@@ -16,6 +16,7 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { useContainerFontSize } from "@/hooks/readQuran";
 import type { SadaqaQuranVerse } from "@/hooks/sadaqaGarya/useSadaqaSurahVerses";
 import QuranPageRenderer from "@/app/(pages)/read-quran/components/QuranPageRenderer";
+
 function ConcatenatedQuranPages({
   verses,
   surahNumber,
@@ -136,7 +137,7 @@ export default function DeceasedPage() {
 
   return (
     <div className="min-h-screen bg-background pb-12">
-      <div className="mx-auto mt-8 w-[92%] max-w-6xl space-y-8">
+      <div className="mx-auto mt-8 w-[92%] max-w-7xl space-y-8">
         <section className="rounded-2xl border border-border/70 bg-gradient-to-br from-card via-card to-secondary/30 p-6 text-center shadow-xl lg:p-8">
           <h1
             className={`${language === "ar" ? "leading-10" : ""} text-2xl lg:text-3xl text-foreground`}
@@ -255,7 +256,7 @@ export default function DeceasedPage() {
                 key={index}
                 className="rounded-2xl border border-border/70 bg-card p-5 shadow-md lg:p-6"
               >
-                <p className="fontAmiri text-lg leading-loose text-foreground lg:text-xl">
+                <p className="text-lg leading-loose text-foreground lg:text-xl">
                   {dua}
                 </p>
               </article>

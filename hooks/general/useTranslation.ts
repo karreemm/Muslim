@@ -1,4 +1,4 @@
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 
 import enNavbar from "@/locales/en/navbar.json";
 import enHome from "@/locales/en/home.json";
@@ -80,7 +80,7 @@ export function useTranslation() {
 
   const t = (
     key: TranslationKey,
-    params?: Record<string, string | number>
+    params?: Record<string, string | number>,
   ): string => {
     const keys = key.split(".");
     let value: any = translations[language] || translations.en;

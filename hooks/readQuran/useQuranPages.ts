@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 
 export const useQuranPages = (
   verses: any[],

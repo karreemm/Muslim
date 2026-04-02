@@ -7,14 +7,14 @@ import {
   faLanguage,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "@/components/modals/TafseerModal";
 import { TranslationModal } from "@/components/modals/TranslationModal";
 import type { SearchAyah } from "../service/GetSearchAyah";
 import { reciters } from "@/constants/recitersData";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/general/ThemeContext";
 import { highlightText } from "@/components/general/highlightText";
 
 interface AyahSearchCardProps {
@@ -149,7 +149,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
         >
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
             <div>
-              <h3 className="text-xl font-semibold dynamic-font text-foreground">
+              <h3 className="text-xl font-semibold  text-foreground">
                 {language === "ar"
                   ? `${ayah.surah.name}`
                   : ayah.surah.englishName}
@@ -167,14 +167,14 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
           <div className="mb-5">
             <p
-              className="text-2xl leading-loose dynamic-font text-foreground"
+              className="text-2xl leading-loose  text-foreground"
               dir="rtl"
             >
               {highlightKeyword
                 ? highlightText({
                     text: ayah.text,
                     keyword: highlightKeyword,
-                    isDarkMode: theme,
+                    isDarkMode: theme === "dark",
                   })
                 : ayah.text}
             </p>
@@ -194,7 +194,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 icon={isLoadingAudio ? faSpinner : faHeadphones}
                 className={isLoadingAudio ? "animate-spin" : ""}
               />
-              <span className="dynamic-font text-sm">
+              <span className=" text-sm">
                 {isLoadingAudio ? t("common.loading") : t("searchAyah.listen")}
               </span>
               {isPlaying && (
@@ -220,7 +220,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
             >
               <FontAwesomeIcon icon={faBook} />
-              <span className="dynamic-font text-sm">
+              <span className=" text-sm">
                 {t("searchAyah.tafseer")}
               </span>
             </button>
@@ -230,7 +230,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
             >
               <FontAwesomeIcon icon={faLanguage} />
-              <span className="dynamic-font text-sm">
+              <span className=" text-sm">
                 {t("searchAyah.translation")}
               </span>
             </button>
@@ -243,7 +243,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
               >
                 <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span className="dynamic-font text-sm">{reciterName}</span>
+                <span className=" text-sm">{reciterName}</span>
               </button>
 
               {showReciterMenu && (
@@ -260,7 +260,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                         selectedReciter === reciter.id ? "bg-muted" : ""
                       }`}
                     >
-                      <div className="dynamic-font text-sm text-foreground">
+                      <div className=" text-sm text-foreground">
                         {language === "ar" ? reciter.NameAr : reciter.NameEn}
                       </div>
                     </button>

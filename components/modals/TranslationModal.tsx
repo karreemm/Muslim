@@ -7,7 +7,7 @@ import {
   faLanguage,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
   getAyahTranslation,
@@ -120,11 +120,11 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           className="text-primary-foreground text-xl"
                         />
                       </div>
-                      <Dialog.Title className="text-2xl font-bold text-primary-foreground dynamic-font">
+                      <Dialog.Title className="text-2xl font-bold text-primary-foreground ">
                         {t("readQuran.translation.title")}
                       </Dialog.Title>
                     </div>
-                    <p className="text-primary-foreground/80 text-sm mt-1 dynamic-font">
+                    <p className="text-primary-foreground/80 text-sm mt-1 ">
                       {language === "ar"
                         ? `${surahNameAr} - الآية ${ayahNumber}`
                         : `${surahNameEn} - Ayah ${ayahNumber}`}
@@ -143,7 +143,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           onClick={(e) => handleEditionChange(e, edition.id)}
                           onMouseDown={(e) => e.preventDefault()}
                           type="button"
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${
+                          className={`px-4 py-2 rounded-lg transition-all duration-200  text-sm font-medium ${
                             selectedEditionId === edition.id
                               ? "bg-primary text-primary-foreground shadow-md scale-105"
                               : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -168,7 +168,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                       </div>
                     ) : error ? (
                       <div className="flex items-center justify-center overflow-y-auto h-40">
-                        <p className="dynamic-font text-center text-muted-foreground">
+                        <p className=" text-center text-muted-foreground">
                           {error}
                         </p>
                       </div>
@@ -178,11 +178,11 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           dir="ltr"
                           className="rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto bg-background"
                         >
-                          <p className="text-lg leading-relaxed dynamic-font text-foreground">
+                          <p className="text-lg leading-relaxed  text-foreground">
                             {currentTranslation.text}
                           </p>
                           {currentTranslation.edition && (
-                            <p className="mt-4 text-sm font-medium dynamic-font text-muted-foreground">
+                            <p className="mt-4 text-sm font-medium  text-muted-foreground">
                               — {currentTranslation.edition.name}
                             </p>
                           )}
@@ -190,7 +190,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                       </div>
                     ) : (
                       <div className="flex items-center justify-center h-40">
-                        <p className="dynamic-font text-center text-muted-foreground">
+                        <p className=" text-center text-muted-foreground">
                           {t("readQuran.translation.noData")}
                         </p>
                       </div>
@@ -204,7 +204,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                     <button
                       onClick={onClose}
                       type="button"
-                      className="w-full py-3 rounded-xl transition-all duration-200 dynamic-font font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="w-full py-3 rounded-xl transition-all duration-200  font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
                       {t("common.close")}
                     </button>

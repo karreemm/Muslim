@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSadaqaGarya } from "../../context/SadaqatContext";
+import { useSadaqaGarya } from "../../context/features/SadaqatContext";
 import { slugify } from "../../utils/helpers";
 import { DeceasedPerson } from "../../types";
 import { safeEncode } from "../../utils/encoding";
@@ -12,10 +12,10 @@ export default function useSadaqaGaryaForm() {
   const [nameEn, setNameEn] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [messageEn, setMessageEn] = useState(
-    "This is a Sadaqa Jariyah page for the deceased. May Allah elevate their status in Jannah and grant them peace. Ameen."
+    "This is a Sadaqa Jariyah page for the deceased. May Allah elevate their status in Jannah and grant them peace. Ameen.",
   );
   const [messageAr, setMessageAr] = useState(
-    "هذه صفحة صدقة جارية للمتوفى. نسأل الله أن يرفع درجته في الجنة ويجعل قبره روضة من رياض الجنة. آمين."
+    "هذه صفحة صدقة جارية للمتوفى. نسأل الله أن يرفع درجته في الجنة ويجعل قبره روضة من رياض الجنة. آمين.",
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,10 +61,10 @@ export default function useSadaqaGaryaForm() {
     setNameEn("");
     setNameAr("");
     setMessageEn(
-      "This is a Sadaqa Jariyah page for the deceased. May Allah elevate their status in Jannah and grant them peace. Ameen."
+      "This is a Sadaqa Jariyah page for the deceased. May Allah elevate their status in Jannah and grant them peace. Ameen.",
     );
     setMessageAr(
-      "هذه صفحة صدقة جارية للمتوفى. نسأل الله أن يرفع درجته في الجنة ويجعل قبره روضة من رياض الجنة. آمين."
+      "هذه صفحة صدقة جارية للمتوفى. نسأل الله أن يرفع درجته في الجنة ويجعل قبره روضة من رياض الجنة. آمين.",
     );
     setIsSubmitting(false);
   };

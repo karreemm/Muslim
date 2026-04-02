@@ -4,7 +4,7 @@ import React, { useState, useEffect, Fragment, memo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faBook, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
   getTafseerList,
@@ -143,11 +143,11 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                           className="text-primary-foreground text-xl"
                         />
                       </div>
-                      <Dialog.Title className="text-2xl font-bold text-primary-foreground dynamic-font">
+                      <Dialog.Title className="text-2xl font-bold text-primary-foreground ">
                         {t("readQuran.tafseer.title")}
                       </Dialog.Title>
                     </div>
-                    <p className="text-primary-foreground/80 text-sm mt-1 dynamic-font">
+                    <p className="text-primary-foreground/80 text-sm mt-1 ">
                       {language === "ar"
                         ? `${surahNameAr} - الآية ${ayahNumber}`
                         : `${surahNameEn} - Ayah ${ayahNumber}`}
@@ -166,7 +166,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                           onClick={(e) => handleBookChange(e, book.id)}
                           onMouseDown={(e) => e.preventDefault()}
                           type="button"
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 dynamic-font text-sm font-medium ${
+                          className={`px-4 py-2 rounded-lg transition-all duration-200  text-sm font-medium ${
                             selectedBookId === book.id
                               ? "bg-primary text-primary-foreground shadow-md scale-105"
                               : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -191,7 +191,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                       </div>
                     ) : error ? (
                       <div className="flex items-center justify-center overflow-y-auto h-40">
-                        <p className="dynamic-font text-center text-muted-foreground">
+                        <p className=" text-center text-muted-foreground">
                           {error}
                         </p>
                       </div>
@@ -201,11 +201,11 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                           dir={language === "ar" ? "rtl" : "ltr"}
                           className="rounded-xl p-5 h-fit max-h-[40vh] overflow-y-auto bg-background"
                         >
-                          <p className="dynamic-font text-sm font-medium mb-3 text-muted-foreground">
+                          <p className=" text-sm font-medium mb-3 text-muted-foreground">
                             {currentTafseer.tafseer_name}
                           </p>
                           <p
-                            className="fontAmiri text-lg leading-relaxed text-justify text-foreground"
+                            className="text-lg leading-relaxed text-justify text-foreground"
                             dir={language === "ar" ? "rtl" : "ltr"}
                           >
                             {currentTafseer.text}
@@ -214,7 +214,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                       </div>
                     ) : (
                       <div className="flex items-center justify-center h-40">
-                        <p className="dynamic-font text-center text-muted-foreground">
+                        <p className=" text-center text-muted-foreground">
                           {t("readQuran.tafseer.notAvailable")}
                         </p>
                       </div>
@@ -228,7 +228,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                     <button
                       onClick={onClose}
                       type="button"
-                      className="w-full py-3 rounded-xl transition-all duration-200 dynamic-font font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="w-full py-3 rounded-xl transition-all duration-200  font-medium bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
                       {t("common.close")}
                     </button>

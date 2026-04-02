@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import { hadithBooks } from "../../../constants/hadithData";
 import { ClipLoader } from "react-spinners";
 import { useHadithBooks } from "@/hooks/readHadith/useHadithBooks";
@@ -30,7 +30,7 @@ export default function ReadHadithPage() {
         </h1>
 
         {loading ? (
-          <div className="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
             <BookCardSkeleton />
             <BookCardSkeleton />
             <BookCardSkeleton />
@@ -43,7 +43,7 @@ export default function ReadHadithPage() {
             {t("hadith.error")}
           </div>
         ) : (
-          <div className="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
             {displayBooks.map((book) => (
               <Link
                 key={book.id}

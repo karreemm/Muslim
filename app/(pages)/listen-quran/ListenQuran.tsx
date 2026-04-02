@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import { reciters } from "../../../constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -11,7 +11,7 @@ export default function ListenQuranPage() {
 
   return (
     <div className="bg-background text-primary min-h-screen w-full flex justify-center">
-      <div className="w-[95%] max-w-[1500px] mx-auto mt-10 flex flex-col items-center gap-10">
+      <div className="w-[95%] max-w-7xl mx-auto mt-10 flex flex-col items-center gap-10">
         <h1 className="text-2xl md:text-4xl text-center">
           {t("listenQuran.title")}
         </h1>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import { AzkarCategories } from "../../../constants/azkarData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -11,7 +11,7 @@ export default function ListenQuranPage() {
 
   return (
     <div className="bg-background text-primary dark:bg-background dark:text-foreground min-h-screen w-full flex justify-center">
-      <div className="w-[95%] mt-10 max-w-[1500px] mx-auto flex flex-col items-center gap-10">
+      <div className="w-[95%] mt-10 max-w-7xl mx-auto flex flex-col items-center gap-10">
         <h1 className="text-2xl md:text-4xl text-center">{t("azkar.title")}</h1>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-center bg-background text-foreground dark:bg-background dark:text-foreground p-5">
           {AzkarCategories.map((item) => (

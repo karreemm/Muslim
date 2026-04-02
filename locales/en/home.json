@@ -1,18 +1,12 @@
 {
-  "welcome": "Your path toward what truly matters",
-  "description": "We’re here to help you stay connected to your faith through:",
-  "item1": "Reading the Holy Quran anytime, anywhere",
-  "item2": "Listening to the Quran with reciters you love",
-  "item3": "Exploring the Hadith of the Prophet (PBUH) from trusted books",
-  "item4": "Keeping up with your daily Azkar and heartfelt duaa",
   "install": "How to add it to your phone?",
   "step1": "Open your browser menu (the three dots at the top right)",
   "step2": "Tap “Add to Home screen”",
   "step3": "Choose a name, and it will appear on your phone like a normal app",
   "hero": {
     "badge": "Your companion in every moment",
-    "title": "A simple space for your daily worship",
-    "description": "Whether you want to read, listen, or remember Allah, this app is designed to make your journey with the Quran and your daily ibadah easier and more consistent.",
+    "title": "My goal is to help you get closer to Allah from anywhere, at any time",
+    "description": "Whether you want to read, listen, or remember Allah, this website is designed to make your journey with the Quran and your daily ibadah easier and more consistent.",
     "primaryCta": "Start reading",
     "secondaryCta": "Start listening",
     "imageAlt": "App preview"
@@ -22,7 +16,7 @@
     "subheading": "Everything you need to stay close to the Quran and your عبادات, all in one place.",
     "readQuran": {
       "title": "Read Quran",
-      "desc": "Move through surahs, juz, or pages in a calm and clear reading experience."
+      "desc": "Move through surahs, or juz in a calm and clear reading experience."
     },
     "listenQuran": {
       "title": "Listen to Quran",
@@ -30,7 +24,7 @@
     },
     "searchAyah": {
       "title": "Find an Ayah",
-      "desc": "Search by words and quickly reach the verses you’re looking for."
+      "desc": "Search by words and reach the verses you’re looking for in seconds."
     },
     "prayerTimes": {
       "title": "Prayer Times",
@@ -54,7 +48,7 @@
     },
     "sadaqaGarya": {
       "title": "Ongoing Charity",
-      "desc": "Find and share opportunities for sadaqa jariya."
+      "desc": "Create an ongoing charity for a person you care about and share it with others."
     },
     "favourites": {
       "title": "Favourites",

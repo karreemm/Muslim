@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSavedAyahs } from "../../../context/SavedAyahsContext";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useSavedAyahs } from "../../../context/features/SavedAyahsContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
@@ -47,7 +47,7 @@ export default function AyahsTable() {
   };
 
   return (
-    <div className="mt-10 max-w-(--breakpoint-xl) min-h-screen mx-auto px-4 md:px-8">
+    <div className="mt-10 max-w-7xl min-h-screen mx-auto px-4 md:px-8">
       {isEmpty && (
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
           {t("savedAyahs.noSavedAyahs")}
@@ -94,7 +94,7 @@ export default function AyahsTable() {
                     </td>
                     <td
                       dir="rtl"
-                      className="fontAmiri px-6 py-4 whitespace-normal leading-8 hidden md:table-cell"
+                      className="px-6 py-4 whitespace-normal leading-8 hidden md:table-cell"
                     >
                       {item.text}
                     </td>

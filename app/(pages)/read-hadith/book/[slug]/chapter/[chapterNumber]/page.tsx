@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/context/general/LanguageContext";
+import Navbar from "@/components/layout/navbar/Navbar";
+import Footer from "@/components/layout/footer/Footer";
 import TranslationPair from "@/types";
 import { ClipLoader } from "react-spinners";
 import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
@@ -54,7 +54,7 @@ export default function ChapterHadithsPage() {
     <>
       <div className="w-full min-h-screen flex flex-col gap-8 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center mt-10">
-          <div className="w-[95%] max-w-5xl flex flex-col items-center gap-6">
+          <div className="w-[95%] max-w-7xl flex flex-col items-center gap-6">
             <div className="w-full flex flex-col items-center gap-4">
               <h1 className="text-3xl md:text-4xl font-bold text-center">
                 {t("hadith.chapter.title")}
@@ -231,7 +231,7 @@ export default function ChapterHadithsPage() {
                           )}
                           <p
                             dir="rtl"
-                            className="text-lg leading-loose text-foreground fontAmiri"
+                            className="text-lg leading-loose text-foreground"
                           >
                             {hadith.hadithArabic}
                           </p>

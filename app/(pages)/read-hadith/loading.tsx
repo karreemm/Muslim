@@ -6,7 +6,7 @@ export default function LoadingPage() {
       <div className="w-[95%] mt-32 flex flex-col items-center gap-10">
         <div className="h-10 w-64 bg-muted rounded-lg animate-pulse"></div>
 
-        <div className="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
           <BookCardSkeleton />
           <BookCardSkeleton />
           <BookCardSkeleton />

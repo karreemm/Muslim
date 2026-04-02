@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 
 interface Particle {
   id: number;

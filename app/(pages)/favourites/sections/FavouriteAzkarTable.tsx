@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useFavoriteAzkar } from "../../../../context/FavoriteAzkarContext";
-import { useLanguage } from "../../../../context/LanguageContext";
+import { useFavoriteAzkar } from "../../../../context/favourites/FavoriteAzkarContext";
+import { useLanguage } from "../../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
 import { toArabicNumber } from "../../../../utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,7 +54,7 @@ export default function HadithTable() {
   };
 
   return (
-    <div className="mt-20 max-w-(--breakpoint-xl) min-h-screen mx-auto px-4 md:px-8">
+    <div className="mt-20 max-w-7xl min-h-screen mx-auto px-4 md:px-8">
       {isEmpty && (
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
           {t("favourites.azkar.noFavourites")}
@@ -100,7 +100,7 @@ export default function HadithTable() {
                       </td>
                       <td
                         dir="rtl"
-                        className="fontAmiri px-6 py-4 hidden md:table-cell leading-8"
+                        className="px-6 py-4 hidden md:table-cell leading-8"
                       >
                         {item.content}
                       </td>

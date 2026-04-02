@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/app/styles/modules/AudioPlayer.module.css";
 import animationStyles from "@/app/styles/modules/Animations.module.css";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { reciters } from "@/constants/recitersData";
 import { surahNames } from "@/constants/quranData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,7 +30,7 @@ import {
   useAudioPlayer,
   useSurahDownload,
 } from "@/hooks/listenQuran";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 
 interface SurahAudioPlayerProps {
   reciterId: string;
@@ -182,7 +182,7 @@ const SurahAudioPlayer: React.FC<SurahAudioPlayerProps> = ({
 
           {/* Sticky Bottom Bar */}
           <div className="w-full h-fit z-[100] bg-[hsl(var(--player-bg))] backdrop-blur-lg border-t border-border/20 shadow-xl px-4 py-4 md:py-6 animate-slide-up transition-all duration-300">
-            <div className="max-w-[1500px] mx-auto flex flex-col gap-2 md:gap-4">
+            <div className="max-w-7xl mx-auto flex flex-col gap-2 md:gap-4">
               {/* Progress Slider Row */}
               {showProgressBar && (
                 <div

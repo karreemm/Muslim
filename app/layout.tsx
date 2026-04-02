@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ThemeContextProvider from "../context/ThemeContext";
-import LanguageContextProvider from "../context/LanguageContext";
-import { SavedAyahsProvider } from "../context/SavedAyahsContext";
-import { FavoriteSurahsProvider } from "../context/FavoriteSurahsContext";
-import { FavoriteHadithsProvider } from "../context/FavoriteHadithsContext";
-import { FavoriteAzkarProvider } from "../context/FavoriteAzkarContext";
-import { SadaqaGaryaProvider } from "../context/SadaqatContext";
-import TasbeehContextProvider from "../context/TasbeehContext";
+import ThemeContextProvider from "../context/general/ThemeContext";
+import LanguageContextProvider from "../context/general/LanguageContext";
+import { SavedAyahsProvider } from "../context/features/SavedAyahsContext";
+import { FavoriteSurahsProvider } from "../context/favourites/FavoriteSurahsContext";
+import { FavoriteHadithsProvider } from "../context/favourites/FavoriteHadithsContext";
+import { FavoriteAzkarProvider } from "../context/favourites/FavoriteAzkarContext";
+import { SadaqaGaryaProvider } from "../context/features/SadaqatContext";
+import TasbeehContextProvider from "../context/features/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
-import { QuranAudioProvider } from "../context/QuranAudioContext";
+import { QuranAudioProvider } from "../context/features/QuranAudioContext";
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -34,13 +34,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cabin+Condensed:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body
-        className={`dynamic-font bg-background dark:bg-background`}
-      >
+      <body className={`font bg-background dark:bg-background`}>
         <LanguageContextProvider>
           <ThemeContextProvider>
             <QuranAudioProvider>
@@ -50,9 +48,7 @@ export default function RootLayout({
                     <FavoriteAzkarProvider>
                       <SadaqaGaryaProvider>
                         <TasbeehContextProvider>
-                          <PageLayout>
-                            {children}
-                          </PageLayout>
+                          <PageLayout>{children}</PageLayout>
                         </TasbeehContextProvider>
                       </SadaqaGaryaProvider>
                     </FavoriteAzkarProvider>

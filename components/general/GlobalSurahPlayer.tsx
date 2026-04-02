@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import { usePathname } from "next/navigation";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { reciters } from "@/constants/recitersData";
 import { surahNames } from "@/constants/quranData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -225,10 +225,6 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
     }
 
     playAyah(requestedAyahIndex);
-    // The ayah-play request should be handled only when the trigger changes.
-    // Including playAyah in dependencies causes a render loop because playAyah
-    // is recreated by the hook and itself updates state.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playAyahTrigger, requestedAyahIndex, loading, surah]);
 
   useEffect(() => {
@@ -308,7 +304,7 @@ const GlobalPlayerInner: React.FC<InnerProps> = ({
       <audio ref={audioPlayer} className="hidden" />
       <audio ref={nextAudioPlayer} className="hidden" />
 
-      <div className="max-w-[1500px] mx-auto px-3 py-2">
+      <div className="max-w-7xl mx-auto px-3 py-2">
         <div dir="ltr" className="flex items-center gap-2 mb-1.5">
           <span className="text-[11px] font-mono text-muted-foreground min-w-[36px]">
             {formatTime(currentTime)}

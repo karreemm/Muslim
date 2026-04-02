@@ -1,6 +1,6 @@
 "use client";
 
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
 import { surahNames, juzNames } from "../../../constants/quranData";
 import QuranNavbar from "./components/QuranNavbar";
@@ -26,7 +26,7 @@ export default function ReadQuran() {
   );
 
   return (
-    <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col items-center gap-20">
+    <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col items-center gap-20">
       <div className="w-full mt-10">
         <QuranNavbar
           onTabChange={(tabName) => setActiveTab(tabName)}

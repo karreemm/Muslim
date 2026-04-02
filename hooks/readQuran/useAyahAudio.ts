@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 
 export const useAyahAudio = (
   surahNumber: number,

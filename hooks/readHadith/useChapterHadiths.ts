@@ -6,12 +6,12 @@ import {
   searchHadiths,
   searchHadithByNumber,
 } from "@/app/(pages)/read-hadith/service/HadithApiService";
-import { useFavoriteHadiths } from "@/context/FavoriteHadithsContext";
+import { useFavoriteHadiths } from "@/context/favourites/FavoriteHadithsContext";
 
 export function useChapterHadiths(
   bookSlug: string,
   chapterNumber: string,
-  itemsPerPage: number = 10
+  itemsPerPage: number = 10,
 ) {
   const searchParams = useSearchParams();
   const hadithNumber = searchParams.get("hadith");
@@ -53,7 +53,7 @@ export function useChapterHadiths(
             bookSlug,
             chapterNumber,
             currentPage,
-            itemsPerPage
+            itemsPerPage,
           );
 
           if (data.hadiths) {
@@ -113,7 +113,7 @@ export function useChapterHadiths(
           language,
           bookSlug,
           currentPage,
-          itemsPerPage
+          itemsPerPage,
         );
       }
 
@@ -151,7 +151,7 @@ export function useChapterHadiths(
 
   const isFavorite = (hadithNumber: string, bookSlug: string) => {
     return favoriteHadiths.some(
-      (h) => h.numberEn === parseInt(hadithNumber) && h.bookId === bookSlug
+      (h) => h.numberEn === parseInt(hadithNumber) && h.bookId === bookSlug,
     );
   };
 

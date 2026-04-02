@@ -11,7 +11,7 @@ import {
   faBook,
   faLanguage,
 } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "../../../../context/LanguageContext";
+import { useLanguage } from "../../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "../../../../components/modals/TafseerModal";
 import { TranslationModal } from "../../../../components/modals/TranslationModal";
@@ -81,7 +81,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
           border-border
         `}
           >
-            <span className="dynamic-font font-semibold text-sm">
+            <span className="font-semibold text-sm">
               {language === "ar" ? `الآية ${ayahNumber}` : `Ayah ${ayahNumber}`}
             </span>
             <button
@@ -109,7 +109,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                 icon={isSaved ? faCheck : faBookmark}
                 className={`w-5 ${isSaved ? "text-accent" : ""}`}
               />
-              <span className="dynamic-font flex-1 text-start">
+              <span className="flex-1 text-start">
                 {isSaved ? t("common.saved") : t("readQuran.popover.saveAyah")}
               </span>
             </button>
@@ -129,7 +129,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                   isPlaying ? "text-primary" : ""
                 }`}
               />
-              <span className="dynamic-font flex-1 text-start">
+              <span className="flex-1 text-start">
                 {isLoadingAudio
                   ? t("common.loading")
                   : t("readQuran.popover.listenAyah")}
@@ -166,7 +166,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
             `}
             >
               <FontAwesomeIcon icon={faBook} className="w-5" />
-              <span className="dynamic-font flex-1 text-start">
+              <span className="flex-1 text-start">
                 {t("readQuran.popover.viewTafseer")}
               </span>
             </button>
@@ -181,7 +181,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
             `}
             >
               <FontAwesomeIcon icon={faLanguage} className="w-5" />
-              <span className="dynamic-font flex-1 text-start">
+              <span className="flex-1 text-start">
                 {t("readQuran.popover.viewTranslation")}
               </span>
             </button>

@@ -14,15 +14,15 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
-interface ShareButtonsProps {
+interface ShareModalProps {
   url: string;
   size?: string;
 }
 
-export default function ShareButtons({ url, size }: ShareButtonsProps) {
+export default function ShareModal({ url, size }: ShareModalProps) {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [copied, setCopied] = useState<boolean>(false);
@@ -155,7 +155,7 @@ export default function ShareButtons({ url, size }: ShareButtonsProps) {
                       >
                         {language === "en" ? "Or share via" : "أو شارك عبر"}
                       </p>
-                      <div className="grid grid-cols-4 gap-3 dynamic-font">
+                      <div className="grid grid-cols-4 gap-3 ">
                         <button
                           onClick={() =>
                             window.open(

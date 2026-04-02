@@ -55,7 +55,7 @@ export default function SadaqaGaryaPage() {
                   type="text"
                   value={nameAr}
                   onChange={(e) => setNameAr(e.target.value)}
-                  className="fontAmiri h-12 w-full rounded-xl border border-input bg-background px-4 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring"
+                  className="h-12 w-full rounded-xl border border-input bg-background px-4 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring"
                   required
                   dir="rtl"
                 />
@@ -83,7 +83,7 @@ export default function SadaqaGaryaPage() {
                 <textarea
                   value={messageAr}
                   onChange={(e) => setMessageAr(e.target.value)}
-                  className="fontAmiri min-h-[130px] w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring"
+                  className="min-h-[130px] w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring"
                   dir="rtl"
                   rows={5}
                 />

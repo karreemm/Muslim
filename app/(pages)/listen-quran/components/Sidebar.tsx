@@ -8,7 +8,7 @@ import {
   faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "../../../../constants/quranData";
-import { useLanguage } from "../../../../context/LanguageContext";
+import { useLanguage } from "../../../../context/general/LanguageContext";
 import { toArabicNumber } from "../../../../utils/helpers";
 import { useTranslation } from "@/hooks/general/useTranslation";
 

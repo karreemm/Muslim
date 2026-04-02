@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFavoriteAzkar } from "@/context/FavoriteAzkarContext";
+import { useFavoriteAzkar } from "@/context/favourites/FavoriteAzkarContext";
 import { AzkarItem } from "../../app/(pages)/azkar/service/GetAzkar";
 
 /**
@@ -17,7 +17,7 @@ export function useFavoriteZekrActions(categoryId: string) {
    */
   const handleLoveClick = (azkar: AzkarItem) => {
     const isFav = favoriteAzkar.some(
-      (fav) => fav.number === azkar.number && fav.categoryId === categoryId
+      (fav) => fav.number === azkar.number && fav.categoryId === categoryId,
     );
     if (isFav) {
       removeFavoriteAzkar(azkar.number!, categoryId);
@@ -36,7 +36,7 @@ export function useFavoriteZekrActions(categoryId: string) {
    */
   const isFavorite = (number: number) => {
     return favoriteAzkar.some(
-      (fav) => fav.number === number && fav.categoryId === categoryId
+      (fav) => fav.number === number && fav.categoryId === categoryId,
     );
   };
 
@@ -51,7 +51,7 @@ export function useFavoriteZekrActions(categoryId: string) {
     useEffect(() => {
       if (zekr) {
         const status = favoriteAzkar.some(
-          (fav) => fav.number === zekr.number && fav.categoryId === categoryId
+          (fav) => fav.number === zekr.number && fav.categoryId === categoryId,
         );
         setIsFav(status);
       }

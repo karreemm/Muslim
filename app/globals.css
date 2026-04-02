@@ -188,22 +188,15 @@
   }
 }
 
-.fontAmiri {
-  font-family: "Amiri", serif;
+
+/* Font Family */
+.font{
+  font-family: "Kufam", sans-serif;
 }
 
-.fontCabin {
-  font-family: "Cabin Condensed", sans-serif;
-}
 
-[dir="rtl"] .dynamic-font {
-  font-family: "Amiri", serif;
-}
 
-[dir="ltr"] .dynamic-font {
-  font-family: "Cabin Condensed", sans-serif;
-}
-
+/* Scroll bar Styles */
 ::-webkit-scrollbar {
   width: 8px;
 }

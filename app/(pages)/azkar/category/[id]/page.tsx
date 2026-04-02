@@ -2,9 +2,9 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import Nvbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/context/general/LanguageContext";
+import Nvbar from "@/components/layout/navbar/Navbar";
+import Footer from "@/components/layout/footer/Footer";
 import { AzkarCategories } from "@/constants/azkarData";
 import Pagination from "../../../../../components/general/Pagination";
 import { toArabicNumber } from "@/utils/helpers";
@@ -71,7 +71,7 @@ export default function CategoryPage() {
 
   return (
     <>
-      <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col gap-5 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
+      <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col gap-5 p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
         <div className="w-full flex justify-center">
           <h1 className="mt-10 text-4xl font-bold flex gap-1 text-center">
             {t("common.category")}{" "}

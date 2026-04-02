@@ -8,7 +8,7 @@ import QuranSurahHeader from "@/components/general/QuranSurahHeader";
 import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
 import { useQuranPageLines } from "@/hooks/readQuran/useQuranPageLines";
 import { useAyahInteraction } from "@/hooks/readQuran/useAyahInteraction";
-import { useQuranAudio } from "@/context/QuranAudioContext";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import type { QuranVerse } from "@/hooks/readQuran";
 
 interface SurahHeaderInfo {

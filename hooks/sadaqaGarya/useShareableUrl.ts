@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSadaqaGarya } from "../../context/SadaqatContext";
+import { useSadaqaGarya } from "../../context/features/SadaqatContext";
 import { safeEncode } from "../../utils/encoding";
 
 export default function useShareableUrl(slug: string) {
@@ -10,7 +10,7 @@ export default function useShareableUrl(slug: string) {
   const shortenURL = async (url: string): Promise<string | undefined> => {
     try {
       const response = await fetch(
-        `https://tinyurl.com/api-create.php?url=${url}`
+        `https://tinyurl.com/api-create.php?url=${url}`,
       );
       const shortUrl = await response.text();
       console.log("Short URL:", shortUrl);
@@ -26,7 +26,7 @@ export default function useShareableUrl(slug: string) {
     if (person) {
       const encodedData = safeEncode(person);
       const shortenedUrl = await shortenURL(
-        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`
+        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`,
       );
       return (
         shortenedUrl || `https://muslim-one.vercel.app/sadaqa-garya/${slug}`

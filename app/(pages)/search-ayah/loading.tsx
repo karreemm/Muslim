@@ -2,7 +2,7 @@ import { AyahSearchCardSkeleton } from "./components/AyahSearchCardSkeleton";
 
 export default function LoadingSearchAyah() {
   return (
-    <div className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col items-center gap-10 mt-32">
+    <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col items-center gap-10 mt-32">
       <div className="w-[90%] mx-auto">
         <div className="bg-card rounded-lg shadow-lg p-3 sm:p-6 border border-border animate-pulse">
           <div className="flex items-center gap-2 sm:gap-3">

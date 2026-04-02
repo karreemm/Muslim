@@ -3,7 +3,7 @@ import {
   searchAyahs,
   type SearchResponse,
 } from "@/app/(pages)/search-ayah/service/GetSearchAyah";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 
 export const useSearchAyah = () => {
   const { language } = useLanguage();

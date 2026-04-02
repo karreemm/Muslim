@@ -3,12 +3,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, useRef } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/layout/Navbar";
+import { useLanguage } from "@/context/general/LanguageContext";
+import Navbar from "@/components/layout/navbar/Navbar";
 import GetPage from "../../service/GetPage";
 import { toArabicNumber, showPopover, hidePopover } from "@/utils/helpers";
 import QuranPageRenderer from "../../components/QuranPageRenderer";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/footer/Footer";
 import { useQuranNavigation, useContainerFontSize } from "@/hooks/readQuran";
 
 export default function PageView() {
@@ -35,7 +35,7 @@ export default function PageView() {
   return (
     <>
       <div className="w-full min-h-screen flex flex-col items-center md:p-5 bg-background text-foreground dark:bg-background dark:text-foreground">
-        <div className="relative mt-10 w-[90%] max-w-[1500px] mx-auto flex flex-col items-center">
+        <div className="relative mt-10 w-[90%] max-w-7xl mx-auto flex flex-col items-center">
           <div>
             {navigation.hasNext && (
               <>

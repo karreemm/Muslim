@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import {
   usePrayerTimes,
@@ -9,7 +9,7 @@ import {
   useNextPrayer,
 } from "../../../hooks/prayerTimes";
 import Loading from "@/components/general/Loading";
-import GovernorateSelector from "@/components/general/GovernorateSelector";
+import GovernorateSelector from "@/app/(pages)/prayer-times/components/GovernorateSelector";
 
 const prayerNames = {
   en: ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"],
@@ -98,7 +98,7 @@ const PrayerTimes: React.FC = () => {
     <div className="w-full pb-20 lg:pb-0">
       {prayerTimes && (
         <>
-          <div className="mx-auto mt-8 w-[92%] max-w-6xl space-y-6 text-foreground">
+          <div className="mx-auto mt-8 w-[92%] max-w-7xl space-y-6 text-foreground">
             <div className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur-sm lg:p-7">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">

@@ -2,13 +2,13 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { useSearchAyah } from "@/hooks/searchAyah";
 import { AyahSearchCard } from "./components/AyahSearchCard";
 import { AyahSearchCardSkeleton } from "./components/AyahSearchCardSkeleton";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import Navbar from "@/components/layout/navbar/Navbar";
+import Footer from "@/components/layout/footer/Footer";
 
 export default function SearchAyah() {
   const { language } = useLanguage();
@@ -59,7 +59,7 @@ export default function SearchAyah() {
     <>
       <div
         dir={language === "ar" ? "rtl" : "ltr"}
-        className="w-full max-w-[1500px] mx-auto min-h-screen flex flex-col items-center gap-10"
+        className="w-full max-w-7xl mx-auto min-h-screen flex flex-col items-center gap-10"
       >
         <div className="w-full mt-10">
           <div className="w-[90%] mx-auto">
@@ -75,7 +75,7 @@ export default function SearchAyah() {
                   onChange={(e) => setKeyword(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder={t("searchAyah.placeholder")}
-                  className="flex-1 text-base sm:text-xl dynamic-font outline-none bg-transparent text-foreground placeholder:text-muted-foreground min-w-0"
+                  className="flex-1 text-base sm:text-xl  outline-none bg-transparent text-foreground placeholder:text-muted-foreground min-w-0"
                   dir={language === "ar" ? "rtl" : "ltr"}
                 />
 
@@ -105,7 +105,7 @@ export default function SearchAyah() {
                       </svg>
                     </div>
                   </div>
-                  <span className="text-sm sm:text-base dynamic-font text-muted-foreground group-hover:text-primary transition-colors select-none">
+                  <span className="text-sm sm:text-base  text-muted-foreground group-hover:text-primary transition-colors select-none">
                     {t("searchAyah.exactPhrase")}
                   </span>
                 </label>
@@ -124,7 +124,7 @@ export default function SearchAyah() {
                 <button
                   onClick={handleSearch}
                   disabled={!keyword.trim() || isLoading}
-                  className="px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font text-sm sm:text-base flex-shrink-0 whitespace-nowrap"
+                  className="px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all  text-sm sm:text-base flex-shrink-0 whitespace-nowrap"
                 >
                   {t("searchAyah.searchButton")}
                 </button>
@@ -142,18 +142,18 @@ export default function SearchAyah() {
             </div>
           ) : error ? (
             <div className="flex-1 flex items-center justify-center text-center py-20">
-              <p className="text-lg dynamic-font text-destructive">{error}</p>
+              <p className="text-lg  text-destructive">{error}</p>
             </div>
           ) : results && totalResults > 0 ? (
             <>
               <div className="mb-6">
-                <h2 className="text-2xl font-semibold dynamic-font">
+                <h2 className="text-2xl font-semibold ">
                   {t("searchAyah.resultsFound", { count: totalResults })}
                 </h2>
-                <p className="text-sm mt-1 dynamic-font opacity-70">
+                <p className="text-sm mt-1  opacity-70">
                   {t("searchAyah.searchingFor")} &quot;{searchedKeyword}&quot;
                 </p>
-                <p className="text-sm mt-1 dynamic-font opacity-70">
+                <p className="text-sm mt-1  opacity-70">
                   {t("searchAyah.showingPage", {
                     current: currentPage,
                     total: totalPages,
@@ -176,11 +176,11 @@ export default function SearchAyah() {
                       handlePageChange(Math.max(1, currentPage - 1))
                     }
                     disabled={currentPage === 1 || isLoading}
-                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all "
                   >
                     {t("searchAyah.previous")}
                   </button>
-                  <span className="px-4 dynamic-font">
+                  <span className="px-4 ">
                     {currentPage} / {totalPages}
                   </span>
                   <button
@@ -188,7 +188,7 @@ export default function SearchAyah() {
                       handlePageChange(Math.min(totalPages, currentPage + 1))
                     }
                     disabled={currentPage === totalPages || isLoading}
-                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all dynamic-font"
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all "
                   >
                     {t("searchAyah.next")}
                   </button>
@@ -197,10 +197,10 @@ export default function SearchAyah() {
             </>
           ) : hasSearched && totalResults === 0 ? (
             <div className="flex-1 flex items-center justify-center text-center py-20">
-              <p className="text-lg dynamic-font">
+              <p className="text-lg ">
                 {t("searchAyah.noResults")}
               </p>
-              <p className="text-sm mt-2 dynamic-font opacity-70">
+              <p className="text-sm mt-2  opacity-70">
                 {t("searchAyah.tryDifferent")}
               </p>
             </div>
@@ -210,7 +210,7 @@ export default function SearchAyah() {
                 icon={faSearch}
                 className="text-6xl text-primary mb-4"
               />
-              <p className="text-xl dynamic-font">
+              <p className="text-xl ">
                 {t("searchAyah.startSearch")}
               </p>
             </div>
