@@ -67,7 +67,7 @@ export const AudioPlayer = () => {
 
   const pathname = usePathname();
   const { language } = useLanguage();
-  const isListenPage = pathname.includes("/listen-quran");
+  const isListenPage = pathname.includes("/listen-quran/reciter/");
   const isReadQuranPage = pathname.includes("/read-quran");
 
   const [showReciterDropdown, setShowReciterDropdown] = useState(false);
@@ -386,7 +386,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
           onJumpToAyah={triggerScrollToAyah}
         />
 
-        <div className="px-3 sm:px-4 py-2.5">
+        <div className="py-2.5 max-w-7xl mx-auto w-full">
           <div className="flex md:hidden items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
               <div

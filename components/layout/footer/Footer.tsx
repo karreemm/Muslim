@@ -35,12 +35,10 @@ export default function Footer() {
         <div className="flex flex-col items-center text-center mb-10">
           <div className="relative mb-5">
             <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150" />
-            <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 text-primary">
-              <FontAwesomeIcon icon={faMosque} className="text-3xl" />
-            </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground  mb-4 tracking-tight">
+          <h2 className="flex items-center gap-2 text-3xl font-bold text-foreground mb-4 tracking-tight">
+            <FontAwesomeIcon icon={faMosque} />
             {t("footer.title")}
           </h2>
 

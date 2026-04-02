@@ -1,51 +1,74 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "../../../context/general/LanguageContext";
-import { reciters } from "../../../constants/recitersData";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { reciters } from "@/constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faHeadphones, 
+  faMicrophone, 
+  faArrowRight, 
+  faArrowLeft,
+  faMusic
+} from "@fortawesome/free-solid-svg-icons";
+import { CategoryCardSkeleton } from "./components/ReciterCardSkeleton";
 
 export default function ListenQuranPage() {
   const { language } = useLanguage();
   const { t } = useTranslation();
+  const isArabic = language === "ar";
 
   return (
-    <div className="bg-background text-primary min-h-screen w-full flex justify-center">
-      <div className="w-[95%] max-w-7xl mx-auto mt-10 flex flex-col items-center gap-10">
-        <h1 className="text-2xl md:text-4xl text-center">
-          {t("listenQuran.title")}
-        </h1>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 bg-background text-foreground p-5">
+    <div className="w-full min-h-screen bg-background text-foreground pb-20">
+      <div className="relative z-10 w-[92%] max-w-[1500px] mx-auto pt-10">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground dynamic-font mb-3">
+            {t("listenQuran.title")}
+          </h1>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {reciters.map((reciter) => (
             <Link
               key={reciter.id}
               href={`/listen-quran/reciter/${reciter.id}`}
-              className="bg-card px-5 py-3 border border-transparent shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-lg flex justify-between group hover:border-border hover:bg-opacity-70"
+              className="group relative rounded-2xl border border-border bg-card/70 p-5 
+                transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 
+                hover:border-primary/30 backdrop-blur-sm"
             >
-              <div className="flex gap-5 items-center">
-                <div className="w-[65px] h-[65px] flex items-center justify-center bg-background group-hover:text-primary-foreground group-hover:bg-primary dark:group-hover:bg-primary rounded-md text-xl">
-                  <img
-                    loading="lazy"
-                    decoding="async"
-                    src={reciter.image.src}
-                    alt={reciter.NameEn}
-                    className="w-[50px] h-[50px] rounded-full"
-                  />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary/50 text-primary 
+                  transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110 shadow-lg">
+                  <FontAwesomeIcon icon={faMicrophone} className="text-2xl" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h1 className="md:text-2xl text-xl">
+                
+                <div className="flex-1">
+                  <h3 className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
                     {t("listenQuran.reciter")}
-                  </h1>
-                  <span className="text-lg md:text-xl group-hover:text-primary">
-                    {language === "en" ? reciter.NameEn : reciter.NameAr}
-                  </span>
+                  </h3>
+                  <h2 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors dynamic-font">
+                    {isArabic ? reciter.NameAr : reciter.NameEn}
+                  </h2>
+                </div>
+
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <FontAwesomeIcon 
+                      icon={isArabic ? faArrowLeft : faArrowRight} 
+                      className="text-sm" 
+                    />
+                  </div>
                 </div>
               </div>
             </Link>
           ))}
         </div>
-        <div className="h-20"></div>
       </div>
+      
+      <div className="h-20" />
     </div>
   );
 }

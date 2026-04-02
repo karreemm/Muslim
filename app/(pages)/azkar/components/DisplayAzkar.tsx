@@ -10,7 +10,7 @@ import { useAzkarCategory } from "@/hooks/azkar/useAzkarCategory";
 import { useAzkarData } from "@/hooks/azkar/useAzkarData";
 import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import { AzkarCategories } from "@/constants/azkarData";
-import { AzkarCardSkeleton } from "../../components/AzkarCardSkeleton";
+import { AzkarCardSkeleton } from "./AzkarCardSkeleton";
 import { toArabicNumber } from "@/utils/helpers";
 
 interface AzkarPageProps {

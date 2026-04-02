@@ -11,7 +11,8 @@ export default function PageLayout({
   children: React.ReactNode;
 }) {
   const currentPath = usePathname();
-  const listenQuranPage = currentPath.includes("listen-quran");
+  const listenQuranPage = currentPath.includes("listen-quran/reciter");
+
 
   return (
     <div

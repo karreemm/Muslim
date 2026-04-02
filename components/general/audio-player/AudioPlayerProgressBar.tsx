@@ -30,7 +30,7 @@ export default function AudioPlayerProgressBar({
   onJumpToAyah,
 }: AudioPlayerProgressBarProps) {
   return (
-    <div className="px-4 pt-2 pb-1">
+    <div className="px-4 pt-2 pb-1 max-w-7xl mx-auto w-full">
       <div dir="ltr" className="flex items-center gap-3">
         <span className="text-[10px] font-mono text-muted-foreground min-w-[40px] tabular-nums hidden sm:block">
           {formatTime(currentTime)}

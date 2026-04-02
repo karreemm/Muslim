@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { removeDiacritics } from "../../utils/helpers";
+import { removeDiacritics } from "@/utils/helpers";
 
 export interface HighlightTextProps {
   text: string;

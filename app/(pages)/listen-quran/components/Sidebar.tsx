@@ -61,35 +61,31 @@ const Sidebar: React.FC<SidebarProps> = ({
       aria-label={t("listenQuran.sidebar.title")}
     >
       <div className="flex h-full min-h-0 flex-col pb-24 md:pb-28">
-        <div className="sticky top-0 z-10 border-b border-border/70 bg-background/90 px-3 py-3 backdrop-blur-md">
-          <div className="flex items-center justify-between gap-2">
-            <button
-              onClick={toggleSidebar}
-              className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-card text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
-              aria-label={
-                isExpanded ? "Collapse surah list" : "Expand surah list"
-              }
-            >
-              <FontAwesomeIcon
-                icon={isExpanded ? faX : faMagnifyingGlass}
-                className="text-lg"
-              />
-            </button>
-          </div>
+      <div className="sticky top-0 z-10 border-b border-border/70 bg-background/90 px-3 py-3 backdrop-blur-md">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleSidebar}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+            aria-label={isExpanded ? "Collapse surah list" : "Expand surah list"}
+          >
+            <FontAwesomeIcon
+              icon={isExpanded ? faX : faMagnifyingGlass}
+              className="text-lg"
+            />
+          </button>
 
           {isExpanded && (
-            <div className="mt-3">
-              <input
-                type="search"
-                placeholder={t("listenQuran.sidebar.searchPlaceholder")}
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className="w-full rounded-xl border border-input bg-card px-3 py-2 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
-                aria-label={t("listenQuran.sidebar.searchPlaceholder")}
-              />
-            </div>
+            <input
+              type="search"
+              placeholder={t("listenQuran.sidebar.searchPlaceholder")}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full rounded-xl border border-input bg-card px-3 py-2 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
+              aria-label={t("listenQuran.sidebar.searchPlaceholder")}
+            />
           )}
         </div>
+      </div>
 
         {isExpanded && (
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-4">

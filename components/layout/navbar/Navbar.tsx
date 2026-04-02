@@ -54,6 +54,7 @@ export default function Navbar() {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const pathname = usePathname();
+  const navbarContainerRef = useRef<HTMLDivElement>(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -71,6 +72,22 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navbarContainerRef.current &&
+        !navbarContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,10 +110,10 @@ export default function Navbar() {
   const mobileRoutes = mobileNavLinks(t);
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center" ref={navbarContainerRef}>
       <nav
         className={`w-full z-50 fixed top-0 left-0 right-0 px-4 py-3
-          bg-background/80 text-foreground backdrop-blur-xl
+          bg-background sm:bg-background/80 text-foreground sm:backdrop-blur-xl
           shadow-lg shadow-primary/5 border-b border-border/40
           transition-transform duration-300 ease-out
           ${isNavVisible ? "translate-y-0" : "-translate-y-full"}`}
@@ -202,19 +219,19 @@ export default function Navbar() {
               ${language === "ar" ? "text-right" : "text-left"}`}
           >
             <div className="max-w-7xl mx-auto space-y-1">
-              {mobileRoutes.map(({ href, label, icon }) => (
+              {mobileRoutes.map(({ href, label, icon, exactMatch }) => (
                 <Link
                   key={href}
                   href={href}
                   className={`flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-all duration-200
                   ${
-                    isActive(href)
+                    isActive(href, exactMatch)
                       ? "bg-primary/10 text-primary border border-primary/20"
                       : "text-foreground/80 hover:bg-secondary/50 hover:text-primary"
                   }`}
                 >
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href) ? "bg-primary/20" : "bg-secondary/50"}`}
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href, exactMatch) ? "bg-primary/20" : "bg-secondary/50"}`}
                   >
                     <FontAwesomeIcon icon={icon} className="text-sm" />
                   </div>
