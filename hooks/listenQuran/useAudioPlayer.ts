@@ -82,13 +82,12 @@ export function useAudioPlayer(
           nextAudioPlayer.current.src = "";
         }
       } else if (prevReciterIdRef.current !== reciterId) {
-        console.log("Reciter changed, resetting to ayah 1");
-        setCurrentAyahIndex(0);
+        console.log("Reciter changed, keeping current ayah position");
         setCurrentTime(0);
         setCurrentAyahElapsedTime(0);
         setCurrentAyahTotalDuration(0);
         setDuration(0);
-        setShouldAutoPlay(true);
+        setShouldAutoPlay(isPlayingRef.current);
         setIsPlaying(false);
         setIsUsingPrimary(true);
         transitionTriggeredRef.current = false;

@@ -3,7 +3,7 @@
 import Navbar from "./navbar/Navbar";
 import Footer from "./footer/Footer";
 import { usePathname } from "next/navigation";
-import { GlobalSurahPlayer } from "../general/GlobalSurahPlayer";
+import { AudioPlayer } from "../general/audio-player/AudioPlayer";
 
 export default function PageLayout({
   children,
@@ -19,7 +19,7 @@ export default function PageLayout({
     >
       <Navbar />
       <main className="flex-1 flex flex-col">{children}</main>
-      <GlobalSurahPlayer />
+      <AudioPlayer />
       {!listenQuranPage && <Footer />}
     </div>
   );

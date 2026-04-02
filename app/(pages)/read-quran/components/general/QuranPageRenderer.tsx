@@ -4,7 +4,7 @@ import styles from "@/app/styles/modules/QuranText.module.css";
 import { memo, Fragment } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
-import QuranSurahHeader from "@/components/general/QuranSurahHeader";
+import QuranSurahHeader from "./QuranSurahHeader";
 import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
 import { useQuranPageLines } from "@/hooks/readQuran/useQuranPageLines";
 import { useAyahInteraction } from "@/hooks/readQuran/useAyahInteraction";
@@ -208,7 +208,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                             : undefined
                         }
                         className={`cursor-pointer rounded transition-all duration-200 px-0.5
-                          ${isHighlighted ? "bg-primary/20 text-primary shadow-[0_0_10px_rgba(var(--primary)/0.2)]" : ""}
+                          ${isHighlighted ? "text-primary" : ""}
                           ${
                             hoveredVerseKey === chunk.verseKey ||
                             selectedVerseKey === chunk.verseKey

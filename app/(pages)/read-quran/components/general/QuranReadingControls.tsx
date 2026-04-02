@@ -82,7 +82,7 @@ export default function QuranReadingControls({
             {previous && (
               <Link
                 href={previous.href}
-                className="group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
+                className="w-fit group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
                 onMouseEnter={() =>
                   previous.popoverId && showPopover(previous.popoverId)
                 }
@@ -126,7 +126,7 @@ export default function QuranReadingControls({
             {next && (
               <Link
                 href={next.href}
-                className="group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
+                className="w-fit group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
                 onMouseEnter={() =>
                   next.popoverId && showPopover(next.popoverId)
                 }
