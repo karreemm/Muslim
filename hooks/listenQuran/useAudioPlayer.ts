@@ -6,6 +6,7 @@ export function useAudioPlayer(
   surah: Surah | null,
   reciterId: string,
   surahNumber: number,
+  stopAfterAyahIndex: number | null = null,
 ) {
   const [currentAyahIndex, setCurrentAyahIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -248,6 +249,23 @@ export function useAudioPlayer(
         }
 
         const timeLeft = activePlayer.duration - activePlayer.currentTime;
+        const shouldStopAfterCurrentAyah =
+          stopAfterAyahIndex !== null &&
+          stopAfterAyahIndex === currentAyahIndex;
+
+        if (
+          shouldStopAfterCurrentAyah &&
+          timeLeft <= 0.3 &&
+          !transitionTriggeredRef.current &&
+          !seekingRef.current
+        ) {
+          transitionTriggeredRef.current = true;
+          isTransitioningRef.current = false;
+          setShouldAutoPlay(false);
+          activePlayer.pause();
+          setIsPlaying(false);
+          return;
+        }
 
         if (
           timeLeft <= 0.3 &&
@@ -283,6 +301,16 @@ export function useAudioPlayer(
 
       const handleEnded = () => {
         console.log("Audio ended event fired");
+
+        const shouldStopAfterCurrentAyah =
+          stopAfterAyahIndex !== null &&
+          stopAfterAyahIndex === currentAyahIndex;
+
+        if (shouldStopAfterCurrentAyah) {
+          setShouldAutoPlay(false);
+          setIsPlaying(false);
+          return;
+        }
 
         if (!transitionTriggeredRef.current && !seekingRef.current) {
           setCurrentAyahIndex((prevIndex) => {
@@ -327,6 +355,7 @@ export function useAudioPlayer(
     isDragging,
     cumulativeDurations,
     playRequestCounter,
+    stopAfterAyahIndex,
   ]);
 
   const [isBuffering, setIsBuffering] = useState<boolean>(false);

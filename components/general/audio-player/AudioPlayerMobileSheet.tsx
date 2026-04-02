@@ -32,7 +32,6 @@ interface AudioPlayerMobileSheetProps {
   downloadStatus: "idle" | "downloading" | "success" | "error";
   onJumpToAyah: () => void;
   onDownload: () => void;
-  onClose: () => void;
 }
 
 export default function AudioPlayerMobileSheet({
@@ -54,7 +53,6 @@ export default function AudioPlayerMobileSheet({
   downloadStatus,
   onJumpToAyah,
   onDownload,
-  onClose,
 }: AudioPlayerMobileSheetProps) {
   if (!showMobileSheet) return null;
 
@@ -138,19 +136,6 @@ export default function AudioPlayerMobileSheet({
               </span>
             </button>
           </div>
-
-          {!isListenPage && (
-            <button
-              onClick={() => {
-                onClose();
-                setShowMobileSheet(false);
-              }}
-              className="w-full mt-3 py-3.5 text-destructive font-medium text-sm bg-destructive/5 hover:bg-destructive/10 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-              {language === "ar" ? "إغلاق المشغل" : "Close Player"}
-            </button>
-          )}
         </div>
       ) : (
         <div className="flex flex-col max-h-[60vh]">

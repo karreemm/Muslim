@@ -62,7 +62,9 @@ export const AudioPlayer = () => {
     playTrigger,
     playAyahTrigger,
     requestedAyahIndex,
+    stopAfterAyahIndex,
     triggerScrollToAyah,
+    clearStopAfterAyah,
   } = useQuranAudio();
 
   const pathname = usePathname();
@@ -123,7 +125,9 @@ export const AudioPlayer = () => {
       playTrigger={playTrigger}
       playAyahTrigger={playAyahTrigger}
       requestedAyahIndex={requestedAyahIndex}
+      stopAfterAyahIndex={stopAfterAyahIndex}
       triggerScrollToAyah={triggerScrollToAyah}
+      clearStopAfterAyah={clearStopAfterAyah}
     />
   );
 };
@@ -163,7 +167,9 @@ interface InnerProps {
   playTrigger: number;
   playAyahTrigger: number;
   requestedAyahIndex: number | null;
+  stopAfterAyahIndex: number | null;
   triggerScrollToAyah: () => void;
+  clearStopAfterAyah: () => void;
 }
 
 const AudioPlayerInner: React.FC<InnerProps> = ({
@@ -197,7 +203,9 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   playTrigger,
   playAyahTrigger,
   requestedAyahIndex,
+  stopAfterAyahIndex,
   triggerScrollToAyah,
+  clearStopAfterAyah,
 }) => {
   const { surah, loading } = useSurahData(surahNumber, reciterId);
   const {
@@ -222,7 +230,14 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     currentAyahTotalDuration,
     playAyah,
     restart,
-  } = useAudioPlayer(surah, reciterId, surahNumber);
+  } = useAudioPlayer(surah, reciterId, surahNumber, stopAfterAyahIndex);
+
+  const handleTogglePlayPause = () => {
+    if (!isPlaying && stopAfterAyahIndex !== null) {
+      clearStopAfterAyah();
+    }
+    togglePlayPause();
+  };
 
   const { downloadSurah } = useSurahDownload(surah, surahNumber);
 
@@ -246,7 +261,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
       switch (e.code) {
         case "Space":
           e.preventDefault();
-          togglePlayPause();
+          handleTogglePlayPause();
           break;
         case "ArrowLeft":
           if (e.shiftKey) previous();
@@ -262,7 +277,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [togglePlayPause, previous, next, isMuted, audioPlayer]);
+  }, [handleTogglePlayPause, previous, next, isMuted, audioPlayer]);
 
   useEffect(() => {
     setContextIsPlaying(isPlaying);
@@ -398,19 +413,14 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 )}
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-primary/80 rounded-xl">
-                    <ClipLoader
-                      color="hsl(var(--primary-foreground))"
-                      size={16}
-                    />
+                    <ClipLoader color="hsl(var(--primary-foreground))" size={16} />
                   </div>
                 )}
               </div>
 
               <div className="min-w-0 flex flex-col justify-center flex-1">
                 <h3 className="text-sm font-bold text-foreground truncate leading-tight">
-                  {language === "ar"
-                    ? `سورة ${surahName}`
-                    : `Surah ${surahName}`}
+                  {language === "ar" ? `سورة ${surahName}` : `Surah ${surahName}`}
                 </h3>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
                   <span className="truncate font-medium">{reciterName}</span>
@@ -419,6 +429,18 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
             </div>
 
             <div dir="ltr" className="flex items-center gap-0.5 shrink-0">
+              {!isListenPage && (
+                <PlayerIconButton
+                  onClick={handleClose}
+                  tooltip={language === "ar" ? "إغلاق" : "Close"}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+                >
+                  <FontAwesomeIcon icon={faXmark} className="text-xs" />
+                </PlayerIconButton>
+              )}
+
+              <div className="w-px h-5 bg-border mx-1" />
+
               <PlayerIconButton
                 onClick={previous}
                 disabled={isFirstAyah}
@@ -430,15 +452,12 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
               <PlayerIconButton
                 tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
-                onClick={togglePlayPause}
+                onClick={handleTogglePlayPause}
                 disabled={isBuffering}
                 className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
               >
                 {isBuffering ? (
-                  <FontAwesomeIcon
-                    icon={faSpinner}
-                    className="animate-spin text-sm"
-                  />
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin text-sm" />
                 ) : (
                   <FontAwesomeIcon
                     icon={isPlaying ? faPause : faPlay}
@@ -459,36 +478,11 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <div className="w-px h-5 bg-border mx-1" />
 
               <PlayerIconButton
-                tooltip={
-                  isMuted
-                    ? language === "ar"
-                      ? "تشغيل الصوت"
-                      : "Unmute"
-                    : language === "ar"
-                      ? "كتم الصوت"
-                      : "Mute"
-                }
-                onClick={() => {
-                  setIsMuted(!isMuted);
-                  if (audioPlayer.current) audioPlayer.current.muted = !isMuted;
-                }}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isMuted ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary"}`}
-              >
-                <FontAwesomeIcon
-                  icon={isMuted ? faVolumeMute : faVolumeHigh}
-                  className="text-xs"
-                />
-              </PlayerIconButton>
-
-              <PlayerIconButton
                 tooltip={language === "ar" ? "خيارات" : "Options"}
                 onClick={() => setShowMobileSheet(true)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
               >
-                <FontAwesomeIcon
-                  icon={faEllipsisVertical}
-                  className="text-xs"
-                />
+                <FontAwesomeIcon icon={faEllipsisVertical} className="text-xs" />
               </PlayerIconButton>
             </div>
           </div>
@@ -542,7 +536,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               </PlayerIconButton>
 
               <PlayerIconButton
-                onClick={togglePlayPause}
+                onClick={handleTogglePlayPause}
                 disabled={isBuffering}
                 tooltip={
                   isPlaying
@@ -638,7 +632,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 isListenPage={isListenPage}
                 showReciterDropdown={showReciterDropdown}
                 setShowReciterDropdown={setShowReciterDropdown}
-                setReciterId={setReciterId}
+                onReciterChange={setReciterId}
                 dropdownRef={dropdownRef}
                 micBtnRef={micBtnRef}
               />
@@ -679,7 +673,6 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
         downloadStatus={downloadStatus}
         onJumpToAyah={triggerScrollToAyah}
         onDownload={handleDownload}
-        onClose={handleClose}
       />
     </>
   );

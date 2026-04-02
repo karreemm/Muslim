@@ -18,7 +18,6 @@ export const highlightText = ({
 
   const normalizedKeyword = removeDiacritics(keyword.trim());
   const searchWords = normalizedKeyword.split(/\s+/);
-
   const highlightMap: boolean[] = new Array(text.length).fill(false);
 
   searchWords.forEach((searchWord) => {
@@ -27,7 +26,6 @@ export const highlightText = ({
       while (i < text.length && removeDiacritics(text[i]) === "") {
         i++;
       }
-
       if (i >= text.length) break;
 
       let textPos = i;
@@ -36,15 +34,11 @@ export const highlightText = ({
 
       while (wordPos < searchWord.length && textPos < text.length) {
         const normalizedChar = removeDiacritics(text[textPos]);
-
         if (normalizedChar === "") {
           textPos++;
           continue;
         }
-
-        if (
-          normalizedChar.toLowerCase() === searchWord[wordPos].toLowerCase()
-        ) {
+        if (normalizedChar.toLowerCase() === searchWord[wordPos].toLowerCase()) {
           wordPos++;
           textPos++;
         } else {
@@ -53,13 +47,9 @@ export const highlightText = ({
       }
 
       if (wordPos === searchWord.length) {
-        while (
-          textPos < text.length &&
-          removeDiacritics(text[textPos]) === ""
-        ) {
+        while (textPos < text.length && removeDiacritics(text[textPos]) === "") {
           textPos++;
         }
-
         for (let j = matchStart; j < textPos; j++) {
           highlightMap[j] = true;
         }
@@ -82,16 +72,13 @@ export const highlightText = ({
           parts.push(
             <span
               key={`highlight-${segmentKey++}`}
-              className="text-primary"
-              style={{ fontWeight: "700" }}
+              className="text-primary mx-0.5 font-bold"
             >
               {currentSegment}
             </span>,
           );
         } else {
-          parts.push(
-            <span key={`text-${segmentKey++}`}>{currentSegment}</span>,
-          );
+          parts.push(<span key={`text-${segmentKey++}`}>{currentSegment}</span>);
         }
         currentSegment = "";
       }
@@ -105,8 +92,7 @@ export const highlightText = ({
       parts.push(
         <span
           key={`highlight-${segmentKey++}`}
-          className="px-1.5 py-0.5 rounded mx-0.5 text-primary"
-          style={{ fontWeight: "700" }}
+          className="text-primary mx-0.5 font-bold"
         >
           {currentSegment}
         </span>,

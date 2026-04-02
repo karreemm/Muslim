@@ -1,11 +1,11 @@
 "use client";
+
 import React, { useState, useCallback, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeadphones,
   faBook,
   faLanguage,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -13,9 +13,10 @@ import { TafseerModal } from "@/components/modals/TafseerModal";
 import { TranslationModal } from "@/components/modals/TranslationModal";
 import type { SearchAyah } from "../service/GetSearchAyah";
 import { reciters } from "@/constants/recitersData";
-import animationStyles from "@/app/styles/modules/Animations.module.css";
 import { useTheme } from "@/context/general/ThemeContext";
 import { highlightText } from "./highlightText";
+import { useQuranAudio } from "@/context/features/QuranAudioContext";
+import AudioPlayerReciterDropdown from "@/components/general/audio-player/AudioPlayerReciterDropdown";
 
 interface AyahSearchCardProps {
   ayah: SearchAyah;
@@ -27,116 +28,82 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
     const { language } = useLanguage();
     const { t } = useTranslation();
     const { theme } = useTheme();
+    const isArabic = language === "ar";
+    const isDark = theme === "dark";
+    const {
+      playSurahAyah,
+      setReciterId,
+      surahNumber,
+      activeAyahIndex,
+      isPlaying,
+      isPlayerVisible,
+    } = useQuranAudio();
 
     const [selectedReciter, setSelectedReciter] =
       useState<string>("ar.alafasy");
     const [showReciterMenu, setShowReciterMenu] = useState(false);
-    const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
-    const [isLoadingAudio, setIsLoadingAudio] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(false);
     const [showTafseerModal, setShowTafseerModal] = useState(false);
     const [showTranslationModal, setShowTranslationModal] = useState(false);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
+    const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-    const handleListenClick = useCallback(async () => {
-      if (isPlaying && audioRef) {
-        audioRef.pause();
-        setIsPlaying(false);
-        return;
-      }
+    const isCurrentAyahPlaying =
+      isPlayerVisible &&
+      isPlaying &&
+      surahNumber === ayah.surah.number &&
+      activeAyahIndex === ayah.numberInSurah - 1;
 
-      setIsLoadingAudio(true);
-
-      try {
-        const response = await fetch(
-          `https://api.alquran.cloud/v1/surah/${ayah.surah.number}/${selectedReciter}`,
-        );
-
-        if (!response.ok) {
-          console.error("Failed to fetch surah data");
-          setIsLoadingAudio(false);
-          return;
-        }
-
-        const data = await response.json();
-        const ayahData = data.data.ayahs.find(
-          (a: any) => a.numberInSurah === ayah.numberInSurah,
-        );
-
-        if (!ayahData || !ayahData.audio) {
-          console.error("Audio URL not found for this ayah");
-          setIsLoadingAudio(false);
-          return;
-        }
-
-        const audio = new Audio(ayahData.audio);
-
-        audio.onended = () => {
-          setIsPlaying(false);
-        };
-
-        audio.onerror = () => {
-          console.error("Error playing audio");
-          setIsPlaying(false);
-          setIsLoadingAudio(false);
-        };
-
-        audio.onloadeddata = () => {
-          setIsLoadingAudio(false);
-        };
-
-        setAudioRef(audio);
-        await audio.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.error("Error playing ayah audio:", error);
-        setIsLoadingAudio(false);
-      }
+    const handleListenClick = useCallback(() => {
+      setReciterId(selectedReciter);
+      localStorage.setItem("preferredReciter", selectedReciter);
+      playSurahAyah(
+        ayah.surah.number,
+        ayah.numberInSurah - 1,
+        selectedReciter,
+        [],
+        true,
+      );
     }, [
-      isPlaying,
-      audioRef,
-      ayah.surah.number,
       ayah.numberInSurah,
+      ayah.surah.number,
+      playSurahAyah,
       selectedReciter,
+      setReciterId,
     ]);
 
     const handleReciterChange = useCallback(
       (reciterId: string) => {
         setSelectedReciter(reciterId);
         setShowReciterMenu(false);
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem("preferredReciter", reciterId);
-        }
-
-        if (audioRef && isPlaying) {
-          audioRef.pause();
-          setIsPlaying(false);
-        }
+        setReciterId(reciterId);
+        localStorage.setItem("preferredReciter", reciterId);
       },
-      [audioRef, isPlaying],
+      [setReciterId],
     );
 
     React.useEffect(() => {
-      if (typeof window !== "undefined") {
-        const savedReciter = localStorage.getItem("preferredReciter");
-        if (savedReciter) {
-          setSelectedReciter(savedReciter);
-        }
-      }
+      const saved = localStorage.getItem("preferredReciter");
+      if (saved) setSelectedReciter(saved);
     }, []);
 
     React.useEffect(() => {
-      return () => {
-        if (audioRef) {
-          audioRef.pause();
-          audioRef.src = "";
+      const handler = (e: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(e.target as Node) &&
+          triggerRef.current &&
+          !triggerRef.current.contains(e.target as Node)
+        ) {
+          setShowReciterMenu(false);
         }
       };
-    }, [audioRef]);
+      document.addEventListener("mousedown", handler);
+      return () => document.removeEventListener("mousedown", handler);
+    }, []);
 
     const selectedReciterData = reciters.find((r) => r.id === selectedReciter);
     const reciterName = selectedReciterData
-      ? language === "ar"
+      ? isArabic
         ? selectedReciterData.NameAr
         : selectedReciterData.NameEn
       : "";
@@ -144,129 +111,110 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
     return (
       <>
         <div
-          dir={language === "ar" ? "rtl" : "ltr"}
-          className="bg-card rounded-lg shadow-lg border border-transparent hover:border-border transition-all duration-300 p-5"
+          dir={isArabic ? "rtl" : "ltr"}
+          className="group relative overflow-visible rounded-2xl border border-border bg-card/70 backdrop-blur-sm 
+            shadow-lg shadow-primary/5 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 
+            hover:border-primary/30 hover:-translate-y-0.5"
         >
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
-            <div>
-              <h3 className="text-xl font-semibold  text-foreground">
-                {language === "ar"
-                  ? `${ayah.surah.name}`
-                  : ayah.surah.englishName}
-              </h3>
-              <p className="text-sm mt-1 opacity-70">
-                {language === "ar"
-                  ? `الآية ${ayah.numberInSurah}`
-                  : `Ayah ${ayah.numberInSurah}`}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="relative z-10 p-6">
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/50">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <span className="font-bold text-sm">{ayah.surah.number}</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground dynamic-font group-hover:text-primary transition-colors">
+                    {isArabic ? ayah.surah.name : ayah.surah.englishName}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {isArabic
+                      ? `الآية ${ayah.numberInSurah}`
+                      : `Ayah ${ayah.numberInSurah}`}
+                  </p>
+                </div>
+              </div>
+              <div className="px-3 py-1.5 rounded-full text-xs font-bold bg-secondary/50 text-secondary-foreground border border-border/30">
+                {t("searchAyah.page")} {ayah.page}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p
+                className="text-2xl leading-loose text-foreground text-center dynamic-font font-medium"
+                dir="rtl"
+              >
+                {highlightKeyword
+                  ? highlightText({
+                      text: ayah.text,
+                      keyword: highlightKeyword,
+                      isDarkMode: isDark,
+                    })
+                  : ayah.text}
               </p>
             </div>
-            <div className="px-3 py-1 rounded-full text-sm font-medium bg-primary text-primary-foreground">
-              {t("searchAyah.page")} {ayah.page}
-            </div>
-          </div>
 
-          <div className="mb-5">
-            <p
-              className="text-2xl leading-loose  text-foreground"
-              dir="rtl"
-            >
-              {highlightKeyword
-                ? highlightText({
-                    text: ayah.text,
-                    keyword: highlightKeyword,
-                    isDarkMode: theme === "dark",
-                  })
-                : ayah.text}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleListenClick}
-              disabled={isLoadingAudio}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:cursor-pointer ${
-                isPlaying
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-            >
-              <FontAwesomeIcon
-                icon={isLoadingAudio ? faSpinner : faHeadphones}
-                className={isLoadingAudio ? "animate-spin" : ""}
-              />
-              <span className=" text-sm">
-                {isLoadingAudio ? t("common.loading") : t("searchAyah.listen")}
-              </span>
-              {isPlaying && (
-                <div className={animationStyles.soundWave}>
-                  <div
-                    className={animationStyles.waveBarWhite}
-                    style={{ animationDelay: "0s" }}
-                  ></div>
-                  <div
-                    className={animationStyles.waveBarWhite}
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className={animationStyles.waveBarWhite}
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </div>
-              )}
-            </button>
-
-            <button
-              onClick={() => setShowTafseerModal(true)}
-              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
-            >
-              <FontAwesomeIcon icon={faBook} />
-              <span className=" text-sm">
-                {t("searchAyah.tafseer")}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setShowTranslationModal(true)}
-              className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
-            >
-              <FontAwesomeIcon icon={faLanguage} />
-              <span className=" text-sm">
-                {t("searchAyah.translation")}
-              </span>
-            </button>
-
-            <div
-              className={`relative ${language === "ar" ? "md:mr-auto" : "md:ml-auto"}`}
-            >
+            <div className="flex flex-wrap items-center gap-2">
               <button
-                onClick={() => setShowReciterMenu(!showReciterMenu)}
-                className="flex items-center hover:cursor-pointer gap-2 px-4 py-2 rounded-lg transition-all bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
+                onClick={handleListenClick}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                  isCurrentAyahPlaying
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                    : "bg-secondary/50 text-foreground hover:bg-primary hover:text-primary-foreground border border-border/30 hover:border-primary/30"
+                }`}
               >
-                <div className="w-2 h-2 rounded-full bg-primary"></div>
-                <span className=" text-sm">{reciterName}</span>
+                <FontAwesomeIcon icon={faHeadphones} />
+                <span>{t("searchAyah.listen")}</span>
+                {isCurrentAyahPlaying && (
+                  <div className="flex gap-0.5 items-end h-3 ml-1">
+                    {[0, 0.1, 0.2].map((delay) => (
+                      <div
+                        key={delay}
+                        className="w-0.5 bg-current rounded-full animate-pulse"
+                        style={{
+                          height: "100%",
+                          animationDelay: `${delay}s`,
+                          animationDuration: "0.5s",
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </button>
 
-              {showReciterMenu && (
-                <div
-                  className={`absolute ${
-                    language === "ar" ? "left-0" : "right-0"
-                  } bottom-full mb-2 w-64 rounded-lg shadow-xl border max-h-64 overflow-y-auto z-10 bg-card border-border`}
-                >
-                  {reciters.map((reciter) => (
-                    <button
-                      key={reciter.id}
-                      onClick={() => handleReciterChange(reciter.id)}
-                      className={`w-full px-4 py-2 text-start transition-colors hover:bg-muted ${
-                        selectedReciter === reciter.id ? "bg-muted" : ""
-                      }`}
-                    >
-                      <div className=" text-sm text-foreground">
-                        {language === "ar" ? reciter.NameAr : reciter.NameEn}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
+              <button
+                onClick={() => setShowTafseerModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm bg-secondary/50 text-foreground 
+                  border border-border/30 hover:border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              >
+                <FontAwesomeIcon icon={faBook} />
+                <span>{t("searchAyah.tafseer")}</span>
+              </button>
+
+              <button
+                onClick={() => setShowTranslationModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm bg-secondary/50 text-foreground 
+                  border border-border/30 hover:border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              >
+                <FontAwesomeIcon icon={faLanguage} />
+                <span>{t("searchAyah.translation")}</span>
+              </button>
+
+              <div className={`relative ${isArabic ? "lg:mr-auto" : "lg:ml-auto"}`}>
+                <AudioPlayerReciterDropdown
+                  language={language}
+                  reciterId={selectedReciter}
+                  showReciterDropdown={showReciterMenu}
+                  setShowReciterDropdown={setShowReciterMenu}
+                  onReciterChange={handleReciterChange}
+                  dropdownRef={dropdownRef}
+                  micBtnRef={triggerRef}
+                  triggerVariant="label"
+                  reciterName={reciterName}
+                  align={isArabic ? "start" : "end"}
+                />
+              </div>
             </div>
           </div>
         </div>

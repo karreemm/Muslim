@@ -29,6 +29,7 @@ interface QuranAudioContextType {
     ayahIndex: number,
     reciterId?: string,
     queue?: number[],
+    stopAfterAyah?: boolean,
   ) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setActiveAyahIndex: (index: number) => void;
@@ -42,8 +43,10 @@ interface QuranAudioContextType {
   playTrigger: number;
   playAyahTrigger: number;
   requestedAyahIndex: number | null;
+  stopAfterAyahIndex: number | null;
   scrollToAyahTrigger: number;
   triggerScrollToAyah: () => void;
+  clearStopAfterAyah: () => void;
 }
 
 const QuranAudioContext = createContext<QuranAudioContextType | null>(null);
@@ -66,10 +69,17 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [requestedAyahIndex, setRequestedAyahIndex] = useState<number | null>(
     null,
   );
+  const [stopAfterAyahIndex, setStopAfterAyahIndex] = useState<number | null>(
+    null,
+  );
   const [scrollToAyahTrigger, setScrollToAyahTrigger] = useState<number>(0);
 
   const triggerScrollToAyah = useCallback(() => {
     setScrollToAyahTrigger((t) => t + 1);
+  }, []);
+
+  const clearStopAfterAyah = useCallback(() => {
+    setStopAfterAyahIndex(null);
   }, []);
 
   useEffect(() => {
@@ -90,6 +100,8 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorage.setItem("preferredReciter", rId);
       }
       setActiveAyahIndex(0);
+      setRequestedAyahIndex(null);
+      setStopAfterAyahIndex(null);
       setIsPlayerVisible(true);
       setIsPlaying(true);
       setPlayTrigger((t) => t + 1);
@@ -104,6 +116,7 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
       ayahIndex: number,
       rId?: string,
       queue: number[] = [],
+      stopAfterAyah = false,
     ) => {
       setSurahNumber(sNumber);
       setSurahQueue(queue);
@@ -113,6 +126,7 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       setActiveAyahIndex(ayahIndex);
       setRequestedAyahIndex(ayahIndex);
+      setStopAfterAyahIndex(stopAfterAyah ? ayahIndex : null);
       setIsPlayerVisible(true);
       setIsPlaying(true);
       setPlayAyahTrigger((t) => t + 1);
@@ -137,8 +151,10 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
         playTrigger,
         playAyahTrigger,
         requestedAyahIndex,
+        stopAfterAyahIndex,
         scrollToAyahTrigger,
         triggerScrollToAyah,
+        clearStopAfterAyah,
         playSurah,
         playSurahAyah,
         setIsPlaying,
