@@ -62,7 +62,7 @@ export default function LanguageDropdown({ className = "" }: Props) {
         aria-label={copy.title}
       >
         <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-          {language === "ar" ? "AR" : "EN"}
+          {language === "ar" ? "ع" : "EN"}
         </span>
         <FontAwesomeIcon
           icon={faChevronDown}
@@ -78,7 +78,6 @@ export default function LanguageDropdown({ className = "" }: Props) {
             isArabic ? "left-0 text-right" : "right-0 text-left"
           }`}
         >
-          {/* Header */}
           <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2.5 bg-muted/30">
             <FontAwesomeIcon
               icon={faEarthAfrica}
@@ -89,7 +88,6 @@ export default function LanguageDropdown({ className = "" }: Props) {
             </span>
           </div>
 
-          {/* Options */}
           <div className="py-1">
             <button
               onClick={() => changeLanguage("ar")}
@@ -101,7 +99,7 @@ export default function LanguageDropdown({ className = "" }: Props) {
             >
               <span className="flex items-center gap-2 font-medium">
                 <span className="flex items-center justify-center w-6 h-6 rounded-md bg-secondary/50 text-xs">
-                  AR
+                  ع
                 </span>
                 {copy.ar}
               </span>
