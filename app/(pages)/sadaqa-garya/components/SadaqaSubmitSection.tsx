@@ -49,7 +49,6 @@ export default function SadaqaSubmitSection({
             </>
           ) : (
             <>
-              <Sparkles className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
               <span>{generateText}</span>
               <Send className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </>

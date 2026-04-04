@@ -16,6 +16,7 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  isHydrated: boolean;
 }
 
 export const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -28,7 +29,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const root = document.documentElement;
     const stored = localStorage.getItem("theme") as Theme | null;
-    
+
     // Check stored preference or system preference
     if (stored === "dark" || stored === "light") {
       setThemeState(stored);
@@ -37,16 +38,16 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
       setThemeState("dark");
       root.classList.add("dark");
     }
-    
+
     setMounted(true);
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
     const root = document.documentElement;
-    
+
     root.classList.toggle("dark", newTheme === "dark");
     localStorage.setItem("theme", newTheme);
-    
+
     startTransition(() => setThemeState(newTheme));
   }, []);
 
@@ -57,8 +58,13 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   // Prevent hydration mismatch by rendering light mode initially
   if (!mounted) {
     return (
-      <ThemeContext.Provider 
-        value={{ theme: "light", setTheme: () => {}, toggleTheme: () => {} }}
+      <ThemeContext.Provider
+        value={{
+          theme: "light",
+          setTheme: () => {},
+          toggleTheme: () => {},
+          isHydrated: false,
+        }}
       >
         {children}
       </ThemeContext.Provider>
@@ -66,7 +72,9 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, setTheme, toggleTheme, isHydrated: true }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -76,6 +84,7 @@ export default ThemeContextProvider;
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error("useTheme must be used within ThemeContextProvider");
+  if (!context)
+    throw new Error("useTheme must be used within ThemeContextProvider");
   return context;
 };

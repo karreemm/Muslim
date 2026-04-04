@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { GeometricPattern } from "@/utils/decorations";
 import type { ArrowIcon, TranslateFn } from "./types";
+import { useLanguage } from "@/context/general/LanguageContext";
 
 type HeroSectionProps = {
   t: TranslateFn;
@@ -14,6 +15,9 @@ type HeroSectionProps = {
 };
 
 export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
+
+  const { language } = useLanguage();
+
   return (
     <section className="relative overflow-hidden rounded-[2.5rem] border border-border bg-card/80 backdrop-blur-md shadow-2xl shadow-primary/5">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />
@@ -23,8 +27,13 @@ export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
       <GeometricPattern className="text-primary/5 w-32 h-32 top-20 right-20 rotate-45 opacity-50" />
 
       <div className="relative flex flex-col items-center justify-center text-center px-6 py-12 sm:py-16">
-        <div className="mb-6 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-lg shadow-primary/10">
-          <FontAwesomeIcon icon={faMosque} className="text-3xl sm:text-4xl" />
+        <div className="mb-6 flex items-center justify-center gap-2">
+          <span className="md:hidden mt-1 text-primary text-3xl font-bold uppercase">
+            {language === "en" ? "Muslim" : "مسلم"}
+          </span>
+          <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-lg shadow-primary/10">
+            <FontAwesomeIcon icon={faMosque} className="text-3xl sm:text-4xl" />
+          </div>
         </div>
 
         <h1

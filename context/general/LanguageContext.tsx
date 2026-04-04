@@ -14,6 +14,7 @@ interface LanguageContextType {
   language: string;
   dir: string;
   toggleLanguage: () => void;
+  isHydrated: boolean;
 }
 
 interface IProps {
@@ -25,6 +26,7 @@ export const LanguageContext = createContext<LanguageContextType | null>(null);
 const LanguageContextProvider = ({ children }: IProps) => {
   const [language, setLanguage] = useState<string>("ar");
   const [dir, setDir] = useState<string>("rtl");
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -35,6 +37,7 @@ const LanguageContextProvider = ({ children }: IProps) => {
         document.documentElement.dir = savedLanguage === "en" ? "ltr" : "rtl";
       }
     }
+    setIsHydrated(true);
   }, []);
 
   const toggleLanguage = useCallback(() => {
@@ -54,6 +57,7 @@ const LanguageContextProvider = ({ children }: IProps) => {
     language,
     dir,
     toggleLanguage,
+    isHydrated,
   };
 
   return (

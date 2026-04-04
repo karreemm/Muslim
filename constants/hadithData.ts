@@ -1,18 +1,9 @@
-import aboDawod from "../assets/books/aboDawod.webp";
-import bukhari from "../assets/books/bukhari.webp";
-import ibnMajah from "../assets/books/ibnMajah.webp";
-import muslim from "../assets/books/muslim.webp";
-import nasai from "../assets/books/nasai.webp";
-import termezei from "../assets/books/termezei.webp";
-import meshkatAlMasabih from "../assets/books/mishkatAlMasabih.webp";
-
 export const hadithBooks = [
   {
     id: "sahih-bukhari",
     slug: "sahih-bukhari",
     name_en: "Sahih Bukhari",
     name_ar: "صحيح البخاري",
-    image: bukhari,
     description_en: "The most authentic collection of hadith",
     description_ar: "أصح كتب الحديث",
   },
@@ -21,7 +12,6 @@ export const hadithBooks = [
     slug: "sahih-muslim",
     name_en: "Sahih Muslim",
     name_ar: "صحيح مسلم",
-    image: muslim,
     description_en: "The second most authentic hadith collection",
     description_ar: "ثاني أصح كتب الحديث",
   },
@@ -30,7 +20,6 @@ export const hadithBooks = [
     slug: "al-tirmidhi",
     name_en: "Jami' Al-Tirmidhi",
     name_ar: "جامع الترمذي",
-    image: termezei,
     description_en: "Comprehensive collection by Imam Tirmidhi",
     description_ar: "مجموعة شاملة للإمام الترمذي",
   },
@@ -39,7 +28,6 @@ export const hadithBooks = [
     slug: "abu-dawood",
     name_en: "Sunan Abu Dawood",
     name_ar: "سنن أبي داود",
-    image: aboDawod,
     description_en: "Collection focusing on legal hadiths",
     description_ar: "مجموعة تركز على الأحاديث الفقهية",
   },
@@ -48,7 +36,6 @@ export const hadithBooks = [
     slug: "ibn-e-majah",
     name_en: "Sunan Ibn-e-Majah",
     name_ar: "سنن ابن ماجه",
-    image: ibnMajah,
     description_en: "One of the six major hadith collections",
     description_ar: "أحد الكتب الستة",
   },
@@ -57,7 +44,6 @@ export const hadithBooks = [
     slug: "sunan-nasai",
     name_en: "Sunan An-Nasa'i",
     name_ar: "سنن النسائي",
-    image: nasai,
     description_en: "Comprehensive hadith collection",
     description_ar: "مجموعة شاملة للأحاديث",
   },
@@ -66,7 +52,6 @@ export const hadithBooks = [
     slug: "mishkat",
     name_en: "Mishkat Al-Masabih",
     name_ar: "مشكاة المصابيح",
-    image: meshkatAlMasabih,
     description_en: "A comprehensive hadith collection",
     description_ar: "مجموعة شاملة للأحاديث",
   },

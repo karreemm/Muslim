@@ -128,7 +128,7 @@ export default function Navbar() {
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
               <FontAwesomeIcon icon={faMosque} className="text-xl" />
             </div>
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-foreground mt-1">
+            <span className="hidden md:inline-block text-xl sm:text-2xl font-bold tracking-tight text-foreground mt-1">
               {t("navbar.title")}
             </span>
           </Link>

@@ -15,6 +15,7 @@ type Palette = "teal" | "gold";
 interface PaletteContextType {
   palette: Palette;
   setPalette: (palette: Palette) => void;
+  isHydrated: boolean;
 }
 
 export const PaletteContext = createContext<PaletteContextType | null>(null);
@@ -52,7 +53,7 @@ const PaletteContextProvider = ({ children }: { children: ReactNode }) => {
   if (!mounted) {
     return (
       <PaletteContext.Provider
-        value={{ palette: "teal", setPalette: () => {} }}
+        value={{ palette: "teal", setPalette: () => {}, isHydrated: false }}
       >
         {children}
       </PaletteContext.Provider>
@@ -60,7 +61,7 @@ const PaletteContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <PaletteContext.Provider value={{ palette, setPalette }}>
+    <PaletteContext.Provider value={{ palette, setPalette, isHydrated: true }}>
       {children}
     </PaletteContext.Provider>
   );

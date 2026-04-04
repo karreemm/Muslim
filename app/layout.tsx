@@ -10,9 +10,9 @@ import { SadaqaGaryaProvider } from "../context/features/SadaqatContext";
 import TasbeehContextProvider from "../context/features/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
+import AppHydrationGate from "@/components/general/AppHydrationGate";
 import { QuranAudioProvider } from "../context/features/QuranAudioContext";
 import "./globals.css";
-
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -44,21 +44,23 @@ export default function RootLayout({
         <LanguageContextProvider>
           <ThemeContextProvider>
             <PaletteContextProvider>
-              <QuranAudioProvider>
-                <SavedAyahsProvider>
-                  <FavoriteSurahsProvider>
-                    <FavoriteHadithsProvider>
-                      <FavoriteAzkarProvider>
-                        <SadaqaGaryaProvider>
-                          <TasbeehContextProvider>
-                            <PageLayout>{children}</PageLayout>
-                          </TasbeehContextProvider>
-                        </SadaqaGaryaProvider>
-                      </FavoriteAzkarProvider>
-                    </FavoriteHadithsProvider>
-                  </FavoriteSurahsProvider>
-                </SavedAyahsProvider>
-              </QuranAudioProvider>
+              <AppHydrationGate>
+                <QuranAudioProvider>
+                  <SavedAyahsProvider>
+                    <FavoriteSurahsProvider>
+                      <FavoriteHadithsProvider>
+                        <FavoriteAzkarProvider>
+                          <SadaqaGaryaProvider>
+                            <TasbeehContextProvider>
+                              <PageLayout>{children}</PageLayout>
+                            </TasbeehContextProvider>
+                          </SadaqaGaryaProvider>
+                        </FavoriteAzkarProvider>
+                      </FavoriteHadithsProvider>
+                    </FavoriteSurahsProvider>
+                  </SavedAyahsProvider>
+                </QuranAudioProvider>
+              </AppHydrationGate>
             </PaletteContextProvider>
           </ThemeContextProvider>
         </LanguageContextProvider>
