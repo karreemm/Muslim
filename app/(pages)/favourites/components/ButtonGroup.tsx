@@ -1,59 +1,94 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface ButtonGroupProps {
   onSelectionChange: (selected: string) => void;
+  defaultSelected?: string;
 }
 
-export default function ButtonGroup({ onSelectionChange }: ButtonGroupProps) {
-  const { t } = useTranslation();
-  const [selectedButton, setSelectedButton] = useState<string>("Surahs");
+type TabOption = {
+  value: string;
+  label: string;
+};
 
-  const handleClick = (e: any) => {
-    const value = e.target.value;
-    setSelectedButton(value);
+export default function ButtonGroup({ 
+  onSelectionChange, 
+  defaultSelected = "Surahs" 
+}: ButtonGroupProps) {
+  const { t } = useTranslation();
+  const [selected, setSelected] = useState<string>(defaultSelected);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const options: TabOption[] = [
+    { 
+      value: "Surahs", 
+      label: t("common.surahs"),
+    },
+    { 
+      value: "Hadiths", 
+      label: t("common.hadiths"),
+    },
+    { 
+      value: "Azkar", 
+      label: t("common.azkar"),
+    },
+  ];
+
+  useEffect(() => {
+    const activeIndex = options.findIndex(opt => opt.value === selected);
+    const activeTab = tabsRef.current[activeIndex];
+    
+    if (activeTab && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      
+      setIndicatorStyle({
+        left: tabRect.left - containerRect.left,
+        width: tabRect.width,
+      });
+    }
+  }, [selected]);
+
+  const handleSelect = (value: string) => {
+    setSelected(value);
     onSelectionChange(value);
   };
 
   return (
-    <div className="flex justify-around bg-background text-foreground dark:bg-background dark:text-foreground">
-      <button
-        value="Surahs"
-        onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Surahs"
-            ? "bg-primary text-primary-foreground"
-            : "text-foreground dark:text-foreground border-2 border-border dark:border-border"
-        } hover:opacity-80`}
+    <div className="w-full flex justify-center mb-8">
+      <div 
+        ref={containerRef}
+        className="relative inline-flex p-1.5 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm"
       >
-        {t("common.surahs")}
-      </button>
+        <div 
+          className="absolute top-1.5 bottom-1.5 bg-primary rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 ease-out"
+          style={{
+            left: `${indicatorStyle.left}px`,
+            width: `${indicatorStyle.width}px`,
+          }}
+        />
 
-      <button
-        value="Hadiths"
-        onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Hadiths"
-            ? "bg-primary text-primary-foreground"
-            : "text-foreground dark:text-foreground border-2 border-border dark:border-border"
-        } hover:opacity-80`}
-      >
-        {t("common.hadiths")}
-      </button>
-
-      <button
-        value="Azkar"
-        onClick={handleClick}
-        className={`w-24 md:w-48 py-2 rounded-lg flex justify-center ${
-          selectedButton === "Azkar"
-            ? "bg-primary text-primary-foreground"
-            : "text-foreground dark:text-foreground border-2 border-border dark:border-border"
-        } hover:opacity-80`}
-      >
-        {t("common.azkar")}
-      </button>
+        {options.map((option, idx) => (
+          <button
+            key={option.value}
+            ref={el => { tabsRef.current[idx] = el; }}
+            onClick={() => handleSelect(option.value)}
+            className={`
+              relative z-10 flex items-center gap-2 px-4 md:px-6 py-3 rounded-xl font-medium text-sm transition-colors duration-200
+              ${selected === option.value 
+                ? "text-primary-foreground" 
+                : "text-muted-foreground hover:text-foreground"
+              }
+            `}
+          >
+            <span className="">{option.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

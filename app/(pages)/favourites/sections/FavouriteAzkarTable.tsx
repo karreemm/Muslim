@@ -1,150 +1,164 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFavoriteAzkar } from "../../../../context/favourites/FavoriteAzkarContext";
 import { useLanguage } from "../../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
-import { toArabicNumber } from "../../../../utils/helpers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrashCan,
-  faLocationArrow,
-  faHeartCircleMinus,
-} from "@fortawesome/free-solid-svg-icons";
+import { ExternalLink, Share2, Trash2 } from "lucide-react";
+import DataTable from "@/components/general/DataTable";
 import { AzkarCategories } from "../../../../constants/azkarData";
-import { ClipLoader } from "react-spinners";
-import ShareModal from "../../../../components/modals/ShareModal";
+import { toArabicNumber } from "../../../../utils/helpers";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import ShareModal from "@/components/modals/ShareModal";
+import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
 
-export default function HadithTable() {
+export default function FavouriteAzkarTable() {
   const { favoriteAzkar, removeFavoriteAzkar } = useFavoriteAzkar();
-  const [isMounted, setIsMounted] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-    setLoading(false);
-    console.log(favoriteAzkar);
-  }, []);
-
-  useEffect(() => {
-    if (favoriteAzkar.length === 0) {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
-    }
-  }, [favoriteAzkar]);
-
-  if (!isMounted || loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
-      </div>
-    );
-  }
-
-  const handleGoToZekr = (zekr: any) => {
-    const zekrNumber = zekr.number;
+  const handleNavigate = (zekr: any) => {
     const zekrr = AzkarCategories.find((b) => b.ar === zekr.category);
-    router.push(`/azkar/category/${zekrr?.id}?zekr=${zekrNumber}`);
+    router.push(`/azkar/category/${zekrr?.id}?zekr=${zekr.number}`);
   };
 
+  const getCategoryName = (categoryAr: string) => {
+    const cat = AzkarCategories.find((b) => b.ar === categoryAr);
+    return language === "ar" ? cat?.ar : cat?.en;
+  };
+
+  const getShareUrl = (zekr: any) => {
+    const category = AzkarCategories.find((b) => b.ar === zekr.category);
+    if (!category) return "";
+
+    if (typeof window !== "undefined") {
+      return `${window.location.origin}/azkar/category/${category.id}?zekr=${zekr.number}`;
+    }
+
+    return `https://muslim-one.vercel.app/azkar/category/${category.id}?zekr=${zekr.number}`;
+  };
+
+  const columns = [
+    {
+      key: "number",
+      title: t("favourites.azkar.zekrNo"),
+      align: "center" as const,
+      width: "100px",
+      render: (item: any, idx: number) => (
+        <div className="flex flex-col items-center gap-1">
+          {idx === 0 && (
+            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="mt-0.5">
+                {t("common.latest")}
+              </span>
+            </span>
+          )}
+          <span className="font-mono font-medium text-foreground">
+            {language === "en" ? item.number : toArabicNumber(item.number)}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "category",
+      title: t("common.category"),
+      align: "center" as const,
+      render: (item: any) => (
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-secondary/50 text-foreground text-sm font-medium border border-border">
+          {getCategoryName(item.category)}
+        </span>
+      ),
+    },
+    {
+      key: "content",
+      title: t("common.text"),
+      align: "left" as const,
+      hiddenOnMobile: true,
+      render: (item: any) => (
+        <div
+          dir="rtl"
+          className="max-w-md truncate text-muted-foreground leading-relaxed"
+        >
+          {item.content}
+        </div>
+      ),
+    },
+  ];
+
+  const actions = [
+    {
+      icon: <ExternalLink className="w-4 h-4" />,
+      label: t("common.goTo"),
+      variant: "primary" as const,
+      onClick: handleNavigate,
+    },
+    {
+      icon: <Share2 className="w-4 h-4" />,
+      label: t("common.share"),
+      variant: "ghost" as const,
+      onClick: () => {},
+      customRender: (item: any) => {
+        const url = getShareUrl(item);
+        return url ? <ShareModal url={url} /> : null;
+      },
+    },
+    {
+      icon: <Trash2 className="w-4 h-4" />,
+      label: t("common.remove"),
+      variant: "destructive" as const,
+      onClick: (item: any) => setDeleteTarget(item),
+    },
+  ];
+
   return (
-    <div className="mt-20 max-w-7xl min-h-screen mx-auto px-4 md:px-8">
-      {isEmpty && (
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
-          {t("favourites.azkar.noFavourites")}
-        </h1>
-      )}
-      {!isEmpty && (
-        <>
-          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
-            <table className="w-full table-auto text-sm">
-              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
-                <tr>
-                  <th className="py-3 px-6">{t("favourites.azkar.zekrNo")}</th>
-                  <th className="py-3 px-6">{t("common.category")}</th>
-                  <th className="hidden md:table-cell py-3 px-6">
-                    {t("common.text")}
-                  </th>
-                  <th className="py-3 px-6">{t("common.actions")}</th>
-                </tr>
-              </thead>
-              <tbody className="text-foreground divide-y divide-border">
-                {[...favoriteAzkar].reverse().map((item, idx) => {
-                  const zekr = AzkarCategories.find(
-                    (b) => b.ar === item.category,
+    <div className="px-4 md:px-8">
+      <DataTable
+        columns={columns}
+        data={favoriteAzkar}
+        keyExtractor={(item) => `${item.category}-${item.number}`}
+        actions={actions}
+        emptyTitle={t("favourites.azkar.noFavourites")}
+        clearAllAction={
+          favoriteAzkar.length > 0
+            ? {
+                label: t("favourites.azkar.clearAllAzkar"),
+                onClick: () => {
+                  favoriteAzkar.forEach((zekr) =>
+                    removeFavoriteAzkar(zekr.number || 0, zekr.category),
                   );
-                  return (
-                    <tr key={idx} className="">
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <div className="flex flex-col items-center gap-1">
-                          {idx === 0 && (
-                            <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
-                              {t("common.latest")}
-                            </span>
-                          )}
-                          <span>
-                            {language === "en"
-                              ? item.number
-                              : toArabicNumber(item.number)}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        {language === "ar" ? zekr?.ar : zekr?.en}
-                      </td>
-                      <td
-                        dir="rtl"
-                        className="px-6 py-4 hidden md:table-cell leading-8"
-                      >
-                        {item.content}
-                      </td>
-                      <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
-                        <button
-                          className="text-primary hover:opacity-80"
-                          onClick={() => handleGoToZekr(item)}
-                        >
-                          <FontAwesomeIcon icon={faLocationArrow} />
-                        </button>
-                        <ShareModal
-                          url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${item.number}`}
-                        />
-                        <button
-                          className="text-destructive hover:opacity-80"
-                          onClick={() =>
-                            removeFavoriteAzkar(
-                              item?.number ?? 0,
-                              item.category,
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon icon={faHeartCircleMinus} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
-            onClick={() =>
-              favoriteAzkar.forEach((zekr) =>
-                removeFavoriteAzkar(zekr?.number ?? 0, zekr.category),
-              )
-            }
-          >
-            <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />
-            {t("favourites.azkar.clearAllAzkar")}
-          </button>
-        </>
-      )}
+                },
+                confirmationTitle:
+                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
+                confirmationDescription:
+                  language === "ar"
+                    ? "هل أنت متأكد من حذف كل الأذكار المفضلة؟"
+                    : "Are you sure you want to clear all favourite azkar?",
+              }
+            : undefined
+        }
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
+        description={
+          language === "ar"
+            ? "هل أنت متأكد من حذف هذا الذكر من المفضلة؟"
+            : "Are you sure you want to remove this zikr from favourites?"
+        }
+        confirmText={language === "ar" ? "حذف" : "Delete"}
+        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        onConfirm={() => {
+          if (deleteTarget) {
+            removeFavoriteAzkar(deleteTarget.number, deleteTarget.category);
+          }
+          setDeleteTarget(null);
+        }}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

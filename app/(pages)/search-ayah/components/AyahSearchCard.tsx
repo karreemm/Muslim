@@ -125,7 +125,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                   <span className="font-bold text-sm">{ayah.surah.number}</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-foreground dynamic-font group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-bold text-foreground  group-hover:text-primary transition-colors">
                     {isArabic ? ayah.surah.name : ayah.surah.englishName}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -142,7 +142,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
             <div className="mb-6">
               <p
-                className="text-2xl leading-loose text-foreground text-center dynamic-font font-medium"
+                className="text-2xl leading-loose text-foreground text-center  font-medium"
                 dir="rtl"
               >
                 {highlightKeyword
@@ -201,7 +201,9 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 <span>{t("searchAyah.translation")}</span>
               </button>
 
-              <div className={`relative ${isArabic ? "lg:mr-auto" : "lg:ml-auto"}`}>
+              <div
+                className={`relative ${isArabic ? "lg:mr-auto" : "lg:ml-auto"}`}
+              >
                 <AudioPlayerReciterDropdown
                   language={language}
                   reciterId={selectedReciter}

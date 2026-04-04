@@ -71,7 +71,7 @@ export default function CategoryPage() {
 
       <div className="relative z-10 w-[92%] max-w-[1500px] mx-auto pt-10">
         <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground dynamic-font">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground ">
             {isArabic ? categoryNameAr : categoryNameEn}
           </h1>
         </div>

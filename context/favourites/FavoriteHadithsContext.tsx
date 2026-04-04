@@ -26,23 +26,28 @@ const FavoriteHadithsContext = createContext<
 export const FavoriteHadithsProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [favoriteHadiths, setFavoriteHadiths] = useState<FavoriteHadith[]>(
-    () => {
-      if (typeof window !== "undefined") {
-        const storedFavorites = JSON.parse(
-          localStorage.getItem("favoriteHadiths") || "[]"
-        );
-        return storedFavorites;
-      }
-      return [];
-    }
-  );
+  const [favoriteHadiths, setFavoriteHadiths] = useState<FavoriteHadith[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("favoriteHadiths", JSON.stringify(favoriteHadiths));
+    if (typeof window === "undefined") return;
+
+    try {
+      const storedFavorites = JSON.parse(
+        localStorage.getItem("favoriteHadiths") || "[]",
+      );
+      setFavoriteHadiths(Array.isArray(storedFavorites) ? storedFavorites : []);
+    } catch {
+      setFavoriteHadiths([]);
+    } finally {
+      setIsHydrated(true);
     }
-  }, [favoriteHadiths]);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !isHydrated) return;
+    localStorage.setItem("favoriteHadiths", JSON.stringify(favoriteHadiths));
+  }, [favoriteHadiths, isHydrated]);
 
   const addFavoriteHadith = (hadith: FavoriteHadith) => {
     setFavoriteHadiths((prev) => [...prev, hadith]);
@@ -51,8 +56,8 @@ export const FavoriteHadithsProvider: React.FC<{
   const removeFavoriteHadith = (numberEn: number, bookId: string | null) => {
     setFavoriteHadiths((prev) =>
       prev.filter(
-        (hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId
-      )
+        (hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId,
+      ),
     );
   };
 
@@ -78,7 +83,7 @@ export const useFavoriteHadiths = () => {
   const context = useContext(FavoriteHadithsContext);
   if (!context) {
     throw new Error(
-      "useFavoriteHadiths must be used within a FavoriteHadithsProvider"
+      "useFavoriteHadiths must be used within a FavoriteHadithsProvider",
     );
   }
   return context;

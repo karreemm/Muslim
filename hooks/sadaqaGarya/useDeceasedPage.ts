@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DeceasedPerson } from "../../types";
-import { safeDecode } from "../../utils/encoding";
+import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
 
 export default function useDeceasedPage(slug: string) {
   const router = useRouter();
@@ -10,25 +9,22 @@ export default function useDeceasedPage(slug: string) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadDeceasedData = () => {
+  const loadDeceasedData = async () => {
     try {
-      const params = new URLSearchParams(window.location.search);
-      const encodedData = params.get("data");
+      const response = await fetch(`/api/sadaqa-garya/${slug}`, {
+        method: "GET",
+        cache: "no-store",
+      });
 
-      if (encodedData) {
-        try {
-          const decodedData = safeDecode(encodedData);
-          setDeceased(decodedData);
-          setError(null);
-        } catch (error) {
-          console.error("Error decoding URL data:", error);
-          setError("Error loading deceased person data");
-          setDeceased(null);
-        }
-      } else {
-        setError("No deceased person data found");
-        setDeceased(null);
+      if (response.ok) {
+        const data = (await response.json()) as { deceased: DeceasedPerson };
+        setDeceased(data.deceased);
+        setError(null);
+        return;
       }
+
+      setError("No deceased person data found");
+      setDeceased(null);
     } catch (error) {
       console.error("Error loading deceased data:", error);
       setError("Error loading deceased person data");
@@ -59,18 +55,15 @@ export default function useDeceasedPage(slug: string) {
   };
 
   return {
-    // State
     deceased,
     expandedSurah,
     loading,
     error,
 
-    // Actions
     toggleSurahExpansion,
     goHome,
     retryLoading,
 
-    // Computed values
     isDeceasedFound: deceased !== null,
     hasError: error !== null,
   };

@@ -7,7 +7,6 @@ import QuranNavbar from "./components/general/QuranNavbar";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
-
 export default function ReadQuran() {
   const { language } = useLanguage();
   const { t } = useTranslation();
@@ -63,7 +62,7 @@ export default function ReadQuran() {
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors dynamic-font">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
                           {surah[language as keyof typeof surah]}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-0.5">
@@ -103,7 +102,7 @@ export default function ReadQuran() {
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors dynamic-font">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
                           {juz.name[language as keyof typeof juz.name]}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-0.5">

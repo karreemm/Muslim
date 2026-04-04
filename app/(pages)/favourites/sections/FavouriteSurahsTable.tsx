@@ -4,129 +4,131 @@ import React, { useEffect, useState } from "react";
 import { useFavoriteSurahs } from "../../../../context/favourites/FavoriteSurahsContext";
 import { useLanguage } from "../../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrashCan,
-  faLocationArrow,
-  faHeartCircleMinus,
-} from "@fortawesome/free-solid-svg-icons";
-import { ClipLoader } from "react-spinners";
+import { ExternalLink, Share2, Trash2 } from "lucide-react";
+import DataTable from "@/components/general/DataTable";
 import ShareModal from "../../../../components/modals/ShareModal";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
 
-export default function AyahsTable() {
+export default function FavouriteSurahsTable() {
   const { favoriteSurahs, removeFavoriteSurah } = useFavoriteSurahs();
-  const [isMounted, setIsMounted] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
+  const [shareUrls, setShareUrls] = useState<Record<string, string>>({});
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-    setLoading(false);
-    console.log(favoriteSurahs);
-  }, []);
-
-  useEffect(() => {
-    if (favoriteSurahs.length === 0) {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
-    }
+    const urls: Record<string, string> = {};
+    favoriteSurahs.forEach((surah) => {
+      urls[surah.number] =
+        `https://muslim-one.vercel.app/listen-quran/reciter/${surah.reciterId}?surah=${surah.number}`;
+    });
+    setShareUrls(urls);
   }, [favoriteSurahs]);
 
-  if (!isMounted || loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
-      </div>
-    );
-  }
-
-  const handleGoToSurah = (surah: any) => {
-    const surahNumber = surah.number;
+  const handleNavigate = (surah: any) => {
     router.push(
-      `/listen-quran/reciter/${surah.reciterId}?surah=${surahNumber}`,
+      `/listen-quran/reciter/${surah.reciterId}?surah=${surah.number}`,
     );
   };
 
+  const columns = [
+    {
+      key: "name",
+      title: t("common.surah"),
+      align: "center" as const,
+      render: (item: any) => (
+        <div className="flex flex-col items-center gap-1">
+          <span className="font-semibold text-foreground">
+            {language === "ar" ? item.nameAr : item.nameEn}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "reciter",
+      title: t("common.reciter"),
+      align: "center" as const,
+      render: (item: any) => (
+        <span className="text-muted-foreground">
+          {language === "ar" ? item.reciterNameAr : item.reciterNameEn}
+        </span>
+      ),
+    },
+  ];
+
+  const actions = [
+    {
+      icon: <ExternalLink className="w-4 h-4" />,
+      label: t("common.goTo"),
+      variant: "primary" as const,
+      onClick: handleNavigate,
+    },
+    {
+      icon: <Share2 className="w-4 h-4" />,
+      label: t("common.share"),
+      variant: "ghost" as const,
+      onClick: () => {},
+      customRender: (item: any) =>
+        shareUrls[item.number] ? (
+          <ShareModal url={shareUrls[item.number]} />
+        ) : null,
+    },
+    {
+      icon: <Trash2 className="w-4 h-4" />,
+      label: t("common.remove"),
+      variant: "destructive" as const,
+      onClick: (item: any) => setDeleteTarget(item),
+    },
+  ];
+
   return (
-    <div className="mt-20 max-w-7xl min-h-screen mx-auto px-4 md:px-8">
-      {isEmpty && (
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
-          {t("favourites.surah.noFavourites")}
-        </h1>
-      )}
-      {!isEmpty && (
-        <>
-          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
-            <table className="w-full table-auto text-sm">
-              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
-                <tr>
-                  <th className="py-3 px-6">{t("common.surah")}</th>
-                  <th className="py-3 px-6">{t("common.reciter")}</th>
-                  <th className="py-3 px-6">{t("common.actions")}</th>
-                </tr>
-              </thead>
-              <tbody className="text-foreground divide-y divide-border">
-                {[...favoriteSurahs].reverse().map((item, idx) => (
-                  <tr key={idx} className="">
-                    <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        {idx === 0 && (
-                          <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
-                            {t("common.latest")}
-                          </span>
-                        )}
-                        <span>
-                          {language === "ar" ? item.nameAr : item.nameEn}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-2 md:px-6 py-4 whitespace-nowrap text-center">
-                      {language === "ar"
-                        ? item.reciterNameAr
-                        : item.reciterNameEn}
-                    </td>
-                    <td className="px-2 md:px-6 py-4 flex items-center justify-center gap-3 text-lg">
-                      <button
-                        className="text-primary hover:opacity-80"
-                        onClick={() => handleGoToSurah(item)}
-                      >
-                        <FontAwesomeIcon icon={faLocationArrow} />
-                      </button>
-                      <ShareModal
-                        url={`https://muslim-one.vercel.app/listen-quran/reciter/${item.reciterId}?surah=${item.number}`}
-                      />
-                      <button
-                        className="text-destructive hover:opacity-80"
-                        onClick={() =>
-                          removeFavoriteSurah(item.number, item.reciterId)
-                        }
-                      >
-                        <FontAwesomeIcon icon={faHeartCircleMinus} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
-            onClick={() =>
-              favoriteSurahs.forEach((surah) =>
-                removeFavoriteSurah(surah.number, surah.reciterId),
-              )
-            }
-          >
-            <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />
-            {t("favourites.surah.clearAllSurahs")}
-          </button>
-        </>
-      )}
+    <div className="px-4 md:px-8">
+      <DataTable
+        columns={columns}
+        data={favoriteSurahs}
+        keyExtractor={(item) => `${item.number}-${item.reciterId}`}
+        actions={actions}
+        emptyTitle={t("favourites.surah.noFavourites")}
+        clearAllAction={
+          favoriteSurahs.length > 0
+            ? {
+                label: t("favourites.surah.clearAllSurahs"),
+                onClick: () => {
+                  favoriteSurahs.forEach((surah) =>
+                    removeFavoriteSurah(surah.number, surah.reciterId),
+                  );
+                },
+                confirmationTitle:
+                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
+                confirmationDescription:
+                  language === "ar"
+                    ? "هل أنت متأكد من حذف كل السور المفضلة؟"
+                    : "Are you sure you want to clear all favourite surahs?",
+              }
+            : undefined
+        }
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
+        description={
+          language === "ar"
+            ? "هل أنت متأكد من حذف هذه السورة من المفضلة؟"
+            : "Are you sure you want to remove this surah from favourites?"
+        }
+        confirmText={language === "ar" ? "حذف" : "Delete"}
+        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        onConfirm={() => {
+          if (deleteTarget) {
+            removeFavoriteSurah(deleteTarget.number, deleteTarget.reciterId);
+          }
+          setDeleteTarget(null);
+        }}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

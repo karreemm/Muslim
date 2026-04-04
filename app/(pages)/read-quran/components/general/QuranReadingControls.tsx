@@ -100,16 +100,14 @@ export default function QuranReadingControls({
                   <span className="block text-xs text-muted-foreground">
                     {previousLabel}
                   </span>
-                  <span className="dynamic-font font-semibold">
-                    {previous.title}
-                  </span>
+                  <span className=" font-semibold">{previous.title}</span>
                 </div>
               </Link>
             )}
           </div>
 
           <div className="flex justify-center items-center gap-3">
-            <h1 className="dynamic-font text-center text-2xl font-bold text-foreground sm:text-3xl">
+            <h1 className=" text-center text-2xl font-bold text-foreground sm:text-3xl">
               {title}
             </h1>
             <button
@@ -138,9 +136,7 @@ export default function QuranReadingControls({
                   <span className="block text-xs text-muted-foreground">
                     {nextLabel}
                   </span>
-                  <span className="dynamic-font font-semibold">
-                    {next.title}
-                  </span>
+                  <span className=" font-semibold">{next.title}</span>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card transition-all group-hover:border-primary/30 group-hover:bg-primary/10">
                   <FontAwesomeIcon

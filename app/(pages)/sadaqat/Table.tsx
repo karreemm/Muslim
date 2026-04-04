@@ -1,166 +1,261 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSadaqaGarya } from "../../../context/features/SadaqatContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+import { ExternalLink, Lock, Trash2, Users } from "lucide-react";
+import DataTable from "@/components/general/DataTable";
 import ShareModal from "../../../components/modals/ShareModal";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
+import Loading from "@/components/general/Loading";
 import { useLanguage } from "../../../context/general/LanguageContext";
-import { safeEncode } from "../../../utils/encoding";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
 
 export default function DeceasedPersonsTable() {
   const {
     deceasedPersons,
     removeDeceasedPerson,
-    clearAllDeceasedPersons,
-    getDeceasedPerson,
+    isLoading,
+    canDeleteDeceased,
   } = useSadaqaGarya();
-  const [isMounted, setIsMounted] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [shareableUrls, setShareableUrls] = useState<{ [key: string]: string }>(
+  const [shareableUrls, setShareableUrls] = useState<Record<string, string>>(
     {},
   );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    slug: string;
+    name: string;
+  } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string>("");
   const { language } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
 
   useEffect(() => {
-    setIsMounted(true);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    setIsEmpty(deceasedPersons.length === 0);
+    const urls: Record<string, string> = {};
+    deceasedPersons.forEach((person) => {
+      if (typeof window !== "undefined") {
+        urls[person.slug] =
+          `${window.location.origin}/sadaqa-garya/${person.slug}`;
+      } else {
+        urls[person.slug] =
+          `https://muslim-one.vercel.app/sadaqa-garya/${person.slug}`;
+      }
+    });
+    setShareableUrls(urls);
   }, [deceasedPersons]);
-
-  const shortenURL = async (url: string) => {
-    try {
-      const response = await fetch(
-        `https://tinyurl.com/api-create.php?url=${url}`,
-      );
-      const shortUrl = await response.text();
-      console.log("Short URL:", shortUrl);
-      return shortUrl;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const getShareableUrl = async (slug: string) => {
-    const person = getDeceasedPerson(slug);
-    if (person) {
-      const encodedData = safeEncode(person);
-      const shortenedUrl = await shortenURL(
-        `https://muslim-one.vercel.app/sadaqa-garya/${slug}?data=${encodedData}`,
-      );
-      return shortenedUrl || "";
-    }
-    return `https://muslim-one.vercel.app/sadaqa-garya/${slug}`;
-  };
 
   const handleNavigation = (slug: string) => {
-    const person = getDeceasedPerson(slug);
-    if (person) {
-      const encodedData = safeEncode(person);
-      router.push(`/sadaqa-garya/${slug}?data=${encodedData}`);
-    } else {
-      router.push(`/sadaqa-garya/${slug}`);
+    router.push(`/sadaqa-garya/${slug}`);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+
+    setIsDeleting(true);
+    setDeleteError("");
+    try {
+      let deleteToken = "";
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("sadaqaDeleteTokens");
+          const parsed = raw ? JSON.parse(raw) : {};
+          const tokens =
+            parsed && typeof parsed === "object"
+              ? (parsed as Record<string, string>)
+              : {};
+          deleteToken = tokens[deleteTarget.slug] || "";
+        } catch {
+          deleteToken = "";
+        }
+      }
+
+      const response = await fetch(
+        `/api/sadaqa-garya/${encodeURIComponent(deleteTarget.slug)}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: deleteToken
+            ? { "x-sadaqa-delete-token": deleteToken }
+            : undefined,
+        },
+      );
+
+      if (!response.ok) {
+        let message = language === "ar" ? "فشل الحذف" : "Failed to delete";
+        try {
+          const payload = await response.json();
+          if (payload?.error) {
+            message =
+              response.status === 401
+                ? language === "ar"
+                  ? "يمكن حذف الصفحات التي أنشأتها فقط ومن نفس المتصفح."
+                  : "You can only delete pages you created from this browser."
+                : payload.error;
+          }
+        } catch {}
+        setDeleteError(message);
+        return;
+      }
+
+      removeDeceasedPerson(deleteTarget.id);
+
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("sadaqaDeleteTokens");
+          const parsed = raw ? JSON.parse(raw) : {};
+          const tokens =
+            parsed && typeof parsed === "object"
+              ? (parsed as Record<string, string>)
+              : {};
+          delete tokens[deleteTarget.slug];
+          localStorage.setItem("sadaqaDeleteTokens", JSON.stringify(tokens));
+        } catch {
+        }
+      }
+
+      setIsDeleteModalOpen(false);
+      setDeleteTarget(null);
+    } catch (error) {
+      console.error("Error deleting:", error);
+      setDeleteError(
+        language === "ar" ? "حدث خطأ غير متوقع" : "Unexpected error occurred",
+      );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  useEffect(() => {
-    const fetchShareableUrls = async () => {
-      const urls: { [key: string]: string } = {};
-      for (const person of deceasedPersons) {
-        const url = await getShareableUrl(person.slug);
-        urls[person.slug] = url;
-      }
-      setShareableUrls(urls);
-    };
+  const openDeleteModal = (person: any) => {
+    setDeleteError("");
+    setDeleteTarget({
+      id: person.id,
+      slug: person.slug,
+      name: language === "ar" ? person.nameAr : person.nameEn,
+    });
+    setIsDeleteModalOpen(true);
+  };
 
-    if (!isEmpty) {
-      fetchShareableUrls();
-    }
-  }, [deceasedPersons]);
+  const columns = [
+    {
+      key: "name",
+      title: t("common.name"),
+      align: "center" as const,
+      render: (item: any, idx: number) => (
+        <div className="flex flex-col items-center gap-1">
+          {idx === 0 && (
+            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="mt-0.5">{t("common.latest")}</span>
+            </span>
+          )}
+          <span className="font-semibold text-lg text-foreground">
+            {language === "ar" ? item.nameAr : item.nameEn}
+          </span>
+        </div>
+      ),
+    },
+  ];
 
-  if (!isMounted || loading) {
+  const actions = [
+    {
+      icon: <ExternalLink className="w-4 h-4" />,
+      label: t("common.view"),
+      variant: "primary" as const,
+      onClick: (item: any) => handleNavigation(item.slug),
+    },
+    {
+      icon: <div className="w-4 h-4" />,
+      label: t("common.share"),
+      variant: "ghost" as const,
+      onClick: () => {},
+      customRender: (item: any) =>
+        shareableUrls[item.slug] ? (
+          <ShareModal url={shareableUrls[item.slug]} />
+        ) : null,
+    },
+    {
+      icon: <Trash2 className="w-4 h-4" />,
+      label: t("common.delete"),
+      variant: "destructive" as const,
+      onClick: openDeleteModal,
+      customRender: (item: any) =>
+        canDeleteDeceased(item.slug) ? (
+          <button
+            onClick={() => openDeleteModal(item)}
+            className="p-2.5 rounded-lg transition-all duration-200 text-destructive hover:bg-destructive/10 hover:scale-110"
+            title={t("common.delete")}
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        ) : (
+          <button
+            disabled
+            className="p-2.5 rounded-lg text-muted-foreground/50 cursor-not-allowed"
+            title={
+              language === "ar"
+                ? "لا يمكنك حذف هذه الصفحة لأنها ليست من إنشائك"
+                : "You cannot delete this page because you are not the creator"
+            }
+          >
+            <Lock className="w-4 h-4" />
+          </button>
+        ),
+    },
+  ];
+
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
+      <div className="flex justify-center items-center min-h-screen">
+        <Loading />
       </div>
     );
   }
 
   return (
-    <div className="mt-10 w-[90%] max-w-7xl mx-auto min-h-screen px-4 md:px-8">
-      <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
-        {t("sadaqa.table.title")}
-      </h1>
-      {isEmpty && (
-        <h1 className="text-2xl md:text-3xl font-bold text-center mt-20">
-          {t("sadaqa.table.noSadaqat")}
+    <div className="mt-8 w-[90%] max-w-7xl mx-auto min-h-screen px-4 md:px-8">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          {t("sadaqa.table.title")}
         </h1>
-      )}
-      {!isEmpty && (
-        <>
-          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
-            <table className="w-full table-auto text-sm">
-              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
-                <tr>
-                  <th className="py-3 px-6">{t("common.name")}</th>
-                  <th className="py-3 px-6">{t("common.actions")}</th>
-                </tr>
-              </thead>
-              <tbody className="text-foreground divide-y divide-border">
-                {[...deceasedPersons].reverse().map((person, idx) => (
-                  <tr key={idx} className="">
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        {idx === 0 && (
-                          <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
-                            {t("common.latest")}
-                          </span>
-                        )}
-                        <span>
-                          {language === "ar" ? person.nameAr : person.nameEn}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
-                      <button
-                        className="text-primary hover:opacity-80"
-                        onClick={() => handleNavigation(person.slug)}
-                      >
-                        <FontAwesomeIcon icon={faLocationArrow} />
-                      </button>
-                      {shareableUrls[person.slug] && (
-                        <ShareModal url={shareableUrls[person.slug]} />
-                      )}
-                      <button
-                        className="text-destructive hover:opacity-80"
-                        onClick={() => removeDeceasedPerson(person.id)}
-                      >
-                        <FontAwesomeIcon icon={faTrashCan} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
-            onClick={clearAllDeceasedPersons}
-          >
-            <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />
-            {t("sadaqa.table.clearAll")}
-          </button>
-        </>
-      )}
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={deceasedPersons}
+        keyExtractor={(item) => item.id}
+        actions={actions}
+        emptyTitle={t("sadaqa.table.noSadaqat")}
+        maxHeight="50vh"
+        containerClassName="mt-8"
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
+        description={
+          deleteError ||
+          (deleteTarget
+            ? language === "ar"
+              ? `هل أنت متأكد من حذف صفحة ${deleteTarget.name}؟`
+              : `Are you sure you want to delete ${deleteTarget.name}'s page?`
+            : "")
+        }
+        confirmText={language === "ar" ? "حذف" : "Delete"}
+        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        isProcessing={isDeleting}
+        onConfirm={handleDelete}
+        onClose={() => {
+          if (!isDeleting) {
+            setIsDeleteModalOpen(false);
+            setDeleteTarget(null);
+            setDeleteError("");
+          }
+        }}
+      />
     </div>
   );
 }

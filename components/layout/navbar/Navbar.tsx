@@ -22,6 +22,7 @@ import Link from "next/link";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import LanguageDropdown from "./LanguageDropdown";
 import ThemeDropdown from "./ThemeDropdown";
+import PaletteDropdown from "./PaletteDropdown";
 import NavDropdown from "./NavDropdown";
 
 const quranLinks = (t: (key: string) => string) => [
@@ -174,6 +175,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-2">
             <ThemeDropdown />
+            <PaletteDropdown />
             <LanguageDropdown />
 
             <div className="hidden lg:block h-5 w-px bg-border/60 mx-1" />
@@ -219,19 +221,19 @@ export default function Navbar() {
               ${language === "ar" ? "text-right" : "text-left"}`}
           >
             <div className="max-w-7xl mx-auto space-y-1">
-              {mobileRoutes.map(({ href, label, icon, exactMatch }) => (
+              {mobileRoutes.map(({ href, label, icon }) => (
                 <Link
                   key={href}
                   href={href}
                   className={`flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-all duration-200
                   ${
-                    isActive(href, exactMatch)
+                    isActive(href, true)
                       ? "bg-primary/10 text-primary border border-primary/20"
                       : "text-foreground/80 hover:bg-secondary/50 hover:text-primary"
                   }`}
                 >
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href, exactMatch) ? "bg-primary/20" : "bg-secondary/50"}`}
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href, true) ? "bg-primary/20" : "bg-secondary/50"}`}
                   >
                     <FontAwesomeIcon icon={icon} className="text-sm" />
                   </div>

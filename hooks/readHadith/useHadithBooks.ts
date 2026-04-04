@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { HadithBook } from "@/types";
+import { HadithBook } from "@/app/(pages)/read-hadith/types";
 import { getBooks } from "@/app/(pages)/read-hadith/service/HadithApiService";
 
 export function useHadithBooks() {

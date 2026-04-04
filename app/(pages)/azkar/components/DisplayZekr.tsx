@@ -15,7 +15,6 @@ import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import Link from "next/link";
 import { toArabicNumber } from "@/utils/helpers";
 
-
 interface SingleZekrProps {
   zekrNumber: number;
   categoryId: string;
@@ -78,7 +77,6 @@ export default function DisplayZekr({
               <ShareModal
                 size="xl"
                 url={`https://muslim-one.vercel.app/azkar/category/${zekrData?.id ?? categoryId}?zekr=${zekr.number}`}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary/50 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
               />
 
               <button
@@ -100,7 +98,7 @@ export default function DisplayZekr({
           <div className="space-y-4">
             <p
               dir="rtl"
-              className="text-xl md:text-2xl leading-loose text-foreground text-center dynamic-font font-medium"
+              className="text-xl md:text-2xl leading-loose text-foreground text-center  font-medium"
             >
               {zekr.content}
             </p>
@@ -111,12 +109,12 @@ export default function DisplayZekr({
               </p>
             )}
 
-            {zekr.count && zekr.count > 1 && (
+            {zekr.count && parseInt(zekr.count) > 1 && (
               <div className="mt-5 flex justify-center">
                 <span className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-bold">
                   <span>{isArabic ? "التكرار:" : "Repeat:"}</span>
                   <span>
-                    {isArabic ? toArabicNumber(zekr.count) : zekr.count}
+                    {isArabic ? toArabicNumber(parseInt(zekr.count)) : zekr.count}
                   </span>
                   <span>{isArabic ? "مرات" : "times"}</span>
                 </span>
@@ -128,4 +126,3 @@ export default function DisplayZekr({
     </div>
   );
 }
-

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Hadith } from "@/types";
+import { Hadith } from "@/app/(pages)/read-hadith/types";
 import {
   getChapterHadiths,
   searchHadiths,

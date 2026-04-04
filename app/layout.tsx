@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import ThemeContextProvider from "../context/general/ThemeContext";
+import PaletteContextProvider from "../context/general/PaletteContext";
 import LanguageContextProvider from "../context/general/LanguageContext";
 import { SavedAyahsProvider } from "../context/features/SavedAyahsContext";
 import { FavoriteSurahsProvider } from "../context/favourites/FavoriteSurahsContext";
@@ -11,6 +11,8 @@ import TasbeehContextProvider from "../context/features/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
 import { QuranAudioProvider } from "../context/features/QuranAudioContext";
+import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "Muslim",
@@ -41,21 +43,23 @@ export default function RootLayout({
       <body className={`font bg-background dark:bg-background`}>
         <LanguageContextProvider>
           <ThemeContextProvider>
-            <QuranAudioProvider>
-              <SavedAyahsProvider>
-                <FavoriteSurahsProvider>
-                  <FavoriteHadithsProvider>
-                    <FavoriteAzkarProvider>
-                      <SadaqaGaryaProvider>
-                        <TasbeehContextProvider>
-                          <PageLayout>{children}</PageLayout>
-                        </TasbeehContextProvider>
-                      </SadaqaGaryaProvider>
-                    </FavoriteAzkarProvider>
-                  </FavoriteHadithsProvider>
-                </FavoriteSurahsProvider>
-              </SavedAyahsProvider>
-            </QuranAudioProvider>
+            <PaletteContextProvider>
+              <QuranAudioProvider>
+                <SavedAyahsProvider>
+                  <FavoriteSurahsProvider>
+                    <FavoriteHadithsProvider>
+                      <FavoriteAzkarProvider>
+                        <SadaqaGaryaProvider>
+                          <TasbeehContextProvider>
+                            <PageLayout>{children}</PageLayout>
+                          </TasbeehContextProvider>
+                        </SadaqaGaryaProvider>
+                      </FavoriteAzkarProvider>
+                    </FavoriteHadithsProvider>
+                  </FavoriteSurahsProvider>
+                </SavedAyahsProvider>
+              </QuranAudioProvider>
+            </PaletteContextProvider>
           </ThemeContextProvider>
         </LanguageContextProvider>
       </body>

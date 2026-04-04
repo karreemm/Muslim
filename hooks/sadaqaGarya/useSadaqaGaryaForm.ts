@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSadaqaGarya } from "../../context/features/SadaqatContext";
 import { slugify } from "../../utils/helpers";
-import { DeceasedPerson } from "../../types";
-import { safeEncode } from "../../utils/encoding";
+import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
 
 export default function useSadaqaGaryaForm() {
   const router = useRouter();
@@ -35,21 +34,47 @@ export default function useSadaqaGaryaForm() {
       const baseSlug = slugify(nameEn);
       const uniqueSlug = `${baseSlug}-${timestamp}`;
 
-      const deceased: DeceasedPerson = {
-        id: uniqueSlug,
-        nameEn,
-        nameAr,
-        messageEn,
-        messageAr,
-        slug: uniqueSlug,
-        createdAt: new Date().toISOString(),
+      const response = await fetch("/api/sadaqa-garya", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nameEn,
+          nameAr,
+          messageEn,
+          messageAr,
+          slug: uniqueSlug,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create Sadaqa page");
+      }
+
+      const result = (await response.json()) as {
+        deceased: DeceasedPerson;
+        deleteToken?: string;
       };
 
-      await addDeceasedPerson(deceased);
+      if (typeof window !== "undefined" && result?.deleteToken) {
+        try {
+          const raw = localStorage.getItem("sadaqaDeleteTokens");
+          const parsed = raw ? JSON.parse(raw) : {};
+          const tokens =
+            parsed && typeof parsed === "object"
+              ? (parsed as Record<string, string>)
+              : {};
+          tokens[result.deceased.slug] = result.deleteToken;
+          localStorage.setItem("sadaqaDeleteTokens", JSON.stringify(tokens));
+        } catch {
+        }
+      }
 
-      const encodedData = safeEncode(deceased);
+      addDeceasedPerson(result.deceased);
 
-      await router.push(`/sadaqa-garya/${uniqueSlug}?data=${encodedData}`);
+      await router.push(`/sadaqa-garya/${result.deceased.slug}`);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -70,14 +95,12 @@ export default function useSadaqaGaryaForm() {
   };
 
   return {
-    // Form state
     nameEn,
     nameAr,
     messageEn,
     messageAr,
     isSubmitting,
 
-    // Form actions
     setNameEn,
     setNameAr,
     setMessageEn,

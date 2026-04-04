@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface SavedAyah {
   surahNameEn: string | undefined;
@@ -18,48 +18,56 @@ interface SavedAyahsContextProps {
   removeAyah: (ayah: SavedAyah) => void;
 }
 
-const SavedAyahsContext = createContext<SavedAyahsContextProps | undefined>(undefined);
+const SavedAyahsContext = createContext<SavedAyahsContextProps | undefined>(
+  undefined,
+);
 
-export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [savedAyahs, setSavedAyahs] = useState<SavedAyah[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('savedAyahs');
-      return saved ? JSON.parse(saved) : [];
+export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [savedAyahs, setSavedAyahs] = useState<SavedAyah[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const saved = localStorage.getItem("savedAyahs");
+      setSavedAyahs(saved ? JSON.parse(saved) : []);
+    } catch {
+      setSavedAyahs([]);
+    } finally {
+      setIsHydrated(true);
     }
-    return [];
-  });
+  }, []);
 
   const saveAyah = (ayah: SavedAyah) => {
-    setSavedAyahs((prev) => {
-      const newSavedAyahs = [...prev, ayah];
-      localStorage.setItem('savedAyahs', JSON.stringify(newSavedAyahs));
-      return newSavedAyahs;
-    });
+    setSavedAyahs((prev) => [...prev, ayah]);
   };
 
   const clearSavedAyahs = () => {
-    localStorage.removeItem('savedAyahs');
-    setSavedAyahs([]); 
+    setSavedAyahs([]);
   };
 
   const removeAyah = (ayah: SavedAyah) => {
     setSavedAyahs((prev) => {
-      const newSavedAyahs = prev.filter(
+      return prev.filter(
         (item) =>
           item.surahNameEn !== ayah.surahNameEn ||
-          item.ayahNumberEn !== ayah.ayahNumberEn
+          item.ayahNumberEn !== ayah.ayahNumberEn,
       );
-      localStorage.setItem('savedAyahs', JSON.stringify(newSavedAyahs));
-      return newSavedAyahs;
     });
   };
 
   useEffect(() => {
-    localStorage.setItem('savedAyahs', JSON.stringify(savedAyahs));
-  }, [savedAyahs]);
+    if (typeof window === "undefined" || !isHydrated) return;
+    localStorage.setItem("savedAyahs", JSON.stringify(savedAyahs));
+  }, [savedAyahs, isHydrated]);
 
   return (
-    <SavedAyahsContext.Provider value={{ savedAyahs, saveAyah, clearSavedAyahs, removeAyah }}>
+    <SavedAyahsContext.Provider
+      value={{ savedAyahs, saveAyah, clearSavedAyahs, removeAyah }}
+    >
       {children}
     </SavedAyahsContext.Provider>
   );
@@ -68,7 +76,7 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 export const useSavedAyahs = () => {
   const context = useContext(SavedAyahsContext);
   if (!context) {
-    throw new Error('useSavedAyahs must be used within a SavedAyahsProvider');
+    throw new Error("useSavedAyahs must be used within a SavedAyahsProvider");
   }
   return context;
 };

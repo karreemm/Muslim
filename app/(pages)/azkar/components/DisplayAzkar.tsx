@@ -3,7 +3,11 @@
 import { useLanguage } from "@/context/general/LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as loved, faShareNodes, faHashtag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as loved,
+  faShareNodes,
+  faHashtag,
+} from "@fortawesome/free-solid-svg-icons";
 import ShareModal from "@/components/modals/ShareModal";
 import useMediaQuery from "@/hooks/general/useMediaQuery";
 import { useAzkarCategory } from "@/hooks/azkar/useAzkarCategory";
@@ -46,7 +50,7 @@ export default function DisplayAzkar({
         azkarItems.map((azkar, index) => {
           const zekr = AzkarCategories.find((b) => b.ar === azkar.category);
           const fav = isFavorite(azkar.number!);
-          
+
           return (
             <div
               key={index}
@@ -55,16 +59,15 @@ export default function DisplayAzkar({
                 hover:border-primary/30 backdrop-blur-sm"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="relative z-10 p-6">
                 <div className="flex items-start justify-between mb-5">
                   <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
                     <FontAwesomeIcon icon={faHashtag} className="text-xs" />
                     <span>
-                      {isArabic 
+                      {isArabic
                         ? `${toArabicNumber(azkar.number!)}`
-                        : `${azkar.number}`
-                      }
+                        : `${azkar.number}`}
                     </span>
                   </div>
 
@@ -72,10 +75,8 @@ export default function DisplayAzkar({
                     <ShareModal
                       size="xl"
                       url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${azkar.number}`}
-                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary/50 text-muted-foreground 
-                        hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                     />
-                    
+
                     <button
                       onClick={() => handleLoveClick(azkar)}
                       className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300 ${
@@ -93,13 +94,13 @@ export default function DisplayAzkar({
                 </div>
 
                 <div className="space-y-4">
-                  <p 
-                    dir="rtl" 
-                    className="text-xl md:text-2xl leading-loose text-foreground text-center dynamic-font font-medium"
+                  <p
+                    dir="rtl"
+                    className="text-xl md:text-2xl leading-loose text-foreground text-center  font-medium"
                   >
                     {azkar.content}
                   </p>
-                  
+
                   {azkar.description && (
                     <p className="text-center text-muted-foreground text-sm md:text-base leading-relaxed pt-4 border-t border-border/30">
                       {azkar.description}
@@ -107,11 +108,13 @@ export default function DisplayAzkar({
                   )}
                 </div>
 
-                {azkar.count && azkar.count > 1 && (
+                {azkar.count && parseInt(azkar.count) > 1 && (
                   <div className="mt-5 flex justify-center">
                     <span className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-bold">
                       <span>{isArabic ? "التكرار:" : "Repeat:"}</span>
-                      <span>{isArabic ? toArabicNumber(azkar.count) : azkar.count}</span>
+                      <span>
+                        {isArabic ? toArabicNumber(parseInt(azkar.count)) : azkar.count}
+                      </span>
                       <span>{isArabic ? "مرات" : "times"}</span>
                     </span>
                   </div>

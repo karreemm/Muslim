@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface AzkarItem {
   category: string;
@@ -22,22 +28,35 @@ interface FavoriteAzkarContextType {
   removeAllFavoriteAzkar: () => void;
 }
 
-const FavoriteAzkarContext = createContext<FavoriteAzkarContextType | undefined>(undefined);
+const FavoriteAzkarContext = createContext<
+  FavoriteAzkarContextType | undefined
+>(undefined);
 
-export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [favoriteAzkar, setFavoriteAzkar] = useState<FavoriteAzkarItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      const storedFavorites = JSON.parse(localStorage.getItem('favoriteAzkar') || '[]');
-      return storedFavorites;
-    }
-    return [];
-  });
+export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [favoriteAzkar, setFavoriteAzkar] = useState<FavoriteAzkarItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('favoriteAzkar', JSON.stringify(favoriteAzkar));
+    if (typeof window === "undefined") return;
+
+    try {
+      const storedFavorites = JSON.parse(
+        localStorage.getItem("favoriteAzkar") || "[]",
+      );
+      setFavoriteAzkar(Array.isArray(storedFavorites) ? storedFavorites : []);
+    } catch {
+      setFavoriteAzkar([]);
+    } finally {
+      setIsHydrated(true);
     }
-  }, [favoriteAzkar]);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !isHydrated) return;
+    localStorage.setItem("favoriteAzkar", JSON.stringify(favoriteAzkar));
+  }, [favoriteAzkar, isHydrated]);
 
   const addFavoriteAzkar = (azkar: FavoriteAzkarItem) => {
     setFavoriteAzkar((prevFavorites) => [...prevFavorites, azkar]);
@@ -45,7 +64,9 @@ export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({ child
 
   const removeFavoriteAzkar = (number: number, categoryId: string) => {
     setFavoriteAzkar((prevFavorites) =>
-      prevFavorites.filter((fav) => fav.number !== number || fav.categoryId !== categoryId)
+      prevFavorites.filter(
+        (fav) => fav.number !== number || fav.categoryId !== categoryId,
+      ),
     );
   };
 
@@ -54,7 +75,14 @@ export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({ child
   };
 
   return (
-    <FavoriteAzkarContext.Provider value={{ favoriteAzkar, addFavoriteAzkar, removeFavoriteAzkar, removeAllFavoriteAzkar }}>
+    <FavoriteAzkarContext.Provider
+      value={{
+        favoriteAzkar,
+        addFavoriteAzkar,
+        removeFavoriteAzkar,
+        removeAllFavoriteAzkar,
+      }}
+    >
       {children}
     </FavoriteAzkarContext.Provider>
   );
@@ -63,7 +91,9 @@ export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({ child
 export const useFavoriteAzkar = () => {
   const context = useContext(FavoriteAzkarContext);
   if (context === undefined) {
-    throw new Error('useFavoriteAzkar must be used within a FavoriteAzkarProvider');
+    throw new Error(
+      "useFavoriteAzkar must be used within a FavoriteAzkarProvider",
+    );
   }
   return context;
 };

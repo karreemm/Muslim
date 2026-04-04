@@ -65,15 +65,18 @@ export default function ChapterHadithsPage() {
 
       <div className="relative z-10 w-[92%] max-w-7xl mx-auto pt-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground dynamic-font mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground  mb-2">
             {language === "en" ? book?.name_en : book?.name_ar}
           </h1>
           <p className="text-muted-foreground">
-             {t("hadith.book.chapterLabel")} {chapterNumber}
+            {t("hadith.book.chapterLabel")} {chapterNumber}
           </p>
           {!loading && totalHadiths > 0 && (
             <p className="mt-2 text-sm text-muted-foreground">
-              {t("hadith.chapter.totalResults")}: <span className="font-semibold text-foreground">{totalHadiths}</span>
+              {t("hadith.chapter.totalResults")}:{" "}
+              <span className="font-semibold text-foreground">
+                {totalHadiths}
+              </span>
             </p>
           )}
         </div>
@@ -116,7 +119,7 @@ export default function ChapterHadithsPage() {
                       className="w-full rounded-xl bg-background border border-border text-foreground py-2.5 px-4 
                         placeholder:text-muted-foreground/60 
                         focus:border-primary/50 focus:ring-2 focus:ring-primary/20 
-                        transition-all duration-300 dynamic-font"
+                        transition-all duration-300 "
                     />
                   </div>
                   <button
@@ -146,7 +149,9 @@ export default function ChapterHadithsPage() {
         {showingSingleHadith && (
           <div className="max-w-4xl mx-auto mb-8">
             <div className="bg-accent/10 border border-accent/20 rounded-2xl p-4 flex items-center justify-between">
-              <span className="text-accent font-medium">{t("hadith.chapter.showingSingle")}</span>
+              <span className="text-accent font-medium">
+                {t("hadith.chapter.showingSingle")}
+              </span>
               <button
                 onClick={clearHadithFilter}
                 className="px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold 
@@ -160,7 +165,9 @@ export default function ChapterHadithsPage() {
 
         {loading ? (
           <div className="max-w-4xl mx-auto flex flex-col gap-6">
-            {[...Array(3)].map((_, i) => <HadithCardSkeleton key={i} />)}
+            {[...Array(3)].map((_, i) => (
+              <HadithCardSkeleton key={i} />
+            ))}
           </div>
         ) : error ? (
           <div className="text-center py-20 text-destructive text-xl">
@@ -173,7 +180,9 @@ export default function ChapterHadithsPage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted text-muted-foreground mb-4">
                   <FontAwesomeIcon icon={faBookOpen} className="text-2xl" />
                 </div>
-                <p className="text-xl text-muted-foreground">{t("hadith.chapter.noHadithsFound")}</p>
+                <p className="text-xl text-muted-foreground">
+                  {t("hadith.chapter.noHadithsFound")}
+                </p>
               </div>
             ) : (
               <div className="max-w-4xl mx-auto flex flex-col gap-6">
@@ -189,16 +198,21 @@ export default function ChapterHadithsPage() {
                         <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-bold">
                           <span>#{hadith.hadithNumber}</span>
                         </span>
-                        
+
                         {hadith.status && (
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${
-                            hadith.status.toLowerCase() === "sahih"
-                              ? "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20"
-                              : hadith.status.toLowerCase() === "hasan"
-                                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
-                                : "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20"
-                          }`}>
-                            <FontAwesomeIcon icon={getStatusIcon(hadith.status)} className="text-xs" />
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${
+                              hadith.status.toLowerCase() === "sahih"
+                                ? "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20"
+                                : hadith.status.toLowerCase() === "hasan"
+                                  ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                                  : "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20"
+                            }`}
+                          >
+                            <FontAwesomeIcon
+                              icon={getStatusIcon(hadith.status)}
+                              className="text-xs"
+                            />
                             {hadith.status.toLowerCase() === "sahih"
                               ? t("hadith.chapter.sahih")
                               : hadith.status.toLowerCase() === "hasan"
@@ -211,8 +225,7 @@ export default function ChapterHadithsPage() {
                       <div className="flex items-center gap-2">
                         <ShareModal
                           size="xl"
-                          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/read-hadith/book/${bookSlug}/chapter/${chapterNumber}?hadith=${hadith.hadithNumber}`}
-                          className="text-muted-foreground hover:text-primary transition-colors"
+                          url={`${typeof window !== "undefined" ? window.location.origin : ""}/read-hadith/book/${bookSlug}/chapter/${chapterNumber}?hadith=${hadith.hadithNumber}`}
                         />
                         <button
                           onClick={() => toggleFavorite(hadith)}
@@ -223,7 +236,11 @@ export default function ChapterHadithsPage() {
                           }`}
                         >
                           <FontAwesomeIcon
-                            icon={isFavorite(hadith.hadithNumber, bookSlug) ? solidHeart : regularHeart}
+                            icon={
+                              isFavorite(hadith.hadithNumber, bookSlug)
+                                ? solidHeart
+                                : regularHeart
+                            }
                             className="text-lg"
                           />
                         </button>
@@ -232,11 +249,17 @@ export default function ChapterHadithsPage() {
 
                     <div className="mb-6">
                       {hadith.headingArabic && (
-                        <h3 dir="rtl" className="text-xl font-bold text-primary mb-3 dynamic-font">
+                        <h3
+                          dir="rtl"
+                          className="text-xl font-bold text-primary mb-3 "
+                        >
                           {hadith.headingArabic}
                         </h3>
                       )}
-                      <p dir="rtl" className="text-lg leading-loose text-foreground dynamic-font">
+                      <p
+                        dir="rtl"
+                        className="text-lg leading-loose text-foreground "
+                      >
                         {hadith.hadithArabic}
                       </p>
                     </div>
@@ -270,7 +293,7 @@ export default function ChapterHadithsPage() {
           </>
         )}
       </div>
-      
+
       <div className="h-20" />
     </div>
   );

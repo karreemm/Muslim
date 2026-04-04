@@ -2,7 +2,11 @@
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faTimes, faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faTimes,
+  faBookOpen,
+} from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { useSearchAyah } from "@/hooks/searchAyah";
@@ -56,7 +60,7 @@ export default function SearchAyah() {
     <div className="w-full min-h-screen bg-background text-foreground pb-20">
       <div className="relative z-10 w-[92%] max-w-[1500px] mx-auto pt-10">
         <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground dynamic-font mb-3">
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground  mb-3">
             {t("searchAyah.title")}
           </h1>
         </div>
@@ -76,7 +80,7 @@ export default function SearchAyah() {
                   onKeyPress={handleKeyPress}
                   placeholder={t("searchAyah.placeholder")}
                   className="w-full h-12 px-4 text-lg bg-transparent text-foreground placeholder:text-muted-foreground/60 
-                    outline-none border-none dynamic-font"
+                    outline-none border-none "
                   dir={isArabic ? "rtl" : "ltr"}
                 />
                 {keyword && (
@@ -97,12 +101,16 @@ export default function SearchAyah() {
                     onChange={(e) => setWholeWord(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-5 h-5 border-2 border-border rounded-md bg-background 
+                  <div
+                    className="w-5 h-5 border-2 border-border rounded-md bg-background 
                     peer-checked:bg-primary peer-checked:border-primary transition-all duration-200 
-                    flex items-center justify-center group-hover:border-primary/50">
+                    flex items-center justify-center group-hover:border-primary/50"
+                  >
                     <svg
                       className={`w-3 h-3 text-primary-foreground transition-all duration-200 ${
-                        wholeWord ? "opacity-100 scale-100" : "opacity-0 scale-50"
+                        wholeWord
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-50"
                       }`}
                       fill="none"
                       strokeLinecap="round"
@@ -132,8 +140,20 @@ export default function SearchAyah() {
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
                     </svg>
                     {t("common.searching")}
                   </span>
@@ -163,11 +183,14 @@ export default function SearchAyah() {
             <>
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card/50 backdrop-blur-sm rounded-xl p-4 border border-border/30">
                 <div>
-                  <h2 className="text-xl font-bold text-foreground dynamic-font">
+                  <h2 className="text-xl font-bold text-foreground ">
                     {t("searchAyah.resultsFound", { count: totalResults })}
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {t("searchAyah.searchingFor")} <span className="font-semibold text-primary">&quot;{searchedKeyword}&quot;</span>
+                    {t("searchAyah.searchingFor")}{" "}
+                    <span className="font-semibold text-primary">
+                      &quot;{searchedKeyword}&quot;
+                    </span>
                   </p>
                 </div>
                 <div className="w-fit text-sm text-muted-foreground bg-background/50 px-3 py-1 rounded-full border border-border/30">
@@ -215,11 +238,11 @@ export default function SearchAyah() {
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-primary/10 text-primary mb-6">
                 <FontAwesomeIcon icon={faSearch} className="text-5xl" />
               </div>
-              <p className="text-2xl font-bold text-foreground mb-2 dynamic-font">
+              <p className="text-2xl font-bold text-foreground mb-2 ">
                 {t("searchAyah.startSearch")}
               </p>
               <p className="text-muted-foreground max-w-md mx-auto">
-                {isArabic 
+                {isArabic
                   ? "اكتب كلمة أو عبارة للبحث عنها في القرآن الكريم"
                   : "Type a word or phrase to search for in the Quran"}
               </p>
@@ -227,7 +250,7 @@ export default function SearchAyah() {
           )}
         </div>
       </div>
-      
+
       <div className="h-20" />
     </div>
   );

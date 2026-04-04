@@ -177,24 +177,47 @@ For detailed information about all APIs used in this project, including endpoint
 
 ---
 
+## 🚀 Quick Setup (Clone And Run)
+
+### 1. Clone and install
+
+```bash
+git clone <your-fork-or-repo-url>
+cd muslim
+npm install
+```
+
+### 2. Create environment file
+
+Create `.env.local` in the project root and add:
+
+```env
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_SADAQA_TABLE=sadaqa_garya_records
+
+HADITH_API_KEY=
+HADITH_API_BASE_URL=https://hadithapi.com/api
+```
+
+### 3. Prepare database (Supabase)
+
+1. Create a Supabase project.
+2. Open SQL Editor.
+3. Run schema from `data/sadaqa_supabase_schema.sql`.
+
+### 4. Start app
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+---
 ## 🤝 Contributing
 
 Any contributions you make are **greatly appreciated** and will be considered as Sadaqah Jariyah for you too.
-
-### How to Contribute
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Areas for Contribution
-
-- UI/UX improvements
-- Bug fixes and testing
-- Mobile optimization
-- New features
 
 ---
 

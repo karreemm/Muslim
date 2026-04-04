@@ -45,25 +45,16 @@
   --color-surah-header-foreground: hsl(var(--surah-header-foreground));
   --color-prayer-times-next: hsl(var(--prayer-times-next));
   --color-prayer-times-next-bg: hsl(var(--prayer-times-next-bg));
-  --color-prayer-times-next-foreground: hsl(
-    var(--prayer-times-next-foreground)
-  );
+  --color-prayer-times-next-foreground: hsl(var(--prayer-times-next-foreground));
 
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --background-image-gradient-conic: conic-gradient(
-    from 180deg at 50% 50%,
-    var(--tw-gradient-stops)
-  );
+  --background-image-gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
 
   --animate-slide-up: slideUp 0.3s ease-out;
 
   @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
   }
 }
 
@@ -76,45 +67,49 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
+  /* ═══════════════════════════════════════════════
+     TEAL — LIGHT  (default)
+     html has no class  OR  class="teal"
+  ═══════════════════════════════════════════════ */
   :root {
-    --background: 37 100% 94%;
-    --foreground: 204 70% 26%;
+    --background: 150 30% 96%;
+    --foreground: 200 60% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 204 70% 26%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 204 70% 26%;
+    --card: 160 25% 99%;
+    --card-foreground: 200 60% 12%;
+    --popover: 160 25% 99%;
+    --popover-foreground: 200 60% 12%;
 
-    --primary: 176 83% 32%;
+    --primary: 174 80% 28%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 37 44% 92%;
-    --secondary-foreground: 204 70% 26%;
-    --muted: 210 16% 93%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 43 89% 45%;
+    --secondary: 155 30% 90%;
+    --secondary-foreground: 200 60% 18%;
+    --muted: 160 18% 90%;
+    --muted-foreground: 185 20% 35%;
+    --accent: 43 89% 42%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 73% 45%;
+    --destructive: 0 73% 42%;
     --destructive-foreground: 0 0% 100%;
-    --border: 206 24% 74%;
-    --input: 210 16% 90%;
-    --ring: 176 83% 32%;
+    --border: 170 25% 78%;
+    --input: 160 20% 88%;
+    --ring: 174 80% 28%;
 
-    --player-bg: 0 0% 100% / 0.95;
-    --player-foreground: 204 70% 26%;
-    --player-control: 176 83% 32%;
-    --player-track: 214 20% 91%;
-    --player-track-active: 176 83% 32%;
+    --player-bg: 160 25% 99% / 0.97;
+    --player-foreground: 200 60% 12%;
+    --player-control: 174 80% 28%;
+    --player-track: 160 20% 88%;
+    --player-track-active: 174 80% 28%;
 
-    --quran-surface: 0 0% 100%;
-    --quran-surface-foreground: 204 70% 26%;
-    --quran-highlight: 176 83% 45%;
-    --quran-highlight-soft: 176 83% 96%;
+    --quran-surface: 160 25% 99%;
+    --quran-surface-foreground: 200 60% 12%;
+    --quran-highlight: 174 80% 34%;
+    --quran-highlight-soft: 174 70% 92%;
 
-    --scrollbar-track: 37 100% 94%;
-    --scrollbar-thumb: 176 83% 32%;
-    --scrollbar-thumb-hover: 176 79% 27%;
+    --scrollbar-track: 150 30% 93%;
+    --scrollbar-thumb: 174 70% 38%;
+    --scrollbar-thumb-hover: 174 79% 27%;
 
-    --quran-karaoke-base: 215 28% 17%;
+    --quran-karaoke-base: 200 60% 12%;
 
     --celebration-1: 43 96% 56%;
     --celebration-2: 160 84% 39%;
@@ -127,10 +122,15 @@
     --surah-header-foreground: 0 0% 100%;
     --surah-header-shadow: 0 0% 0% / 0.55;
 
-    --prayer-times-next: 176 75% 49%;
-    --prayer-times-next-bg: 0 0% 0%;
+    --prayer-times-next: 174 80% 28%;
+    --prayer-times-next-bg: 200 60% 12%;
     --prayer-times-next-foreground: 0 0% 100%;
   }
+
+  /* ═══════════════════════════════════════════════
+     TEAL — DARK
+     html class="dark"
+  ═══════════════════════════════════════════════ */
   .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
@@ -186,52 +186,149 @@
     --prayer-times-next-bg: 0 0% 0%;
     --prayer-times-next-foreground: 0 0% 100%;
   }
+
+  /* ═══════════════════════════════════════════════
+     GOLD — LIGHT
+     html class="gold"
+  ═══════════════════════════════════════════════ */
+  .gold {
+    --background: 42 60% 96%;
+    --foreground: 28 55% 14%;
+
+    --card: 45 50% 99%;
+    --card-foreground: 28 55% 14%;
+    --popover: 45 50% 99%;
+    --popover-foreground: 28 55% 14%;
+
+    --primary: 38 80% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 42 45% 90%;
+    --secondary-foreground: 28 55% 18%;
+    --muted: 40 22% 90%;
+    --muted-foreground: 30 25% 38%;
+    --accent: 174 60% 38%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 73% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 38 35% 80%;
+    --input: 40 28% 88%;
+    --ring: 38 80% 36%;
+
+    --player-bg: 45 50% 99% / 0.97;
+    --player-foreground: 28 55% 14%;
+    --player-control: 38 80% 36%;
+    --player-track: 40 28% 88%;
+    --player-track-active: 38 80% 36%;
+
+    --quran-surface: 45 50% 99%;
+    --quran-surface-foreground: 28 55% 14%;
+    --quran-highlight: 38 80% 36%;
+    --quran-highlight-soft: 42 80% 93%;
+
+    --scrollbar-track: 42 55% 93%;
+    --scrollbar-thumb: 38 72% 42%;
+    --scrollbar-thumb-hover: 38 80% 30%;
+
+    --quran-karaoke-base: 28 55% 14%;
+
+    --celebration-1: 43 96% 56%;
+    --celebration-2: 160 84% 39%;
+    --celebration-3: 213 94% 68%;
+    --celebration-4: 327 87% 70%;
+    --celebration-5: 258 90% 76%;
+    --celebration-6: 0 0% 100%;
+    --celebration-7: 45 97% 77%;
+
+    --surah-header-foreground: 0 0% 100%;
+    --surah-header-shadow: 0 0% 0% / 0.55;
+
+    --prayer-times-next: 38 80% 36%;
+    --prayer-times-next-bg: 28 55% 14%;
+    --prayer-times-next-foreground: 0 0% 100%;
+  }
+
+  /* ═══════════════════════════════════════════════
+     GOLD — DARK
+     html class="gold dark"
+     NOTE: .gold.dark must come AFTER .dark in the
+     file so it wins the specificity race cleanly.
+  ═══════════════════════════════════════════════ */
+  .gold.dark {
+    --background: 28 35% 10%;
+    --foreground: 42 70% 92%;
+
+    --card: 28 32% 16%;
+    --card-foreground: 42 70% 92%;
+    --popover: 28 32% 16%;
+    --popover-foreground: 42 70% 92%;
+
+    --primary: 43 85% 52%;
+    --primary-foreground: 28 55% 10%;
+    --secondary: 28 28% 20%;
+    --secondary-foreground: 42 70% 88%;
+    --muted: 30 22% 22%;
+    --muted-foreground: 38 30% 60%;
+    --accent: 174 60% 44%;
+    --accent-foreground: 28 55% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 42 70% 92%;
+    --border: 35 28% 24%;
+    --input: 30 22% 22%;
+    --ring: 43 85% 52%;
+
+    --player-bg: 28 35% 10% / 0.98;
+    --player-foreground: 42 70% 92%;
+    --player-control: 43 85% 52%;
+    --player-track: 30 22% 22%;
+    --player-track-active: 43 85% 52%;
+
+    --quran-surface: 28 30% 15%;
+    --quran-surface-foreground: 42 70% 92%;
+    --quran-highlight: 43 85% 52%;
+    --quran-highlight-soft: 38 60% 18%;
+
+    --scrollbar-track: 28 35% 10%;
+    --scrollbar-thumb: 43 72% 42%;
+    --scrollbar-thumb-hover: 43 80% 50%;
+
+    --quran-karaoke-base: 42 70% 92%;
+
+    --celebration-1: 43 96% 56%;
+    --celebration-2: 160 84% 39%;
+    --celebration-3: 213 94% 68%;
+    --celebration-4: 327 87% 70%;
+    --celebration-5: 258 90% 76%;
+    --celebration-6: 42 70% 92%;
+    --celebration-7: 45 97% 77%;
+
+    --surah-header-foreground: 42 70% 92%;
+    --surah-header-shadow: 0 0% 0% / 0.65;
+
+    --prayer-times-next: 43 85% 52%;
+    --prayer-times-next-bg: 28 55% 10%;
+    --prayer-times-next-foreground: 28 55% 10%;
+  }
 }
 
-
 /* Font Family */
-.font{
+.font {
   font-family: "Kufam", sans-serif;
 }
 
-
-
-/* Scroll bar Styles */
-::-webkit-scrollbar {
-  width: 8px;
-}
+/* ═══════════════════════════════════════════════
+   SCROLLBAR STYLES
+═══════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 8px; }
 
 ::-webkit-scrollbar-track {
   background: hsl(var(--scrollbar-track));
 }
-
 ::-webkit-scrollbar-thumb {
   background-color: hsl(var(--scrollbar-thumb));
   border-radius: 10px;
   border: 2px solid hsl(var(--scrollbar-track));
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--scrollbar-thumb-hover));
-}
-
-:root.dark ::-webkit-scrollbar-track,
-html.dark ::-webkit-scrollbar-track,
-.dark ::-webkit-scrollbar-track {
-  background: hsl(var(--scrollbar-track));
-}
-
-:root.dark ::-webkit-scrollbar-thumb,
-html.dark ::-webkit-scrollbar-thumb,
-.dark ::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--scrollbar-thumb));
-  border-radius: 10px;
-  border: 2px solid hsl(var(--scrollbar-track));
-}
-
-:root.dark ::-webkit-scrollbar-thumb:hover,
-html.dark ::-webkit-scrollbar-thumb:hover,
-.dark ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--scrollbar-thumb-hover));
 }
 

@@ -1,22 +1,37 @@
-import { HadithBook, HadithChapter, Hadith, PaginatedResponse } from "@/types";
+import { HadithBook, HadithChapter, Hadith, PaginatedResponse } from "../types";
 
-const API_KEY = process.env.NEXT_PUBLIC_HADITH_API_KEY;
-const BASE_URL = process.env.NEXT_PUBLIC_HADITH_API_BASE_URL;
+async function fetchHadithApi(
+  params: Record<string, string | number | undefined>,
+) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, String(value));
+    }
+  });
+
+  const response = await fetch(`/api/hadith?${searchParams.toString()}`);
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(
+        errorData?.error ||
+          "Invalid hadith API key. Check HADITH_API_KEY in .env.local, then restart dev server.",
+      );
+    }
+    throw new Error(
+      errorData?.error || `HTTP error! status: ${response.status}`,
+    );
+  }
+
+  return response.json();
+}
 
 export async function getBooks(): Promise<HadithBook[]> {
   try {
-    const response = await fetch(`${BASE_URL}/books?apiKey=${API_KEY}`);
-
-    if (!response.ok) {
-      if (response.status === 403) {
-        throw new Error(
-          "Invalid API key. Please check your NEXT_PUBLIC_HADITH_API_KEY in .env.local"
-        );
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchHadithApi({ mode: "books" });
     return data.books || [];
   } catch (error) {
     console.error("Error fetching books:", error);
@@ -27,31 +42,15 @@ export async function getBooks(): Promise<HadithBook[]> {
 export async function getChapters(
   bookSlug: string,
   paginate?: number,
-  page?: number
+  page?: number,
 ): Promise<HadithChapter[] | PaginatedResponse<HadithChapter>> {
   try {
-    let url = `${BASE_URL}/${bookSlug}/chapters?apiKey=${API_KEY}`;
-
-    if (paginate) {
-      url += `&paginate=${paginate}`;
-    }
-
-    if (page) {
-      url += `&page=${page}`;
-    }
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      if (response.status === 403) {
-        throw new Error(
-          "Invalid API key. Please check your NEXT_PUBLIC_HADITH_API_KEY in .env.local"
-        );
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchHadithApi({
+      mode: "chapters",
+      bookSlug,
+      paginate,
+      page,
+    });
 
     if (data.chapters && data.chapters.data) {
       return data;
@@ -77,29 +76,10 @@ export interface HadithFilters {
 }
 
 export async function getHadiths(
-  filters: HadithFilters = {}
+  filters: HadithFilters = {},
 ): Promise<PaginatedResponse<Hadith>> {
   try {
-    let url = `${BASE_URL}/hadiths?apiKey=${API_KEY}`;
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        url += `&${key}=${encodeURIComponent(value)}`;
-      }
-    });
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      if (response.status === 403) {
-        throw new Error(
-          "Invalid API key. Please check your NEXT_PUBLIC_HADITH_API_KEY in .env.local"
-        );
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchHadithApi({ mode: "hadiths", ...filters });
     return data;
   } catch (error) {
     console.error("Error fetching hadiths:", error);
@@ -111,7 +91,7 @@ export async function getChapterHadiths(
   bookSlug: string,
   chapterNumber: string,
   page: number = 1,
-  paginate: number = 10
+  paginate: number = 10,
 ): Promise<PaginatedResponse<Hadith>> {
   return getHadiths({
     book: bookSlug,
@@ -126,7 +106,7 @@ export async function searchHadiths(
   language: "en" | "ar" = "en",
   bookSlug?: string,
   page: number = 1,
-  paginate: number = 10
+  paginate: number = 10,
 ): Promise<PaginatedResponse<Hadith>> {
   const filters: HadithFilters = {
     paginate,
@@ -148,7 +128,7 @@ export async function searchHadiths(
 
 export async function searchHadithByNumber(
   hadithNumber: string,
-  bookSlug?: string
+  bookSlug?: string,
 ): Promise<PaginatedResponse<Hadith>> {
   const filters: HadithFilters = {
     hadithNumber,

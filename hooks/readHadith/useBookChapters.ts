@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { HadithChapter } from "@/types";
+import { HadithChapter } from "@/app/(pages)/read-hadith/types";
 import { getChapters } from "@/app/(pages)/read-hadith/service/HadithApiService";
 
 export function useBookChapters(bookSlug: string, itemsPerPage: number = 20) {

@@ -80,9 +80,7 @@ const Pagination: React.FC<PaginationProps> = ({
           icon={isArabic ? faChevronRight : faChevronLeft}
           className="h-4 w-4 transition-transform group-hover:-translate-x-0.5"
         />
-        <span className="hidden sm:inline dynamic-font">
-          {t("common.previous")}
-        </span>
+        <span className="hidden sm:inline ">{t("common.previous")}</span>
       </button>
 
       <div className="flex items-center gap-1.5 sm:hidden">
@@ -90,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
           className="flex h-11 min-w-[4.5rem] px-3 items-center justify-center rounded-xl font-bold text-sm
           bg-primary text-primary-foreground shadow-lg shadow-primary/30 mx-1"
         >
-          <span className="dynamic-font">
+          <span className="">
             {isArabic
               ? `${formatNumber(currentPage)} / ${formatNumber(totalPages)}`
               : `${currentPage} / ${totalPages}`}
@@ -137,9 +135,7 @@ const Pagination: React.FC<PaginationProps> = ({
           active:scale-95 shrink-0"
         aria-label={t("common.next")}
       >
-        <span className="hidden sm:inline dynamic-font">
-          {t("common.next")}
-        </span>
+        <span className="hidden sm:inline ">{t("common.next")}</span>
         <FontAwesomeIcon
           icon={isArabic ? faChevronLeft : faChevronRight}
           className="h-4 w-4 transition-transform group-hover:translate-x-0.5"

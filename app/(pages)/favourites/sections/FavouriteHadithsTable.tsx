@@ -1,52 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFavoriteHadiths } from "../../../../context/favourites/FavoriteHadithsContext";
 import { useLanguage } from "../../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrashCan,
-  faLocationArrow,
-  faHeartCircleMinus,
-} from "@fortawesome/free-solid-svg-icons";
+import { ExternalLink, Share2, Trash2 } from "lucide-react";
+import DataTable from "@/components/general/DataTable";
 import { hadithBooks } from "../../../../constants/hadithData";
-import { ClipLoader } from "react-spinners";
-import ShareModal from "../../../../components/modals/ShareModal";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import ShareModal from "@/components/modals/ShareModal";
+import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
 
-export default function HadithTable() {
+export default function FavouriteHadithsTable() {
   const { favoriteHadiths, removeFavoriteHadith } = useFavoriteHadiths();
-  const [isMounted, setIsMounted] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { language } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
+  const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-    setLoading(false);
-    console.log(favoriteHadiths);
-  }, []);
-
-  useEffect(() => {
-    if (favoriteHadiths.length === 0) {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
-    }
-  }, [favoriteHadiths]);
-
-  if (!isMounted || loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ClipLoader color={"hsl(var(--primary))"} loading={loading} size={50} />
-      </div>
-    );
-  }
-
-  const handleGoToHadith = (hadith: any) => {
+  const handleNavigate = (hadith: any) => {
     const hadithNumber = hadith.numberEn;
     const chapterId = hadith.chapterId;
 
@@ -59,97 +31,140 @@ export default function HadithTable() {
     }
   };
 
+  const getBookName = (bookId: string) => {
+    const book = hadithBooks.find((b) => b.id === bookId);
+    return language === "ar" ? book?.name_ar : book?.name_en;
+  };
+
+  const getShareUrl = (item: any) => {
+    if (typeof window !== "undefined") {
+      return item.chapterId
+        ? `${window.location.origin}/read-hadith/book/${item.bookId}/chapter/${item.chapterId}?hadith=${item.numberEn}`
+        : `${window.location.origin}/read-hadith/book/${item.bookId}?hadith=${item.numberEn}`;
+    }
+
+    return item.chapterId
+      ? `https://muslim-one.vercel.app/read-hadith/book/${item.bookId}/chapter/${item.chapterId}?hadith=${item.numberEn}`
+      : `https://muslim-one.vercel.app/read-hadith/book/${item.bookId}?hadith=${item.numberEn}`;
+  };
+
+  const columns = [
+    {
+      key: "number",
+      title: t("favourites.hadith.hadithNo"),
+      align: "center" as const,
+      width: "120px",
+      render: (item: any, idx: number) => (
+        <div className="flex flex-col items-center gap-1">
+          {idx === 0 && (
+            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="mt-0.5">
+                {t("common.latest")}
+              </span>
+              </span>
+          )}
+          <span className="font-mono font-medium text-foreground">
+            {language === "ar" ? item.numberAr : item.numberEn}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "book",
+      title: t("common.book"),
+      align: "center" as const,
+      render: (item: any) => (
+        <span className="font-medium text-foreground">
+          {getBookName(item.bookId)}
+        </span>
+      ),
+    },
+    {
+      key: "text",
+      title: t("common.text"),
+      align: "left" as const,
+      hiddenOnMobile: true,
+      render: (item: any) => (
+        <div
+          dir="rtl"
+          className="max-w-md truncate text-muted-foreground leading-relaxed"
+        >
+          {item.text}
+        </div>
+      ),
+    },
+  ];
+
+  const actions = [
+    {
+      icon: <ExternalLink className="w-4 h-4" />,
+      label: t("common.goTo"),
+      variant: "primary" as const,
+      onClick: handleNavigate,
+    },
+    {
+      icon: <Share2 className="w-4 h-4" />,
+      label: t("common.share"),
+      variant: "ghost" as const,
+      onClick: () => {},
+      customRender: (item: any) => <ShareModal url={getShareUrl(item)} />,
+    },
+    {
+      icon: <Trash2 className="w-4 h-4" />,
+      label: t("common.remove"),
+      variant: "destructive" as const,
+      onClick: (item: any) => setDeleteTarget(item),
+    },
+  ];
+
   return (
-    <div className="mt-20 max-w-7xl min-h-screen mx-auto px-4 md:px-8">
-      {isEmpty && (
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-5">
-          {t("favourites.hadith.noFavourites")}
-        </h1>
-      )}
-      {!isEmpty && (
-        <>
-          <div className="mt-10 shadow-xs border border-border dark:border-border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh] ">
-            <table className="w-full table-auto text-sm">
-              <thead className="bg-primary text-primary-foreground font-medium border-b sticky top-0 z-10">
-                <tr>
-                  <th className="py-3 px-6">
-                    {t("favourites.hadith.hadithNo")}
-                  </th>
-                  <th className="py-3 px-6">{t("common.book")}</th>
-                  <th className="hidden md:table-cell py-3 px-6">
-                    {t("common.text")}
-                  </th>
-                  <th className="py-3 px-6">{t("common.actions")}</th>
-                </tr>
-              </thead>
-              <tbody className="text-foreground divide-y divide-border">
-                {[...favoriteHadiths].reverse().map((item, idx) => {
-                  const book = hadithBooks.find((b) => b.id === item.bookId);
-                  return (
-                    <tr key={idx} className="">
-                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm md:text-base">
-                        <div className="flex flex-col items-center gap-1">
-                          {idx === 0 && (
-                            <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full font-sans w-fit">
-                              {t("common.latest")}
-                            </span>
-                          )}
-                          <span>
-                            {language === "ar" ? item.numberAr : item.numberEn}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        {language === "ar" ? book?.name_ar : book?.name_en}
-                      </td>
-                      <td
-                        dir="rtl"
-                        className="px-6 py-4 hidden md:table-cell leading-8"
-                      >
-                        {item.text}
-                      </td>
-                      <td className="px-6 py-4 flex items-center justify-center gap-3 text-lg">
-                        <button
-                          className="text-primary hover:opacity-80"
-                          onClick={() => handleGoToHadith(item)}
-                        >
-                          <FontAwesomeIcon icon={faLocationArrow} />
-                        </button>
-                        <ShareModal
-                          url={
-                            item.chapterId
-                              ? `https://muslim-one.vercel.app/read-hadith/book/${book?.id}/chapter/${item.chapterId}?hadith=${item.numberEn}`
-                              : `https://muslim-one.vercel.app/read-hadith/book/${book?.id}?hadith=${item.numberEn}`
-                          }
-                        />
-                        <button
-                          className="text-destructive hover:opacity-80"
-                          onClick={() =>
-                            removeFavoriteHadith(item.numberEn, item.bookId)
-                          }
-                        >
-                          <FontAwesomeIcon icon={faHeartCircleMinus} />
-                        </button>
-                      </td>
-                    </tr>
+    <div className="px-4 md:px-8">
+      <DataTable
+        columns={columns}
+        data={favoriteHadiths}
+        keyExtractor={(item) => `${item.bookId}-${item.numberEn}`}
+        actions={actions}
+        emptyTitle={t("favourites.hadith.noFavourites")}
+        clearAllAction={
+          favoriteHadiths.length > 0
+            ? {
+                label: t("favourites.hadith.clearAllHadith"),
+                onClick: () => {
+                  favoriteHadiths.forEach((hadith) =>
+                    removeFavoriteHadith(hadith.numberEn, hadith.bookId),
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="mt-10 bg-primary text-primary-foreground px-4 py-2 rounded-sm mb-4 flex gap-2 hover:opacity-90"
-            onClick={() =>
-              favoriteHadiths.forEach((surah) =>
-                removeFavoriteHadith(surah.numberEn, surah.bookId),
-              )
-            }
-          >
-            <FontAwesomeIcon icon={faTrashCan} className="text-lg mt-0.5" />
-            {t("favourites.hadith.clearAllHadith")}
-          </button>
-        </>
-      )}
+                },
+                confirmationTitle:
+                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
+                confirmationDescription:
+                  language === "ar"
+                    ? "هل أنت متأكد من حذف كل الأحاديث المفضلة؟"
+                    : "Are you sure you want to clear all favourite hadiths?",
+              }
+            : undefined
+        }
+        maxHeight="60vh"
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
+        description={
+          language === "ar"
+            ? "هل أنت متأكد من حذف هذا الحديث من المفضلة؟"
+            : "Are you sure you want to remove this hadith from favourites?"
+        }
+        confirmText={language === "ar" ? "حذف" : "Delete"}
+        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        onConfirm={() => {
+          if (deleteTarget) {
+            removeFavoriteHadith(deleteTarget.numberEn, deleteTarget.bookId);
+          }
+          setDeleteTarget(null);
+        }}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

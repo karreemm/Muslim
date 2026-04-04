@@ -26,7 +26,7 @@ import { useQuranAudio } from "@/context/features/QuranAudioContext";
 export default function ReciterPage() {
   const { language } = useLanguage();
   const { t } = useTranslation();
-  const { playSurah, isPlaying, currentSurah } = useQuranAudio();
+  const { playSurah, isPlaying, surahNumber } = useQuranAudio();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const isArabic = language === "ar";
 
@@ -61,16 +61,18 @@ export default function ReciterPage() {
   );
 
   const handlePreviousSurah = () => {
-    if (selectedSurah && selectedSurah > 1) handleSurahChange(selectedSurah - 1);
+    if (selectedSurah && selectedSurah > 1)
+      handleSurahChange(selectedSurah - 1);
   };
 
   const handleNextSurah = () => {
-    if (selectedSurah && selectedSurah < 114) handleSurahChange(selectedSurah + 1);
+    if (selectedSurah && selectedSurah < 114)
+      handleSurahChange(selectedSurah + 1);
   };
 
   const canGoPreviousSurah = selectedSurah ? selectedSurah > 1 : false;
   const canGoNextSurah = selectedSurah ? selectedSurah < 114 : false;
-  const isCurrentlyPlaying = isPlaying && currentSurah === selectedSurah;
+  const isCurrentlyPlaying = isPlaying && surahNumber === selectedSurah;
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -95,17 +97,16 @@ export default function ReciterPage() {
         >
           <div className="flex-1 flex flex-col items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
             <div className="w-full max-w-4xl flex flex-col items-center gap-5 sm:gap-8">
-
               <div className="flex items-center justify-center gap-4 sm:gap-8 w-full">
                 <button
                   onClick={handlePreviousSurah}
                   disabled={!canGoPreviousSurah}
                   className={`group flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
                     transition-all duration-300 border-2 ${
-                    canGoPreviousSurah
-                      ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
-                      : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
-                  }`}
+                      canGoPreviousSurah
+                        ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
+                        : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
+                    }`}
                   title={isArabic ? "السورة السابقة" : "Previous Surah"}
                 >
                   <FontAwesomeIcon
@@ -119,17 +120,22 @@ export default function ReciterPage() {
 
                   <div className="relative z-10">
                     <div className="inline-flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 text-primary mb-3 sm:mb-4">
-                      <span className="font-bold text-sm sm:text-lg">{selectedSurah}</span>
+                      <span className="font-bold text-sm sm:text-lg">
+                        {selectedSurah}
+                      </span>
                     </div>
 
-                    <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2 dynamic-font">
+                    <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2 ">
                       {isArabic
                         ? `سورة ${selectedSurahNameAr}`
                         : `Surah ${selectedSurahNameEn}`}
                     </h1>
 
                     <div className="flex items-center justify-center gap-2 text-muted-foreground mt-2 sm:mt-4">
-                      <FontAwesomeIcon icon={faMicrophone} className="text-xs sm:text-sm" />
+                      <FontAwesomeIcon
+                        icon={faMicrophone}
+                        className="text-xs sm:text-sm"
+                      />
                       <p className="text-sm sm:text-base md:text-lg">
                         {isArabic
                           ? `الشيخ ${reciterNameAr}`
@@ -165,10 +171,10 @@ export default function ReciterPage() {
                   disabled={!canGoNextSurah}
                   className={`group flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
                     transition-all duration-300 border-2 ${
-                    canGoNextSurah
-                      ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
-                      : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
-                  }`}
+                      canGoNextSurah
+                        ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
+                        : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
+                    }`}
                   title={isArabic ? "السورة التالية" : "Next Surah"}
                 >
                   <FontAwesomeIcon
@@ -191,7 +197,7 @@ export default function ReciterPage() {
                     icon={isFavorite ? loved : notLoved}
                     className={`text-base sm:text-xl transition-transform group-hover:scale-110 ${!isFavorite && "group-hover:text-destructive"}`}
                   />
-                  <span className="dynamic-font whitespace-nowrap">
+                  <span className=" whitespace-nowrap">
                     {isFavorite
                       ? t("listenQuran.surahPlayer.saved")
                       : t("listenQuran.surahPlayer.loveIt")}
@@ -201,16 +207,8 @@ export default function ReciterPage() {
                 <ShareModal
                   size="xl"
                   url={`https://muslim-one.vercel.app/listen-quran/reciter/${reciterId}?surah=${selectedSurah}`}
-                  className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold bg-card border border-border/50 text-foreground
-                    hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
-                >
-                  <FontAwesomeIcon icon={faShareNodes} className="text-base sm:text-xl" />
-                  <span className="dynamic-font whitespace-nowrap">
-                    {t("listenQuran.surahPlayer.shareIt")}
-                  </span>
-                </ShareModal>
+                />
               </div>
-
             </div>
           </div>
 
