@@ -417,7 +417,6 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   </div>
                 )}
               </div>
-
               <div className="min-w-0 flex flex-col justify-center flex-1">
                 <h3 className="text-sm font-bold text-foreground truncate leading-tight">
                   {language === "ar" ? `سورة ${surahName}` : `Surah ${surahName}`}

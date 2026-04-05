@@ -88,8 +88,8 @@ export default function ReciterPage() {
           className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
             isSidebarExpanded
               ? isArabic
-                ? "pr-16 md:pr-80"
-                : "pl-16 md:pl-80"
+                ? "pr-16 lg:pr-80"
+                : "pl-16 lg:pl-80"
               : isArabic
                 ? "pr-16"
                 : "pl-16"
@@ -101,7 +101,7 @@ export default function ReciterPage() {
                 <button
                   onClick={handlePreviousSurah}
                   disabled={!canGoPreviousSurah}
-                  className={`group flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
+                  className={`group flex h-7 w-7 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
                     transition-all duration-300 border-2 ${
                       canGoPreviousSurah
                         ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
@@ -119,12 +119,6 @@ export default function ReciterPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 pointer-events-none" />
 
                   <div className="relative z-10">
-                    <div className="inline-flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 text-primary mb-3 sm:mb-4">
-                      <span className="font-bold text-sm sm:text-lg">
-                        {selectedSurah}
-                      </span>
-                    </div>
-
                     <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2 ">
                       {isArabic
                         ? `سورة ${selectedSurahNameAr}`
@@ -142,34 +136,13 @@ export default function ReciterPage() {
                           : `Sheikh ${reciterNameEn}`}
                       </p>
                     </div>
-
-                    {isCurrentlyPlaying && (
-                      <div className="mt-3 sm:mt-4 flex items-center justify-center gap-2 text-primary">
-                        <div className="flex gap-0.5 items-end h-3 sm:h-4">
-                          {[0, 0.1, 0.2, 0.3].map((delay) => (
-                            <div
-                              key={delay}
-                              className="w-0.5 bg-primary animate-pulse rounded-full"
-                              style={{
-                                height: "100%",
-                                animationDelay: `${delay}s`,
-                                animationDuration: "0.6s",
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs sm:text-sm font-medium">
-                          {isArabic ? "جاري التشغيل" : "Now Playing"}
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </div>
 
                 <button
                   onClick={handleNextSurah}
                   disabled={!canGoNextSurah}
-                  className={`group flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
+                  className={`group flex h-7 w-7 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl
                     transition-all duration-300 border-2 ${
                       canGoNextSurah
                         ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
@@ -197,7 +170,7 @@ export default function ReciterPage() {
                     icon={isFavorite ? loved : notLoved}
                     className={`text-base sm:text-xl transition-transform group-hover:scale-110 ${!isFavorite && "group-hover:text-destructive"}`}
                   />
-                  <span className=" whitespace-nowrap">
+                  <span className=" whitespace-nowrap hidden md:inline-block">
                     {isFavorite
                       ? t("listenQuran.surahPlayer.saved")
                       : t("listenQuran.surahPlayer.loveIt")}

@@ -92,7 +92,7 @@ export default function AudioPlayerMobileSheet({
                 <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-foreground shadow-sm">
                   <FontAwesomeIcon icon={faArrowUp} className="text-xs" />
                 </div>
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium text-foreground">
                   {language === "ar" ? "انتقال للآية" : "Jump to Ayah"}
                 </span>
               </button>
@@ -118,7 +118,7 @@ export default function AudioPlayerMobileSheet({
                   className={`text-xs ${downloadStatus === "downloading" ? "animate-bounce" : ""}`}
                 />
               </div>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-foreground">
                 {language === "ar" ? "تنزيل السورة" : "Download"}
               </span>
             </button>
@@ -131,7 +131,7 @@ export default function AudioPlayerMobileSheet({
               <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-foreground shadow-sm">
                 <FontAwesomeIcon icon={faMicrophone} className="text-xs" />
               </div>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-foreground">
                 {language === "ar" ? "تغيير القارئ" : "Change Reciter"}
               </span>
             </button>
