@@ -1,5 +1,3 @@
-import type { SVGProps } from "react";
-
 type PatternVariant = "home" | "footer";
 
 type GeometricPatternProps = {
