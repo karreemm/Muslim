@@ -1,14 +1,18 @@
+"use client";
+
 import React from "react";
 import { useLanguage } from "@/context/general/LanguageContext";
 
 export const HadithCardSkeleton: React.FC = () => {
   const { language } = useLanguage();
-  
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-card/50 border border-border/50 p-6 animate-pulse backdrop-blur-sm">
       <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-      
-      <div className={`absolute ${language === "ar" ? "left-4" : "right-4"} top-4 flex gap-2`}>
+
+      <div
+        className={`absolute ${language === "ar" ? "left-4" : "right-4"} top-4 flex gap-2`}
+      >
         <div className="w-9 h-9 bg-muted/50 rounded-xl"></div>
         <div className="w-9 h-9 bg-muted/50 rounded-xl"></div>
       </div>

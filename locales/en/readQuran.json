@@ -3,8 +3,8 @@
     "saveAyah": "Save Ayah",
     "listenAyah": "Listen to Ayah",
     "selectReciter": "Select Reciter",
-    "viewTafseer": "View Tafseer",
-    "viewTranslation": "View Translation"
+    "viewTafseer": "Tafseer",
+    "viewTranslation": "Translation"
   },
   "tafseer": {
     "title": "Ayah Tafseer",

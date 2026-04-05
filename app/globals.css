@@ -69,7 +69,6 @@
 
   /* ═══════════════════════════════════════════════
      TEAL — LIGHT  (default)
-     html has no class  OR  class="teal"
   ═══════════════════════════════════════════════ */
   :root {
     --background: 150 30% 96%;
@@ -129,7 +128,6 @@
 
   /* ═══════════════════════════════════════════════
      TEAL — DARK
-     html class="dark"
   ═══════════════════════════════════════════════ */
   .dark {
     --background: 222 47% 11%;
@@ -189,7 +187,6 @@
 
   /* ═══════════════════════════════════════════════
      GOLD — LIGHT
-     html class="gold"
   ═══════════════════════════════════════════════ */
   .gold {
     --background: 42 60% 96%;
@@ -249,9 +246,6 @@
 
   /* ═══════════════════════════════════════════════
      GOLD — DARK
-     html class="gold dark"
-     NOTE: .gold.dark must come AFTER .dark in the
-     file so it wins the specificity race cleanly.
   ═══════════════════════════════════════════════ */
   .gold.dark {
     --background: 28 35% 10%;
@@ -332,6 +326,15 @@
   background: hsl(var(--scrollbar-thumb-hover));
 }
 
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
+/* NUMBER INPUT STYLES (remove spinners) 
+═══════════════════════════════════════════════ */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

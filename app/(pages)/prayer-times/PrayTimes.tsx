@@ -13,6 +13,7 @@ import {
 import PrayerTimesHeader from "@/app/(pages)/prayer-times/components/PrayerTimesHeader";
 import NextPrayerCard from "@/app/(pages)/prayer-times/components/NextPrayerCard";
 import PrayerTimesGrid from "@/app/(pages)/prayer-times/components/PrayerTimesGrid";
+import Loading from "@/components/general/Loading";
 
 const prayerNames = {
   en: ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"],
@@ -80,20 +81,8 @@ const PrayerTimes: React.FC = () => {
 
   if (prayerTimesLoading)
     return (
-      <div className="w-full min-h-screen flex flex-col items-center justify-center gap-4 bg-background">
-        <div className="relative w-16 h-16">
-          <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
-          <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-          <FontAwesomeIcon
-            icon={faSpinner}
-            className="absolute inset-0 m-auto text-primary text-xl animate-pulse"
-          />
-        </div>
-        <p className="text-muted-foreground animate-pulse">
-          {language === "ar"
-            ? "جاري تحميل مواقيت الصلاة..."
-            : "Loading prayer times..."}
-        </p>
+      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-background">
+       <Loading />
       </div>
     );
 
