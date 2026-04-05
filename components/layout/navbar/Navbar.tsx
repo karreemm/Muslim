@@ -61,8 +61,12 @@ export default function Navbar() {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
 
-  const isActive = (path: string, exact = false) =>
-    exact ? pathname === path : pathname.startsWith(path);
+  const isActive = (path: string, exact = false) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return exact ? pathname === path : pathname.startsWith(path);
+  };
 
   const isQuranActive = () =>
     quranLinks(t).some((route) => pathname.startsWith(route.href));
@@ -227,7 +231,7 @@ export default function Navbar() {
                   href={href}
                   className={`flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-all duration-200
                   ${
-                    isActive(href, true)
+                    isActive(href)
                       ? "bg-primary/10 text-primary border border-primary/20"
                       : "text-foreground/80 hover:bg-secondary/50 hover:text-primary"
                   }`}
