@@ -12,16 +12,44 @@ const getSurahAndAyah = (verseKey: string | null) => {
   return { surah, ayah };
 };
 
+interface SelectedAyahInfo {
+  surahNumber: number;
+  ayahNumber: number;
+  surahNameAr?: string;
+  surahNameEn?: string;
+}
+
 export const useAyahInteraction = (verses: QuranVerse[]) => {
   const { saveAyah } = useSavedAyahs();
   const [hoveredVerseKey, setHoveredVerseKey] = useState<string | null>(null);
   const [selectedVerseKey, setSelectedVerseKey] = useState<string | null>(null);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
+  const [modalAyahInfo, setModalAyahInfo] = useState<SelectedAyahInfo>({
+    surahNumber: 0,
+    ayahNumber: 0,
+    surahNameAr: undefined,
+    surahNameEn: undefined,
+  });
+
+  const [showTafseerModal, setShowTafseerModal] = useState(false);
+  const [showTranslationModal, setShowTranslationModal] = useState(false);
+
   const handleWordClick = useCallback(
     (event: React.MouseEvent, verseKey: string | undefined) => {
       if (!verseKey) return;
       event.stopPropagation();
+
+      const { surah, ayah } = getSurahAndAyah(verseKey);
+      const surahInfo = surahNames.find((s) => s.number === surah);
+
+      setModalAyahInfo({
+        surahNumber: surah,
+        ayahNumber: ayah,
+        surahNameAr: surahInfo?.ar,
+        surahNameEn: surahInfo?.en,
+      });
+
       setSelectedVerseKey(verseKey);
       setPopoverPosition({ x: event.clientX, y: event.clientY });
     },
@@ -60,9 +88,18 @@ export const useAyahInteraction = (verses: QuranVerse[]) => {
     handleClosePopover();
   }, [selectedVerseKey, verses, saveAyah, handleClosePopover]);
 
+  const handleOpenTafseer = useCallback(() => {
+    setShowTafseerModal(true);
+    setSelectedVerseKey(null); 
+  }, []);
+
+  const handleOpenTranslation = useCallback(() => {
+    setShowTranslationModal(true);
+    setSelectedVerseKey(null);
+  }, []);
+
   const { surah: selectedSurahNumber, ayah: selectedAyahNumber } =
     getSurahAndAyah(selectedVerseKey);
-
   const surahInfo = surahNames.find((s) => s.number === selectedSurahNumber);
 
   return {
@@ -77,5 +114,12 @@ export const useAyahInteraction = (verses: QuranVerse[]) => {
     selectedAyahNumber,
     selectedSurahNameAr: surahInfo?.ar,
     selectedSurahNameEn: surahInfo?.en,
+    modalAyahInfo,
+    showTafseerModal,
+    setShowTafseerModal,
+    showTranslationModal,
+    setShowTranslationModal,
+    handleOpenTafseer,
+    handleOpenTranslation,
   };
 };

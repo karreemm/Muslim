@@ -10,6 +10,8 @@ import { useQuranPageLines } from "@/hooks/readQuran/useQuranPageLines";
 import { useAyahInteraction } from "@/hooks/readQuran/useAyahInteraction";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import type { QuranVerse } from "@/hooks/readQuran";
+import { TafseerModal } from "@/components/modals/TafseerModal";
+import { TranslationModal } from "@/components/modals/TranslationModal";
 
 interface SurahHeaderInfo {
   surahNumber: number;
@@ -91,6 +93,13 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       selectedAyahNumber,
       selectedSurahNameAr,
       selectedSurahNameEn,
+      modalAyahInfo,
+      showTafseerModal,
+      setShowTafseerModal,
+      showTranslationModal,
+      setShowTranslationModal,
+      handleOpenTafseer,
+      handleOpenTranslation,
     } = useAyahInteraction(verses);
 
     if (!fontLoadTried && pageNumber) {
@@ -286,10 +295,29 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             position={popoverPosition}
             onClose={handleClosePopover}
             onSave={handleSaveAyah}
+            onOpenTafseer={handleOpenTafseer}
+            onOpenTranslation={handleOpenTranslation}
             surahNameAr={selectedSurahNameAr}
             surahNameEn={selectedSurahNameEn}
           />
         )}
+
+        <TafseerModal
+          isOpen={showTafseerModal}
+          onClose={() => setShowTafseerModal(false)}
+          surahNumber={modalAyahInfo?.surahNumber || 0}
+          ayahNumber={modalAyahInfo?.ayahNumber || 0}
+          surahNameAr={modalAyahInfo?.surahNameAr}
+          surahNameEn={modalAyahInfo?.surahNameEn}
+        />
+        <TranslationModal
+          isOpen={showTranslationModal}
+          onClose={() => setShowTranslationModal(false)}
+          surahNumber={modalAyahInfo?.surahNumber || 0}
+          ayahNumber={modalAyahInfo?.ayahNumber || 0}
+          surahNameAr={modalAyahInfo?.surahNameAr}
+          surahNameEn={modalAyahInfo?.surahNameEn}
+        />
       </div>
     );
   },

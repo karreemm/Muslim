@@ -562,6 +562,10 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--scrollbar-thumb-hover));
 }
+::-webkit-scrollbar:horizontal {
+  height: 0;
+  background: transparent;
+}
 
 /* NUMBER INPUT STYLES (remove spinners) 
 ═══════════════════════════════════════════════ */

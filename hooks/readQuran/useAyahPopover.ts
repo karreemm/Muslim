@@ -15,19 +15,12 @@ export const useAyahPopover = ({
 }: UseAyahPopoverOptions) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [showTafseerModal, setShowTafseerModal] = useState(false);
-  const [showTranslationModal, setShowTranslationModal] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('[role="dialog"]')) return;
-
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node) &&
-        !showTafseerModal &&
-        !showTranslationModal
+        !popoverRef.current.contains(event.target as Node)
       ) {
         onClose();
       }
@@ -40,13 +33,11 @@ export const useAyahPopover = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, onClose, showTafseerModal, showTranslationModal]);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) {
       setIsSaved(false);
-      setShowTafseerModal(false);
-      setShowTranslationModal(false);
     }
   }, [isOpen]);
 
@@ -61,10 +52,6 @@ export const useAyahPopover = ({
   return {
     popoverRef,
     isSaved,
-    showTafseerModal,
-    setShowTafseerModal,
-    showTranslationModal,
-    setShowTranslationModal,
     handleSaveClick,
   };
 };

@@ -12,7 +12,7 @@ export default function ParentComponent() {
   const { language } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
+    <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden">
       <div className="w-full max-w-7xl mx-auto pt-8 px-4">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
