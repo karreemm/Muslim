@@ -1,26 +1,31 @@
 import { useState, useCallback, useMemo } from "react";
-import {
-  searchAyahs,
-  type SearchResponse,
-} from "@/app/(pages)/search-ayah/service/GetSearchAyah";
 import { useLanguage } from "@/context/general/LanguageContext";
 
-export const useSearchAyah = () => {
+import type { SearchAyah, SearchResponse } from "@/app/(pages)/search-ayah/types";
+
+const ITEMS_PER_PAGE = 20;
+
+export function useSearchAyah() {
   const { language } = useLanguage();
+
   const [keyword, setKeyword] = useState("");
   const [searchedKeyword, setSearchedKeyword] = useState("");
   const [results, setResults] = useState<SearchResponse | null>(null);
-  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [wholeWord, setWholeWord] = useState(true);
-  const itemsPerPage = 20;
+
+  const isAr = language !== "en";
+
+  function t(ar: string, en: string) {
+    return isAr ? ar : en;
+  }
 
   const performSearch = useCallback(
     async (page: number = 1) => {
-      if (!keyword || keyword.trim().length === 0) {
+      if (!keyword.trim()) {
         setResults(null);
         setHasSearched(false);
         return;
@@ -32,106 +37,74 @@ export const useSearchAyah = () => {
       if (page === 1) {
         setHasSearched(true);
         setCurrentPage(1);
-        setSearchedKeyword(keyword);
+        setSearchedKeyword(keyword.trim());
       }
 
       try {
-        const searchResults = await searchAyahs(
-          keyword,
-          "all",
-          page,
-          itemsPerPage,
-          wholeWord,
-          language,
-        );
+        const params = new URLSearchParams({
+          q: keyword.trim(),
+          surah: "all",
+          page: String(page),
+          limit: String(ITEMS_PER_PAGE),
+          wholeWord: String(wholeWord),
+        });
 
-        if (searchResults) {
-          setResults(searchResults);
-          setTotalCount(searchResults.count);
-          setError("");
+        const res = await fetch(`/api/search-quran?${params}`, {
+          signal: AbortSignal.timeout(15_000),
+        });
 
-          if (searchResults.count === 0) {
-            console.log("No ayahs matched the search query");
-          }
-        } else {
-          setError("Failed to fetch search results");
-          setResults(null);
+        if (res.status === 404) {
+          setResults({ count: 0, totalPages: 0, matches: [] });
+          return;
         }
+
+        if (!res.ok) {
+          const payload = await res.json().catch(() => null);
+          throw new Error(
+            payload?.error ??
+              t(`فشل البحث: ${res.statusText}`, `Search failed: ${res.statusText}`),
+          );
+        }
+
+        const data: SearchResponse = await res.json();
+        setResults(data);
+        setError("");
       } catch (err) {
-        console.error("Search error:", err);
-        if (err instanceof Error) {
-          if (err.message.includes("too short")) {
-            if (language === "en") {
-              setError(
-                "Search term is too short. Please use at least 3 characters.",
-              );
-            } else {
-              setError(
-                "كلمة البحث قصيرة جدًا. يرجى استخدام 3 أحرف على الأقل للحصول على نتائج أفضل.",
-              );
-            }
-          } else if (err.message.includes("timeout")) {
-            if (language === "en") {
-              setError(
-                "The search is taking too long. Please try a simpler search or try again later.",
-              );
-            } else {
-              setError(
-                "البحث يستغرق وقتًا طويلاً. يرجى تجربة بحث أبسط أو المحاولة مرة أخرى لاحقًا.",
-              );
-            }
-          } else if (err.message.includes("Failed to fetch")) {
-            if (language === "en") {
-              setError(
-                "Network error. Please check your internet connection and try again.",
-              );
-            } else {
-              setError(
-                "خطأ في الشبكة. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
-              );
-            }
-          } else if (err.message.includes("API server is having trouble")) {
-            if (language === "en") {
-              setError(
-                "The search term caused a server error. Try using a longer or more specific phrase.",
-              );
-            } else {
-              setError(
-                "تسبب مصطلح البحث في خطأ في الخادم. حاول استخدام عبارة أطول أو أكثر تحديدًا.",
-              );
-            }
-          } else {
-            if (language === "en") {
-              setError(err.message || "An error occurred while searching");
-            } else {
-              setError(err.message || "حدث خطأ أثناء البحث");
-            }
-          }
+        const message =
+          err instanceof Error ? err.message : t("حدث خطأ أثناء البحث", "Search error");
+
+        if (message.includes("short") || message.includes("قصيرة")) {
+          setError(
+            t(
+              "كلمة البحث قصيرة جدًا. يرجى استخدام 3 أحرف على الأقل.",
+              "Search term is too short. Please use at least 3 characters.",
+            ),
+          );
+        } else if (message.includes("timeout") || err instanceof DOMException) {
+          setError(
+            t(
+              "البحث يستغرق وقتًا طويلاً. حاول مجددًا.",
+              "Search timed out. Please try again.",
+            ),
+          );
+        } else if (message.includes("Failed to fetch") || message.includes("NetworkError")) {
+          setError(
+            t(
+              "خطأ في الشبكة. تحقق من اتصالك بالإنترنت.",
+              "Network error. Check your connection.",
+            ),
+          );
         } else {
-          if (language === "en") {
-            setError("An error occurred while searching");
-          } else {
-            setError("حدث خطأ أثناء البحث");
-          }
+          setError(message);
         }
+
         setResults(null);
-        setTotalCount(0);
       } finally {
         setIsLoading(false);
       }
     },
-    [keyword, itemsPerPage, wholeWord, language],
+    [keyword, wholeWord, language],
   );
-
-  const clearSearch = useCallback(() => {
-    setKeyword("");
-    setSearchedKeyword("");
-    setResults(null);
-    setTotalCount(0);
-    setError("");
-    setHasSearched(false);
-    setCurrentPage(1);
-  }, []);
 
   const changePage = useCallback(
     (newPage: number) => {
@@ -141,26 +114,30 @@ export const useSearchAyah = () => {
     [performSearch],
   );
 
-  const totalPages = useMemo(() => {
-    if (totalCount === 0) return 0;
-    return Math.ceil(totalCount / itemsPerPage);
-  }, [totalCount, itemsPerPage]);
+  const clearSearch = useCallback(() => {
+    setKeyword("");
+    setSearchedKeyword("");
+    setResults(null);
+    setError("");
+    setHasSearched(false);
+    setCurrentPage(1);
+  }, []);
 
   return {
     keyword,
     setKeyword,
     searchedKeyword,
     results,
-    totalResults: totalCount,
+    totalResults: results?.count ?? 0,
+    totalPages: results?.totalPages ?? 0,
     isLoading,
     error,
     hasSearched,
-    clearSearch,
-    performSearch,
     currentPage,
-    changePage,
-    totalPages,
     wholeWord,
     setWholeWord,
+    performSearch,
+    changePage,
+    clearSearch,
   };
-};
+}

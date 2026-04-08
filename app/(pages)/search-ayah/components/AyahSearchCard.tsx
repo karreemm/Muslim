@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "@/components/modals/TafseerModal";
 import { TranslationModal } from "@/components/modals/TranslationModal";
-import type { SearchAyah } from "../service/GetSearchAyah";
+import type { SearchAyah } from "../types";
 import { reciters } from "@/constants/recitersData";
 import { useTheme } from "@/context/general/ThemeContext";
 import { highlightText } from "./highlightText";
@@ -145,12 +145,11 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 className="text-2xl leading-loose text-foreground text-center  font-medium"
                 dir="rtl"
               >
-                {highlightKeyword
+                {ayah.matchIntervals && ayah.matchIntervals.length > 0
                   ? highlightText({
-                      text: ayah.text,
-                      keyword: highlightKeyword,
-                      isDarkMode: isDark,
-                    })
+                    text: ayah.text,
+                    matchIntervals: ayah.matchIntervals,
+                  })
                   : ayah.text}
               </p>
             </div>
@@ -158,11 +157,10 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={handleListenClick}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
-                  isCurrentAyahPlaying
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${isCurrentAyahPlaying
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                     : "bg-secondary/50 text-foreground hover:bg-primary hover:text-primary-foreground border border-border/30 hover:border-primary/30"
-                }`}
+                  }`}
               >
                 <FontAwesomeIcon icon={faHeadphones} />
                 <span>{t("searchAyah.listen")}</span>

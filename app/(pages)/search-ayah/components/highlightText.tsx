@@ -1,106 +1,58 @@
-import React, { ReactNode } from "react";
-import { removeDiacritics } from "@/utils/helpers";
+import React, { type ReactNode } from "react";
+
+import type { MatchInterval } from "../types";
 
 export interface HighlightTextProps {
   text: string;
-  keyword: string;
-  isDarkMode: boolean;
+  keyword?: string;
+  matchIntervals?: MatchInterval[];
+  isDarkMode?: boolean;
 }
 
-export const highlightText = ({
+export function highlightText({
   text,
-  keyword,
-  isDarkMode,
-}: HighlightTextProps): ReactNode => {
-  if (!keyword || !text) {
+  matchIntervals = [],
+}: HighlightTextProps): ReactNode {
+  if (!text) return null;
+
+  if (!matchIntervals || matchIntervals.length === 0) {
     return <>{text}</>;
   }
 
-  const normalizedKeyword = removeDiacritics(keyword.trim());
-  const searchWords = normalizedKeyword.split(/\s+/);
-  const highlightMap: boolean[] = new Array(text.length).fill(false);
+  const nodes: ReactNode[] = [];
+  let currentIndex = 0;
 
-  searchWords.forEach((searchWord) => {
-    let i = 0;
-    while (i < text.length) {
-      while (i < text.length && removeDiacritics(text[i]) === "") {
-        i++;
-      }
-      if (i >= text.length) break;
+  for (let i = 0; i < matchIntervals.length; i++) {
+    const { start, end } = matchIntervals[i];
 
-      let textPos = i;
-      let wordPos = 0;
-      let matchStart = i;
-
-      while (wordPos < searchWord.length && textPos < text.length) {
-        const normalizedChar = removeDiacritics(text[textPos]);
-        if (normalizedChar === "") {
-          textPos++;
-          continue;
-        }
-        if (normalizedChar.toLowerCase() === searchWord[wordPos].toLowerCase()) {
-          wordPos++;
-          textPos++;
-        } else {
-          break;
-        }
-      }
-
-      if (wordPos === searchWord.length) {
-        while (textPos < text.length && removeDiacritics(text[textPos]) === "") {
-          textPos++;
-        }
-        for (let j = matchStart; j < textPos; j++) {
-          highlightMap[j] = true;
-        }
-        i = textPos;
-      } else {
-        i++;
-      }
-    }
-  });
-
-  const parts: ReactNode[] = [];
-  let currentSegment = "";
-  let isHighlighted = false;
-  let segmentKey = 0;
-
-  for (let i = 0; i < text.length; i++) {
-    if (highlightMap[i] !== isHighlighted) {
-      if (currentSegment) {
-        if (isHighlighted) {
-          parts.push(
-            <span
-              key={`highlight-${segmentKey++}`}
-              className="text-primary mx-0.5 font-bold"
-            >
-              {currentSegment}
-            </span>,
-          );
-        } else {
-          parts.push(<span key={`text-${segmentKey++}`}>{currentSegment}</span>);
-        }
-        currentSegment = "";
-      }
-      isHighlighted = highlightMap[i];
-    }
-    currentSegment += text[i];
-  }
-
-  if (currentSegment) {
-    if (isHighlighted) {
-      parts.push(
-        <span
-          key={`highlight-${segmentKey++}`}
-          className="text-primary mx-0.5 font-bold"
-        >
-          {currentSegment}
-        </span>,
+    if (start > currentIndex && start <= text.length) {
+      nodes.push(
+        <React.Fragment key={`text-${currentIndex}`}>
+          {text.slice(currentIndex, start)}
+        </React.Fragment>
       );
-    } else {
-      parts.push(<span key={`text-${segmentKey++}`}>{currentSegment}</span>);
+    }
+
+    if (start < text.length) {
+      const validEnd = Math.min(end + 1, text.length);
+      nodes.push(
+        <mark key={`mark-${start}`} className="bg-transparent text-primary font-bold not-italic">
+          {text.slice(start, validEnd)}
+        </mark>
+      );
+      currentIndex = validEnd;
     }
   }
 
-  return <>{parts}</>;
-};
+  if (currentIndex < text.length) {
+    nodes.push(
+      <React.Fragment key={`text-${currentIndex}`}>
+        {text.slice(currentIndex)}
+      </React.Fragment>
+    );
+  }
+
+  return <>{nodes}</>;
+}
+
+export default highlightText;
