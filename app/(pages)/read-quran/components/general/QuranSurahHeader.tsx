@@ -24,7 +24,7 @@ export default function QuranSurahHeader({
           </div>
         )}
         <img
-          src="/suraha-header-cropped.png"
+          src="/surah-header-4.png"
           alt={`سورة ${surahNameAr}`}
           className={`w-full h-auto block transition-opacity duration-300 ${
             imageLoaded ? "opacity-100" : "opacity-0 absolute inset-0"
@@ -35,7 +35,7 @@ export default function QuranSurahHeader({
         {imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
-              className="text-surah-header-foreground font-bold font drop-shadow-[0_2px_4px_hsl(var(--surah-header-shadow))] text-[clamp(0.9rem,3vw,2rem)] leading-none"
+              className="text-[#4a1e08] font-bold font text-[clamp(0.9rem,3vw,2rem)] leading-none"
               style={{
                 transform: "translateY(0.18em)",
               }}

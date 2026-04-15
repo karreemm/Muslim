@@ -25,12 +25,10 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
-  // Initialize theme on mount to avoid hydration mismatch
   useEffect(() => {
     const root = document.documentElement;
     const stored = localStorage.getItem("theme") as Theme | null;
 
-    // Check stored preference or system preference
     if (stored === "dark" || stored === "light") {
       setThemeState(stored);
       root.classList.toggle("dark", stored === "dark");
@@ -55,7 +53,6 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     setTheme(theme === "light" ? "dark" : "light");
   }, [theme, setTheme]);
 
-  // Prevent hydration mismatch by rendering light mode initially
   if (!mounted) {
     return (
       <ThemeContext.Provider

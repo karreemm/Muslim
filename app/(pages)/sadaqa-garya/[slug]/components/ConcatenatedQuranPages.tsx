@@ -68,6 +68,9 @@ export default function ConcatenatedQuranPages({
               pageNumber={pageNum}
               highlightedAyahNumber={0}
               surahHeaders={surahHeaders}
+              forceTopSurahHeaderNumber={
+                idx === 0 && startAyah !== 1 ? surahNumber : undefined
+              }
             />
           </div>
         ))}

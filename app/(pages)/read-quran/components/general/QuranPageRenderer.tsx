@@ -26,6 +26,7 @@ interface QuranPageRendererProps {
   pageNumber?: number;
   highlightedAyahNumber?: number;
   surahHeaders?: SurahHeaderInfo[];
+  forceTopSurahHeaderNumber?: number;
 }
 
 const SKELETON_LINE_WIDTHS = [
@@ -70,6 +71,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     pageNumber,
     highlightedAyahNumber = 0,
     surahHeaders,
+    forceTopSurahHeaderNumber,
   }) => {
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
@@ -121,6 +123,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     }
 
     const firstLineOfPage = lineOrder[0];
+    const forcedTopHeaderInfo = forceTopSurahHeaderNumber
+      ? surahNames.find((s) => s.number === forceTopSurahHeaderNumber)
+      : null;
     let isFirstChunkOfPage = true;
     const seenAyahs = new Set<string>();
 
@@ -141,6 +146,18 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             lineHeight: lineHeight,
           }}
         >
+          {forcedTopHeaderInfo && (
+            <div
+              className="w-full mb-6"
+              style={{ fontFamily: "'Amiri', serif" }}
+            >
+              <QuranSurahHeader
+                surahNameAr={forcedTopHeaderInfo.arTashkeel}
+                surahNumber={forcedTopHeaderInfo.number}
+              />
+            </div>
+          )}
+
           {lineOrder.map((lineNumber) => {
             const headerForLine = headerLineMap.get(lineNumber) ?? null;
             const surahHeaderInfo = headerForLine
