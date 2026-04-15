@@ -15,7 +15,7 @@ export function useSearchAyah() {
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [wholeWord, setWholeWord] = useState(true);
+  const [wholeWord, setWholeWord] = useState(false);
 
   const isAr = language !== "en";
 
