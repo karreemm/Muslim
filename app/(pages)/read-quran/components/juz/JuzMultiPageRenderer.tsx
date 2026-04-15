@@ -49,7 +49,13 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
             return;
           }
 
-          const scrollTimer = setTimeout(() => {
+          let retries = 0;
+          const maxRetries = 20;
+          let cancelled = false;
+
+          const tryScroll = () => {
+            if (cancelled) return;
+
             const ayahElement = document.getElementById(ayahId);
             if (ayahElement) {
               lastScrolledTargetRef.current = targetKey;
@@ -57,10 +63,21 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
                 behavior: "smooth",
                 block: "center",
               });
+              return;
             }
-          }, 120);
 
-          return () => clearTimeout(scrollTimer);
+            if (retries < maxRetries) {
+              retries += 1;
+              setTimeout(tryScroll, 100);
+            }
+          };
+
+          const scrollTimer = setTimeout(tryScroll, 120);
+
+          return () => {
+            cancelled = true;
+            clearTimeout(scrollTimer);
+          };
         }
       }
     }, [

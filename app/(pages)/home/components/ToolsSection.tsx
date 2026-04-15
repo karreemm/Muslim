@@ -17,9 +17,6 @@ export default function ToolsSection({ t }: ToolsSectionProps) {
         <h2 className="text-xl sm:text-2xl font-bold text-foreground">
           {t("home.tools.heading")}
         </h2>
-        <p className="text-muted-foreground text-sm max-w-xl">
-          {t("home.tools.subheading")}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 relative z-10">

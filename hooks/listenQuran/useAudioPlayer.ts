@@ -361,7 +361,11 @@ export function useAudioPlayer(
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleBufferingStart = () => setIsBuffering(true);
+    const handleBufferingStart = () => {
+      if (seekingRef.current || !isPlayingRef.current) {
+        setIsBuffering(true);
+      }
+    };
     const handleBufferingEnd = () => setIsBuffering(false);
 
     if (audioPlayer.current) {
@@ -423,6 +427,7 @@ export function useAudioPlayer(
       nextAudioPlayer.current.pause();
       nextAudioPlayer.current.currentTime = 0;
     }
+    setIsBuffering(false);
   };
 
   const restart = () => {
@@ -434,6 +439,7 @@ export function useAudioPlayer(
     transitionTriggeredRef.current = false;
     isTransitioningRef.current = false;
     seekingRef.current = false;
+    setIsBuffering(false);
   };
 
   const playAyah = (ayahIndex: number) => {
@@ -455,6 +461,7 @@ export function useAudioPlayer(
       transitionTriggeredRef.current = false;
       isTransitioningRef.current = false;
       seekingRef.current = false;
+      setIsBuffering(false);
       setPlayRequestCounter((prev) => prev + 1);
     }
   };
@@ -517,6 +524,7 @@ export function useAudioPlayer(
       seekingRef.current = false;
       setCurrentAyahElapsedTime(0);
       setCurrentAyahTotalDuration(0);
+      setIsBuffering(false);
     }
   };
 
@@ -531,6 +539,7 @@ export function useAudioPlayer(
       seekingRef.current = false;
       setCurrentAyahElapsedTime(0);
       setCurrentAyahTotalDuration(0);
+      setIsBuffering(false);
     }
   };
 
@@ -574,6 +583,11 @@ export function useAudioPlayer(
 
     stopAllPlayers();
     setIsPlaying(false);
+    setIsBuffering(false);
+
+    if (wasPlaying) {
+      setIsBuffering(true);
+    }
 
     if (targetAyahIndex !== currentAyahIndex) {
       console.log(

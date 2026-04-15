@@ -24,9 +24,6 @@ export default function FeaturesSection({
           </h2>
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
         </div>
-        <p className="text-center text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-          {t("home.features.subheading")}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
