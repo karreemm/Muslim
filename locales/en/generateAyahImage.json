@@ -1,0 +1,41 @@
+{
+  "title": "Turn an Ayah into an Image",
+  "subtitle": "Pick an ayah, style it your way, and share it as a clean image.",
+
+  "surahLabel": "Surah",
+  "ayahLabel": "Ayah",
+
+  "surahSearchPlaceholder": "Search surah...",
+  "ayahSearchPlaceholder": "Enter ayah number...",
+
+  "noSurahFound": "No results found",
+  "noAyahFound": "No results found",
+
+  "aspectRatioTitle": "Image Size",
+  "paletteTitle": "Colors",
+  "imageThemeTitle": "Appearance",
+
+  "pageNumberTitle": "Show page number",
+
+  "show": "Show",
+  "hide": "Hide",
+
+  "lightTheme": "Light",
+  "darkTheme": "Dark",
+
+  "palettePresets": "Presets",
+  "paletteCustom": "Custom",
+
+  "selectionSummary": "Your Selection",
+  "selectedSurah": "Surah",
+  "selectedAyah": "Ayah",
+  "page": "Page",
+  "line": "Line",
+
+  "downloadPng": "Download Image",
+
+  "exporting": "Creating your image...",
+  "readyToExport": "Ready to download",
+  "waitingPreview": "Preparing preview...",
+  "exportFailed": "Something went wrong. Try again"
+}

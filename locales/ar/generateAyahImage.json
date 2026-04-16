@@ -1,0 +1,41 @@
+{
+  "title": "حوّل الآية إلى صورة",
+  "subtitle": "اختر الآية، خصّص الشكل، وشاركها بسهولة كصورة أنيقة.",
+
+  "surahLabel": "السورة",
+  "ayahLabel": "الآية",
+
+  "surahSearchPlaceholder": "ابحث عن السورة...",
+  "ayahSearchPlaceholder": "اكتب رقم الآية...",
+
+  "noSurahFound": "لا توجد نتائج",
+  "noAyahFound": "لا توجد نتائج",
+
+  "aspectRatioTitle": "حجم الصورة",
+  "paletteTitle": "الألوان",
+  "imageThemeTitle": "المظهر",
+
+  "pageNumberTitle": "إظهار رقم الصفحة",
+
+  "show": "إظهار",
+  "hide": "إخفاء",
+
+  "lightTheme": "فاتح",
+  "darkTheme": "داكن",
+
+  "palettePresets": "ألوان جاهزة",
+  "paletteCustom": "لون مخصص",
+
+  "selectionSummary": "اختيارك",
+  "selectedSurah": "السورة",
+  "selectedAyah": "الآية",
+  "page": "صفحة",
+  "line": "سطر",
+
+  "downloadPng": "تحميل الصورة",
+
+  "exporting": "جاري تجهيز الصورة...",
+  "readyToExport": "جاهزة للتحميل",
+  "waitingPreview": "لحظة... جاري التحضير",
+  "exportFailed": "حصل خطأ، حاول مرة أخرى"
+}

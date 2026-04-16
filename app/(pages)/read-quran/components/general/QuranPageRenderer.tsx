@@ -24,9 +24,15 @@ interface QuranPageRendererProps {
   fontSize: number;
   lineHeight: number;
   pageNumber?: number;
+  showPageNumber?: boolean;
+  imageLinePaddingClass?: string;
   highlightedAyahNumber?: number;
   surahHeaders?: SurahHeaderInfo[];
   forceTopSurahHeaderNumber?: number;
+  headerColorScopeElement?: HTMLElement | null;
+  paletteHueToken?: number;
+  imageMode?: boolean;
+  forcePrimaryText?: boolean;
 }
 
 const SKELETON_LINE_WIDTHS = [
@@ -69,9 +75,15 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     fontSize,
     lineHeight,
     pageNumber,
+    showPageNumber = true,
+    imageLinePaddingClass = "px-2",
     highlightedAyahNumber = 0,
     surahHeaders,
     forceTopSurahHeaderNumber,
+    headerColorScopeElement,
+    paletteHueToken,
+    imageMode = false,
+    forcePrimaryText = false,
   }) => {
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
@@ -131,12 +143,20 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
 
     return (
       <div
-        className="w-full flex flex-col items-center justify-center py-6 px-4 bg-card/40 rounded-2xl border border-border/50 shadow-lg shadow-primary/5 mb-6 relative backdrop-blur-sm"
+        className={`w-full flex flex-col items-center relative ${
+          imageMode
+            ? "h-full justify-start py-0 px-0 bg-transparent border-0 shadow-none mb-0 backdrop-blur-none"
+            : "justify-center py-6 px-4 bg-card/40 rounded-2xl border border-border/50 shadow-lg shadow-primary/5 mb-6 backdrop-blur-sm"
+        }`}
         style={{ direction: "rtl" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 rounded-2xl pointer-events-none" />
+        {!imageMode && (
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 rounded-2xl pointer-events-none" />
+        )}
         <div
-          className="relative z-10 text-center w-full max-w-[800px]"
+          className={`relative z-10 text-center w-full ${
+            imageMode ? "h-full max-w-none" : "max-w-[800px]"
+          }`}
           style={{
             fontFamily:
               pageFontName && fontReady
@@ -144,6 +164,11 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 : "'Amiri', serif",
             fontSize: `${fontSize}px`,
             lineHeight: lineHeight,
+            color: forcePrimaryText
+              ? "hsl(var(--primary))"
+              : imageMode
+                ? "hsl(var(--quran-surface-foreground))"
+                : undefined,
           }}
         >
           {forcedTopHeaderInfo && (
@@ -154,6 +179,8 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
               <QuranSurahHeader
                 surahNameAr={forcedTopHeaderInfo.arTashkeel}
                 surahNumber={forcedTopHeaderInfo.number}
+                colorScopeElement={headerColorScopeElement}
+                usePrimaryText={forcePrimaryText}
               />
             </div>
           )}
@@ -177,12 +204,18 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                     <QuranSurahHeader
                       surahNameAr={surahHeaderInfo.arTashkeel}
                       surahNumber={headerForLine.surahNumber}
+                      colorScopeElement={headerColorScopeElement}
+                      usePrimaryText={forcePrimaryText}
                     />
                   </div>
                 )}
                 <div
                   key={lineNumber}
-                  className="w-full px-4 mb-2 block leading-loose"
+                  className={`w-full block ${
+                    imageMode
+                      ? `${imageLinePaddingClass} mb-1 leading-relaxed`
+                      : "px-4 mb-2 leading-loose"
+                  }`}
                   style={
                     pageFontName && fontReady
                       ? {
@@ -241,6 +274,11 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                               ? "text-primary"
                               : "hover:text-primary"
                           }`}
+                        style={
+                          forcePrimaryText && !isHighlighted
+                            ? { color: "hsl(var(--primary))" }
+                            : undefined
+                        }
                         onMouseEnter={() =>
                           chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
                         }
@@ -265,7 +303,15 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                   <span
                                     className={`${styles.ayahNumberWrapper} inline-flex items-center gap-1 mx-1`}
                                   >
-                                    <span className="text-primary/60 text-sm">
+                                    <span
+                                      className="text-sm"
+                                      style={{
+                                        color: forcePrimaryText
+                                          ? "hsl(var(--primary))"
+                                          : undefined,
+                                        opacity: 0.6,
+                                      }}
+                                    >
                                       ﴿
                                     </span>
                                     <span
@@ -274,7 +320,15 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       }}
                                       className={styles.ayahNumberText}
                                     />
-                                    <span className="text-primary/60 text-sm">
+                                    <span
+                                      className="text-sm"
+                                      style={{
+                                        color: forcePrimaryText
+                                          ? "hsl(var(--primary))"
+                                          : undefined,
+                                        opacity: 0.6,
+                                      }}
+                                    >
                                       ﴾
                                     </span>
                                   </span>
@@ -298,8 +352,24 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           })}
         </div>
 
-        {pageNumber && (
-          <div className="mt-6 pt-4 border-t border-border/30 text-sm text-muted-foreground font-medium w-full text-center">
+        {pageNumber && showPageNumber && (
+          <div
+            className={`text-sm font-medium w-full text-center ${
+              imageMode
+                ? "mt-2 pt-2 border-t border-border/20"
+                : "mt-6 pt-4 border-t border-border/30"
+            } ${forcePrimaryText ? "" : "text-muted-foreground"}`}
+            style={
+              forcePrimaryText
+                ? { color: "hsl(var(--primary))", opacity: 0.7 }
+                : imageMode
+                  ? {
+                      color: "hsl(var(--quran-surface-foreground))",
+                      opacity: 0.65,
+                    }
+                  : undefined
+            }
+          >
             {pageNumber}
           </div>
         )}

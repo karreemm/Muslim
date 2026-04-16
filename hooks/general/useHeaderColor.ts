@@ -2,8 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
-function cssVarToRgb(varName: string): { r: number; g: number; b: number } {
-  const raw = getComputedStyle(document.documentElement)
+function getScopeElement(scopeElement?: HTMLElement | null): HTMLElement {
+  return scopeElement ?? document.documentElement;
+}
+
+function cssVarToRgb(
+  varName: string,
+  scopeElement?: HTMLElement | null,
+): { r: number; g: number; b: number } {
+  const raw = getComputedStyle(getScopeElement(scopeElement))
     .getPropertyValue(varName)
     .trim();
 
@@ -17,6 +24,7 @@ function cssVarToRgb(varName: string): { r: number; g: number; b: number } {
     const k = (n + h / 30) % 12;
     return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
   };
+
   return {
     r: Math.round(f(0) * 255),
     g: Math.round(f(8) * 255),
@@ -37,23 +45,36 @@ interface ColorConfig {
 
 const cache = new Map<string, string>();
 
-function makeCacheKey(src: string, strokeVar: string, bgVar: string) {
+function makeCacheKey(
+  src: string,
+  strokeVar: string,
+  bgVar: string,
+  scopeElement?: HTMLElement | null,
+) {
   if (typeof document === "undefined") return "";
-  const stroke = getComputedStyle(document.documentElement)
-    .getPropertyValue(strokeVar)
-    .trim();
-  const bg = getComputedStyle(document.documentElement)
-    .getPropertyValue(bgVar)
-    .trim();
+
+  const source = getScopeElement(scopeElement);
+  const stroke = getComputedStyle(source).getPropertyValue(strokeVar).trim();
+  const bg = getComputedStyle(source).getPropertyValue(bgVar).trim();
+
   return `${src}|${stroke}|${bg}`;
 }
 
-async function recolorImage(src: string, config: ColorConfig): Promise<string> {
-  const cacheKey = makeCacheKey(src, config.strokeVar, config.bgVar);
+async function recolorImage(
+  src: string,
+  config: ColorConfig,
+  scopeElement?: HTMLElement | null,
+): Promise<string> {
+  const cacheKey = makeCacheKey(
+    src,
+    config.strokeVar,
+    config.bgVar,
+    scopeElement,
+  );
   if (cache.has(cacheKey)) return cache.get(cacheKey)!;
 
-  const strokeRgb = cssVarToRgb(config.strokeVar);
-  const bgRgb = cssVarToRgb(config.bgVar);
+  const strokeRgb = cssVarToRgb(config.strokeVar, scopeElement);
+  const bgRgb = cssVarToRgb(config.bgVar, scopeElement);
   const darken = config.strokeDarken ?? 0.75;
 
   return new Promise((resolve, reject) => {
@@ -77,17 +98,29 @@ async function recolorImage(src: string, config: ColorConfig): Promise<string> {
 
         if (lum < DARK_THRESHOLD) {
           const scale = (lum / DARK_THRESHOLD) * darken;
-          d[i]     = Math.min(255, Math.round(strokeRgb.r * (0.15 + scale * 0.85)));
-          d[i + 1] = Math.min(255, Math.round(strokeRgb.g * (0.15 + scale * 0.85)));
-          d[i + 2] = Math.min(255, Math.round(strokeRgb.b * (0.15 + scale * 0.85)));
+          d[i] = Math.min(255, Math.round(strokeRgb.r * (0.15 + scale * 0.85)));
+          d[i + 1] = Math.min(
+            255,
+            Math.round(strokeRgb.g * (0.15 + scale * 0.85)),
+          );
+          d[i + 2] = Math.min(
+            255,
+            Math.round(strokeRgb.b * (0.15 + scale * 0.85)),
+          );
         } else if (lum > LIGHT_THRESHOLD) {
           const scale = (lum - LIGHT_THRESHOLD) / (1 - LIGHT_THRESHOLD);
-          d[i]     = Math.round(bgRgb.r * 0.85 + bgRgb.r * 0.15 * scale + 255 * 0.05 * scale);
-          d[i + 1] = Math.round(bgRgb.g * 0.85 + bgRgb.g * 0.15 * scale + 255 * 0.05 * scale);
-          d[i + 2] = Math.round(bgRgb.b * 0.85 + bgRgb.b * 0.15 * scale + 255 * 0.05 * scale);
+          d[i] = Math.round(
+            bgRgb.r * 0.85 + bgRgb.r * 0.15 * scale + 255 * 0.05 * scale,
+          );
+          d[i + 1] = Math.round(
+            bgRgb.g * 0.85 + bgRgb.g * 0.15 * scale + 255 * 0.05 * scale,
+          );
+          d[i + 2] = Math.round(
+            bgRgb.b * 0.85 + bgRgb.b * 0.15 * scale + 255 * 0.05 * scale,
+          );
         } else {
           const t = (lum - DARK_THRESHOLD) / (LIGHT_THRESHOLD - DARK_THRESHOLD);
-          d[i]     = Math.round(strokeRgb.r * (1 - t) + bgRgb.r * t);
+          d[i] = Math.round(strokeRgb.r * (1 - t) + bgRgb.r * t);
           d[i + 1] = Math.round(strokeRgb.g * (1 - t) + bgRgb.g * t);
           d[i + 2] = Math.round(strokeRgb.b * (1 - t) + bgRgb.b * t);
         }
@@ -97,8 +130,7 @@ async function recolorImage(src: string, config: ColorConfig): Promise<string> {
       const dataUrl = canvas.toDataURL("image/png");
       if (cache.size >= MAX_CACHE_SIZE) {
         const oldest = cache.keys().next().value;
-        if (oldest)
-        cache.delete(oldest);
+        if (oldest) cache.delete(oldest);
       }
 
       cache.set(cacheKey, dataUrl);
@@ -109,26 +141,43 @@ async function recolorImage(src: string, config: ColorConfig): Promise<string> {
   });
 }
 
-export function useHeaderColor(src: string, config: ColorConfig) {
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
+export function useHeaderColor(
+  src: string,
+  config: ColorConfig,
+  scopeElement?: HTMLElement | null,
+) {
+  const [dataUrl, setDataUrl] = useState<string | null>(() => {
+    if (typeof document === "undefined") return null;
+
+    const cacheKey = makeCacheKey(
+      src,
+      config.strokeVar,
+      config.bgVar,
+      scopeElement,
+    );
+    return cache.get(cacheKey) ?? null;
+  });
   const configRef = useRef(config);
   configRef.current = config;
+
+  const scopeRef = useRef<HTMLElement | null | undefined>(scopeElement);
+  scopeRef.current = scopeElement;
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const recolor = async () => {
     try {
-      const url = await recolorImage(src, configRef.current);
+      const url = await recolorImage(src, configRef.current, scopeRef.current);
       setDataUrl(url);
-    } catch (e) {
-      console.error("[useHeaderColor] failed to recolor image", e);
+    } catch (error) {
+      console.error("[useHeaderColor] failed to recolor image", error);
     }
   };
 
   const debouncedRecolor = () => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
-      for (const key of cache.keys()) {
+      for (const key of Array.from(cache.keys())) {
         if (key.startsWith(src + "|")) cache.delete(key);
       }
       recolor();
@@ -137,26 +186,29 @@ export function useHeaderColor(src: string, config: ColorConfig) {
 
   useEffect(() => {
     recolor();
-  }, [src]);
+  }, [src, scopeElement]);
 
   useEffect(() => {
+    const sourceElement = getScopeElement(scopeElement);
+
+    const sourceObserver = new MutationObserver(debouncedRecolor);
+    sourceObserver.observe(sourceElement, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+
     const htmlObserver = new MutationObserver(debouncedRecolor);
     htmlObserver.observe(document.documentElement, {
       attributes: true,
-    });
-
-    const styleObserver = new MutationObserver(debouncedRecolor);
-    styleObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["style"],
+      attributeFilter: ["style", "class"],
     });
 
     return () => {
+      sourceObserver.disconnect();
       htmlObserver.disconnect();
-      styleObserver.disconnect();
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
     };
-  }, [src]);
+  }, [src, scopeElement]);
 
   return dataUrl;
 }

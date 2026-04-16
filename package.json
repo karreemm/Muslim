@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@headlessui/react": "^2.2.9",
     "axios": "1.7.7",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^0.469.0",
     "moment-hijri": "^2.30.0",
     "next": "14.2.32",
