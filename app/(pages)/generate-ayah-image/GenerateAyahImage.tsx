@@ -29,6 +29,20 @@ export default function GenerateAyahImage() {
   const {
     selectedSurah,
     selectedAyah,
+    selectedBeforeAyahs,
+    selectedAfterAyahs,
+    currentLineCount,
+    maxAyahImageLines,
+    isSingleAyahSelection,
+    showAyahNumberForSingle,
+    specificPartEnabled,
+    specificPartStartWordIndex,
+    specificPartEndWordIndex,
+    specificPartMaxWordIndex,
+    canIncreaseBefore,
+    canIncreaseAfter,
+    canDecreaseBefore,
+    canDecreaseAfter,
     surahQuery,
     ayahQuery,
     showSurahDropdown,
@@ -39,7 +53,10 @@ export default function GenerateAyahImage() {
     isLoadingAyah,
     showPageNumber,
     ayahData,
+    appliedAyahData,
     error,
+    isApplyingAyahSelection,
+    hasPendingAyahChanges,
     selectedSurahLabel,
     selectedAyahLabel,
     surahDropdownItems,
@@ -56,6 +73,15 @@ export default function GenerateAyahImage() {
     setShowPageNumber,
     setCustomPaletteHue,
     setFontReadyForExport,
+    incrementBefore,
+    decrementBefore,
+    incrementAfter,
+    decrementAfter,
+    setShowAyahNumberForSingle,
+    setSpecificPartEnabled,
+    setSpecificPartStartWordIndex,
+    setSpecificPartEndWordIndex,
+    applyAyahSelection,
     canExport,
   } = useGenerateAyahImage(language, {
     customHue: hue,
@@ -83,11 +109,13 @@ export default function GenerateAyahImage() {
       });
 
       const link = document.createElement("a");
-      const filenameSurah = `${language === "ar" ? "سورة " + surahNames[selectedSurah - 1]?.ar : "Surah " + surahNames[selectedSurah - 1]?.en}`;
+      const exportSurahNumber = appliedAyahData?.surahNumber ?? selectedSurah;
+      const exportAyahNumber = appliedAyahData?.ayahNumber ?? selectedAyah;
+      const filenameSurah = `${language === "ar" ? "سورة " + surahNames[exportSurahNumber - 1]?.ar : "Surah " + surahNames[exportSurahNumber - 1]?.en}`;
       const filenameAyah =
         language === "ar"
-          ? "آية " + toArabicNumber(selectedAyah)
-          : "Ayah " + selectedAyah;
+          ? "آية " + toArabicNumber(exportAyahNumber)
+          : "Ayah " + exportAyahNumber;
       link.download = `${filenameSurah} - ${filenameAyah}.png`;
       link.href = dataUrl;
       link.click();
@@ -132,6 +160,33 @@ export default function GenerateAyahImage() {
               ayahLoadingLabel={t("generateAyahImage.ayahSnippetLoading")}
               selectedSurah={selectedSurah}
               selectedAyah={selectedAyah}
+              beforeLabel={t("generateAyahImage.beforeAyahs")}
+              afterLabel={t("generateAyahImage.afterAyahs")}
+              lineLimitLabel={t("generateAyahImage.lineLimit")}
+              showAyahNumberLabel={t("generateAyahImage.showAyahNumber")}
+              specificPartLabel={t("generateAyahImage.specificPart")}
+              submitLabel={t("generateAyahImage.submitAyahSelection")}
+              submittingLabel={t("generateAyahImage.applyingAyahSelection")}
+              selectedBeforeAyahs={selectedBeforeAyahs}
+              selectedAfterAyahs={selectedAfterAyahs}
+              currentLineCount={currentLineCount}
+              maxLines={maxAyahImageLines}
+              showAyahNumberToggle={isSingleAyahSelection}
+              showAyahNumber={showAyahNumberForSingle}
+              specificPartEnabled={specificPartEnabled}
+              canIncreaseBefore={canIncreaseBefore}
+              canIncreaseAfter={canIncreaseAfter}
+              canDecreaseBefore={canDecreaseBefore}
+              canDecreaseAfter={canDecreaseAfter}
+              isApplyingSelection={isApplyingAyahSelection}
+              hasPendingChanges={hasPendingAyahChanges}
+              onIncrementBefore={incrementBefore}
+              onDecrementBefore={decrementBefore}
+              onIncrementAfter={incrementAfter}
+              onDecrementAfter={decrementAfter}
+              onShowAyahNumberChange={setShowAyahNumberForSingle}
+              onSpecificPartChange={setSpecificPartEnabled}
+              onSubmit={applyAyahSelection}
               selectedSurahLabel={selectedSurahLabel}
               selectedAyahLabel={selectedAyahLabel}
               surahQuery={surahQuery}
@@ -173,7 +228,13 @@ export default function GenerateAyahImage() {
             <button
               type="button"
               onClick={handleExport}
-              disabled={!canExport || isExporting || isLoadingAyah}
+              disabled={
+                !canExport ||
+                isExporting ||
+                isLoadingAyah ||
+                isApplyingAyahSelection ||
+                hasPendingAyahChanges
+              }
               className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold
                 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5
                 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
@@ -206,6 +267,12 @@ export default function GenerateAyahImage() {
               isLoading={isLoadingAyah}
               previewRef={previewRef}
               onFontReadyChange={() => {}}
+              specificPartEnabled={specificPartEnabled}
+              specificPartStartWordIndex={specificPartStartWordIndex}
+              specificPartEndWordIndex={specificPartEndWordIndex}
+              specificPartMaxWordIndex={specificPartMaxWordIndex}
+              onSpecificPartStartWordIndexChange={setSpecificPartStartWordIndex}
+              onSpecificPartEndWordIndexChange={setSpecificPartEndWordIndex}
             />
           </section>
         </div>
@@ -216,7 +283,7 @@ export default function GenerateAyahImage() {
         >
           <AyahImagePreview
             language={language}
-            ayahData={ayahData}
+            ayahData={appliedAyahData}
             paletteMode={paletteMode}
             paletteHue={paletteHue}
             imageTheme={imageTheme}

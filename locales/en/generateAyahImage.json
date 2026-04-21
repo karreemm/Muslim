@@ -13,6 +13,13 @@
   "ayahManualTitle": "Choose manually",
   "ayahOr": "OR",
   "ayahSnippetLoading": "Loading ayah...",
+  "beforeAyahs": "Before",
+  "afterAyahs": "After",
+  "lineLimit": "Lines",
+  "showAyahNumber": "Show ayah number",
+  "specificPart": "Get specific part",
+  "submitAyahSelection": "Submit",
+  "applyingAyahSelection": "Applying...",
 
   "noSurahFound": "No results found",
   "noAyahFound": "No results found",

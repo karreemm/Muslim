@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faScissors,
+} from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "@/constants/quranData";
 import type { QuranVerse } from "@/hooks/readQuran";
 import GetSurah from "@/app/(pages)/read-quran/service/GetSurah";
@@ -36,6 +40,33 @@ interface AyahSelectorSectionProps {
   onSelectSurah: (surah: number) => void;
   onSelectAyah: (ayah: number) => void;
   onSelectPresetAyah: (surah: number, ayah: number) => void;
+  beforeLabel: string;
+  afterLabel: string;
+  lineLimitLabel: string;
+  showAyahNumberLabel: string;
+  specificPartLabel: string;
+  submitLabel: string;
+  submittingLabel: string;
+  selectedBeforeAyahs: number;
+  selectedAfterAyahs: number;
+  currentLineCount: number;
+  maxLines: number;
+  showAyahNumberToggle: boolean;
+  showAyahNumber: boolean;
+  specificPartEnabled: boolean;
+  canIncreaseBefore: boolean;
+  canIncreaseAfter: boolean;
+  canDecreaseBefore: boolean;
+  canDecreaseAfter: boolean;
+  isApplyingSelection: boolean;
+  hasPendingChanges: boolean;
+  onIncrementBefore: () => void;
+  onDecrementBefore: () => void;
+  onIncrementAfter: () => void;
+  onDecrementAfter: () => void;
+  onShowAyahNumberChange: (value: boolean) => void;
+  onSpecificPartChange: (value: boolean) => void;
+  onSubmit: () => void;
   onSurahQueryChange: (value: string) => void;
   onAyahQueryChange: (value: string) => void;
   onShowSurahDropdownChange: (value: boolean) => void;
@@ -86,6 +117,33 @@ export default function AyahSelectorSection({
   onSelectSurah,
   onSelectAyah,
   onSelectPresetAyah,
+  beforeLabel,
+  afterLabel,
+  lineLimitLabel,
+  showAyahNumberLabel,
+  specificPartLabel,
+  submitLabel,
+  submittingLabel,
+  selectedBeforeAyahs,
+  selectedAfterAyahs,
+  currentLineCount,
+  maxLines,
+  showAyahNumberToggle,
+  showAyahNumber,
+  specificPartEnabled,
+  canIncreaseBefore,
+  canIncreaseAfter,
+  canDecreaseBefore,
+  canDecreaseAfter,
+  isApplyingSelection,
+  hasPendingChanges,
+  onIncrementBefore,
+  onDecrementBefore,
+  onIncrementAfter,
+  onDecrementAfter,
+  onShowAyahNumberChange,
+  onSpecificPartChange,
+  onSubmit,
   onSurahQueryChange,
   onAyahQueryChange,
   onShowSurahDropdownChange,
@@ -166,22 +224,27 @@ export default function AyahSelectorSection({
   }, []);
 
   const cards = useMemo(() => {
-    return PREDEFINED_AYAHS.sort((a, b) => a.surahNumber - b.surahNumber || a.ayahNumber - b.ayahNumber).map(({ surahNumber, ayahNumber }) => {
-      const surah = surahNames.find((item) => item.number === surahNumber);
-      const key = itemKey(surahNumber, ayahNumber);
+    return [...PREDEFINED_AYAHS]
+      .sort(
+        (a, b) => a.surahNumber - b.surahNumber || a.ayahNumber - b.ayahNumber,
+      )
+      .map(({ surahNumber, ayahNumber }) => {
+        const surah = surahNames.find((item) => item.number === surahNumber);
+        const key = itemKey(surahNumber, ayahNumber);
 
-      return {
-        key,
-        surahNumber,
-        ayahNumber,
-        isActive: selectedSurah === surahNumber && selectedAyah === ayahNumber,
-        surahName: isArabic
-          ? surah?.ar || `سورة ${surahNumber}`
-          : surah?.en || `Surah ${surahNumber}`,
-        ayahLabel: isArabic ? `الآية ${ayahNumber}` : `Ayah ${ayahNumber}`,
-        snippet: snippets[key] || "",
-      };
-    });
+        return {
+          key,
+          surahNumber,
+          ayahNumber,
+          isActive:
+            selectedSurah === surahNumber && selectedAyah === ayahNumber,
+          surahName: isArabic
+            ? surah?.ar || `سورة ${surahNumber}`
+            : surah?.en || `Surah ${surahNumber}`,
+          ayahLabel: isArabic ? `الآية ${ayahNumber}` : `Ayah ${ayahNumber}`,
+          snippet: snippets[key] || "",
+        };
+      });
   }, [isArabic, selectedAyah, selectedSurah, snippets]);
 
   return (
@@ -204,7 +267,9 @@ export default function AyahSelectorSection({
           <div>
             <p className="text-xs text-muted-foreground mb-2">{presetsTitle}</p>
 
-            <div className={`max-h-64 overflow-y-auto scrollbar-hover-hidden ${language === "ar" ? "pl-2" : "pr-2"} space-y-2`}>
+            <div
+              className={`max-h-64 overflow-y-auto scrollbar-hover-hidden ${language === "ar" ? "pl-2" : "pr-2"} space-y-2`}
+            >
               {cards.map((card) => (
                 <button
                   key={card.key}
@@ -284,6 +349,109 @@ export default function AyahSelectorSection({
                 onSelect={onSelectAyah}
                 emptyLabel={noAyahFound}
               />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-border/50 bg-background/40 p-2">
+                  <p className="text-[11px] text-muted-foreground mb-2">
+                    {beforeLabel}
+                  </p>
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={onDecrementBefore}
+                      disabled={!canDecreaseBefore || isApplyingSelection}
+                      className="h-8 w-8 rounded-lg border border-border/60 text-sm disabled:opacity-40"
+                    >
+                      -
+                    </button>
+                    <span className="text-sm font-semibold tabular-nums">
+                      {selectedBeforeAyahs}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={onIncrementBefore}
+                      disabled={!canIncreaseBefore || isApplyingSelection}
+                      className="h-8 w-8 rounded-lg border border-border/60 text-sm disabled:opacity-40"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border/50 bg-background/40 p-2">
+                  <p className="text-[11px] text-muted-foreground mb-2">
+                    {afterLabel}
+                  </p>
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={onDecrementAfter}
+                      disabled={!canDecreaseAfter || isApplyingSelection}
+                      className="h-8 w-8 rounded-lg border border-border/60 text-sm disabled:opacity-40"
+                    >
+                      -
+                    </button>
+                    <span className="text-sm font-semibold tabular-nums">
+                      {selectedAfterAyahs}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={onIncrementAfter}
+                      disabled={!canIncreaseAfter || isApplyingSelection}
+                      className="h-8 w-8 rounded-lg border border-border/60 text-sm disabled:opacity-40"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                {lineLimitLabel}:{" "}
+                <span className="font-semibold tabular-nums">
+                  {currentLineCount}/{maxLines}
+                </span>
+              </p>
+
+              {showAyahNumberToggle && (
+                <label className="flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/40 px-3 py-2">
+                  <span className="text-xs text-foreground">
+                    {showAyahNumberLabel}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={showAyahNumber}
+                    onChange={(event) =>
+                      onShowAyahNumberChange(event.target.checked)
+                    }
+                    className="h-4 w-4 accent-primary"
+                  />
+                </label>
+              )}
+
+              <label className="flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/40 px-3 py-2">
+                <span className="inline-flex items-center gap-2 text-xs text-foreground">
+                  <FontAwesomeIcon icon={faScissors} className="text-[11px]" />
+                  {specificPartLabel}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={specificPartEnabled}
+                  onChange={(event) =>
+                    onSpecificPartChange(event.target.checked)
+                  }
+                  className="h-4 w-4 accent-primary"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={onSubmit}
+                disabled={!hasPendingChanges || isApplyingSelection}
+                className="w-full h-10 rounded-xl bg-primary text-primary-foreground text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isApplyingSelection ? submittingLabel : submitLabel}
+              </button>
             </div>
           </div>
         </div>

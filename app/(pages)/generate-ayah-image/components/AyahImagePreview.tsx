@@ -23,6 +23,12 @@ interface AyahImagePreviewProps {
   previewRef: React.RefObject<HTMLDivElement>;
   onFontReadyChange: (ready: boolean) => void;
   renderMode?: "preview" | "export";
+  specificPartEnabled?: boolean;
+  specificPartStartWordIndex?: number;
+  specificPartEndWordIndex?: number;
+  specificPartMaxWordIndex?: number;
+  onSpecificPartStartWordIndexChange?: (index: number) => void;
+  onSpecificPartEndWordIndexChange?: (index: number) => void;
 }
 
 export default function AyahImagePreview({
@@ -36,6 +42,12 @@ export default function AyahImagePreview({
   previewRef,
   onFontReadyChange,
   renderMode = "preview",
+  specificPartEnabled = false,
+  specificPartStartWordIndex = 0,
+  specificPartEndWordIndex = 0,
+  specificPartMaxWordIndex = 0,
+  onSpecificPartStartWordIndexChange,
+  onSpecificPartEndWordIndexChange,
 }: AyahImagePreviewProps) {
   const isArabic = language === "ar";
   const contentRef = useRef<HTMLDivElement>(null);
@@ -117,6 +129,11 @@ export default function AyahImagePreview({
   } as React.CSSProperties;
 
   const isExportMode = renderMode === "export";
+  const showSpecificPartControls =
+    !isExportMode &&
+    specificPartEnabled &&
+    ayahData &&
+    ayahData.totalSelectableWords > 0;
 
   return (
     <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
@@ -152,7 +169,7 @@ export default function AyahImagePreview({
           ) : ayahData ? (
             <div className="relative h-full w-full pointer-events-none">
               <QuranPageRenderer
-                verses={[ayahData.targetVerse]}
+                verses={ayahData.displayVerses}
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 pageNumber={ayahData.pageNumber}
@@ -169,6 +186,55 @@ export default function AyahImagePreview({
               {isArabic
                 ? "اختر سورة وآية لعرضها هنا"
                 : "Select a surah and ayah to preview here"}
+            </div>
+          )}
+
+          {showSpecificPartControls && (
+            <div className="mt-4 rounded-xl border border-border/50 bg-background/55 p-3 space-y-2">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{isArabic ? "بداية المدى" : "Range start"}</span>
+                <span className="tabular-nums">
+                  {specificPartStartWordIndex + 1}/
+                  {specificPartMaxWordIndex + 1}
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min={0}
+                max={specificPartMaxWordIndex}
+                value={Math.min(
+                  specificPartStartWordIndex,
+                  specificPartEndWordIndex,
+                )}
+                onChange={(event) =>
+                  onSpecificPartStartWordIndexChange?.(
+                    Number(event.target.value),
+                  )
+                }
+                className="w-full accent-primary pointer-events-auto"
+              />
+
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{isArabic ? "نهاية المدى" : "Range end"}</span>
+                <span className="tabular-nums">
+                  {specificPartEndWordIndex + 1}/{specificPartMaxWordIndex + 1}
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min={0}
+                max={specificPartMaxWordIndex}
+                value={Math.max(
+                  specificPartEndWordIndex,
+                  specificPartStartWordIndex,
+                )}
+                onChange={(event) =>
+                  onSpecificPartEndWordIndexChange?.(Number(event.target.value))
+                }
+                className="w-full accent-primary pointer-events-auto"
+              />
             </div>
           )}
         </div>

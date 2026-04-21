@@ -13,6 +13,13 @@
   "ayahManualTitle": "اختيار يدوي",
   "ayahOr": "أو",
   "ayahSnippetLoading": "جاري تحميل الآية...",
+  "beforeAyahs": "قبل",
+  "afterAyahs": "بعد",
+  "lineLimit": "الأسطر",
+  "showAyahNumber": "إظهار رقم الآية",
+  "specificPart": "اختيار جزء محدد",
+  "submitAyahSelection": "تطبيق",
+  "applyingAyahSelection": "جارٍ التطبيق...",
 
   "noSurahFound": "لا توجد نتائج",
   "noAyahFound": "لا توجد نتائج",
