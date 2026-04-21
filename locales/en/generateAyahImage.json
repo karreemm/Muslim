@@ -8,6 +8,12 @@
   "surahSearchPlaceholder": "Search surah...",
   "ayahSearchPlaceholder": "Enter ayah number...",
 
+  "ayahSectionTitle": "Ayah",
+  "ayahPredefinedTitle": "Selected ayahs",
+  "ayahManualTitle": "Choose manually",
+  "ayahOr": "OR",
+  "ayahSnippetLoading": "Loading ayah...",
+
   "noSurahFound": "No results found",
   "noAyahFound": "No results found",
 

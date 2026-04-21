@@ -139,10 +139,6 @@ export default function SearchableDropdown({
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <span className="text-sm font-semibold text-muted-foreground mb-2 block">
-        {label}
-      </span>
-
       <button
         ref={buttonRef}
         type="button"

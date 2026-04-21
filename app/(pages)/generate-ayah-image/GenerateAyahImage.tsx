@@ -9,9 +9,9 @@ import { usePalette } from "@/context/general/PaletteContext";
 import { useTheme } from "@/context/general/ThemeContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { useGenerateAyahImage } from "@/hooks/generateAyahImage";
-import SearchableDropdown from "./components/SearchableDropdown";
 import ImagePaletteSelector from "./components/ImagePaletteSelector";
 import AyahImagePreview from "./components/AyahImagePreview";
+import AyahSelectorSection from "./components/AyahSelectorSection";
 import { surahNames } from "@/constants/quranData";
 import { toArabicNumber } from "@/utils/helpers";
 
@@ -46,6 +46,7 @@ export default function GenerateAyahImage() {
     ayahDropdownItems,
     selectSurah,
     selectAyah,
+    selectPredefinedAyah,
     setSurahQuery,
     setAyahQuery,
     setShowSurahDropdown,
@@ -83,7 +84,10 @@ export default function GenerateAyahImage() {
 
       const link = document.createElement("a");
       const filenameSurah = `${language === "ar" ? "سورة " + surahNames[selectedSurah - 1]?.ar : "Surah " + surahNames[selectedSurah - 1]?.en}`;
-      const filenameAyah = language === "ar" ? "آية " + toArabicNumber(selectedAyah) : "Ayah " + selectedAyah;
+      const filenameAyah =
+        language === "ar"
+          ? "آية " + toArabicNumber(selectedAyah)
+          : "Ayah " + selectedAyah;
       link.download = `${filenameSurah} - ${filenameAyah}.png`;
       link.href = dataUrl;
       link.click();
@@ -109,38 +113,40 @@ export default function GenerateAyahImage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6 items-start">
           <aside className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50 p-4 sm:p-5 space-y-4 xl:sticky xl:top-24">
-            <SearchableDropdown
+            <AyahSelectorSection
               language={language}
-              label={t("generateAyahImage.surahLabel")}
-              searchPlaceholder={t("generateAyahImage.surahSearchPlaceholder")}
-              selectedLabel={selectedSurahLabel}
-              searchValue={surahQuery}
-              onSearchChange={setSurahQuery}
-              isOpen={showSurahDropdown}
-              setIsOpen={(value) => {
-                setShowSurahDropdown(value);
-                if (value) setShowAyahDropdown(false);
-              }}
-              items={surahDropdownItems}
-              onSelect={selectSurah}
-              emptyLabel={t("generateAyahImage.noSurahFound")}
-            />
-
-            <SearchableDropdown
-              language={language}
-              label={t("generateAyahImage.ayahLabel")}
-              searchPlaceholder={t("generateAyahImage.ayahSearchPlaceholder")}
-              selectedLabel={selectedAyahLabel}
-              searchValue={ayahQuery}
-              onSearchChange={setAyahQuery}
-              isOpen={showAyahDropdown}
-              setIsOpen={(value) => {
-                setShowAyahDropdown(value);
-                if (value) setShowSurahDropdown(false);
-              }}
-              items={ayahDropdownItems}
-              onSelect={selectAyah}
-              emptyLabel={t("generateAyahImage.noAyahFound")}
+              title={t("generateAyahImage.ayahSectionTitle")}
+              presetsTitle={t("generateAyahImage.ayahPredefinedTitle")}
+              manualTitle={t("generateAyahImage.ayahManualTitle")}
+              separatorLabel={t("generateAyahImage.ayahOr")}
+              surahLabel={t("generateAyahImage.surahLabel")}
+              ayahLabel={t("generateAyahImage.ayahLabel")}
+              surahSearchPlaceholder={t(
+                "generateAyahImage.surahSearchPlaceholder",
+              )}
+              ayahSearchPlaceholder={t(
+                "generateAyahImage.ayahSearchPlaceholder",
+              )}
+              noSurahFound={t("generateAyahImage.noSurahFound")}
+              noAyahFound={t("generateAyahImage.noAyahFound")}
+              ayahLoadingLabel={t("generateAyahImage.ayahSnippetLoading")}
+              selectedSurah={selectedSurah}
+              selectedAyah={selectedAyah}
+              selectedSurahLabel={selectedSurahLabel}
+              selectedAyahLabel={selectedAyahLabel}
+              surahQuery={surahQuery}
+              ayahQuery={ayahQuery}
+              showSurahDropdown={showSurahDropdown}
+              showAyahDropdown={showAyahDropdown}
+              surahDropdownItems={surahDropdownItems}
+              ayahDropdownItems={ayahDropdownItems}
+              onSelectSurah={selectSurah}
+              onSelectAyah={selectAyah}
+              onSelectPresetAyah={selectPredefinedAyah}
+              onSurahQueryChange={setSurahQuery}
+              onAyahQueryChange={setAyahQuery}
+              onShowSurahDropdownChange={setShowSurahDropdown}
+              onShowAyahDropdownChange={setShowAyahDropdown}
             />
 
             <ImagePaletteSelector

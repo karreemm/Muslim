@@ -118,6 +118,22 @@ export function useGenerateAyahImage(
     setShowAyahDropdown(false);
   }, []);
 
+  const selectPredefinedAyah = useCallback(
+    (surahNumber: number, ayahNumber: number) => {
+      const nextSurah = surahNames.find((s) => s.number === surahNumber);
+      if (!nextSurah) return;
+      if (ayahNumber < 1 || ayahNumber > nextSurah.ayahs) return;
+
+      setSelectedSurah(surahNumber);
+      setSelectedAyah(ayahNumber);
+      setSurahQuery("");
+      setAyahQuery("");
+      setShowSurahDropdown(false);
+      setShowAyahDropdown(false);
+    },
+    [],
+  );
+
   const selectPalettePreset = useCallback((mode: FixedAyahPaletteId) => {
     setPaletteMode(mode);
   }, []);
@@ -183,6 +199,7 @@ export function useGenerateAyahImage(
     ayahDropdownItems,
     selectSurah,
     selectAyah,
+    selectPredefinedAyah,
     setSurahQuery,
     setAyahQuery,
     setShowSurahDropdown,

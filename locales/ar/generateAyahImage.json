@@ -8,6 +8,12 @@
   "surahSearchPlaceholder": "ابحث عن السورة...",
   "ayahSearchPlaceholder": "اكتب رقم الآية...",
 
+  "ayahSectionTitle": "الآية",
+  "ayahPredefinedTitle": "آيات مختارة",
+  "ayahManualTitle": "اختيار يدوي",
+  "ayahOr": "أو",
+  "ayahSnippetLoading": "جاري تحميل الآية...",
+
   "noSurahFound": "لا توجد نتائج",
   "noAyahFound": "لا توجد نتائج",
 
