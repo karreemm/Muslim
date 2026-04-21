@@ -13,7 +13,10 @@
 
   "aspectRatioTitle": "حجم الصورة",
   "paletteTitle": "الألوان",
-  "imageThemeTitle": "المظهر",
+  "palettePredefined": "ألوان جاهزة",
+  "paletteCustom": "تخصيص",
+  "paletteThemeMode": "وضع المظهر",
+  "paletteOr": "أو",
 
   "pageNumberTitle": "إظهار رقم الصفحة",
 
@@ -22,9 +25,6 @@
 
   "lightTheme": "فاتح",
   "darkTheme": "داكن",
-
-  "palettePresets": "ألوان جاهزة",
-  "paletteCustom": "لون مخصص",
 
   "selectionSummary": "اختيارك",
   "selectedSurah": "السورة",

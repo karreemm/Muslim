@@ -3,11 +3,15 @@
 import { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
   faChevronDown,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { PALETTE_PRESETS, type PaletteMode } from "@/utils/paletteEngine";
+import {
+  FIXED_AYAH_PALETTES,
+  type AyahImagePaletteMode,
+  type FixedAyahPalette,
+  type FixedAyahPaletteId,
+} from "../palettePresets";
 
 interface ImagePaletteSelectorProps {
   language: string;
@@ -15,20 +19,26 @@ interface ImagePaletteSelectorProps {
   presetsTitle: string;
   customTitle: string;
   themeTitle: string;
+  separatorLabel: string;
   pageNumberTitle: string;
   showLabel: string;
   hideLabel: string;
   lightLabel: string;
   darkLabel: string;
-  presetKeys: Exclude<PaletteMode, "custom">[];
-  selectedMode: PaletteMode;
+  selectedMode: AyahImagePaletteMode;
   selectedHue: number;
   imageTheme: "light" | "dark";
   showPageNumber: boolean;
   onThemeChange: (theme: "light" | "dark") => void;
   onShowPageNumberChange: (show: boolean) => void;
-  onSelectPreset: (mode: Exclude<PaletteMode, "custom">) => void;
+  onSelectPreset: (mode: FixedAyahPaletteId) => void;
   onCustomHueChange: (hue: number) => void;
+}
+
+function fixedPaletteSwatchStyle(palette: FixedAyahPalette) {
+  return {
+    background: `linear-gradient(135deg, ${palette.backgroundHex} 0 49.5%, ${palette.decorationHex} 50% 100%)`,
+  };
 }
 
 export default function ImagePaletteSelector({
@@ -37,12 +47,12 @@ export default function ImagePaletteSelector({
   presetsTitle,
   customTitle,
   themeTitle,
+  separatorLabel,
   pageNumberTitle,
   showLabel,
   hideLabel,
   lightLabel,
   darkLabel,
-  presetKeys,
   selectedMode,
   selectedHue,
   imageTheme,
@@ -120,84 +130,100 @@ export default function ImagePaletteSelector({
         </button>
 
         {!isPaletteCollapsed && (
-          <>
-            <p className="text-xs text-muted-foreground mb-2">{themeTitle}</p>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              <button
-                type="button"
-                onClick={() => onThemeChange("light")}
-                className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                  imageTheme === "light"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                }`}
-              >
-                {lightLabel}
-              </button>
-              <button
-                type="button"
-                onClick={() => onThemeChange("dark")}
-                className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                  imageTheme === "dark"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                }`}
-              >
-                {darkLabel}
-              </button>
-            </div>
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-muted-foreground mb-3">
+                {presetsTitle}
+              </p>
+              <div className="grid grid-cols-5 gap-3">
+                {FIXED_AYAH_PALETTES.map((palette) => {
+                  const isActive = selectedMode === palette.id;
 
-            <p className="text-xs text-muted-foreground mb-2">{presetsTitle}</p>
-            <div className="flex gap-2 flex-wrap mb-4">
-              {presetKeys.map((key) => {
-                const preset = PALETTE_PRESETS[key];
-                const isActive = selectedMode === key;
-
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    title={language === "ar" ? preset.labelAr : preset.label}
-                    onClick={() => onSelectPreset(key)}
-                    className="relative w-8 h-8 rounded-full border-2 transition-transform duration-200 hover:scale-110"
-                    style={{
-                      background: `hsl(${preset.hue},70%,45%)`,
-                      borderColor: isActive
-                        ? "hsl(var(--foreground))"
-                        : "transparent",
-                    }}
-                  >
-                    {isActive && (
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        className="absolute inset-0 m-auto text-[9px] text-white"
+                  return (
+                    <button
+                      key={palette.id}
+                      type="button"
+                      title={
+                        language === "ar" ? palette.labelAr : palette.label
+                      }
+                      onClick={() => onSelectPreset(palette.id)}
+                      className={`group relative flex  h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                        isActive
+                          ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02]"
+                          : "opacity-90 hover:opacity-100 hover:scale-[1.03]"
+                      }`}
+                    >
+                      <span
+                        className="block h-full w-full rounded-full"
+                        style={fixedPaletteSwatchStyle(palette)}
                       />
-                    )}
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            <p className="text-xs text-muted-foreground mb-2">{customTitle}</p>
-            <div
-              ref={trackRef}
-              className="relative h-6 flex items-center cursor-pointer select-none"
-              onMouseDown={startDrag}
-              onTouchStart={startDrag}
-            >
-              <div
-                className="absolute inset-x-0 h-2 rounded-full"
-                style={{ background: hueGradient }}
-              />
-              <div
-                className="absolute w-4 h-4 rounded-full border-2 border-white shadow pointer-events-none"
-                style={{
-                  left: `calc(${(selectedHue / 359) * 100}% - 8px)`,
-                  background: `hsl(${selectedHue},80%,50%)`,
-                }}
-              />
+            <div className="flex items-center gap-3 text-[10px] font-bold tracking-[0.35em] text-muted-foreground mt-8 mb-4">
+              <div className="h-px flex-1 bg-border/60" />
+              <span>{separatorLabel}</span>
+              <div className="h-px flex-1 bg-border/60" />
             </div>
-          </>
+
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">
+                {customTitle}
+              </p>
+
+              <div className="mb-4">
+                <p className="text-[11px] font-medium text-muted-foreground mb-2">
+                  {themeTitle}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onThemeChange("light")}
+                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+                      imageTheme === "light"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {lightLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onThemeChange("dark")}
+                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+                      imageTheme === "dark"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {darkLabel}
+                  </button>
+                </div>
+              </div>
+
+              <div
+                ref={trackRef}
+                className="relative h-6 flex items-center cursor-pointer select-none"
+                onMouseDown={startDrag}
+                onTouchStart={startDrag}
+              >
+                <div
+                  className="absolute inset-x-0 h-2 rounded-full"
+                  style={{ background: hueGradient }}
+                />
+                <div
+                  className="absolute w-4 h-4 rounded-full border-2 border-white shadow pointer-events-none"
+                  style={{
+                    left: `calc(${(selectedHue / 359) * 100}% - 8px)`,
+                    background: `hsl(${selectedHue},80%,50%)`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
 

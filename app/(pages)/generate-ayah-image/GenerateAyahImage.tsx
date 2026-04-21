@@ -12,19 +12,21 @@ import { useGenerateAyahImage } from "@/hooks/generateAyahImage";
 import SearchableDropdown from "./components/SearchableDropdown";
 import ImagePaletteSelector from "./components/ImagePaletteSelector";
 import AyahImagePreview from "./components/AyahImagePreview";
+import { surahNames } from "@/constants/quranData";
+import { toArabicNumber } from "@/utils/helpers";
 
 export default function GenerateAyahImage() {
   const { language } = useLanguage();
-  const { palette, hue } = usePalette();
+  const { hue } = usePalette();
   const { theme } = useTheme();
   const { t } = useTranslation();
 
   const previewRef = useRef<HTMLDivElement>(null);
+  const exportPreviewRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState("");
 
   const {
-    presetKeys,
     selectedSurah,
     selectedAyah,
     surahQuery,
@@ -55,29 +57,34 @@ export default function GenerateAyahImage() {
     setFontReadyForExport,
     canExport,
   } = useGenerateAyahImage(language, {
-    paletteMode: palette,
-    hue,
+    customHue: hue,
     theme,
   });
 
   const handleExport = async () => {
-    if (!previewRef.current || !canExport) return;
+    if (!exportPreviewRef.current || !canExport) return;
 
     setIsExporting(true);
     setExportError("");
 
     try {
+      const computedStyle = window.getComputedStyle(exportPreviewRef.current);
+      const backgroundColor = computedStyle.backgroundColor || "#ffffff";
+
       if (document.fonts?.ready) {
         await document.fonts.ready;
       }
 
-      const dataUrl = await toPng(previewRef.current, {
+      const dataUrl = await toPng(exportPreviewRef.current, {
         cacheBust: true,
         pixelRatio: 3,
+        backgroundColor,
       });
 
       const link = document.createElement("a");
-      link.download = `ayah-${selectedSurah}-${selectedAyah}.png`;
+      const filenameSurah = `${language === "ar" ? "سورة " + surahNames[selectedSurah - 1]?.ar : "Surah " + surahNames[selectedSurah - 1]?.en}`;
+      const filenameAyah = language === "ar" ? "آية " + toArabicNumber(selectedAyah) : "Ayah " + selectedAyah;
+      link.download = `${filenameSurah} - ${filenameAyah}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -139,15 +146,15 @@ export default function GenerateAyahImage() {
             <ImagePaletteSelector
               language={language}
               title={t("generateAyahImage.paletteTitle")}
-              presetsTitle={t("generateAyahImage.palettePresets")}
+              presetsTitle={t("generateAyahImage.palettePredefined")}
               customTitle={t("generateAyahImage.paletteCustom")}
-              themeTitle={t("generateAyahImage.imageThemeTitle")}
+              themeTitle={t("generateAyahImage.paletteThemeMode")}
+              separatorLabel={t("generateAyahImage.paletteOr")}
               pageNumberTitle={t("generateAyahImage.pageNumberTitle")}
               showLabel={t("generateAyahImage.show")}
               hideLabel={t("generateAyahImage.hide")}
               lightLabel={t("generateAyahImage.lightTheme")}
               darkLabel={t("generateAyahImage.darkTheme")}
-              presetKeys={presetKeys}
               selectedMode={paletteMode}
               selectedHue={paletteHue}
               imageTheme={imageTheme}
@@ -186,14 +193,33 @@ export default function GenerateAyahImage() {
             <AyahImagePreview
               language={language}
               ayahData={ayahData}
+              paletteMode={paletteMode}
               paletteHue={paletteHue}
               imageTheme={imageTheme}
               showPageNumber={showPageNumber}
               isLoading={isLoadingAyah}
               previewRef={previewRef}
-              onFontReadyChange={setFontReadyForExport}
+              onFontReadyChange={() => {}}
             />
           </section>
+        </div>
+
+        <div
+          className="pointer-events-none fixed -left-[99999px] top-0 w-[1080px]"
+          aria-hidden
+        >
+          <AyahImagePreview
+            language={language}
+            ayahData={ayahData}
+            paletteMode={paletteMode}
+            paletteHue={paletteHue}
+            imageTheme={imageTheme}
+            showPageNumber={showPageNumber}
+            isLoading={isLoadingAyah}
+            previewRef={exportPreviewRef}
+            onFontReadyChange={setFontReadyForExport}
+            renderMode="export"
+          />
         </div>
       </div>
     </div>

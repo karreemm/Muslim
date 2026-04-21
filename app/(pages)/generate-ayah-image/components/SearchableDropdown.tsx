@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 import type { DropdownItem } from "../types";
 
 interface SearchableDropdownProps {
@@ -38,21 +36,106 @@ export default function SearchableDropdown({
   disabled = false,
 }: SearchableDropdownProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const [mounted, setMounted] = useState(false);
   const isArabic = language === "ar";
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const updatePosition = useCallback(() => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    setDropdownStyle({
+      position: "fixed",
+      top: rect.bottom + 8,
+      left: rect.left,
+      width: rect.width,
+      zIndex: 9999,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      updatePosition();
+    }
+  }, [isOpen, updatePosition]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [isOpen, updatePosition]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
+      const target = event.target as Node;
+
+      if (dropdownRef.current?.contains(target)) return;
+      if (containerRef.current?.contains(target)) return;
+
+      setIsOpen(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setIsOpen]);
+
+  const dropdownContent = (
+    <div
+      ref={dropdownRef}
+      style={dropdownStyle}
+      className="rounded-2xl border border-border/60 bg-popover/95 shadow-2xl backdrop-blur-xl overflow-hidden"
+    >
+      <div className="p-3 border-b border-border/50 bg-muted/30">
+        <div className="relative">
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="absolute top-1/2 -translate-y-1/2 start-3 text-xs text-muted-foreground"
+          />
+          <input
+            value={searchValue}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="w-full h-10 rounded-lg border border-border/50 bg-background/60 px-9 text-sm text-foreground outline-none focus:border-primary"
+            dir={isArabic ? "rtl" : "ltr"}
+          />
+        </div>
+      </div>
+
+      <div className="max-h-72 overflow-y-auto p-1">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              onClick={() => {
+                onSelect(item.value);
+                onSearchChange("");
+                setIsOpen(false);
+              }}
+              className="w-full rounded-lg px-3 py-2.5 text-start hover:bg-muted transition-colors flex items-start gap-2"
+            >
+              <span className="flex flex-col">
+                <span className="text-sm text-foreground">{item.label}</span>
+              </span>
+            </button>
+          ))
+        ) : (
+          <div className="px-3 py-4 text-sm text-muted-foreground">
+            {emptyLabel}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -61,6 +144,7 @@ export default function SearchableDropdown({
       </span>
 
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
@@ -77,56 +161,9 @@ export default function SearchableDropdown({
         />
       </button>
 
-      {isOpen && !disabled && (
-        <div
-          className={`absolute z-[90] mt-2 w-full rounded-2xl border border-border/60 bg-popover/95 shadow-2xl backdrop-blur-xl overflow-hidden ${
-            isArabic ? "right-0" : "left-0"
-          }`}
-        >
-          <div className="p-3 border-b border-border/50 bg-muted/30">
-            <div className="relative">
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="absolute top-1/2 -translate-y-1/2 start-3 text-xs text-muted-foreground"
-              />
-              <input
-                value={searchValue}
-                onChange={(event) => onSearchChange(event.target.value)}
-                placeholder={searchPlaceholder}
-                className="w-full h-10 rounded-lg border border-border/50 bg-background/60 px-9 text-sm text-foreground outline-none focus:border-primary"
-                dir={isArabic ? "rtl" : "ltr"}
-              />
-            </div>
-          </div>
-
-          <div className="max-h-72 overflow-y-auto p-1">
-            {items.length > 0 ? (
-              items.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => {
-                    onSelect(item.value);
-                    onSearchChange("");
-                    setIsOpen(false);
-                  }}
-                  className="w-full rounded-lg px-3 py-2.5 text-start hover:bg-muted transition-colors flex items-start gap-2"
-                >
-                  <span className="flex flex-col">
-                    <span className="text-sm text-foreground">
-                      {item.label}
-                    </span>
-                  </span>
-                </button>
-              ))
-            ) : (
-              <div className="px-3 py-4 text-sm text-muted-foreground">
-                {emptyLabel}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {mounted && isOpen && !disabled
+        ? createPortal(dropdownContent, document.body)
+        : null}
     </div>
   );
 }

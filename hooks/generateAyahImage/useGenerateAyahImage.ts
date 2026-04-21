@@ -2,21 +2,20 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { surahNames } from "@/constants/quranData";
-import { PALETTE_PRESETS, type PaletteMode } from "@/utils/paletteEngine";
 import { getAyahImageData } from "@/app/(pages)/generate-ayah-image/service/GetAyahImageData";
 import type {
   AyahImageData,
   DropdownItem,
 } from "@/app/(pages)/generate-ayah-image/types";
-
-const PRESET_KEYS = Object.keys(PALETTE_PRESETS) as Exclude<
-  PaletteMode,
-  "custom"
->[];
+import {
+  DEFAULT_CUSTOM_HUE,
+  FIXED_AYAH_PALETTES,
+  type AyahImagePaletteMode,
+  type FixedAyahPaletteId,
+} from "@/app/(pages)/generate-ayah-image/palettePresets";
 
 interface GenerateAyahImageDefaults {
-  paletteMode: PaletteMode;
-  hue: number;
+  customHue: number;
   theme: "light" | "dark";
 }
 
@@ -32,14 +31,15 @@ export function useGenerateAyahImage(
 
   const [showSurahDropdown, setShowSurahDropdown] = useState(false);
   const [showAyahDropdown, setShowAyahDropdown] = useState(false);
-  const [paletteMode, setPaletteMode] = useState<PaletteMode>(
-    defaults.paletteMode,
+  const [paletteMode, setPaletteMode] =
+    useState<AyahImagePaletteMode>("custom");
+  const [paletteHue, setPaletteHue] = useState(
+    defaults.customHue ?? DEFAULT_CUSTOM_HUE,
   );
-  const [paletteHue, setPaletteHue] = useState(defaults.hue);
   const [imageTheme, setImageTheme] = useState<"light" | "dark">(
     defaults.theme,
   );
-  const [showPageNumber, setShowPageNumber] = useState(true);
+  const [showPageNumber, setShowPageNumber] = useState(false);
 
   const [isLoadingAyah, setIsLoadingAyah] = useState(false);
   const [ayahData, setAyahData] = useState<AyahImageData | null>(null);
@@ -118,13 +118,9 @@ export function useGenerateAyahImage(
     setShowAyahDropdown(false);
   }, []);
 
-  const selectPalettePreset = useCallback(
-    (mode: Exclude<PaletteMode, "custom">) => {
-      setPaletteMode(mode);
-      setPaletteHue(PALETTE_PRESETS[mode].hue);
-    },
-    [],
-  );
+  const selectPalettePreset = useCallback((mode: FixedAyahPaletteId) => {
+    setPaletteMode(mode);
+  }, []);
 
   const setCustomPaletteHue = useCallback((hue: number) => {
     setPaletteMode("custom");
@@ -166,7 +162,7 @@ export function useGenerateAyahImage(
   }, [selectedSurah, selectedAyah]);
 
   return {
-    presetKeys: PRESET_KEYS,
+    fixedPalettes: FIXED_AYAH_PALETTES,
     selectedSurah,
     selectedAyah,
     surahQuery,

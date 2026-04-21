@@ -13,7 +13,10 @@
 
   "aspectRatioTitle": "Image Size",
   "paletteTitle": "Colors",
-  "imageThemeTitle": "Appearance",
+  "palettePredefined": "Predefined palettes",
+  "paletteCustom": "Customize",
+  "paletteThemeMode": "Theme mode",
+  "paletteOr": "OR",
 
   "pageNumberTitle": "Show page number",
 
@@ -22,9 +25,6 @@
 
   "lightTheme": "Light",
   "darkTheme": "Dark",
-
-  "palettePresets": "Presets",
-  "paletteCustom": "Custom",
 
   "selectionSummary": "Your Selection",
   "selectedSurah": "Surah",

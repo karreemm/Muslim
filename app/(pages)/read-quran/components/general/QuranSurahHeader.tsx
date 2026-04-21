@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHeaderColor } from "@/hooks/general/useHeaderColor";
 
 interface QuranSurahHeaderProps {
@@ -18,6 +18,8 @@ export default function QuranSurahHeader({
 }: QuranSurahHeaderProps) {
   const isAtTawbah = surahNumber === 9;
   const isFatiha = surahNumber === 1;
+  const headerContainerRef = useRef<HTMLDivElement>(null);
+  const [headerWidth, setHeaderWidth] = useState(0);
   const [displayColoredSrc, setDisplayColoredSrc] = useState<string | null>(
     null,
   );
@@ -80,9 +82,31 @@ export default function QuranSurahHeader({
     return () => window.clearTimeout(fallbackTimer);
   }, [displayColoredSrc, useFallbackHeader]);
 
+  useEffect(() => {
+    const element = headerContainerRef.current;
+    if (!element) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setHeaderWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(element);
+    setHeaderWidth(element.getBoundingClientRect().width);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const titleFontSize =
+    headerWidth > 0 ? Math.min(40, Math.max(14.4, headerWidth * 0.045)) : 24;
+
+  const basmalaFontSize =
+    headerWidth > 0 ? Math.min(40, Math.max(19.2, headerWidth * 0.045)) : 24;
+
   return (
     <div className="w-full flex flex-col items-center" dir="rtl">
-      <div className="relative w-full">
+      <div ref={headerContainerRef} className="relative w-full">
         {!isResolvingHeader && (
           <img
             src="/surah-header-4.png"
@@ -122,7 +146,7 @@ export default function QuranSurahHeader({
               color: usePrimaryText
                 ? "hsl(var(--primary))"
                 : "hsl(var(--foreground))",
-              fontSize: "clamp(0.9rem, 3vw, 2rem)",
+              fontSize: `${titleFontSize}px`,
               transform: "translateY(0.18em)",
             }}
           >
@@ -135,7 +159,8 @@ export default function QuranSurahHeader({
         <p
           className="mt-2 text-center"
           style={{
-            fontSize: "clamp(1.2rem, 5vw, 3rem)",
+            fontSize: `${basmalaFontSize}px`,
+            fontFamily: "'Amiri Quran', serif",
             color: usePrimaryText
               ? "hsl(var(--primary))"
               : "hsl(var(--foreground))",

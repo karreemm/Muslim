@@ -81,7 +81,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     surahHeaders,
     forceTopSurahHeaderNumber,
     headerColorScopeElement,
-    paletteHueToken,
     imageMode = false,
     forcePrimaryText = false,
   }) => {
@@ -173,8 +172,8 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
         >
           {forcedTopHeaderInfo && (
             <div
-              className="w-full mb-6"
-              style={{ fontFamily: "'Amiri', serif" }}
+              className="w-full mb-12"
+              style={{ fontFamily: "'Amiri Quran', serif" }}
             >
               <QuranSurahHeader
                 surahNameAr={forcedTopHeaderInfo.arTashkeel}
@@ -198,7 +197,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 {surahHeaderInfo && headerForLine && (
                   <div
                     key={`header-${lineNumber}`}
-                    className={`w-full mb-6 ${isHeaderAtTop ? "" : "mt-8"}`}
+                    className={`w-full mb-12 ${isHeaderAtTop ? "" : "mt-8"}`}
                     style={{ fontFamily: "'Amiri', serif" }}
                   >
                     <QuranSurahHeader
