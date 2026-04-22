@@ -2,12 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useHeaderColor } from "@/hooks/general/useHeaderColor";
+import useMediaQuery from "@/hooks/general/useMediaQuery";
 
 interface QuranSurahHeaderProps {
   surahNameAr: string;
   surahNumber: number;
   colorScopeElement?: HTMLElement | null;
   usePrimaryText?: boolean;
+  onReadyChange?: (ready: boolean) => void;
+  fallbackDelayMs?: number;
+  requireColoredReady?: boolean;
+  fixedTypography?: boolean;
 }
 
 export default function QuranSurahHeader({
@@ -15,7 +20,12 @@ export default function QuranSurahHeader({
   surahNumber,
   colorScopeElement,
   usePrimaryText = false,
+  onReadyChange,
+  fallbackDelayMs = 5000,
+  requireColoredReady = false,
+  fixedTypography = false,
 }: QuranSurahHeaderProps) {
+  const isMobile = useMediaQuery("(max-width: 500px)");
   const isAtTawbah = surahNumber === 9;
   const isFatiha = surahNumber === 1;
   const headerContainerRef = useRef<HTMLDivElement>(null);
@@ -36,10 +46,21 @@ export default function QuranSurahHeader({
     colorScopeElement,
   );
 
-  const shouldUseColored = !!displayColoredSrc && !useFallbackHeader;
+  const shouldUseColored = !!displayColoredSrc;
 
   useEffect(() => {
-    if (!coloredSrc || useFallbackHeader) return;
+    onReadyChange?.(
+      requireColoredReady ? !!displayColoredSrc : !isResolvingHeader,
+    );
+  }, [
+    displayColoredSrc,
+    isResolvingHeader,
+    onReadyChange,
+    requireColoredReady,
+  ]);
+
+  useEffect(() => {
+    if (!coloredSrc) return;
 
     let active = true;
     const preload = new Image();
@@ -48,6 +69,7 @@ export default function QuranSurahHeader({
     preload.onload = () => {
       if (!active) return;
       setDisplayColoredSrc(coloredSrc);
+      setUseFallbackHeader(false);
       setIsResolvingHeader(false);
     };
 
@@ -60,7 +82,7 @@ export default function QuranSurahHeader({
     return () => {
       active = false;
     };
-  }, [coloredSrc, useFallbackHeader]);
+  }, [coloredSrc]);
 
   useEffect(() => {
     setIsResolvingHeader(true);
@@ -77,10 +99,10 @@ export default function QuranSurahHeader({
     const fallbackTimer = window.setTimeout(() => {
       setUseFallbackHeader(true);
       setIsResolvingHeader(false);
-    }, 1500);
+    }, fallbackDelayMs);
 
     return () => window.clearTimeout(fallbackTimer);
-  }, [displayColoredSrc, useFallbackHeader]);
+  }, [displayColoredSrc, fallbackDelayMs, useFallbackHeader]);
 
   useEffect(() => {
     const element = headerContainerRef.current;
@@ -98,11 +120,26 @@ export default function QuranSurahHeader({
     return () => observer.disconnect();
   }, []);
 
-  const titleFontSize =
-    headerWidth > 0 ? Math.min(40, Math.max(14.4, headerWidth * 0.045)) : 24;
+  const titleFontSize = fixedTypography
+    ? 40
+    : headerWidth > 0
+      ? Math.min(
+          isMobile ? 24 : 40,
+          Math.max(isMobile ? 12 : 16, headerWidth * (isMobile ? 0.05 : 0.045)),
+        )
+      : 20;
 
-  const basmalaFontSize =
-    headerWidth > 0 ? Math.min(40, Math.max(19.2, headerWidth * 0.045)) : 24;
+  const basmalaFontSize = fixedTypography
+    ? 40
+    : headerWidth > 0
+      ? Math.min(
+          isMobile ? 26 : 40,
+          Math.max(
+            isMobile ? 14 : 20,
+            headerWidth * (isMobile ? 0.055 : 0.045),
+          ),
+        )
+      : 22;
 
   return (
     <div className="w-full flex flex-col items-center" dir="rtl">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -23,8 +23,14 @@ export default function GenerateAyahImage() {
 
   const previewRef = useRef<HTMLDivElement>(null);
   const exportPreviewRef = useRef<HTMLDivElement>(null);
+  const headerReadyForExportRef = useRef(false);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState("");
+  const [headerReadyForExport, setHeaderReadyForExport] = useState(false);
+
+  useEffect(() => {
+    headerReadyForExportRef.current = headerReadyForExport;
+  }, [headerReadyForExport]);
 
   const {
     selectedSurah,
@@ -38,7 +44,6 @@ export default function GenerateAyahImage() {
     specificPartEnabled,
     specificPartStartWordIndex,
     specificPartEndWordIndex,
-    specificPartMaxWordIndex,
     canIncreaseBefore,
     canIncreaseAfter,
     canDecreaseBefore,
@@ -102,6 +107,14 @@ export default function GenerateAyahImage() {
         await document.fonts.ready;
       }
 
+      const waitStart = Date.now();
+      while (
+        !headerReadyForExportRef.current &&
+        Date.now() - waitStart < 5500
+      ) {
+        await new Promise((resolve) => window.setTimeout(resolve, 50));
+      }
+
       const dataUrl = await toPng(exportPreviewRef.current, {
         cacheBust: true,
         pixelRatio: 3,
@@ -140,7 +153,7 @@ export default function GenerateAyahImage() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6 items-start">
-          <aside className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50 p-4 sm:p-5 space-y-4 xl:sticky xl:top-24">
+          <aside className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50 p-4 sm:p-5 space-y-4 xl:sticky xl:top-24 order-last xl:order-first">
             <AyahSelectorSection
               language={language}
               title={t("generateAyahImage.ayahSectionTitle")}
@@ -256,7 +269,7 @@ export default function GenerateAyahImage() {
             )}
           </aside>
 
-          <section className="space-y-4">
+          <section className="space-y-4 order-first xl:order-last">
             <AyahImagePreview
               language={language}
               ayahData={ayahData}
@@ -267,10 +280,10 @@ export default function GenerateAyahImage() {
               isLoading={isLoadingAyah}
               previewRef={previewRef}
               onFontReadyChange={() => {}}
+              onHeaderReadyChange={() => {}}
               specificPartEnabled={specificPartEnabled}
               specificPartStartWordIndex={specificPartStartWordIndex}
               specificPartEndWordIndex={specificPartEndWordIndex}
-              specificPartMaxWordIndex={specificPartMaxWordIndex}
               onSpecificPartStartWordIndexChange={setSpecificPartStartWordIndex}
               onSpecificPartEndWordIndexChange={setSpecificPartEndWordIndex}
             />
@@ -291,6 +304,7 @@ export default function GenerateAyahImage() {
             isLoading={isLoadingAyah}
             previewRef={exportPreviewRef}
             onFontReadyChange={setFontReadyForExport}
+            onHeaderReadyChange={setHeaderReadyForExport}
             renderMode="export"
           />
         </div>

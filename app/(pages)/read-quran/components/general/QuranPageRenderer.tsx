@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/styles/modules/QuranText.module.css";
-import { memo, Fragment } from "react";
+import { memo, Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { AyahPopover } from "./AyahPopover";
 import { surahNames } from "@/constants/quranData";
 import QuranSurahHeader from "./QuranSurahHeader";
@@ -33,6 +33,16 @@ interface QuranPageRendererProps {
   paletteHueToken?: number;
   imageMode?: boolean;
   forcePrimaryText?: boolean;
+  onHeaderReadyChange?: (ready: boolean) => void;
+  requireColoredHeaderForReady?: boolean;
+  fixedHeaderTypography?: boolean;
+  wordRangeSelection?: {
+    enabled: boolean;
+    startWordIndex: number;
+    endWordIndex: number;
+    onStartWordIndexChange: (index: number) => void;
+    onEndWordIndexChange: (index: number) => void;
+  };
 }
 
 const SKELETON_LINE_WIDTHS = [
@@ -83,6 +93,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     headerColorScopeElement,
     imageMode = false,
     forcePrimaryText = false,
+    onHeaderReadyChange,
+    requireColoredHeaderForReady = false,
+    fixedHeaderTypography = false,
+    wordRangeSelection,
   }) => {
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
@@ -115,6 +129,69 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       handleOpenTranslation,
     } = useAyahInteraction(verses);
 
+    const wordRefs = useRef<Array<HTMLSpanElement | null>>([]);
+    const dragHandleRef = useRef<"start" | "end" | null>(null);
+    const animationFrameRef = useRef<number | null>(null);
+    const pendingPointRef = useRef<{ x: number; y: number } | null>(null);
+    const [activeHandle, setActiveHandle] = useState<"start" | "end" | null>(
+      null,
+    );
+    const [dragTooltip, setDragTooltip] = useState<{
+      x: number;
+      y: number;
+      text: string;
+    } | null>(null);
+
+    const isWordRangeSelectionEnabled = !!wordRangeSelection?.enabled;
+    const allowAyahInteraction = !imageMode && !isWordRangeSelectionEnabled;
+    const totalSelectableWords = useMemo(
+      () =>
+        verses.reduce(
+          (count, verse) =>
+            count +
+            verse.words.filter((word) => word.char_type_name !== "end").length,
+          0,
+        ),
+      [verses],
+    );
+    const maxSelectableWordIndex = Math.max(0, totalSelectableWords - 1);
+    const normalizedSelectionStart = wordRangeSelection
+      ? Math.max(
+          0,
+          Math.min(
+            Math.min(
+              wordRangeSelection.startWordIndex,
+              wordRangeSelection.endWordIndex,
+            ),
+            maxSelectableWordIndex,
+          ),
+        )
+      : 0;
+    const normalizedSelectionEnd = wordRangeSelection
+      ? Math.max(
+          normalizedSelectionStart,
+          Math.min(
+            Math.max(
+              wordRangeSelection.startWordIndex,
+              wordRangeSelection.endWordIndex,
+            ),
+            maxSelectableWordIndex,
+          ),
+        )
+      : 0;
+
+    useEffect(() => {
+      wordRefs.current = wordRefs.current.slice(0, totalSelectableWords);
+    }, [totalSelectableWords]);
+
+    useEffect(() => {
+      return () => {
+        if (animationFrameRef.current !== null) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+      };
+    }, []);
+
     if (!fontLoadTried && pageNumber) {
       return <QuranPageSkeleton hasSurahHeader={!!surahHeaders?.length} />;
     }
@@ -139,6 +216,130 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       : null;
     let isFirstChunkOfPage = true;
     const seenAyahs = new Set<string>();
+    let globalSelectableWordIndex = -1;
+
+    const updateSelectedWordIndex = (
+      handle: "start" | "end" | null,
+      nextIndex: number,
+    ) => {
+      if (!wordRangeSelection || !handle || totalSelectableWords === 0) return;
+
+      const clampedIndex = Math.max(
+        0,
+        Math.min(nextIndex, maxSelectableWordIndex),
+      );
+
+      if (handle === "start") {
+        wordRangeSelection.onStartWordIndexChange(
+          Math.min(clampedIndex, normalizedSelectionEnd),
+        );
+        return;
+      }
+
+      wordRangeSelection.onEndWordIndexChange(
+        Math.max(clampedIndex, normalizedSelectionStart),
+      );
+    };
+
+    const findClosestWordIndex = (x: number, y: number) => {
+      const directTarget = document.elementFromPoint(x, y);
+      const directWord = directTarget?.closest("[data-word-range-index]");
+
+      if (directWord instanceof HTMLElement) {
+        const index = Number(directWord.dataset.wordRangeIndex);
+        if (Number.isFinite(index)) return index;
+      }
+
+      let nearestIndex = normalizedSelectionStart;
+      let smallestDistance = Number.POSITIVE_INFINITY;
+
+      wordRefs.current.forEach((element, index) => {
+        if (!element) return;
+
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = (centerX - x) ** 2 + (centerY - y) ** 2;
+
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+
+      return nearestIndex;
+    };
+
+    const flushPendingPointer = () => {
+      animationFrameRef.current = null;
+      const point = pendingPointRef.current;
+      pendingPointRef.current = null;
+
+      if (!point || !dragHandleRef.current) return;
+      const idx = findClosestWordIndex(point.x, point.y);
+      updateSelectedWordIndex(dragHandleRef.current, idx);
+
+      setDragTooltip({
+        x: point.x,
+        y: point.y - 44,
+        text: `Word ${idx + 1}`,
+      });
+    };
+
+    const queuePointerUpdate = (x: number, y: number) => {
+      pendingPointRef.current = { x, y };
+      if (animationFrameRef.current !== null) return;
+      animationFrameRef.current = requestAnimationFrame(flushPendingPointer);
+    };
+
+    const handleSelectionPointerMove = (
+      event: React.PointerEvent<HTMLDivElement>,
+    ) => {
+      if (!dragHandleRef.current) return;
+      queuePointerUpdate(event.clientX, event.clientY);
+    };
+
+    const endSelectionDrag = () => {
+      dragHandleRef.current = null;
+      setActiveHandle(null);
+      setDragTooltip(null);
+    };
+
+    const startSelectionDrag = (
+      event: React.PointerEvent<HTMLSpanElement>,
+      handle: "start" | "end",
+    ) => {
+      event.preventDefault();
+      event.stopPropagation();
+      dragHandleRef.current = handle;
+      setActiveHandle(handle);
+      event.currentTarget.setPointerCapture(event.pointerId);
+      queuePointerUpdate(event.clientX, event.clientY);
+    };
+
+    const handleSelectableWordClick = (wordIndex: number) => {
+      if (!wordRangeSelection) return;
+
+      if (wordIndex < normalizedSelectionStart) {
+        wordRangeSelection.onStartWordIndexChange(wordIndex);
+        return;
+      }
+
+      if (wordIndex > normalizedSelectionEnd) {
+        wordRangeSelection.onEndWordIndexChange(wordIndex);
+        return;
+      }
+
+      const distanceToStart = Math.abs(wordIndex - normalizedSelectionStart);
+      const distanceToEnd = Math.abs(normalizedSelectionEnd - wordIndex);
+
+      if (distanceToStart <= distanceToEnd) {
+        wordRangeSelection.onStartWordIndexChange(wordIndex);
+        return;
+      }
+
+      wordRangeSelection.onEndWordIndexChange(wordIndex);
+    };
 
     return (
       <div
@@ -168,7 +369,23 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
               : imageMode
                 ? "hsl(var(--quran-surface-foreground))"
                 : undefined,
+            userSelect:
+              isWordRangeSelectionEnabled && imageMode ? "none" : undefined,
+            WebkitUserSelect:
+              isWordRangeSelectionEnabled && imageMode ? "none" : undefined,
           }}
+          onPointerMove={
+            isWordRangeSelectionEnabled ? handleSelectionPointerMove : undefined
+          }
+          onPointerUp={
+            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
+          }
+          onPointerCancel={
+            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
+          }
+          onPointerLeave={
+            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
+          }
         >
           {forcedTopHeaderInfo && (
             <div
@@ -180,6 +397,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                 surahNumber={forcedTopHeaderInfo.number}
                 colorScopeElement={headerColorScopeElement}
                 usePrimaryText={forcePrimaryText}
+                onReadyChange={onHeaderReadyChange}
+                requireColoredReady={requireColoredHeaderForReady}
+                fixedTypography={fixedHeaderTypography}
               />
             </div>
           )}
@@ -205,6 +425,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                       surahNumber={headerForLine.surahNumber}
                       colorScopeElement={headerColorScopeElement}
                       usePrimaryText={forcePrimaryText}
+                      onReadyChange={onHeaderReadyChange}
+                      requireColoredReady={requireColoredHeaderForReady}
+                      fixedTypography={fixedHeaderTypography}
                     />
                   </div>
                 )}
@@ -265,13 +488,16 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                             ? `ayah-${chunkAyah}-${chunkSurah}`
                             : undefined
                         }
-                        className={`cursor-pointer rounded transition-all duration-200 px-0.5
+                        className={`rounded transition-all duration-200 px-0.5
                           ${isHighlighted ? "text-primary" : ""}
                           ${
-                            hoveredVerseKey === chunk.verseKey ||
-                            selectedVerseKey === chunk.verseKey
+                            allowAyahInteraction &&
+                            (hoveredVerseKey === chunk.verseKey ||
+                              selectedVerseKey === chunk.verseKey)
                               ? "text-primary"
-                              : "hover:text-primary"
+                              : allowAyahInteraction
+                                ? "cursor-pointer hover:text-primary"
+                                : ""
                           }`}
                         style={
                           forcePrimaryText && !isHighlighted
@@ -279,12 +505,21 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                             : undefined
                         }
                         onMouseEnter={() =>
-                          chunk.verseKey && setHoveredVerseKey(chunk.verseKey)
+                          allowAyahInteraction &&
+                          chunk.verseKey &&
+                          setHoveredVerseKey(chunk.verseKey)
                         }
-                        onMouseLeave={() => setHoveredVerseKey(null)}
-                        onClick={(e) => handleWordClick(e, chunk.verseKey)}
+                        onMouseLeave={() =>
+                          allowAyahInteraction && setHoveredVerseKey(null)
+                        }
+                        onClick={(e) => {
+                          if (!allowAyahInteraction) return;
+                          handleWordClick(e, chunk.verseKey);
+                        }}
                       >
-                        {pageFontName && fontReady
+                        {pageFontName &&
+                        fontReady &&
+                        !isWordRangeSelectionEnabled
                           ? applySpaceFix
                             ? chunk.words
                                 .map((word) => word.code_v2 || "")
@@ -296,52 +531,314 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                             : chunk.words
                                 .map((word) => word.code_v2 || "")
                                 .join("")
-                          : chunk.words.map((word, wordIndex) => (
-                              <span key={`${word.id}-${wordIndex}`}>
-                                {word.char_type_name === "end" ? (
-                                  <span
-                                    className={`${styles.ayahNumberWrapper} inline-flex items-center gap-1 mx-1`}
-                                  >
+                          : chunk.words.map((word, wordIndex) => {
+                              const isAyahNumber =
+                                word.char_type_name === "end";
+
+                              if (!isAyahNumber) {
+                                globalSelectableWordIndex += 1;
+                              }
+
+                              const wordRangeIndex = globalSelectableWordIndex;
+                              const isSelectedWord =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex >= normalizedSelectionStart &&
+                                wordRangeIndex <= normalizedSelectionEnd;
+                              const isUnselectedWord =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                !isSelectedWord;
+                              const isSelectionStartWord =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex === normalizedSelectionStart;
+                              const isSelectionEndWord =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex === normalizedSelectionEnd;
+                              const isCollapsedSelection =
+                                normalizedSelectionStart ===
+                                normalizedSelectionEnd;
+                              const isSelectedAyahNumber =
+                                isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex >= normalizedSelectionStart &&
+                                wordRangeIndex <= normalizedSelectionEnd;
+
+                              const isPrevInSelection =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex > 0 &&
+                                wordRangeIndex - 1 >=
+                                  normalizedSelectionStart &&
+                                wordRangeIndex - 1 <= normalizedSelectionEnd;
+                              const isNextInSelection =
+                                !isAyahNumber &&
+                                isWordRangeSelectionEnabled &&
+                                wordRangeIndex < maxSelectableWordIndex &&
+                                wordRangeIndex + 1 >=
+                                  normalizedSelectionStart &&
+                                wordRangeIndex + 1 <= normalizedSelectionEnd;
+
+                              return (
+                                <span
+                                  key={`${word.id}-${wordIndex}`}
+                                  className="relative inline-block align-baseline"
+                                >
+                                  {isAyahNumber ? (
+                                    pageFontName && fontReady ? (
+                                      <span
+                                        className="inline-block align-baseline"
+                                        style={
+                                          isWordRangeSelectionEnabled
+                                            ? {
+                                                opacity: isSelectedAyahNumber
+                                                  ? 1
+                                                  : 0.45,
+                                                fontFamily: "inherit",
+                                              }
+                                            : { fontFamily: "inherit" }
+                                        }
+                                        dangerouslySetInnerHTML={{
+                                          __html:
+                                            word.code_v2 || word.text_uthmani,
+                                        }}
+                                      />
+                                    ) : (
+                                      <span
+                                        className={`${styles.ayahNumberWrapper} inline-flex items-center gap-1 mx-1`}
+                                        style={
+                                          pageFontName && fontReady
+                                            ? { fontFamily: "inherit" }
+                                            : undefined
+                                        }
+                                      >
+                                        <span
+                                          className="text-sm"
+                                          style={{
+                                            color: forcePrimaryText
+                                              ? "hsl(var(--primary))"
+                                              : undefined,
+                                            opacity: 0.6,
+                                          }}
+                                        >
+                                          ﴿
+                                        </span>
+                                        <span
+                                          dangerouslySetInnerHTML={{
+                                            __html: word.text_uthmani,
+                                          }}
+                                          className={styles.ayahNumberText}
+                                          style={
+                                            pageFontName && fontReady
+                                              ? { fontFamily: "inherit" }
+                                              : undefined
+                                          }
+                                        />
+                                        <span
+                                          className="text-sm"
+                                          style={{
+                                            color: forcePrimaryText
+                                              ? "hsl(var(--primary))"
+                                              : undefined,
+                                            opacity: 0.6,
+                                          }}
+                                        >
+                                          ﴾
+                                        </span>
+                                      </span>
+                                    )
+                                  ) : (
                                     <span
-                                      className="text-sm"
-                                      style={{
-                                        color: forcePrimaryText
-                                          ? "hsl(var(--primary))"
-                                          : undefined,
-                                        opacity: 0.6,
+                                      ref={(element) => {
+                                        if (isWordRangeSelectionEnabled) {
+                                          wordRefs.current[wordRangeIndex] =
+                                            element;
+                                        }
                                       }}
-                                    >
-                                      ﴿
-                                    </span>
-                                    <span
+                                      data-word-range-index={
+                                        isWordRangeSelectionEnabled
+                                          ? wordRangeIndex
+                                          : undefined
+                                      }
+                                      className={`${styles.quranWord} ${
+                                        isWordRangeSelectionEnabled
+                                          ? "relative inline-block rounded-[0.1em] px-[0.08em]"
+                                          : ""
+                                      } ${
+                                        isSelectedWord &&
+                                        isWordRangeSelectionEnabled &&
+                                        !isPrevInSelection
+                                          ? "rounded-s-[0.1em]"
+                                          : ""
+                                      } ${
+                                        isSelectedWord &&
+                                        isWordRangeSelectionEnabled &&
+                                        !isNextInSelection
+                                          ? "rounded-e-[0.1em]"
+                                          : ""
+                                      }`}
+                                      style={
+                                        isWordRangeSelectionEnabled
+                                          ? {
+                                              backgroundImage: isSelectedWord
+                                                ? "linear-gradient(to bottom, hsl(var(--primary) / 0.18), hsl(var(--primary) / 0.18))"
+                                                : "none",
+                                              backgroundSize: "100% 45%",
+                                              backgroundPosition: "0 92%",
+                                              backgroundRepeat: "no-repeat",
+                                              boxShadow: isSelectedWord
+                                                ? "inset 0 -2px 0 0 hsl(var(--primary) / 0.55)"
+                                                : "none",
+                                              opacity: isUnselectedWord
+                                                ? 0.45
+                                                : 1,
+                                              cursor: "pointer",
+                                              fontFamily: "inherit",
+                                              transition:
+                                                "opacity 0.3s ease, box-shadow 0.15s ease",
+                                            }
+                                          : pageFontName && fontReady
+                                            ? { fontFamily: "inherit" }
+                                            : undefined
+                                      }
+                                      onMouseEnter={(e) => {
+                                        if (
+                                          isWordRangeSelectionEnabled &&
+                                          !isSelectedWord
+                                        ) {
+                                          e.currentTarget.style.backgroundImage =
+                                            "linear-gradient(to bottom, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1))";
+                                        }
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        if (
+                                          isWordRangeSelectionEnabled &&
+                                          !isSelectedWord
+                                        ) {
+                                          e.currentTarget.style.backgroundImage =
+                                            "none";
+                                          e.currentTarget.style.boxShadow =
+                                            "none";
+                                        }
+                                      }}
+                                      onClick={() =>
+                                        isWordRangeSelectionEnabled &&
+                                        handleSelectableWordClick(
+                                          wordRangeIndex,
+                                        )
+                                      }
                                       dangerouslySetInnerHTML={{
-                                        __html: word.text_uthmani,
+                                        __html:
+                                          pageFontName && fontReady
+                                            ? word.code_v2 || word.text_uthmani
+                                            : word.text_uthmani,
                                       }}
-                                      className={styles.ayahNumberText}
                                     />
+                                  )}
+                                  {!isAyahNumber && isSelectionStartWord && (
                                     <span
-                                      className="text-sm"
-                                      style={{
-                                        color: forcePrimaryText
-                                          ? "hsl(var(--primary))"
-                                          : undefined,
-                                        opacity: 0.6,
-                                      }}
+                                      role="slider"
+                                      aria-label="Selection start"
+                                      aria-valuemin={1}
+                                      aria-valuemax={totalSelectableWords}
+                                      aria-valuenow={
+                                        normalizedSelectionStart + 1
+                                      }
+                                      className={`
+                                        absolute right-0 bottom-0 z-30 translate-x-1/2
+                                        flex flex-col items-center justify-between
+                                        h-[1.05em] w-3 cursor-ew-resize
+                                        transition-transform duration-150 ease-out
+                                        hover:scale-110
+                                        ${activeHandle === "start" ? "scale-125" : ""}
+                                      `}
+                                      onPointerDown={(event) =>
+                                        startSelectionDrag(event, "start")
+                                      }
                                     >
-                                      ﴾
+                                      <span
+                                        className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        style={{
+                                          backgroundColor:
+                                            "hsl(var(--quran-surface-foreground))",
+                                          borderColor:
+                                            "hsl(var(--quran-surface) / 0.95)",
+                                        }}
+                                      />
+                                      <span
+                                        className="w-[2px] flex-1"
+                                        style={{
+                                          backgroundColor:
+                                            "hsl(var(--quran-surface-foreground) / 0.9)",
+                                        }}
+                                      />
+                                      <span
+                                        className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        style={{
+                                          backgroundColor:
+                                            "hsl(var(--quran-surface-foreground))",
+                                          borderColor:
+                                            "hsl(var(--quran-surface) / 0.95)",
+                                        }}
+                                      />
                                     </span>
-                                  </span>
-                                ) : (
-                                  <span
-                                    dangerouslySetInnerHTML={{
-                                      __html: word.text_uthmani,
-                                    }}
-                                    className={styles.quranWord}
-                                  />
-                                )}
-                                {word.char_type_name !== "end" && " "}
-                              </span>
-                            ))}
+                                  )}
+                                  {!isAyahNumber &&
+                                    isSelectionEndWord &&
+                                    !isCollapsedSelection && (
+                                      <span
+                                        role="slider"
+                                        aria-label="Selection end"
+                                        aria-valuemin={1}
+                                        aria-valuemax={totalSelectableWords}
+                                        aria-valuenow={
+                                          normalizedSelectionEnd + 1
+                                        }
+                                        className={`
+                                          absolute left-0 bottom-0 z-30 -translate-x-1/2
+                                          flex flex-col items-center justify-between
+                                          h-[1.05em] w-3 cursor-ew-resize
+                                          transition-transform duration-150 ease-out
+                                          hover:scale-110
+                                          ${activeHandle === "end" ? "scale-125" : ""}
+                                        `}
+                                        onPointerDown={(event) =>
+                                          startSelectionDrag(event, "end")
+                                        }
+                                      >
+                                        <span
+                                          className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          style={{
+                                            backgroundColor:
+                                              "hsl(var(--quran-surface-foreground))",
+                                            borderColor:
+                                              "hsl(var(--quran-surface) / 0.95)",
+                                          }}
+                                        />
+                                        <span
+                                          className="w-[2px] flex-1"
+                                          style={{
+                                            backgroundColor:
+                                              "hsl(var(--quran-surface-foreground) / 0.9)",
+                                          }}
+                                        />
+                                        <span
+                                          className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          style={{
+                                            backgroundColor:
+                                              "hsl(var(--quran-surface-foreground))",
+                                            borderColor:
+                                              "hsl(var(--quran-surface) / 0.95)",
+                                          }}
+                                        />
+                                      </span>
+                                    )}
+                                  {!isAyahNumber && " "}
+                                </span>
+                              );
+                            })}
                       </span>
                     );
                   })}
@@ -404,6 +901,22 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           surahNameAr={modalAyahInfo?.surahNameAr}
           surahNameEn={modalAyahInfo?.surahNameEn}
         />
+
+        {dragTooltip && (
+          <div
+            className="fixed z-[60] pointer-events-none px-2.5 py-1 rounded-md text-xs font-semibold shadow-xl border"
+            style={{
+              left: dragTooltip.x,
+              top: dragTooltip.y,
+              transform: "translateX(-50%)",
+              backgroundColor: "hsl(var(--quran-surface-foreground))",
+              color: "hsl(var(--quran-surface))",
+              borderColor: "hsl(var(--quran-surface-foreground) / 0.2)",
+            }}
+          >
+            {dragTooltip.text}
+          </div>
+        )}
       </div>
     );
   },

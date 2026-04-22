@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { surahNames } from "@/constants/quranData";
 import { getAyahImageData } from "@/app/(pages)/generate-ayah-image/service/GetAyahImageData";
 import type { QuranVerse } from "@/hooks/readQuran";
@@ -26,6 +32,8 @@ interface AyahSelectionState {
   beforeCount: number;
   afterCount: number;
   showAyahNumber: boolean;
+  committedPartStartWordIndex: number | null;
+  committedPartEndWordIndex: number | null;
   specificPartEnabled: boolean;
   specificPartStartWordIndex: number | null;
   specificPartEndWordIndex: number | null;
@@ -46,6 +54,44 @@ function flattenSelectableWords(verses: QuranVerse[]) {
   );
 }
 
+function sliceVersesByWordRange(
+  verses: QuranVerse[],
+  start: number,
+  end: number,
+  includeAyahNumberAtVerseEnd: boolean,
+) {
+  let globalIndex = 0;
+
+  return verses
+    .map((verse) => {
+      const lastSelectableIndexInVerse = verse.words.reduce(
+        (lastIndex, word, index) =>
+          word.char_type_name === "end" ? lastIndex : index,
+        -1,
+      );
+      let lastSelectableWordIncluded = false;
+
+      const words = verse.words.filter((word, wordIndex) => {
+        if (word.char_type_name === "end") {
+          return includeAyahNumberAtVerseEnd && lastSelectableWordIncluded;
+        }
+
+        const isSelected = globalIndex >= start && globalIndex <= end;
+        if (isSelected && wordIndex === lastSelectableIndexInVerse) {
+          lastSelectableWordIncluded = true;
+        }
+        globalIndex += 1;
+        return isSelected;
+      });
+
+      return {
+        ...verse,
+        words,
+      };
+    })
+    .filter((verse) => verse.words.length > 0);
+}
+
 function countUniqueLines(verses: QuranVerse[]) {
   const lines = new Set<number>();
 
@@ -59,20 +105,6 @@ function countUniqueLines(verses: QuranVerse[]) {
   });
 
   return lines.size;
-}
-
-function sameSelection(a: AyahSelectionState, b: AyahSelectionState): boolean {
-  return (
-    a.surahNumber === b.surahNumber &&
-    a.ayahNumber === b.ayahNumber &&
-    a.beforeCount === b.beforeCount &&
-    a.afterCount === b.afterCount &&
-    a.showAyahNumber === b.showAyahNumber &&
-    a.specificPartEnabled === b.specificPartEnabled &&
-    (!a.specificPartEnabled ||
-      (a.specificPartStartWordIndex === b.specificPartStartWordIndex &&
-        a.specificPartEndWordIndex === b.specificPartEndWordIndex))
-  );
 }
 
 function buildAyahImageData(
@@ -112,7 +144,10 @@ function buildAyahImageData(
 
   const totalSelectableWords = flattenSelectableWords(targetVerses).length;
   const isSingleAyahSelection = rangeStartAyah === rangeEndAyah;
-  const lineCount = countUniqueLines(targetVerses);
+  const shouldIncludeAyahNumbersInSelection =
+    !isSingleAyahSelection || selection.showAyahNumber;
+  const committedStart = selection.committedPartStartWordIndex;
+  const committedEnd = selection.committedPartEndWordIndex;
 
   let specificPartStartWordIndex: number | null = null;
   let specificPartEndWordIndex: number | null = null;
@@ -120,34 +155,45 @@ function buildAyahImageData(
 
   if (selection.specificPartEnabled && totalSelectableWords > 0) {
     const fallbackEnd = totalSelectableWords - 1;
-    const rawStart = selection.specificPartStartWordIndex ?? 0;
-    const rawEnd = selection.specificPartEndWordIndex ?? fallbackEnd;
+    const rawStart =
+      selection.specificPartStartWordIndex ?? committedStart ?? 0;
+    const rawEnd =
+      selection.specificPartEndWordIndex ?? committedEnd ?? fallbackEnd;
     const start = Math.max(0, Math.min(rawStart, rawEnd, fallbackEnd));
     const end = Math.max(
       start,
       Math.min(Math.max(rawStart, rawEnd), fallbackEnd),
     );
 
-    let globalIndex = 0;
-    displayVerses = targetVerses
-      .map((verse) => {
-        const scopedWords = verse.words.filter((word) => {
-          if (word.char_type_name === "end") return false;
-
-          const isSelected = globalIndex >= start && globalIndex <= end;
-          globalIndex += 1;
-          return isSelected;
-        });
-
-        return {
-          ...verse,
-          words: scopedWords,
-        };
-      })
-      .filter((verse) => verse.words.length > 0);
+    displayVerses = sliceVersesByWordRange(
+      targetVerses,
+      start,
+      end,
+      shouldIncludeAyahNumbersInSelection,
+    );
 
     specificPartStartWordIndex = start;
     specificPartEndWordIndex = end;
+  } else if (
+    committedStart !== null &&
+    committedEnd !== null &&
+    totalSelectableWords > 0
+  ) {
+    displayVerses = sliceVersesByWordRange(
+      targetVerses,
+      Math.max(
+        0,
+        Math.min(committedStart, committedEnd, totalSelectableWords - 1),
+      ),
+      Math.max(
+        0,
+        Math.min(
+          Math.max(committedStart, committedEnd),
+          totalSelectableWords - 1,
+        ),
+      ),
+      shouldIncludeAyahNumbersInSelection,
+    );
   } else if (isSingleAyahSelection && !selection.showAyahNumber) {
     displayVerses = targetVerses.map((verse) => ({
       ...verse,
@@ -158,6 +204,8 @@ function buildAyahImageData(
   if (displayVerses.length === 0) {
     displayVerses = targetVerses;
   }
+
+  const lineCount = countUniqueLines(displayVerses);
 
   return {
     surahNumber: selection.surahNumber,
@@ -191,6 +239,8 @@ export function useGenerateAyahImage(
     beforeCount: 0,
     afterCount: 0,
     showAyahNumber: true,
+    committedPartStartWordIndex: null,
+    committedPartEndWordIndex: null,
     specificPartEnabled: false,
     specificPartStartWordIndex: null,
     specificPartEndWordIndex: null,
@@ -300,6 +350,8 @@ export function useGenerateAyahImage(
       ayahNumber: 1,
       beforeCount: 0,
       afterCount: 0,
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -312,6 +364,8 @@ export function useGenerateAyahImage(
     setPendingSelection((prev) => ({
       ...prev,
       ayahNumber,
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -331,6 +385,8 @@ export function useGenerateAyahImage(
         ayahNumber,
         beforeCount: 0,
         afterCount: 0,
+        committedPartStartWordIndex: null,
+        committedPartEndWordIndex: null,
         specificPartEnabled: false,
         specificPartStartWordIndex: null,
         specificPartEndWordIndex: null,
@@ -415,16 +471,53 @@ export function useGenerateAyahImage(
   }, [loadedSurahNumber, pendingSelection, surahVerses]);
 
   useEffect(() => {
-    if (appliedAyahData || !pendingAyahData) return;
+    if (!pendingAyahData) return;
+
+    // Only clipping remains a pending/apply workflow.
+    if (pendingSelection.specificPartEnabled) return;
 
     setAppliedSelection(pendingSelection);
     setAppliedAyahData(pendingAyahData);
-  }, [appliedAyahData, pendingAyahData, pendingSelection]);
+  }, [pendingAyahData, pendingSelection]);
 
-  const hasPendingAyahChanges = useMemo(
-    () => !sameSelection(pendingSelection, appliedSelection),
-    [appliedSelection, pendingSelection],
-  );
+  const hasPendingAyahChanges = useMemo(() => {
+    if (!pendingSelection.specificPartEnabled) return false;
+
+    const totalWords = pendingAyahData?.totalSelectableWords ?? 0;
+    if (totalWords <= 0) return false;
+
+    const fallbackEnd = Math.max(0, totalWords - 1);
+    const rawStart =
+      pendingSelection.specificPartStartWordIndex ??
+      pendingSelection.committedPartStartWordIndex ??
+      0;
+    const rawEnd =
+      pendingSelection.specificPartEndWordIndex ??
+      pendingSelection.committedPartEndWordIndex ??
+      fallbackEnd;
+
+    const nextStart = Math.max(0, Math.min(rawStart, rawEnd, fallbackEnd));
+    const nextEnd = Math.max(
+      nextStart,
+      Math.min(Math.max(rawStart, rawEnd), fallbackEnd),
+    );
+
+    const committedStart = pendingSelection.committedPartStartWordIndex;
+    const committedEnd = pendingSelection.committedPartEndWordIndex;
+
+    if (committedStart === null || committedEnd === null) {
+      return true;
+    }
+
+    return nextStart !== committedStart || nextEnd !== committedEnd;
+  }, [
+    pendingAyahData?.totalSelectableWords,
+    pendingSelection.committedPartEndWordIndex,
+    pendingSelection.committedPartStartWordIndex,
+    pendingSelection.specificPartEnabled,
+    pendingSelection.specificPartEndWordIndex,
+    pendingSelection.specificPartStartWordIndex,
+  ]);
 
   const currentLineCount = pendingAyahData?.lineCount ?? 0;
 
@@ -466,6 +559,8 @@ export function useGenerateAyahImage(
     setPendingSelection((prev) => ({
       ...prev,
       beforeCount: prev.beforeCount + 1,
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -477,6 +572,8 @@ export function useGenerateAyahImage(
     setPendingSelection((prev) => ({
       ...prev,
       beforeCount: Math.max(0, prev.beforeCount - 1),
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -488,6 +585,8 @@ export function useGenerateAyahImage(
     setPendingSelection((prev) => ({
       ...prev,
       afterCount: prev.afterCount + 1,
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -499,6 +598,8 @@ export function useGenerateAyahImage(
     setPendingSelection((prev) => ({
       ...prev,
       afterCount: Math.max(0, prev.afterCount - 1),
+      committedPartStartWordIndex: null,
+      committedPartEndWordIndex: null,
       specificPartEnabled: false,
       specificPartStartWordIndex: null,
       specificPartEndWordIndex: null,
@@ -529,8 +630,9 @@ export function useGenerateAyahImage(
         return {
           ...prev,
           specificPartEnabled: true,
-          specificPartStartWordIndex: 0,
-          specificPartEndWordIndex: Math.max(0, totalWords - 1),
+          specificPartStartWordIndex: prev.committedPartStartWordIndex ?? 0,
+          specificPartEndWordIndex:
+            prev.committedPartEndWordIndex ?? Math.max(0, totalWords - 1),
         };
       });
     },
@@ -538,27 +640,32 @@ export function useGenerateAyahImage(
   );
 
   const setSpecificPartStartWordIndex = useCallback((index: number) => {
-    setPendingSelection((prev) => {
-      const end = prev.specificPartEndWordIndex ?? index;
-      return {
-        ...prev,
-        specificPartStartWordIndex: Math.min(index, end),
-      };
+    startTransition(() => {
+      setPendingSelection((prev) => {
+        const end = prev.specificPartEndWordIndex ?? index;
+        return {
+          ...prev,
+          specificPartStartWordIndex: Math.min(index, end),
+        };
+      });
     });
   }, []);
 
   const setSpecificPartEndWordIndex = useCallback((index: number) => {
-    setPendingSelection((prev) => {
-      const start = prev.specificPartStartWordIndex ?? 0;
-      return {
-        ...prev,
-        specificPartEndWordIndex: Math.max(index, start),
-      };
+    startTransition(() => {
+      setPendingSelection((prev) => {
+        const start = prev.specificPartStartWordIndex ?? 0;
+        return {
+          ...prev,
+          specificPartEndWordIndex: Math.max(index, start),
+        };
+      });
     });
   }, []);
 
   const applyAyahSelection = useCallback(async () => {
     if (!hasPendingAyahChanges || !pendingAyahData) return;
+    if (!pendingSelection.specificPartEnabled) return;
     if (pendingAyahData.lineCount > MAX_AYAH_IMAGE_LINES) return;
 
     setIsApplyingAyahSelection(true);
@@ -585,8 +692,32 @@ export function useGenerateAyahImage(
         throw new Error("Failed to apply ayah selection");
       }
 
-      setAppliedSelection(pendingSelection);
-      setAppliedAyahData(nextData);
+      const shouldCommitSpecificPart =
+        pendingSelection.specificPartEnabled &&
+        nextData.specificPartStartWordIndex !== null &&
+        nextData.specificPartEndWordIndex !== null;
+      const committedSelection: AyahSelectionState = shouldCommitSpecificPart
+        ? {
+            ...pendingSelection,
+            committedPartStartWordIndex: nextData.specificPartStartWordIndex,
+            committedPartEndWordIndex: nextData.specificPartEndWordIndex,
+            specificPartEnabled: false,
+            specificPartStartWordIndex: null,
+            specificPartEndWordIndex: null,
+          }
+        : pendingSelection;
+      const committedData = shouldCommitSpecificPart
+        ? buildAyahImageData(committedSelection, sourceVerses)
+        : nextData;
+
+      if (!committedData) {
+        throw new Error("Failed to finalize ayah selection");
+      }
+
+      setPendingSelection(committedSelection);
+      setAppliedSelection(committedSelection);
+      setPendingAyahData(committedData);
+      setAppliedAyahData(committedData);
     } catch (err) {
       setError(
         err instanceof Error
@@ -623,10 +754,6 @@ export function useGenerateAyahImage(
     specificPartEndWordIndex:
       pendingSelection.specificPartEndWordIndex ??
       Math.max(0, (pendingAyahData?.totalSelectableWords ?? 1) - 1),
-    specificPartMaxWordIndex: Math.max(
-      0,
-      (pendingAyahData?.totalSelectableWords ?? 1) - 1,
-    ),
     canIncreaseBefore,
     canIncreaseAfter,
     canDecreaseBefore,

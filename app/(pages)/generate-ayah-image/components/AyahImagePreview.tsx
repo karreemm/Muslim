@@ -22,11 +22,11 @@ interface AyahImagePreviewProps {
   isLoading: boolean;
   previewRef: React.RefObject<HTMLDivElement>;
   onFontReadyChange: (ready: boolean) => void;
+  onHeaderReadyChange?: (ready: boolean) => void;
   renderMode?: "preview" | "export";
   specificPartEnabled?: boolean;
   specificPartStartWordIndex?: number;
   specificPartEndWordIndex?: number;
-  specificPartMaxWordIndex?: number;
   onSpecificPartStartWordIndexChange?: (index: number) => void;
   onSpecificPartEndWordIndexChange?: (index: number) => void;
 }
@@ -41,11 +41,11 @@ export default function AyahImagePreview({
   isLoading,
   previewRef,
   onFontReadyChange,
+  onHeaderReadyChange,
   renderMode = "preview",
   specificPartEnabled = false,
   specificPartStartWordIndex = 0,
   specificPartEndWordIndex = 0,
-  specificPartMaxWordIndex = 0,
   onSpecificPartStartWordIndexChange,
   onSpecificPartEndWordIndexChange,
 }: AyahImagePreviewProps) {
@@ -121,19 +121,24 @@ export default function AyahImagePreview({
     return generateCSSVars(paletteHue, imageTheme === "dark");
   }, [paletteMode, paletteHue, imageTheme]);
 
+  const isExportMode = renderMode === "export";
   const wrapperStyle = {
     ...paletteVars,
     backgroundColor: "hsl(var(--quran-surface))",
     color: "hsl(var(--quran-surface-foreground))",
-    borderColor: "hsl(var(--border))",
+    ...(isExportMode ? {} : { borderColor: "hsl(var(--border))" }),
   } as React.CSSProperties;
-
-  const isExportMode = renderMode === "export";
   const showSpecificPartControls =
     !isExportMode &&
     specificPartEnabled &&
     ayahData &&
-    ayahData.totalSelectableWords > 0;
+    ayahData.totalSelectableWords > 0 &&
+    !!onSpecificPartStartWordIndexChange &&
+    !!onSpecificPartEndWordIndexChange;
+  const previewVerses =
+    showSpecificPartControls && ayahData
+      ? ayahData.targetVerses
+      : (ayahData?.displayVerses ?? []);
 
   return (
     <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
@@ -146,9 +151,9 @@ export default function AyahImagePreview({
       <div
         ref={previewRef}
         style={wrapperStyle}
-        className={`relative w-full overflow-hidden border ${
-          isExportMode ? "p-4" : "p-2 md:p-4"
-        }`}
+        className={`relative w-full overflow-hidden ${
+          isExportMode ? "border-0" : "border"
+        } ${isExportMode ? "p-4" : "p-2 md:p-4"}`}
       >
         <div
           className="absolute inset-0 pointer-events-none"
@@ -167,9 +172,9 @@ export default function AyahImagePreview({
           {isLoading ? (
             <div className="h-full w-full rounded-xl bg-muted/50 animate-pulse" />
           ) : ayahData ? (
-            <div className="relative h-full w-full pointer-events-none">
+            <div className="relative h-full w-full">
               <QuranPageRenderer
-                verses={ayahData.displayVerses}
+                verses={previewVerses}
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 pageNumber={ayahData.pageNumber}
@@ -179,6 +184,21 @@ export default function AyahImagePreview({
                 paletteHueToken={paletteHue}
                 imageMode
                 showPageNumber={showPageNumber}
+                onHeaderReadyChange={onHeaderReadyChange}
+                requireColoredHeaderForReady={isExportMode}
+                fixedHeaderTypography={isExportMode}
+                wordRangeSelection={
+                  showSpecificPartControls
+                    ? {
+                        enabled: true,
+                        startWordIndex: specificPartStartWordIndex,
+                        endWordIndex: specificPartEndWordIndex,
+                        onStartWordIndexChange:
+                          onSpecificPartStartWordIndexChange,
+                        onEndWordIndexChange: onSpecificPartEndWordIndexChange,
+                      }
+                    : undefined
+                }
               />
             </div>
           ) : (
@@ -186,55 +206,6 @@ export default function AyahImagePreview({
               {isArabic
                 ? "اختر سورة وآية لعرضها هنا"
                 : "Select a surah and ayah to preview here"}
-            </div>
-          )}
-
-          {showSpecificPartControls && (
-            <div className="mt-4 rounded-xl border border-border/50 bg-background/55 p-3 space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isArabic ? "بداية المدى" : "Range start"}</span>
-                <span className="tabular-nums">
-                  {specificPartStartWordIndex + 1}/
-                  {specificPartMaxWordIndex + 1}
-                </span>
-              </div>
-
-              <input
-                type="range"
-                min={0}
-                max={specificPartMaxWordIndex}
-                value={Math.min(
-                  specificPartStartWordIndex,
-                  specificPartEndWordIndex,
-                )}
-                onChange={(event) =>
-                  onSpecificPartStartWordIndexChange?.(
-                    Number(event.target.value),
-                  )
-                }
-                className="w-full accent-primary pointer-events-auto"
-              />
-
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{isArabic ? "نهاية المدى" : "Range end"}</span>
-                <span className="tabular-nums">
-                  {specificPartEndWordIndex + 1}/{specificPartMaxWordIndex + 1}
-                </span>
-              </div>
-
-              <input
-                type="range"
-                min={0}
-                max={specificPartMaxWordIndex}
-                value={Math.max(
-                  specificPartEndWordIndex,
-                  specificPartStartWordIndex,
-                )}
-                onChange={(event) =>
-                  onSpecificPartEndWordIndexChange?.(Number(event.target.value))
-                }
-                className="w-full accent-primary pointer-events-auto"
-              />
             </div>
           )}
         </div>

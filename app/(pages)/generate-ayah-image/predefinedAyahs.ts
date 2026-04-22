@@ -15,7 +15,6 @@ export const PREDEFINED_AYAHS: PredefinedAyahOption[] = [
   { surahNumber: 39, ayahNumber: 53 },
   { surahNumber: 93, ayahNumber: 3 },
   { surahNumber: 93, ayahNumber: 5 },
-  { surahNumber: 13, ayahNumber: 28 },
   { surahNumber: 94, ayahNumber: 6 },
   { surahNumber: 70, ayahNumber: 5 },
   { surahNumber: 2, ayahNumber: 45 },
