@@ -287,9 +287,6 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           onPointerCancel={
             isWordRangeSelectionEnabled ? endSelectionDrag : undefined
           }
-          onPointerLeave={
-            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
-          }
         >
           {forcedTopHeaderInfo && (
             <div
@@ -602,6 +599,8 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                               fontFamily: "inherit",
                                               transition:
                                                 "opacity 0.3s ease, box-shadow 0.15s ease",
+                                              WebkitUserSelect: "none",
+                                              userSelect: "none",
                                             }
                                           : pageFontName && fontReady
                                             ? { fontFamily: "inherit" }
@@ -641,6 +640,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       }}
                                     />
                                   )}
+
                                   {!isAyahNumber && isSelectionStartWord && (
                                     <span
                                       role="slider"
@@ -653,17 +653,23 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       className={`
                                         absolute right-0 bottom-0 z-30 translate-x-1/2
                                         flex flex-col items-center justify-between
-                                        h-[1.05em] w-3 cursor-ew-resize
+                                        h-[1.4em] w-5 cursor-ew-resize
                                         transition-transform duration-150 ease-out
                                         hover:scale-110
                                         ${activeHandle === "start" ? "scale-125" : ""}
                                       `}
+                                      style={{
+                                        touchAction: "none",
+                                        WebkitUserSelect: "none",
+                                        userSelect: "none",
+                                        padding: "0 6px",
+                                      }}
                                       onPointerDown={(event) =>
                                         startSelectionDrag(event, "start")
                                       }
                                     >
                                       <span
-                                        className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
@@ -679,7 +685,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         }}
                                       />
                                       <span
-                                        className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
@@ -689,6 +695,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       />
                                     </span>
                                   )}
+
                                   {!isAyahNumber &&
                                     isSelectionEndWord &&
                                     !isCollapsedSelection && (
@@ -703,17 +710,23 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         className={`
                                           absolute left-0 bottom-0 z-30 -translate-x-1/2
                                           flex flex-col items-center justify-between
-                                          h-[1.05em] w-3 cursor-ew-resize
+                                          h-[1.4em] w-5 cursor-ew-resize
                                           transition-transform duration-150 ease-out
                                           hover:scale-110
                                           ${activeHandle === "end" ? "scale-125" : ""}
                                         `}
+                                        style={{
+                                          touchAction: "none",
+                                          WebkitUserSelect: "none",
+                                          userSelect: "none",
+                                          padding: "0 6px",
+                                        }}
                                         onPointerDown={(event) =>
                                           startSelectionDrag(event, "end")
                                         }
                                       >
                                         <span
-                                          className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
                                           style={{
                                             backgroundColor:
                                               "hsl(var(--quran-surface-foreground))",
@@ -729,7 +742,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                           }}
                                         />
                                         <span
-                                          className="w-2 h-2 rounded-full border shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
                                           style={{
                                             backgroundColor:
                                               "hsl(var(--quran-surface-foreground))",

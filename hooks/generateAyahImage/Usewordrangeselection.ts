@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface WordRangeSelectionOptions {
   enabled: boolean;
@@ -9,18 +9,14 @@ interface WordRangeSelectionOptions {
 }
 
 export interface UseWordRangeSelectionReturn {
-  // Normalized indices (always start <= end)
   normalizedSelectionStart: number;
   normalizedSelectionEnd: number;
   maxSelectableWordIndex: number;
 
-  // Refs
   wordRefs: React.MutableRefObject<Array<HTMLSpanElement | null>>;
 
-  // Drag state
   activeHandle: "start" | "end" | null;
 
-  // Handlers
   handleSelectionPointerMove: (
     event: React.PointerEvent<HTMLDivElement>,
   ) => void;
@@ -84,6 +80,20 @@ export function useWordRangeSelection(
     };
   }, []);
 
+  useEffect(() => {
+    if (!activeHandle) return;
+
+    const preventScroll = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchmove", preventScroll);
+    };
+  }, [activeHandle]);
+
   const updateSelectedWordIndex = (
     handle: "start" | "end" | null,
     nextIndex: number,
@@ -116,19 +126,40 @@ export function useWordRangeSelection(
       if (Number.isFinite(index)) return index;
     }
 
-    let nearestIndex = normalizedSelectionStart;
-    let smallestDistance = Number.POSITIVE_INFINITY;
+    const fallbackIndex =
+      dragHandleRef.current === "start"
+        ? normalizedSelectionStart
+        : normalizedSelectionEnd;
+
+    let closestLineY = 0;
+    let closestLineYDist = Number.POSITIVE_INFINITY;
+
+    wordRefs.current.forEach((element) => {
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const dy = Math.abs(centerY - y);
+      if (dy < closestLineYDist) {
+        closestLineYDist = dy;
+        closestLineY = centerY;
+      }
+    });
+
+    const LINE_TOLERANCE = 20;
+    let nearestIndex = fallbackIndex;
+    let smallestXDist = Number.POSITIVE_INFINITY;
 
     wordRefs.current.forEach((element, index) => {
       if (!element) return;
-
       const rect = element.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const distance = (centerX - x) ** 2 + (centerY - y) ** 2;
+      const centerX = rect.left + rect.width / 2;
 
-      if (distance < smallestDistance) {
-        smallestDistance = distance;
+      if (Math.abs(centerY - closestLineY) > LINE_TOLERANCE) return;
+
+      const xDist = Math.abs(centerX - x);
+      if (xDist < smallestXDist) {
+        smallestXDist = xDist;
         nearestIndex = index;
       }
     });
@@ -170,9 +201,28 @@ export function useWordRangeSelection(
   ) => {
     event.preventDefault();
     event.stopPropagation();
+
     dragHandleRef.current = handle;
     setActiveHandle(handle);
-    event.currentTarget.setPointerCapture(event.pointerId);
+
+    const el = event.currentTarget;
+    el.setPointerCapture(event.pointerId);
+
+    const onMove = (e: PointerEvent) => {
+      queuePointerUpdate(e.clientX, e.clientY);
+    };
+
+    const onEnd = () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onEnd);
+      el.removeEventListener("pointercancel", onEnd);
+      endSelectionDrag();
+    };
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerup", onEnd);
+    el.addEventListener("pointercancel", onEnd);
+
     queuePointerUpdate(event.clientX, event.clientY);
   };
 
