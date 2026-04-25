@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMosque } from "@fortawesome/free-solid-svg-icons";
 import { generateCSSVars } from "@/utils/paletteEngine";
@@ -34,6 +34,26 @@ interface AyahImagePreviewProps {
   onSpecificPartEndWordIndexChange?: (index: number) => void;
 }
 
+function AyahImagePreviewSkeleton() {
+  const lineWidths = ["96%", "90%", "94%"];
+
+  return (
+    <div className="w-full flex flex-col items-center py-1 px-0 animate-pulse">
+      <div className="w-full flex flex-col items-center gap-2">
+        <div className="w-full h-14 bg-muted rounded-xl mb-2" />
+        <div className="w-[48%] h-7 bg-muted rounded-lg mb-4" />
+        {lineWidths.map((width, index) => (
+          <div
+            key={index}
+            className="h-7 bg-muted rounded-lg"
+            style={{ width }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AyahImagePreview({
   language,
   ayahData,
@@ -53,12 +73,57 @@ export default function AyahImagePreview({
   onSpecificPartStartWordIndexChange,
   onSpecificPartEndWordIndexChange,
 }: AyahImagePreviewProps) {
+  const MIN_SKELETON_DURATION_MS = 500;
   const isArabic = language === "ar";
   const contentRef = useRef<HTMLDivElement>(null);
+  const loadingStartRef = useRef<number | null>(null);
+  const loadingHideTimerRef = useRef<number | null>(null);
+  const [showMinLoadingSkeleton, setShowMinLoadingSkeleton] = useState(false);
 
   const { fontSize, lineHeight } = useContainerFontSize(contentRef);
   const { fontReady, fontLoadTried } = useQuranPageFont(ayahData?.pageNumber);
-  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 640px)").matches;
+
+  useEffect(() => {
+    if (loadingHideTimerRef.current !== null) {
+      window.clearTimeout(loadingHideTimerRef.current);
+      loadingHideTimerRef.current = null;
+    }
+
+    if (isLoading) {
+      loadingStartRef.current = Date.now();
+      setShowMinLoadingSkeleton(true);
+      return;
+    }
+
+    if (!showMinLoadingSkeleton) return;
+
+    const startedAt = loadingStartRef.current;
+    const elapsed = startedAt
+      ? Date.now() - startedAt
+      : MIN_SKELETON_DURATION_MS;
+    const remaining = Math.max(0, MIN_SKELETON_DURATION_MS - elapsed);
+
+    if (remaining === 0) {
+      setShowMinLoadingSkeleton(false);
+      return;
+    }
+
+    loadingHideTimerRef.current = window.setTimeout(() => {
+      setShowMinLoadingSkeleton(false);
+      loadingHideTimerRef.current = null;
+    }, remaining);
+  }, [isLoading, showMinLoadingSkeleton]);
+
+  useEffect(() => {
+    return () => {
+      if (loadingHideTimerRef.current !== null) {
+        window.clearTimeout(loadingHideTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     onFontReadyChange(!ayahData || (fontLoadTried && fontReady));
@@ -127,6 +192,7 @@ export default function AyahImagePreview({
   }, [paletteMode, paletteHue, imageTheme]);
 
   const isExportMode = renderMode === "export";
+  const showLoadingSkeleton = isExportMode ? isLoading : showMinLoadingSkeleton;
   const wrapperStyle = {
     ...paletteVars,
     backgroundColor: "hsl(var(--quran-surface))",
@@ -174,8 +240,8 @@ export default function AyahImagePreview({
             isExportMode ? "w-full" : "w-[92%] lg:w-full"
           }`}
         >
-          {isLoading ? (
-            <div className="h-full w-full rounded-xl bg-muted/50 animate-pulse" />
+          {showLoadingSkeleton ? (
+            <AyahImagePreviewSkeleton />
           ) : ayahData ? (
             <div className="relative h-full w-full">
               <QuranPageRenderer
@@ -192,6 +258,7 @@ export default function AyahImagePreview({
                 onHeaderReadyChange={onHeaderReadyChange}
                 requireColoredHeaderForReady={isExportMode}
                 fixedHeaderTypography={isExportMode}
+                loadingSkeletonVariant="ayah-image"
                 wordRangeSelection={
                   showSpecificPartControls
                     ? {
@@ -219,15 +286,26 @@ export default function AyahImagePreview({
               className={`mt-12 border-t pt-3`}
               style={{
                 borderColor: "hsl(var(--primary) / 0.35)",
-                fontSize: isExportMode ? "15px" : isMobile ? `${fontSize * 0.65}px` : `${fontSize * 0.45}px`,
+                fontSize: isExportMode
+                  ? "15px"
+                  : isMobile
+                    ? `${fontSize * 0.65}px`
+                    : `${fontSize * 0.45}px`,
               }}
             >
-              <div dir="ltr" className="flex items-center justify-center gap-2 font-semibold">
+              <div
+                dir="ltr"
+                className="flex items-center justify-center gap-2 font-semibold"
+              >
                 <FontAwesomeIcon
                   icon={faMosque}
                   className="text-[hsl(var(--primary))]/70"
                   style={{
-                    fontSize: isExportMode ? "15px" : isMobile ? `${fontSize * 0.65}px` : `${fontSize * 0.45}px`,
+                    fontSize: isExportMode
+                      ? "15px"
+                      : isMobile
+                        ? `${fontSize * 0.65}px`
+                        : `${fontSize * 0.45}px`,
                   }}
                 />
                 <span dir="ltr" className="text-[hsl(var(--primary))]/70 mt-1">

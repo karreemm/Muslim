@@ -38,6 +38,7 @@ interface QuranPageRendererProps {
   onHeaderReadyChange?: (ready: boolean) => void;
   requireColoredHeaderForReady?: boolean;
   fixedHeaderTypography?: boolean;
+  loadingSkeletonVariant?: "default" | "ayah-image";
   wordRangeSelection?: {
     enabled: boolean;
     startWordIndex: number;
@@ -47,7 +48,7 @@ interface QuranPageRendererProps {
   };
 }
 
-const SKELETON_LINE_WIDTHS = [
+const DEFAULT_SKELETON_LINE_WIDTHS = [
   "92%",
   "88%",
   "95%",
@@ -65,17 +66,52 @@ const SKELETON_LINE_WIDTHS = [
   "88%",
 ];
 
-const QuranPageSkeleton = ({ hasSurahHeader = false }) => (
-  <div className="w-full flex flex-col items-center py-6 px-4 bg-card/50 rounded-2xl border-2 border-border/50 shadow-inner mb-6 animate-pulse">
-    <div className="w-full max-w-[800px] flex flex-col items-center gap-3">
+const AYAH_IMAGE_SKELETON_LINE_WIDTHS = ["96%", "90%", "94%"];
+
+const QuranPageSkeleton = ({
+  hasSurahHeader = false,
+  variant = "default",
+}: {
+  hasSurahHeader?: boolean;
+  variant?: "default" | "ayah-image";
+}) => (
+  <div
+    className={`w-full flex flex-col items-center animate-pulse ${
+      variant === "ayah-image"
+        ? "py-1 px-0 bg-transparent border-0 shadow-none mb-0"
+        : "py-6 px-4 bg-card/50 rounded-2xl border-2 border-border/50 shadow-inner mb-6"
+    }`}
+  >
+    <div
+      className={`w-full flex flex-col items-center ${
+        variant === "ayah-image" ? "max-w-none gap-2" : "max-w-[800px] gap-3"
+      }`}
+    >
       {hasSurahHeader && (
         <>
-          <div className="w-full h-16 bg-muted rounded-xl mb-2" />
-          <div className="w-[60%] h-8 bg-muted rounded-lg mb-4" />
+          <div
+            className={`bg-muted rounded-xl mb-2 ${
+              variant === "ayah-image" ? "w-full h-14" : "w-full h-16"
+            }`}
+          />
+          <div
+            className={`bg-muted rounded-lg mb-4 ${
+              variant === "ayah-image" ? "w-[48%] h-7" : "w-[60%] h-8"
+            }`}
+          />
         </>
       )}
-      {SKELETON_LINE_WIDTHS.map((width, i) => (
-        <div key={i} className="h-8 bg-muted rounded-lg" style={{ width }} />
+      {(variant === "ayah-image"
+        ? AYAH_IMAGE_SKELETON_LINE_WIDTHS
+        : DEFAULT_SKELETON_LINE_WIDTHS
+      ).map((width, i) => (
+        <div
+          key={i}
+          className={`bg-muted rounded-lg ${
+            variant === "ayah-image" ? "h-7" : "h-8"
+          }`}
+          style={{ width }}
+        />
       ))}
     </div>
   </div>
@@ -98,6 +134,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     onHeaderReadyChange,
     requireColoredHeaderForReady = false,
     fixedHeaderTypography = false,
+    loadingSkeletonVariant = "default",
     wordRangeSelection,
   }) => {
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
@@ -173,7 +210,17 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     } = useWordRangeSelection(wordRangeSelection, totalSelectableWords);
 
     if (!fontLoadTried && pageNumber) {
-      return <QuranPageSkeleton hasSurahHeader={!!surahHeaders?.length} />;
+      const hasSurahHeader =
+        loadingSkeletonVariant === "ayah-image"
+          ? !!forceTopSurahHeaderNumber || !!surahHeaders?.length
+          : !!surahHeaders?.length;
+
+      return (
+        <QuranPageSkeleton
+          hasSurahHeader={hasSurahHeader}
+          variant={loadingSkeletonVariant}
+        />
+      );
     }
 
     const headerLineMap = new Map<string, SurahHeaderInfo>();
