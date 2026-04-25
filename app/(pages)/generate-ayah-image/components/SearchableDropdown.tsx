@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, use } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -35,6 +35,7 @@ export default function SearchableDropdown({
   emptyLabel,
   disabled = false,
 }: SearchableDropdownProps) {
+  const searchRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -45,6 +46,14 @@ export default function SearchableDropdown({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        searchRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
 
   const updatePosition = useCallback(() => {
     if (!buttonRef.current) return;
@@ -101,6 +110,7 @@ export default function SearchableDropdown({
             className="absolute top-1/2 -translate-y-1/2 start-3 text-xs text-muted-foreground"
           />
           <input
+            ref={searchRef}
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder={searchPlaceholder}

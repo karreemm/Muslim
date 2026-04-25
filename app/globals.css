@@ -578,22 +578,29 @@
 }
 
 .scrollbar-hover-hidden {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.scrollbar-hover-hidden::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  background: transparent;
+  /* Always reserve scrollbar space with invisible scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  overflow-y: auto;
 }
 
 .scrollbar-hover-hidden:hover {
-  scrollbar-width: auto; 
+  scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
 }
 
-.scrollbar-hover-hidden:hover::-webkit-scrollbar {
+/* Webkit */
+.scrollbar-hover-hidden::-webkit-scrollbar {
   width: 8px;
+}
+
+.scrollbar-hover-hidden::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hover-hidden::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
 }
 
 .scrollbar-hover-hidden:hover::-webkit-scrollbar-track {
@@ -602,17 +609,11 @@
 
 .scrollbar-hover-hidden:hover::-webkit-scrollbar-thumb {
   background-color: hsl(var(--scrollbar-thumb));
-  border-radius: 10px;
   border: 2px solid hsl(var(--scrollbar-track));
 }
 
 .scrollbar-hover-hidden:hover::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--scrollbar-thumb-hover));
-}
-
-.scrollbar-hover-hidden:hover::-webkit-scrollbar:horizontal {
-  height: 0;
-  background: transparent;
+  background-color: hsl(var(--scrollbar-thumb-hover));
 }
 
 /* NUMBER INPUT STYLES (remove spinners) 

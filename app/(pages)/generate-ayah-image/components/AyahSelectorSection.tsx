@@ -248,11 +248,11 @@ export default function AyahSelectorSection({
   }, [isArabic, selectedAyah, selectedSurah, snippets]);
 
   return (
-    <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
+    <div className={`bg-card/70 rounded-2xl border border-border/50 ${isCollapsed ? "px-4 sm:px-5 py-2" : "p-4 sm:p-5"}`}>
       <button
         type="button"
         onClick={() => setIsCollapsed((prev) => !prev)}
-        className="w-full flex items-center justify-between text-base font-bold text-foreground mb-3"
+        className={`w-full flex items-center justify-between text-base font-bold text-foreground ${isCollapsed ? "mb-0" : "mb-3"}`}
         aria-expanded={!isCollapsed}
       >
         <span>{title}</span>
@@ -268,7 +268,7 @@ export default function AyahSelectorSection({
             <p className="text-xs text-muted-foreground mb-2">{presetsTitle}</p>
 
             <div
-              className={`max-h-64 overflow-y-auto scrollbar-hover-hidden ${language === "ar" ? "pl-2" : "pr-2"} space-y-2`}
+              className={`max-h-64 overflow-y-auto scrollbar-hover-hidden ${isArabic ? "pl-2" : "pr-2"} space-y-2`}
             >
               {cards.map((card) => (
                 <button
@@ -409,7 +409,13 @@ export default function AyahSelectorSection({
               <p className="text-xs text-muted-foreground">
                 {lineLimitLabel}:{" "}
                 <span className="font-semibold tabular-nums">
-                  {currentLineCount}/{maxLines}
+                  <span className={`${currentLineCount > 10 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {currentLineCount}
+                  </span>
+                  / 
+                  <span className="text-muted-foreground">
+                    {maxLines}
+                  </span>
                 </span>
               </p>
 
@@ -448,7 +454,7 @@ export default function AyahSelectorSection({
                 type="button"
                 onClick={onSubmit}
                 disabled={!hasPendingChanges || isApplyingSelection}
-                className="w-full h-10 rounded-xl bg-primary text-primary-foreground text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-1 rounded-xl bg-primary text-primary-foreground text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isApplyingSelection ? submittingLabel : submitLabel}
               </button>

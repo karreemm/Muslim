@@ -57,6 +57,7 @@ export default function GenerateAyahImage() {
     imageTheme,
     isLoadingAyah,
     showPageNumber,
+    showWebsiteAttribution,
     ayahData,
     appliedAyahData,
     error,
@@ -76,7 +77,7 @@ export default function GenerateAyahImage() {
     setImageTheme,
     selectPalettePreset,
     setShowPageNumber,
-    setCustomPaletteHue,
+    setShowWebsiteAttribution,
     setFontReadyForExport,
     incrementBefore,
     decrementBefore,
@@ -221,22 +222,20 @@ export default function GenerateAyahImage() {
               language={language}
               title={t("generateAyahImage.paletteTitle")}
               presetsTitle={t("generateAyahImage.palettePredefined")}
-              customTitle={t("generateAyahImage.paletteCustom")}
-              themeTitle={t("generateAyahImage.paletteThemeMode")}
-              separatorLabel={t("generateAyahImage.paletteOr")}
+              detailsTitle={t("generateAyahImage.imageDetailsTitle")}
               pageNumberTitle={t("generateAyahImage.pageNumberTitle")}
-              showLabel={t("generateAyahImage.show")}
-              hideLabel={t("generateAyahImage.hide")}
-              lightLabel={t("generateAyahImage.lightTheme")}
-              darkLabel={t("generateAyahImage.darkTheme")}
+              websiteAttributionTitle={t(
+                "generateAyahImage.websiteAttributionTitle",
+              )}
+              websiteAttributionHelper={t(
+                "generateAyahImage.websiteAttributionHelper",
+              )}
               selectedMode={paletteMode}
-              selectedHue={paletteHue}
-              imageTheme={imageTheme}
               showPageNumber={showPageNumber}
-              onThemeChange={setImageTheme}
+              showWebsiteAttribution={showWebsiteAttribution}
               onShowPageNumberChange={setShowPageNumber}
+              onShowWebsiteAttributionChange={setShowWebsiteAttribution}
               onSelectPreset={selectPalettePreset}
-              onCustomHueChange={setCustomPaletteHue}
             />
             <button
               type="button"
@@ -248,7 +247,7 @@ export default function GenerateAyahImage() {
                 isApplyingAyahSelection ||
                 hasPendingAyahChanges
               }
-              className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold
+              className="w-full py-1 text-sm rounded-xl bg-primary text-primary-foreground font-bold
                 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5
                 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
@@ -257,7 +256,9 @@ export default function GenerateAyahImage() {
               ) : (
                 <span className="inline-flex items-center gap-2">
                   <FontAwesomeIcon icon={faDownload} />
-                  {t("generateAyahImage.downloadPng")}
+                  <span className="mt-1">
+                    {t("generateAyahImage.downloadPng")}
+                  </span>
                 </span>
               )}
             </button>
@@ -277,6 +278,7 @@ export default function GenerateAyahImage() {
               paletteHue={paletteHue}
               imageTheme={imageTheme}
               showPageNumber={showPageNumber}
+              showWebsiteAttribution={showWebsiteAttribution}
               isLoading={isLoadingAyah}
               previewRef={previewRef}
               onFontReadyChange={() => {}}
@@ -301,6 +303,7 @@ export default function GenerateAyahImage() {
             paletteHue={paletteHue}
             imageTheme={imageTheme}
             showPageNumber={showPageNumber}
+            showWebsiteAttribution={showWebsiteAttribution}
             isLoading={isLoadingAyah}
             previewRef={exportPreviewRef}
             onFontReadyChange={setFontReadyForExport}

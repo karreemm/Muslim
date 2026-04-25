@@ -12,10 +12,16 @@ interface PaletteDefaults {
 }
 
 export function useAyahPalette(defaults: PaletteDefaults) {
-  const [paletteMode, setPaletteMode] = useState<AyahImagePaletteMode>("custom");
-  const [paletteHue, setPaletteHue] = useState(defaults.customHue ?? DEFAULT_CUSTOM_HUE);
-  const [imageTheme, setImageTheme] = useState<"light" | "dark">(defaults.theme);
+  const [paletteMode, setPaletteMode] =
+    useState<AyahImagePaletteMode>("nightModeReader");
+  const [paletteHue, setPaletteHue] = useState(
+    defaults.customHue ?? DEFAULT_CUSTOM_HUE,
+  );
+  const [imageTheme, setImageTheme] = useState<"light" | "dark">(
+    defaults.theme,
+  );
   const [showPageNumber, setShowPageNumber] = useState(false);
+  const [showWebsiteAttribution, setShowWebsiteAttribution] = useState(true);
 
   const selectPalettePreset = useCallback((mode: FixedAyahPaletteId) => {
     setPaletteMode(mode);
@@ -32,8 +38,10 @@ export function useAyahPalette(defaults: PaletteDefaults) {
     paletteHue,
     imageTheme,
     showPageNumber,
+    showWebsiteAttribution,
     setImageTheme,
     setShowPageNumber,
+    setShowWebsiteAttribution,
     selectPalettePreset,
     setCustomPaletteHue,
   };

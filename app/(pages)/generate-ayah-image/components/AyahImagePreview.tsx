@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMosque } from "@fortawesome/free-solid-svg-icons";
 import { generateCSSVars } from "@/utils/paletteEngine";
 import QuranPageRenderer from "@/app/(pages)/read-quran/components/general/QuranPageRenderer";
 import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
@@ -19,6 +21,7 @@ interface AyahImagePreviewProps {
   paletteHue: number;
   imageTheme: "light" | "dark";
   showPageNumber: boolean;
+  showWebsiteAttribution: boolean;
   isLoading: boolean;
   previewRef: React.RefObject<HTMLDivElement>;
   onFontReadyChange: (ready: boolean) => void;
@@ -38,6 +41,7 @@ export default function AyahImagePreview({
   paletteHue,
   imageTheme,
   showPageNumber,
+  showWebsiteAttribution,
   isLoading,
   previewRef,
   onFontReadyChange,
@@ -54,6 +58,7 @@ export default function AyahImagePreview({
 
   const { fontSize, lineHeight } = useContainerFontSize(contentRef);
   const { fontReady, fontLoadTried } = useQuranPageFont(ayahData?.pageNumber);
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
 
   useEffect(() => {
     onFontReadyChange(!ayahData || (fontLoadTried && fontReady));
@@ -206,6 +211,29 @@ export default function AyahImagePreview({
               {isArabic
                 ? "اختر سورة وآية لعرضها هنا"
                 : "Select a surah and ayah to preview here"}
+            </div>
+          )}
+
+          {showWebsiteAttribution && (
+            <div
+              className={`mt-12 border-t pt-3`}
+              style={{
+                borderColor: "hsl(var(--primary) / 0.35)",
+                fontSize: isExportMode ? "15px" : isMobile ? `${fontSize * 0.65}px` : `${fontSize * 0.45}px`,
+              }}
+            >
+              <div dir="ltr" className="flex items-center justify-center gap-2 font-semibold">
+                <FontAwesomeIcon
+                  icon={faMosque}
+                  className="text-[hsl(var(--primary))]/70"
+                  style={{
+                    fontSize: isExportMode ? "15px" : isMobile ? `${fontSize * 0.65}px` : `${fontSize * 0.45}px`,
+                  }}
+                />
+                <span dir="ltr" className="text-[hsl(var(--primary))]/70 mt-1">
+                  https://muslim-one.vercel.app
+                </span>
+              </div>
             </div>
           )}
         </div>

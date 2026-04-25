@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
   faChevronUp,
+  faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   FIXED_AYAH_PALETTES,
@@ -17,22 +18,16 @@ interface ImagePaletteSelectorProps {
   language: string;
   title: string;
   presetsTitle: string;
-  customTitle: string;
-  themeTitle: string;
-  separatorLabel: string;
+  detailsTitle: string;
   pageNumberTitle: string;
-  showLabel: string;
-  hideLabel: string;
-  lightLabel: string;
-  darkLabel: string;
+  websiteAttributionTitle: string;
+  websiteAttributionHelper: string;
   selectedMode: AyahImagePaletteMode;
-  selectedHue: number;
-  imageTheme: "light" | "dark";
   showPageNumber: boolean;
-  onThemeChange: (theme: "light" | "dark") => void;
+  showWebsiteAttribution: boolean;
   onShowPageNumberChange: (show: boolean) => void;
+  onShowWebsiteAttributionChange: (show: boolean) => void;
   onSelectPreset: (mode: FixedAyahPaletteId) => void;
-  onCustomHueChange: (hue: number) => void;
 }
 
 function fixedPaletteSwatchStyle(palette: FixedAyahPalette) {
@@ -45,22 +40,16 @@ export default function ImagePaletteSelector({
   language,
   title,
   presetsTitle,
-  customTitle,
-  themeTitle,
-  separatorLabel,
+  detailsTitle,
   pageNumberTitle,
-  showLabel,
-  hideLabel,
-  lightLabel,
-  darkLabel,
+  websiteAttributionTitle,
+  websiteAttributionHelper,
   selectedMode,
-  selectedHue,
-  imageTheme,
   showPageNumber,
-  onThemeChange,
+  showWebsiteAttribution,
   onShowPageNumberChange,
+  onShowWebsiteAttributionChange,
   onSelectPreset,
-  onCustomHueChange,
 }: ImagePaletteSelectorProps) {
   const defaultCollapsed =
     typeof window !== "undefined" &&
@@ -68,58 +57,25 @@ export default function ImagePaletteSelector({
 
   const [isPaletteCollapsed, setIsPaletteCollapsed] =
     useState(defaultCollapsed);
-  const [isPageNumberCollapsed, setIsPageNumberCollapsed] =
+  const [isDetailsCollapsed, setIsDetailsCollapsed] =
     useState(defaultCollapsed);
 
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  const hueGradient = `linear-gradient(to right,${Array.from(
-    { length: 13 },
-    (_, index) => `hsl(${index * 30},75%,48%)`,
-  ).join(",")})`;
-
-  const getHueFromEvent = (event: MouseEvent | TouchEvent) => {
-    if (!trackRef.current) return selectedHue;
-
-    const rect = trackRef.current.getBoundingClientRect();
-    const clientX =
-      "touches" in event ? event.touches[0].clientX : event.clientX;
-    const percent = Math.max(
-      0,
-      Math.min(1, (clientX - rect.left) / rect.width),
-    );
-    return Math.round(percent * 359);
-  };
-
-  const startDrag = (event: React.MouseEvent | React.TouchEvent) => {
-    event.preventDefault();
-
-    const move = (nativeEvent: MouseEvent | TouchEvent) => {
-      onCustomHueChange(getHueFromEvent(nativeEvent));
-    };
-
-    const up = () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("touchmove", move);
-      window.removeEventListener("mouseup", up);
-      window.removeEventListener("touchend", up);
-    };
-
-    window.addEventListener("mousemove", move);
-    window.addEventListener("touchmove", move, { passive: false });
-    window.addEventListener("mouseup", up);
-    window.addEventListener("touchend", up);
-
-    move(event.nativeEvent as MouseEvent);
-  };
+  const selectedFixedPalette =
+    selectedMode === "custom"
+      ? null
+      : FIXED_AYAH_PALETTES.find((palette) => palette.id === selectedMode);
+  const mainImageColor =
+    selectedFixedPalette?.decorationHex ?? "hsl(var(--primary))";
 
   return (
     <div className="space-y-3">
-      <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
+      <div
+        className={`bg-card/70 rounded-2xl border border-border/50 ${isPaletteCollapsed ? "px-4 sm:px-5 py-2" : "p-4 sm:p-5"}`}
+      >
         <button
           type="button"
           onClick={() => setIsPaletteCollapsed((prev) => !prev)}
-          className="w-full flex items-center justify-between text-base font-bold text-foreground mb-3"
+          className={`w-full flex items-center justify-between text-base font-bold text-foreground ${isPaletteCollapsed ? "mb-0" : "mb-3"}`}
           aria-expanded={!isPaletteCollapsed}
         >
           <span>{title}</span>
@@ -132,9 +88,6 @@ export default function ImagePaletteSelector({
         {!isPaletteCollapsed && (
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-muted-foreground mb-3">
-                {presetsTitle}
-              </p>
               <div className="grid grid-cols-5 gap-3">
                 {FIXED_AYAH_PALETTES.map((palette) => {
                   const isActive = selectedMode === palette.id;
@@ -162,109 +115,57 @@ export default function ImagePaletteSelector({
                 })}
               </div>
             </div>
-
-            <div className="flex items-center gap-3 text-[10px] font-bold tracking-[0.35em] text-muted-foreground mt-8 mb-4">
-              <div className="h-px flex-1 bg-border/60" />
-              <span>{separatorLabel}</span>
-              <div className="h-px flex-1 bg-border/60" />
-            </div>
-
-            <div>
-              <p className="text-xs text-muted-foreground mb-2">
-                {customTitle}
-              </p>
-
-              <div className="mb-4">
-                <p className="text-[11px] font-medium text-muted-foreground mb-2">
-                  {themeTitle}
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onThemeChange("light")}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                      imageTheme === "light"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                    }`}
-                  >
-                    {lightLabel}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onThemeChange("dark")}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                      imageTheme === "dark"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                    }`}
-                  >
-                    {darkLabel}
-                  </button>
-                </div>
-              </div>
-
-              <div
-                ref={trackRef}
-                className="relative h-6 flex items-center cursor-pointer select-none"
-                onMouseDown={startDrag}
-                onTouchStart={startDrag}
-              >
-                <div
-                  className="absolute inset-x-0 h-2 rounded-full"
-                  style={{ background: hueGradient }}
-                />
-                <div
-                  className="absolute w-4 h-4 rounded-full border-2 border-white shadow pointer-events-none"
-                  style={{
-                    left: `calc(${(selectedHue / 359) * 100}% - 8px)`,
-                    background: `hsl(${selectedHue},80%,50%)`,
-                  }}
-                />
-              </div>
-            </div>
           </div>
         )}
       </div>
 
-      <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
+      <div
+        className={`bg-card/70 rounded-2xl border border-border/50 ${isDetailsCollapsed ? "px-4 sm:px-5 py-2" : "p-4 sm:p-5"}`}
+      >
         <button
           type="button"
-          onClick={() => setIsPageNumberCollapsed((prev) => !prev)}
-          className="w-full flex items-center justify-between text-base font-bold text-foreground mb-3"
-          aria-expanded={!isPageNumberCollapsed}
+          onClick={() => setIsDetailsCollapsed((prev) => !prev)}
+          className={`w-full flex items-center justify-between text-base font-bold text-foreground ${isDetailsCollapsed ? "mb-0" : "mb-3"}`}
+          aria-expanded={!isDetailsCollapsed}
         >
-          <span>{pageNumberTitle}</span>
+          <span>{detailsTitle}</span>
           <FontAwesomeIcon
-            icon={isPageNumberCollapsed ? faChevronDown : faChevronUp}
+            icon={isDetailsCollapsed ? faChevronDown : faChevronUp}
             className="text-xs text-muted-foreground"
           />
         </button>
 
-        {!isPageNumberCollapsed && (
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => onShowPageNumberChange(true)}
-              className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                showPageNumber
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-              }`}
-            >
-              {showLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => onShowPageNumberChange(false)}
-              className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                !showPageNumber
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-              }`}
-            >
-              {hideLabel}
-            </button>
+        {!isDetailsCollapsed && (
+          <div className="space-y-3 mt-4">
+            <label className="flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/40 px-3 py-2">
+              <span className="text-sm text-foreground">{pageNumberTitle}</span>
+              <input
+                type="checkbox"
+                checked={showPageNumber}
+                onChange={(event) =>
+                  onShowPageNumberChange(event.target.checked)
+                }
+                className="h-4 w-4 accent-primary"
+              />
+            </label>
+
+            <label className="flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/40 px-3 py-2">
+              <span className="inline-flex items-center gap-2 text-sm text-foreground">
+                {websiteAttributionTitle}
+              </span>
+              <input
+                type="checkbox"
+                checked={showWebsiteAttribution}
+                onChange={(event) =>
+                  onShowWebsiteAttributionChange(event.target.checked)
+                }
+                className="h-4 w-4 accent-primary"
+              />
+            </label>
+
+            <p className="rounded-xl border px-3 py-2 text-xs leading-5 text-primary border-primary/50">
+              {websiteAttributionHelper}
+            </p>
           </div>
         )}
       </div>
