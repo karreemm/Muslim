@@ -13,6 +13,7 @@ import { useWordRangeSelection } from "@/hooks/generateAyahImage/Usewordrangesel
 import type { QuranVerse } from "@/hooks/readQuran";
 import { TafseerModal } from "@/components/modals/TafseerModal";
 import { TranslationModal } from "@/components/modals/TranslationModal";
+import { useNavigateToAyahImage } from "@/hooks/generateAyahImage";
 
 interface SurahHeaderInfo {
   surahNumber: number;
@@ -130,8 +131,23 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       handleOpenTranslation,
     } = useAyahInteraction(verses);
 
+    const navigateToAyahImage = useNavigateToAyahImage();
+
     const isWordRangeSelectionEnabled = !!wordRangeSelection?.enabled;
     const allowAyahInteraction = !imageMode && !isWordRangeSelectionEnabled;
+
+    const handleConvertToImage = useMemo(() => {
+      if (imageMode || !allowAyahInteraction) return undefined;
+      return () => {
+        navigateToAyahImage(selectedSurahNumber, selectedAyahNumber);
+      };
+    }, [
+      selectedSurahNumber,
+      selectedAyahNumber,
+      navigateToAyahImage,
+      imageMode,
+      allowAyahInteraction,
+    ]);
 
     const totalSelectableWords = useMemo(
       () =>
@@ -721,6 +737,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             onSave={handleSaveAyah}
             onOpenTafseer={handleOpenTafseer}
             onOpenTranslation={handleOpenTranslation}
+            onConvertToImage={handleConvertToImage}
             surahNameAr={selectedSurahNameAr}
             surahNameEn={selectedSurahNameEn}
           />

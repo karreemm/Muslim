@@ -6,6 +6,7 @@ import {
   faHeadphones,
   faBook,
   faLanguage,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -17,6 +18,7 @@ import { useTheme } from "@/context/general/ThemeContext";
 import { highlightText } from "./highlightText";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import AudioPlayerReciterDropdown from "@/components/general/audio-player/AudioPlayerReciterDropdown";
+import { useNavigateToAyahImage } from "@/hooks/generateAyahImage";
 
 interface AyahSearchCardProps {
   ayah: SearchAyah;
@@ -28,8 +30,8 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
     const { language } = useLanguage();
     const { t } = useTranslation();
     const { theme } = useTheme();
+    const navigateToAyahImage = useNavigateToAyahImage();
     const isArabic = language === "ar";
-    const isDark = theme === "dark";
     const {
       playSurahAyah,
       setReciterId,
@@ -70,6 +72,10 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
       selectedReciter,
       setReciterId,
     ]);
+
+    const handleConvertToImage = useCallback(() => {
+      navigateToAyahImage(ayah.surah.number, ayah.numberInSurah);
+    }, [navigateToAyahImage, ayah.surah.number, ayah.numberInSurah]);
 
     const handleReciterChange = useCallback(
       (reciterId: string) => {
@@ -147,9 +153,9 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               >
                 {ayah.matchIntervals && ayah.matchIntervals.length > 0
                   ? highlightText({
-                    text: ayah.text,
-                    matchIntervals: ayah.matchIntervals,
-                  })
+                      text: ayah.text,
+                      matchIntervals: ayah.matchIntervals,
+                    })
                   : ayah.text}
               </p>
             </div>
@@ -157,10 +163,11 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={handleListenClick}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${isCurrentAyahPlaying
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                  isCurrentAyahPlaying
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                     : "bg-secondary/50 text-foreground hover:bg-primary hover:text-primary-foreground border border-border/30 hover:border-primary/30"
-                  }`}
+                }`}
               >
                 <FontAwesomeIcon icon={faHeadphones} />
                 <span>{t("searchAyah.listen")}</span>
@@ -197,6 +204,15 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
               >
                 <FontAwesomeIcon icon={faLanguage} />
                 <span>{t("searchAyah.translation")}</span>
+              </button>
+
+              <button
+                onClick={handleConvertToImage}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm bg-secondary/50 text-foreground 
+                  border border-border/30 hover:border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              >
+                <FontAwesomeIcon icon={faImage} />
+                <span>{t("searchAyah.convertToImage")}</span>
               </button>
 
               <div

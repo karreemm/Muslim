@@ -11,6 +11,7 @@ import {
   faSpinner,
   faBook,
   faLanguage,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -25,8 +26,9 @@ interface AyahPopoverProps {
   position: { x: number; y: number };
   onClose: () => void;
   onSave: () => void;
-  onOpenTafseer: () => void;       
-  onOpenTranslation: () => void;   
+  onOpenTafseer: () => void;
+  onOpenTranslation: () => void;
+  onConvertToImage?: () => void;
   surahNameAr?: string;
   surahNameEn?: string;
 }
@@ -41,6 +43,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
     onSave,
     onOpenTafseer,
     onOpenTranslation,
+    onConvertToImage,
   }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
@@ -93,15 +96,22 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
             </button>
           </div>
 
-          <div className={`p-1.5 sm:p-2 grid gap-1 ${isMobile ? "grid-cols-2" : "grid-cols-1"}`}>
+          <div
+            className={`p-1.5 sm:p-2 grid gap-1 ${isMobile ? "grid-cols-2" : "grid-cols-1"}`}
+          >
             <button
               onClick={handleSaveClick}
               disabled={isSaved}
               className={`w-full px-2 py-2 sm:px-4 sm:py-2.5 flex items-center gap-2 rounded-lg sm:rounded-xl transition-all duration-200
               ${isSaved ? "bg-accent/10 text-accent cursor-not-allowed" : "hover:bg-secondary text-foreground hover:text-primary"}`}
             >
-              <div className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg ${isSaved ? "bg-accent/20" : "bg-secondary/50"}`}>
-                <FontAwesomeIcon icon={isSaved ? faCheck : faBookmark} className="text-xs sm:text-sm" />
+              <div
+                className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg ${isSaved ? "bg-accent/20" : "bg-secondary/50"}`}
+              >
+                <FontAwesomeIcon
+                  icon={isSaved ? faCheck : faBookmark}
+                  className="text-xs sm:text-sm"
+                />
               </div>
               <span className="flex-1 text-start font-medium text-xs sm:text-sm truncate">
                 {isSaved ? t("common.saved") : t("readQuran.popover.saveAyah")}
@@ -121,7 +131,9 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                 />
               </div>
               <span className="flex-1 text-start font-medium text-xs sm:text-sm truncate">
-                {isLoadingAudio ? t("common.loading") : t("readQuran.popover.listenAyah")}
+                {isLoadingAudio
+                  ? t("common.loading")
+                  : t("readQuran.popover.listenAyah")}
               </span>
               {isPlaying && (
                 <div className="flex gap-0.5 items-end h-3 sm:h-4">
@@ -129,7 +141,11 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                     <div
                       key={delay}
                       className="w-0.5 bg-primary animate-pulse"
-                      style={{ height: "100%", animationDelay: `${delay}s`, animationDuration: "0.6s" }}
+                      style={{
+                        height: "100%",
+                        animationDelay: `${delay}s`,
+                        animationDuration: "0.6s",
+                      }}
                     />
                   ))}
                 </div>
@@ -155,12 +171,33 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
               hover:bg-secondary text-foreground hover:text-primary"
             >
               <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg bg-secondary/50">
-                <FontAwesomeIcon icon={faLanguage} className="text-xs sm:text-sm" />
+                <FontAwesomeIcon
+                  icon={faLanguage}
+                  className="text-xs sm:text-sm"
+                />
               </div>
               <span className="flex-1 text-start font-medium text-xs sm:text-sm truncate">
                 {t("readQuran.popover.viewTranslation")}
               </span>
             </button>
+
+            {onConvertToImage && (
+              <button
+                onClick={onConvertToImage}
+                className="w-full px-2 py-2 sm:px-4 sm:py-2.5 flex items-center gap-2 rounded-lg sm:rounded-xl transition-all duration-200
+                hover:bg-secondary text-foreground hover:text-primary"
+              >
+                <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg bg-secondary/50">
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    className="text-xs sm:text-sm"
+                  />
+                </div>
+                <span className="flex-1 text-start font-medium text-xs sm:text-sm truncate">
+                  {t("readQuran.popover.convertToImage")}
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </div>,

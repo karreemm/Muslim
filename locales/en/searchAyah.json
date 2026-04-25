@@ -18,6 +18,7 @@
   "listen": "Listen",
   "tafseer": "Tafseer",
   "translation": "Translation",
+  "convertToImage": "Convert to Image",
   "searchButton": "Search",
   "showingPage": "Showing page {{current}} of {{total}}",
   "previous": "Previous",

@@ -18,6 +18,7 @@
   "listen": "استمع",
   "tafseer": "التفسير",
   "translation": "الترجمة",
+  "convertToImage": "تحويل لصورة",
   "searchButton": "بحث",
   "showingPage": "عرض صفحة {{current}} من {{total}}",
   "previous": "السابق",

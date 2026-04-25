@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { toPng } from "html-to-image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +21,7 @@ export default function GenerateAyahImage() {
   const { hue } = usePalette();
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
 
   const previewRef = useRef<HTMLDivElement>(null);
   const exportPreviewRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,22 @@ export default function GenerateAyahImage() {
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState("");
   const [headerReadyForExport, setHeaderReadyForExport] = useState(false);
+
+  const initialSurah = (() => {
+    const param = searchParams.get("surah");
+    if (!param) return undefined;
+    const num = parseInt(param, 10);
+    if (isNaN(num) || num < 1 || num > 114) return undefined;
+    return num;
+  })();
+
+  const initialAyah = (() => {
+    const param = searchParams.get("ayah");
+    if (!param) return undefined;
+    const num = parseInt(param, 10);
+    if (isNaN(num) || num < 1 || num > 6236) return undefined;
+    return num;
+  })();
 
   useEffect(() => {
     headerReadyForExportRef.current = headerReadyForExport;
@@ -92,6 +110,8 @@ export default function GenerateAyahImage() {
   } = useGenerateAyahImage(language, {
     customHue: hue,
     theme,
+    initialSurah,
+    initialAyah,
   });
 
   const handleExport = async () => {

@@ -15,6 +15,8 @@ import type { AyahImageData } from "@/app/(pages)/generate-ayah-image/types";
 interface GenerateAyahImageDefaults {
   customHue: number;
   theme: "light" | "dark";
+  initialSurah?: number;
+  initialAyah?: number;
 }
 
 export function useGenerateAyahImage(
@@ -44,7 +46,10 @@ export function useGenerateAyahImage(
     setSpecificPartEnabled,
     setSpecificPartStartWordIndex,
     setSpecificPartEndWordIndex,
-  } = useAyahSelection(pendingAyahData?.totalSelectableWords ?? 0);
+  } = useAyahSelection(pendingAyahData?.totalSelectableWords ?? 0, {
+    initialSurah: defaults.initialSurah,
+    initialAyah: defaults.initialAyah,
+  });
 
   const {
     surahQuery,

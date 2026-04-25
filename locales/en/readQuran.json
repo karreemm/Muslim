@@ -4,7 +4,8 @@
     "listenAyah": "Listen to Ayah",
     "selectReciter": "Select Reciter",
     "viewTafseer": "Tafseer",
-    "viewTranslation": "Translation"
+    "viewTranslation": "Translation",
+    "convertToImage": "Convert to Image"
   },
   "tafseer": {
     "title": "Ayah Tafseer",

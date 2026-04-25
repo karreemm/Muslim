@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useState } from "react";
+import { startTransition, useCallback, useMemo, useState } from "react";
 import { surahNames } from "@/constants/quranData";
 
 export interface AyahSelectionState {
@@ -35,11 +35,43 @@ const RESET_PART_FIELDS = {
   specificPartEndWordIndex: null,
 };
 
-export function useAyahSelection(totalSelectableWords: number) {
+interface AyahSelectionDefaults {
+  initialSurah?: number;
+  initialAyah?: number;
+}
+
+export function useAyahSelection(
+  totalSelectableWords: number,
+  defaults?: AyahSelectionDefaults,
+) {
+  const createInitialState = useMemo((): AyahSelectionState => {
+    const surah = defaults?.initialSurah;
+    const ayah = defaults?.initialAyah;
+
+    let validSurah = 1;
+    if (surah !== undefined && surah >= 1 && surah <= 114) {
+      validSurah = surah;
+    }
+
+    let validAyah = 1;
+    if (ayah !== undefined) {
+      const surahData = surahNames.find((s) => s.number === validSurah);
+      if (surahData && ayah >= 1 && ayah <= surahData.ayahs) {
+        validAyah = ayah;
+      }
+    }
+
+    return {
+      ...INITIAL_SELECTION,
+      surahNumber: validSurah,
+      ayahNumber: validAyah,
+    };
+  }, [defaults?.initialSurah, defaults?.initialAyah]);
+
   const [pendingSelection, setPendingSelection] =
-    useState<AyahSelectionState>(INITIAL_SELECTION);
+    useState<AyahSelectionState>(createInitialState);
   const [appliedSelection, setAppliedSelection] =
-    useState<AyahSelectionState>(INITIAL_SELECTION);
+    useState<AyahSelectionState>(createInitialState);
 
   const selectSurah = useCallback((surahNumber: number) => {
     const nextSurah = surahNames.find((s) => s.number === surahNumber);
@@ -135,7 +167,8 @@ export function useAyahSelection(totalSelectableWords: number) {
           specificPartEnabled: true,
           specificPartStartWordIndex: prev.committedPartStartWordIndex ?? 0,
           specificPartEndWordIndex:
-            prev.committedPartEndWordIndex ?? Math.max(0, totalSelectableWords - 1),
+            prev.committedPartEndWordIndex ??
+            Math.max(0, totalSelectableWords - 1),
         };
       });
     },

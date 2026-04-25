@@ -4,7 +4,8 @@
     "listenAyah": "استمع للآية",
     "selectReciter": "اختر القارئ",
     "viewTafseer": "التفسير",
-    "viewTranslation": "الترجمة"
+    "viewTranslation": "الترجمة",
+    "convertToImage": "تحويل لصورة"
   },
   "tafseer": {
     "title": "تفسير الآية",
