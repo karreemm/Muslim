@@ -19,7 +19,7 @@ export default function ToolsSection({ t }: ToolsSectionProps) {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 relative z-10">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 relative z-10">
         {secondaryTools.map((tool) => (
           <Link
             key={tool.href}

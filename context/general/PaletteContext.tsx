@@ -25,13 +25,13 @@ interface PaletteContextType {
 export const PaletteContext = createContext<PaletteContextType | null>(null);
 
 export default function PaletteContextProvider({ children }: { children: ReactNode }) {
-  const [palette, setPaletteState] = useState<PaletteMode>("teal");
-  const [hue, setHue] = useState<number>(174);
+  const [palette, setPaletteState] = useState<PaletteMode>("gold");
+  const [hue, setHue] = useState<number>(38);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const storedMode   = (localStorage.getItem("palette") as PaletteMode) ?? "teal";
-    const storedHue    = parseInt(localStorage.getItem("paletteHue") ?? "174", 10);
+    const storedMode   = (localStorage.getItem("palette") as PaletteMode) ?? "gold";
+    const storedHue    = parseInt(localStorage.getItem("paletteHue") ?? "38", 10);
     const isDark       = document.documentElement.classList.contains("dark");
 
     const resolvedHue  = resolveHue(storedMode, storedMode === "custom" ? storedHue : undefined);
@@ -74,7 +74,7 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
   if (!mounted) {
     return (
       <PaletteContext.Provider
-        value={{ palette: "teal", hue: 174, setPalette: () => {}, isHydrated: false }}
+        value={{ palette: "gold", hue: 38, setPalette: () => {}, isHydrated: false }}
       >
         {children}
       </PaletteContext.Provider>

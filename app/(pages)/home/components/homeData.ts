@@ -8,6 +8,7 @@ import {
   faBookmark,
   faStar,
   faMoon,
+  faImage
 } from "@fortawesome/free-solid-svg-icons";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
@@ -90,4 +91,10 @@ export const secondaryTools: HomeTool[] = [
     title: "tools.favourites.title",
     desc: "tools.favourites.desc",
   },
+  {
+    href: "/ayah-to-image",
+    icon: faImage,
+    title: "tools.ayahToImage.title",
+    desc: "tools.ayahToImage.desc",
+  }
 ];

@@ -13,7 +13,7 @@ interface PaletteDefaults {
 
 export function useAyahPalette(defaults: PaletteDefaults) {
   const [paletteMode, setPaletteMode] =
-    useState<AyahImagePaletteMode>("nightModeReader");
+    useState<AyahImagePaletteMode>("softContemplation");
   const [paletteHue, setPaletteHue] = useState(
     defaults.customHue ?? DEFAULT_CUSTOM_HUE,
   );

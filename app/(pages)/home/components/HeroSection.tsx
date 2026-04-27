@@ -54,10 +54,6 @@ export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
           >
             <FontAwesomeIcon icon={faBookOpen} className="text-xs" />
             <span>{t("home.hero.primaryCta")}</span>
-            <FontAwesomeIcon
-              icon={arrowIcon}
-              className="transition-transform group-hover:translate-x-1"
-            />
           </Link>
           <Link
             href="/listen-quran"

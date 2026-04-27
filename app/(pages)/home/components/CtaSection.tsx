@@ -30,10 +30,6 @@ export default function CtaSection({ t, arrowIcon }: CtaSectionProps) {
           >
             <FontAwesomeIcon icon={faBookOpen} className="text-xs" />
             <span>{t("home.cta.primary")}</span>
-            <FontAwesomeIcon
-              icon={arrowIcon}
-              className="text-xs transition-transform group-hover:translate-x-1"
-            />
           </Link>
           <Link
             href="/search-ayah"

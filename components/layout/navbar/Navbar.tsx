@@ -16,7 +16,8 @@ import {
   faClock,
   faSeedling,
   faSearch,
-  faImage,  
+  faImage,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
@@ -45,14 +46,6 @@ const utilityLinks = (t: (key: string) => string) => [
   { href: "/sadaqat", label: t("navbar.yourSadaqat"), icon: faSeedling },
 ];
 
-const mobileNavLinks = (t: (key: string) => string) => [
-  { href: "/", label: t("navbar.home"), icon: faHouse, exactMatch: true },
-  ...quranLinks(t),
-  { href: "/read-hadith", label: t("navbar.hadith"), icon: faBookOpen },
-  { href: "/azkar", label: t("navbar.azkar"), icon: faBookOpen },
-  ...toolsLinks(t),
-];
-
 export default function Navbar() {
   const { t } = useTranslation();
   const { language } = useLanguage();
@@ -61,6 +54,10 @@ export default function Navbar() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
+  const [expandedMobileSections, setExpandedMobileSections] = useState<Record<string, boolean>>({
+    quran: false,
+    ibadat: false,
+  });
   const lastScrollY = useRef(0);
 
   const isActive = (path: string, exact = false) => {
@@ -75,6 +72,13 @@ export default function Navbar() {
 
   const isToolsActive = () =>
     toolsLinks(t).some((route) => pathname.startsWith(route.href));
+
+  useEffect(() => {
+    setExpandedMobileSections({
+      quran: isQuranActive(),
+      ibadat: isToolsActive(),
+    });
+  }, [pathname]);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -111,10 +115,37 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleSection = (section: string) => {
+    setExpandedMobileSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const quranRoutes = quranLinks(t);
   const toolsRoutes = toolsLinks(t);
   const utilityRoutes = utilityLinks(t);
-  const mobileRoutes = mobileNavLinks(t);
+
+  const mobileLinkClass = (active: boolean) =>
+    `flex items-center gap-3 rounded-xl px-4 py-2.5 text-base font-medium transition-all duration-200 ${
+      active
+        ? "bg-primary/10 text-primary border border-primary/20"
+        : "text-foreground/80 hover:bg-secondary/50 hover:text-primary border border-transparent"
+    }`;
+
+  const nestedLinkClass = (active: boolean) =>
+    `flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-colors duration-200 ${
+      active
+        ? "text-primary"
+        : "text-foreground/70 hover:text-primary"
+    }`;
+
+  const iconBoxClass = (active: boolean) =>
+    `flex items-center justify-center w-8 h-8 rounded-lg ${
+      active ? "bg-primary/20" : "bg-secondary/50"
+    }`;
+
+  const nestedIconBoxClass = "flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/50";
 
   return (
     <div className="w-full flex justify-center" ref={navbarContainerRef}>
@@ -139,6 +170,7 @@ export default function Navbar() {
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             <NavDropdown
               label={t("navbar.quran")}
@@ -156,7 +188,7 @@ export default function Navbar() {
                   : "border-transparent text-foreground/80 hover:border-border/60 hover:bg-secondary/50 hover:text-primary"
               }`}
             >
-              <span className="">{t("navbar.hadith")}</span>
+              <span>{t("navbar.hadith")}</span>
             </Link>
 
             <Link
@@ -167,7 +199,7 @@ export default function Navbar() {
                   : "border-transparent text-foreground/80 hover:border-border/60 hover:bg-secondary/50 hover:text-primary"
               }`}
             >
-              <span className="">{t("navbar.azkar")}</span>
+              <span>{t("navbar.azkar")}</span>
             </Link>
 
             <NavDropdown
@@ -227,45 +259,139 @@ export default function Navbar() {
               ${language === "ar" ? "text-right" : "text-left"}`}
           >
             <div className="max-w-7xl mx-auto space-y-1">
-              {mobileRoutes.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-all duration-200
-                  ${
-                    isActive(href)
+              {/* Home */}
+              <Link
+                href="/"
+                className={mobileLinkClass(isActive("/", true))}
+              >
+                <div className={iconBoxClass(isActive("/", true))}>
+                  <FontAwesomeIcon icon={faHouse} className="text-sm" />
+                </div>
+                <span>{t("navbar.home")}</span>
+              </Link>
+
+              <div className="pt-1">
+                <button
+                  onClick={() => toggleSection("quran")}
+                  className={`w-full flex items-center justify-between rounded-xl px-4 py-2.5 text-base font-semibold transition-all duration-200 ${
+                    isQuranActive()
                       ? "bg-primary/10 text-primary border border-primary/20"
-                      : "text-foreground/80 hover:bg-secondary/50 hover:text-primary"
+                      : "text-foreground/90 hover:bg-secondary/50 hover:text-primary border border-transparent"
                   }`}
                 >
-                  <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href, true) ? "bg-primary/20" : "bg-secondary/50"}`}
-                  >
-                    <FontAwesomeIcon icon={icon} className="text-sm" />
+                  <div className="flex items-center gap-3">
+                    <div className={iconBoxClass(isQuranActive())}>
+                      <FontAwesomeIcon icon={faBookOpen} className="text-sm" />
+                    </div>
+                    <span>{t("navbar.quran")}</span>
                   </div>
-                  <span className="">{label}</span>
-                </Link>
-              ))}
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`text-xs transition-transform duration-200 ${
+                      expandedMobileSections.quran ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-              <div className="h-px bg-border/50 my-1" />
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    expandedMobileSections.quran ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="space-y-1 pl-4 border-l-2 border-primary/10 ml-6">
+                    {quranRoutes.map(({ href, label, icon }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        className={nestedLinkClass(isActive(href))}
+                      >
+                        <div className={nestedIconBoxClass}>
+                          <FontAwesomeIcon icon={icon} className="text-sm" />
+                        </div>
+                        <span>{label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/read-hadith"
+                className={mobileLinkClass(isActive("/read-hadith"))}
+              >
+                <div className={iconBoxClass(isActive("/read-hadith"))}>
+                  <FontAwesomeIcon icon={faBookOpen} className="text-sm" />
+                </div>
+                <span>{t("navbar.hadith")}</span>
+              </Link>
+
+              <Link
+                href="/azkar"
+                className={mobileLinkClass(isActive("/azkar"))}
+              >
+                <div className={iconBoxClass(isActive("/azkar"))}>
+                  <FontAwesomeIcon icon={faBookOpen} className="text-sm" />
+                </div>
+                <span>{t("navbar.azkar")}</span>
+              </Link>
+
+              <div className="pt-1">
+                <button
+                  onClick={() => toggleSection("ibadat")}
+                  className={`w-full flex items-center justify-between rounded-xl px-4 py-2.5 text-base font-semibold transition-all duration-200 ${
+                    isToolsActive()
+                      ? "bg-primary/10 text-primary border border-primary/20"
+                      : "text-foreground/90 hover:bg-secondary/50 hover:text-primary border border-transparent"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={iconBoxClass(isToolsActive())}>
+                      <FontAwesomeIcon icon={faListOl} className="text-sm" />
+                    </div>
+                    <span>{t("navbar.tools")}</span>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`text-xs transition-transform duration-200 ${
+                      expandedMobileSections.ibadat ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    expandedMobileSections.ibadat ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="space-y-1 pl-4 border-l-2 border-primary/10 ml-6">
+                    {toolsRoutes.map(({ href, label, icon }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        className={nestedLinkClass(isActive(href))}
+                      >
+                        <div className={nestedIconBoxClass}>
+                          <FontAwesomeIcon icon={icon} className="text-sm" />
+                        </div>
+                        <span>{label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-px bg-border/50 my-2" />
 
               {utilityRoutes.map(({ href, label, icon }) => (
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-all duration-200
-                    ${
-                      isActive(href)
-                        ? "bg-primary/10 text-primary border border-primary/20"
-                        : "text-foreground/80 hover:bg-secondary/50 hover:text-primary"
-                    }`}
+                  className={mobileLinkClass(isActive(href))}
                 >
-                  <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-lg ${isActive(href) ? "bg-primary/20" : "bg-secondary/50"}`}
-                  >
+                  <div className={iconBoxClass(isActive(href))}>
                     <FontAwesomeIcon icon={icon} className="text-sm" />
                   </div>
-                  <span className="">{label}</span>
+                  <span>{label}</span>
                 </Link>
               ))}
             </div>
