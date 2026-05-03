@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 110" width="700" height="110">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700');
+      .bismillah {
+        font-family: 'Scheherazade New', 'Traditional Arabic', 'Arabic Typesetting', serif;
+        font-size: 52px;
+        font-weight: 700;
+        fill: #C9A84C;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+    </style>
+  </defs>
+  <text class="bismillah" x="350" y="60">﷽</text>
+</svg>
