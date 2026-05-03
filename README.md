@@ -8,7 +8,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
-**A continuous charity (Sadaqah Jariyah) progressive web application designed to help Muslims around the world get closer to Allah.**
+**A continuous charity (Sadaqah Jariyah) web application designed to help Muslims get closer to Allah.**
 
 </div>
 
@@ -16,7 +16,7 @@
 
 ## 📖 About The Project
 
-Muslim Website is a comprehensive Islamic resource platform that brings together the Holy Quran, authentic Hadiths, daily Azkar, prayer times, and essential Islamic tools in one beautifully designed, user-friendly interface. Built as a Sadaqah Jariyah (continuous charity).
+Muslim Website is an Islamic platform that brings together the Holy Quran, authentic Hadiths, daily Azkar, prayer times, and essential Islamic tools in one beautifully designed, user-friendly interface. Built as a Sadaqah Jariyah (continuous charity).
 
 ---
 
@@ -25,14 +25,12 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 ### 📖 Read the Holy Quran
 
 - Browse by **Surah** (1-114) or **Juz** (1-30) for flexible navigation
-- Beautiful **Uthmani script** optimized for Quranic text
+- Beautiful **Uthmani script** for Quranic text
 - **Tafseer (Interpretation)** - Access multiple tafseer books in Arabic
 - **Save Ayahs** - Mark verses to continue reading later
 - **Bookmark favorite Surahs** for quick access
 - **Copy & Share** - Easily share Quranic verses
 - Smooth scrolling with ayah highlighting
-- Full-screen reading mode
-- Ayah-by-ayah navigation
 
 ### 🎧 Listen to the Holy Quran
 
@@ -55,7 +53,14 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 - **Audio controls** - Play, pause, seek, and skip
 - **Download audio** - Save for offline listening
 - **Favorite Surahs** - Quick access to your preferred recitations
-- Browse by reciter or Surah
+
+### 🖼️ Ayah to image
+
+- **Select an Ayah** from selected ayahs or select in manually
+- **Add more ayahs** before or after it
+- **Select specific part** using simple drag and drop cursors 
+- **choose the image color** from 10 predefined palettes
+- **Download** and share it as you want 
 
 ### 📜 Read Authentic Hadiths
 
@@ -72,7 +77,6 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 - **Browse by book and chapter**
 - **Search hadiths** in English or Arabic
 - **Bookmark favorite hadiths** for quick reference
-- Hadith grading and reference information
 
 ### 🕋 Daily Azkar & Duas
 
@@ -84,30 +88,21 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
   - **After Prayer Azkar** (أذكار الصلاة) - 9 post-salah duas
   - **Quranic Duas** (أدعية قرآنية) - 26 Quranic supplications
   - **Prophets' Duas** (أدعية الأنبياء) - 13 prophetic supplications
-- Full Arabic text with proper diacritics
 - Repetition counter for each zikr
 - **Favorite Azkar** - Save your most-used supplications
-- Share individual azkar
 
 ### 🕌 Prayer Times
 
-- **Accurate prayer times** based on your location
-- Shows all **5 daily prayers**: Fajr, Dhuhr, Asr, Maghrib, Isha
-- **Automatic location detection**
-- **Egyptian General Authority** calculation method
+- **Accurate prayer times**
 - **Countdown to next prayer** with live updates
 - Hijri and Gregorian calendar dates
 
 ### ⭐ Favorites & Saved Items
 
-- **Saved Ayahs** - Bookmark Quranic verses with:
-  - Surah name and ayah number
-  - Full Arabic text
-  - Quick navigation back to the ayah
-  - Delete and manage saved items
-- **Favorite Surahs** - Quick access to your most-listened Surahs with specific reciters
+- **Saved Ayahs** - Bookmark Quranic verses
+- **Favorite Surahs** - Quick access to your favourite surahs
 - **Favorite Hadiths** - Save important hadiths for quick reference
-- **Favorite Azkar** - Mark your most-used supplications
+- **Favorite Azkar** - Mark your favourite zekr
 - Easy management and deletion of saved items
 
 ### 💖 Sadaqa Jariya (Ongoing Charity)
@@ -115,11 +110,11 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 - Create a **personalized page** with:
   - Deceased person's name
   - Selected Quranic chapters (Al-Fatihah, Yaseen, etc.)
-  - Beautiful funeral duas
+  - Beautiful duas
   - Shareable link to allow others to participate
 - **Share memorial pages** with family and friends
 
-### 📿 Tasbeeh Counter (Digital Dhikr)
+### 📿 Tasbeeh Counter
 
 - **Digital counter** for daily remembrance and dhikr
 - **Reset counter** when needed
@@ -127,6 +122,7 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 
 ### 🎨 Additional Features
 
+- **Palette Selector** - Customize the platform with your favourite color
 - **Theme Toggle** - Switch between light and dark modes
 - **Language Switcher** - Seamless Arabic/English translation
 - **Share Functionality** - Share content via social media or copy link
@@ -152,10 +148,9 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 
 ### Frontend
 
-- **[Next.js 14.2](https://nextjs.org/)**
-- **[TypeScript 5.0](https://www.typescriptlang.org/)**
-- **[Tailwind CSS 4.1](https://tailwindcss.com/)**
-- **[Headless UI](https://headlessui.com/)**
+- **[Next.js](https://nextjs.org/)**
+- **[TypeScript](https://www.typescriptlang.org/)**
+- **[Tailwind CSS](https://tailwindcss.com/)**
 
 ### APIs & Services
 
@@ -165,7 +160,6 @@ Muslim Website is a comprehensive Islamic resource platform that brings together
 - **[Hadith API](https://hadithapi.com/)** - Authentic hadith collections (API key required)
 - **[Azkar API](https://github.com/nawafalqari/azkar-api)** - Daily azkar and duas
 - **[Islamic Network CDN](https://cdn.islamic.network/)** - High-quality Quran audio
-- **[IP-API](http://ip-api.com/)** - IP-based geolocation
 
 ---
 

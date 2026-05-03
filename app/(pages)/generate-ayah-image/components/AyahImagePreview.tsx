@@ -299,7 +299,7 @@ export default function AyahImagePreview({
               >
                 <FontAwesomeIcon
                   icon={faMosque}
-                  className="text-[hsl(var(--primary))]/70"
+                  className="text-[hsl(var(--primary))]/30"
                   style={{
                     fontSize: isExportMode
                       ? "15px"
@@ -308,7 +308,7 @@ export default function AyahImagePreview({
                         : `${fontSize * 0.45}px`,
                   }}
                 />
-                <span dir="ltr" className="text-[hsl(var(--primary))]/70 mt-1">
+                <span dir="ltr" className="text-[hsl(var(--primary))]/30 mt-1">
                   https://muslim-one.vercel.app
                 </span>
               </div>
