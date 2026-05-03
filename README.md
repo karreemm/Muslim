@@ -1,222 +1,329 @@
 <div align="center">
 
-# 🌙 Muslim Website
+<br />
 
-### _Get Closer To Allah_
+<img src="./bismillah.png" alt="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" width="500" />
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=vercel)](https://muslim-one.vercel.app/)
-[![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+<br />
 
-**A continuous charity (Sadaqah Jariyah) web application designed to help Muslims get closer to Allah.**
+# 🌙 Muslim — Get Closer To Allah
+
+**An open-source Islamic platform bringing together Quran, Hadith, Azkar, Prayer Times, and more — built as a Sadaqah Jariyah.**
+
+<br />
+
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit-success?style=flat-square)](https://muslim-one.vercel.app/)
+&nbsp;
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+&nbsp;
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
+<br />
+
+<img width="80%" src="./public/screenshot.png" alt="Muslim App — Quran, Hadith, Azkar & Prayer Times" />
+
+<br /><br />
 
 </div>
 
 ---
 
-## 📖 About The Project
+## 📋 Table of Contents
 
-Muslim Website is an Islamic platform that brings together the Holy Quran, authentic Hadiths, daily Azkar, prayer times, and essential Islamic tools in one beautifully designed, user-friendly interface. Built as a Sadaqah Jariyah (continuous charity).
+- [About The Project](#-about-the-project)
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+  - [Database Setup](#database-setup)
+- [API Documentation](#-api-documentation)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🕌 About The Project
+
+**Muslim** is a comprehensive, open-source Islamic web platform designed to support Muslims in their daily worship and spiritual journey. It is built as a **Sadaqah Jariyah** - a continuous act of charity.
+
+The platform consolidates essential Islamic resources — the Holy Quran with audio and tafseer, authenticated Hadith collections, daily Azkar, prayer times, and more — into a single, beautifully designed experience.
+
+> _"When a person dies, his deeds come to an end except for three: Sadaqah Jariyah (ongoing charity), knowledge that is benefited from, and a righteous child who prays for him."_
+> — **Prophet Muhammad ﷺ** _(Sahih Muslim)_
+
+---
+
+## 🌐 Live Demo
+
+**[muslim-one.vercel.app](https://muslim-one.vercel.app/)**
 
 ---
 
 ## ✨ Features
 
-### 📖 Read the Holy Quran
+<details>
+<summary><strong>📖 Holy Quran — Reading</strong></summary>
+<br />
 
-- Browse by **Surah** (1-114) or **Juz** (1-30) for flexible navigation
-- Beautiful **Uthmani script** for Quranic text
-- **Tafseer (Interpretation)** - Access multiple tafseer books in Arabic
-- **Save Ayahs** - Mark verses to continue reading later
-- **Bookmark favorite Surahs** for quick access
-- **Copy & Share** - Easily share Quranic verses
-- Smooth scrolling with ayah highlighting
+- Browse by **Surah** (1–114) or **Juz** (1–30)
+- Authentic **Uthmani script** rendering
+- **Tafseer** — Multiple Arabic commentary books
+- **Saved Ayahs** — Bookmark verses to continue reading later
+- **Favorite Surahs** for quick access
+- **Copy & Share** Quranic verses with ease
+- Smooth scrolling with ayah-level highlighting
 
-### 🎧 Listen to the Holy Quran
+</details>
 
-- Choose from **14 world-renowned reciters**:
-  - Abdullah Basfar (عبد الله بصفر)
-  - Abdurrahman Al-Sudais (عبدالرحمن السديس)
-  - Abu Bakr Ash-Shaatree (أبو بكر الشاطري)
-  - Ahmed Al-Ajamy (أحمد العجمي)
-  - Mishary Alafasy (مشاري العفاسي)
-  - Hani Rifai (هاني الرفاعي)
-  - Mahmoud Al-Husary (محمود الحصري)
-  - Ali Al-Hudhaify (علي الحذيفي)
-  - Ibrahim Akhdar (إبراهيم الأخضر)
-  - Maher Al Muaiqly (ماهر المعيقلي)
-  - Muhammad Ayyoub (محمد أيوب)
-  - Muhammad Jibreel (محمد جبريل)
-  - Saood Ash-Shuraym (سعود الشريم)
-  - Mohamed El-Minshawi (محمد المنشاوي)
-- **High-quality audio** streaming
-- **Audio controls** - Play, pause, seek, and skip
-- **Download audio** - Save for offline listening
-- **Favorite Surahs** - Quick access to your preferred recitations
+<details>
+<summary><strong>🎧 Holy Quran — Audio</strong></summary>
+<br />
 
-### 🖼️ Ayah to image
+Choose from **14 world-renowned reciters**:
 
-- **Select an Ayah** from selected ayahs or select in manually
-- **Add more ayahs** before or after it
-- **Select specific part** using simple drag and drop cursors 
-- **choose the image color** from 10 predefined palettes
-- **Download** and share it as you want 
+| Reciter | Arabic |
+|---------|--------|
+| Abdullah Basfar | عبد الله بصفر |
+| Abdurrahman Al-Sudais | عبدالرحمن السديس |
+| Abu Bakr Ash-Shaatree | أبو بكر الشاطري |
+| Ahmed Al-Ajamy | أحمد العجمي |
+| Mishary Alafasy | مشاري العفاسي |
+| Hani Rifai | هاني الرفاعي |
+| Mahmoud Al-Husary | محمود الحصري |
+| Ali Al-Hudhaify | علي الحذيفي |
+| Ibrahim Akhdar | إبراهيم الأخضر |
+| Maher Al Muaiqly | ماهر المعيقلي |
+| Muhammad Ayyoub | محمد أيوب |
+| Muhammad Jibreel | محمد جبريل |
+| Saood Ash-Shuraym | سعود الشريم |
+| Mohamed El-Minshawi | محمد المنشاوي |
 
-### 📜 Read Authentic Hadiths
+- High-quality streaming audio
+- Full playback controls: play, pause, seek, skip
+- Download audio for offline listening
+- Favorite Surahs for quick recitation access
 
-- Access **8 major authentic Hadith collections**:
-  - Sahih Bukhari
-  - Sahih Muslim
-  - Sunan Abu Dawud
-  - Sunan al-Tirmidhi
-  - Sunan an-Nasa'i
-  - Sunan Ibn Majah
-  - Muwatta Malik
-  - Musnad Ahmad
-- **20,000+ authentic hadiths** with proper chain of narration
-- **Browse by book and chapter**
-- **Search hadiths** in English or Arabic
-- **Bookmark favorite hadiths** for quick reference
+</details>
 
-### 🕋 Daily Azkar & Duas
+<details>
+<summary><strong>🖼️ Ayah to Image</strong></summary>
+<br />
 
-- **8 comprehensive categories** with 127+ authentic azkar:
-  - **Morning Azkar** (أذكار الصباح) - 25 supplications
-  - **Evening Azkar** (أذكار المساء) - 25 supplications
-  - **Sleep Azkar** (أذكار النوم) - 10 bedtime duas
-  - **Wake Up Azkar** (أذكار الاستيقاظ) - 3 morning duas
-  - **After Prayer Azkar** (أذكار الصلاة) - 9 post-salah duas
-  - **Quranic Duas** (أدعية قرآنية) - 26 Quranic supplications
-  - **Prophets' Duas** (أدعية الأنبياء) - 13 prophetic supplications
-- Repetition counter for each zikr
-- **Favorite Azkar** - Save your most-used supplications
+- Select any Ayah from favorites or manually
+- Extend selection with adjacent verses
+- Drag-and-drop cursors for precise verse selection
+- 10 beautiful color palettes
+- Download and share as an image
 
-### 🕌 Prayer Times
+</details>
 
-- **Accurate prayer times**
-- **Countdown to next prayer** with live updates
-- Hijri and Gregorian calendar dates
+<details>
+<summary><strong>📜 Authentic Hadiths</strong></summary>
+<br />
 
-### ⭐ Favorites & Saved Items
+**8 major Hadith collections with 20,000+ hadiths:**
 
-- **Saved Ayahs** - Bookmark Quranic verses
-- **Favorite Surahs** - Quick access to your favourite surahs
-- **Favorite Hadiths** - Save important hadiths for quick reference
-- **Favorite Azkar** - Mark your favourite zekr
-- Easy management and deletion of saved items
+| Collection | Collection |
+|-----------|-----------|
+| Sahih Bukhari | Sunan an-Nasa'i |
+| Sahih Muslim | Sunan Ibn Majah |
+| Sunan Abu Dawud | Muwatta Malik |
+| Sunan al-Tirmidhi | Musnad Ahmad |
 
-### 💖 Sadaqa Jariya (Ongoing Charity)
+- Browse by book and chapter
+- Search in English or Arabic
+- Bookmark favorite hadiths
 
-- Create a **personalized page** with:
-  - Deceased person's name
-  - Selected Quranic chapters (Al-Fatihah, Yaseen, etc.)
-  - Beautiful duas
-  - Shareable link to allow others to participate
-- **Share memorial pages** with family and friends
+</details>
 
-### 📿 Tasbeeh Counter
+<details>
+<summary><strong>🤲 Daily Azkar & Duas</strong></summary>
+<br />
 
-- **Digital counter** for daily remembrance and dhikr
-- **Reset counter** when needed
-- **Persistent counting** - Saves automatically
+**127+ authentic supplications across 8 categories:**
 
-### 🎨 Additional Features
+| Category | Count |
+|----------|-------|
+| Morning Azkar (أذكار الصباح) | 25 |
+| Evening Azkar (أذكار المساء) | 25 |
+| Sleep Azkar (أذكار النوم) | 10 |
+| Wake Up Azkar (أذكار الاستيقاظ) | 3 |
+| After Prayer Azkar (أذكار الصلاة) | 9 |
+| Quranic Duas (أدعية قرآنية) | 26 |
+| Prophets' Duas (أدعية الأنبياء) | 13 |
 
-- **Palette Selector** - Customize the platform with your favourite color
-- **Theme Toggle** - Switch between light and dark modes
-- **Language Switcher** - Seamless Arabic/English translation
-- **Share Functionality** - Share content via social media or copy link
+- Per-zikr repetition counter
+- Save and manage favorite Azkar
+
+</details>
+
+<details>
+<summary><strong>🕌 Prayer Times</strong></summary>
+<br />
+
+- Accurate, location-based prayer times
+- Live countdown to the next prayer
+- Hijri and Gregorian calendar display
+
+</details>
+
+<details>
+<summary><strong>💖 Sadaqah Jariyah Pages</strong></summary>
+<br />
+
+Create a personalized memorial page for a deceased loved one:
+
+- Add their name
+- Select Quranic chapters (Al-Fatihah, Yaseen, etc.)
+- Include beautiful duas
+- Generate a shareable link for family and friends to participate
+
+</details>
+
+<details>
+<summary><strong>🎨 Personalization & UX</strong></summary>
+<br />
+
+- **Palette Selector** — select color to customize the UI
+- **Dark / Light Mode** toggle
+- **Arabic / English** language switcher
+- **Favorites System** — Save Ayahs, Surahs, Hadiths, and Azkar
+- **Share Functionality** — Share to social media or copy link
+
+</details>
 
 ---
 
-## 📊 Statistics
+## 📊 At a Glance
 
-<div align="center">
-
-| Resource         | Count                        |
-| ---------------- | ---------------------------- |
-| 🎧 Reciters      | 14 World-Class Reciters      |
-| 📜 Total Hadiths | 20,000+ Authentic Hadiths    |
-| 📚 Hadith Books  | 8 Major Collections          |
-| 🕋 Azkar & Duas  | 127+ Authentic Supplications |
-
-</div>
+| Resource | Count |
+|----------|-------|
+| 🎧 Reciters | 14 World-Class |
+| 📜 Hadiths | 20,000+ Authentic |
+| 📚 Hadith Collections | 8 Major Books |
+| 🤲 Azkar & Duas | 127+ Supplications |
+| 📖 Quran Surahs | 114 Surahs |
+| 🗓️ Juz Navigation | 30 Juz |
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
+| Layer | Technology |
+|-------|-----------|
+| Framework | [Next.js](https://nextjs.org/) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| Database | [Supabase](https://supabase.com/) |
 
-- **[Next.js](https://nextjs.org/)**
-- **[TypeScript](https://www.typescriptlang.org/)**
-- **[Tailwind CSS](https://tailwindcss.com/)**
+**External APIs:**
 
-### APIs & Services
+| API | Purpose |
+|-----|---------|
+| [AlQuran Cloud](https://alquran.cloud/api) | Quran text & audio |
+| [Quran Tafseer API](http://api.quran-tafseer.com) | Arabic Tafseer |
+| [Aladhan API](https://aladhan.com/prayer-times-api) | Prayer time calculation |
+| [Hadith API](https://hadithapi.com/) | Hadith collections |
+| [Azkar API](https://github.com/nawafalqari/azkar-api) | Daily Azkar & Duas |
+| [Islamic Network CDN](https://cdn.islamic.network/) | Quran audio files |
 
-- **[AlQuran Cloud API](https://alquran.cloud/api)** - Quran text and audio
-- **[Quran Tafseer API](http://api.quran-tafseer.com)** - Tafseer interpretations
-- **[Aladhan API](https://aladhan.com/prayer-times-api)** - Prayer times calculation
-- **[Hadith API](https://hadithapi.com/)** - Authentic hadith collections (API key required)
-- **[Azkar API](https://github.com/nawafalqari/azkar-api)** - Daily azkar and duas
-- **[Islamic Network CDN](https://cdn.islamic.network/)** - High-quality Quran audio
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** `>= 18.x`
+- **npm** `>= 9.x`
+- A **Supabase** account
+- A **Hadith API** key from [hadithapi.com](https://hadithapi.com/)
+
+### Installation
+
+```bash
+# 1. Fork the repository, then clone your fork
+git clone https://github.com/YOUR_USERNAME/muslim.git
+cd muslim
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+# Supabase
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+SUPABASE_SADAQA_TABLE=sadaqa_garya_records
+
+# Hadith API
+HADITH_API_KEY=your_hadith_api_key
+HADITH_API_BASE_URL=https://hadithapi.com/api
+```
+
+### Database Setup
+
+This project uses **Supabase** for the Sadaqah Jariyah feature.
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Navigate to the **SQL Editor**
+3. Copy and run the schema from [`data/sadaqa_supabase_schema.sql`](data/sadaqa_supabase_schema.sql)
+
+That's it — your database is ready.
 
 ---
 
 ## 📚 API Documentation
 
-For detailed information about all APIs used in this project, including endpoints, authentication requirements, parameters, and examples, please refer to:
+Full documentation for all APIs used in this project — including endpoints, authentication, parameters, and usage examples — is available in:
 
-**[Complete API Documentation](API_Doc.md)**
-
----
-
-## 🚀 Quick Setup (Clone And Run)
-
-### 1. Clone and install
-
-```bash
-git clone <your-fork-or-repo-url>
-cd muslim
-npm install
-```
-
-### 2. Create environment file
-
-Create `.env.local` in the project root and add:
-
-```env
-SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
-SUPABASE_SADAQA_TABLE=sadaqa_garya_records
-
-HADITH_API_KEY=
-HADITH_API_BASE_URL=https://hadithapi.com/api
-```
-
-### 3. Prepare database (Supabase)
-
-1. Create a Supabase project.
-2. Open SQL Editor.
-3. Run schema from `data/sadaqa_supabase_schema.sql`.
-
-### 4. Start app
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000`.
+**[`API_Doc.md`](API_Doc.md)**
 
 ---
+
 ## 🤝 Contributing
 
-Any contributions you make are **greatly appreciated** and will be considered as Sadaqah Jariyah for you too.
+Contributions are **greatly appreciated** and are considered a Sadaqah Jariyah for you too, in sha' Allah.
+
+To contribute:
+
+1. **Fork** the repository
+2. Create your feature branch: `git checkout -b feature/new-feature`
+3. Commit your changes: `git commit -m 'feat: add new feature'`
+4. Push to your branch: `git push origin feature/new-feature`
+5. **Open a Pull Request**
+---
+
+## 🐛 Bug Reports & Feature Requests
+
+Found a bug or have a feature idea? Please [open an issue](../../issues/new/choose)
 
 ---
 
 ## 📄 License
 
-This project is open source and available for anyone to use, modify, and distribute. It is created as Sadaqah Jariyah (ongoing charity).
+This project is **open source** and free to use, modify, and distribute.
 
 ---
+
+If you find this project valuable, please consider:
+- ⭐ **Starring** the repository
+- 🔀 **Sharing** it with others
+- 🤝 **Contributing** improvements
+---
+
+<div align="center">
+</div>
