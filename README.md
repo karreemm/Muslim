@@ -271,7 +271,7 @@ This project uses **Supabase** for the Sadaqah Jariyah feature.
 
 1. Create a new project at [supabase.com](https://supabase.com)
 2. Navigate to the **SQL Editor**
-3. Copy and run the schema from [`data/sadaqa_supabase_schema.sql`](data/sadaqa_supabase_schema.sql)
+3. Copy and run the schema from [`data/sadaqaGarya/sadaqa_supabase_schema.sql`](data/sadaqaGarya/sadaqa_supabase_schema.sql)
 
 That's it, your database is ready.
 
