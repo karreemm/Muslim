@@ -2,70 +2,68 @@
 
 <br />
 
-<img src="./bismillah.png" alt="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" width="500" />
+<img src="./public/bismillah.png" alt="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" width="500" />
+
+<br />
+<br />
+<br />
+
+
+<img src="./public/logo.png" alt="Muslim Logo" height="56" />
+
+<br />
+<br />
+<br />
+
+**An open-source Islamic platform bringing together Quran, Hadith, Azkar, Prayer Times, and more - built as a Sadaqah Jariyah.**
 
 <br />
 
-# 🌙 Muslim — Get Closer To Allah
-
-**An open-source Islamic platform bringing together Quran, Hadith, Azkar, Prayer Times, and more — built as a Sadaqah Jariyah.**
-
-<br />
-
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit-success?style=flat-square)](https://muslim-one.vercel.app/)
-&nbsp;
-[![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-&nbsp;
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-CF9D40?style=for-the-badge&logo=google-chrome&logoColor=white)](https://muslim-one.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-CF9D40?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-CF9D40?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 <br />
 
 <img width="80%" src="./public/screenshot.png" alt="Muslim App — Quran, Hadith, Azkar & Prayer Times" />
 
-<br /><br />
+<br />
+<br />
 
 </div>
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [About The Project](#-about-the-project)
-- [Live Demo](#-live-demo)
-- [Features](#-features)
-- [Tech Stack](#️-tech-stack)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-  - [Database Setup](#database-setup)
-- [API Documentation](#-api-documentation)
-- [Contributing](#-contributing)
+- [About](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [API](#api-documentation)
+- [Contributing](#contributing)
 - [License](#-license)
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 🕌 About The Project
+## About The Project
 
-**Muslim** is a comprehensive, open-source Islamic web platform designed to support Muslims in their daily worship and spiritual journey. It is built as a **Sadaqah Jariyah** - a continuous act of charity.
+**Muslim** is an open-source Islamic web platform designed to support Muslims in their daily worship. It is built as a **Sadaqah Jariyah** - a continuous act of charity.
 
 The platform consolidates essential Islamic resources — the Holy Quran with audio and tafseer, authenticated Hadith collections, daily Azkar, prayer times, and more — into a single, beautifully designed experience.
 
-> _"When a person dies, his deeds come to an end except for three: Sadaqah Jariyah (ongoing charity), knowledge that is benefited from, and a righteous child who prays for him."_
-> — **Prophet Muhammad ﷺ** _(Sahih Muslim)_
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
----
-
-## 🌐 Live Demo
-
-**[muslim-one.vercel.app](https://muslim-one.vercel.app/)**
-
----
-
-## ✨ Features
+## Features
 
 <details>
-<summary><strong>📖 Holy Quran — Reading</strong></summary>
+<summary><strong>Holy Quran — Reading</strong></summary>
 <br />
 
 - Browse by **Surah** (1–114) or **Juz** (1–30)
@@ -79,7 +77,7 @@ The platform consolidates essential Islamic resources — the Holy Quran with au
 </details>
 
 <details>
-<summary><strong>🎧 Holy Quran — Audio</strong></summary>
+<summary><strong>Holy Quran — Audio</strong></summary>
 <br />
 
 Choose from **14 world-renowned reciters**:
@@ -109,7 +107,7 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
-<summary><strong>🖼️ Ayah to Image</strong></summary>
+<summary><strong>Ayah to Image</strong></summary>
 <br />
 
 - Select any Ayah from favorites or manually
@@ -121,7 +119,7 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
-<summary><strong>📜 Authentic Hadiths</strong></summary>
+<summary><strong>Authentic Hadiths</strong></summary>
 <br />
 
 **8 major Hadith collections with 20,000+ hadiths:**
@@ -140,7 +138,7 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
-<summary><strong>🤲 Daily Azkar & Duas</strong></summary>
+<summary><strong>Daily Azkar & Duas</strong></summary>
 <br />
 
 **127+ authentic supplications across 8 categories:**
@@ -161,7 +159,7 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
-<summary><strong>🕌 Prayer Times</strong></summary>
+<summary><strong>Prayer Times</strong></summary>
 <br />
 
 - Accurate, location-based prayer times
@@ -171,7 +169,7 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
-<summary><strong>💖 Sadaqah Jariyah Pages</strong></summary>
+<summary><strong>Sadaqah Jariyah Pages</strong></summary>
 <br />
 
 Create a personalized memorial page for a deceased loved one:
@@ -184,7 +182,7 @@ Create a personalized memorial page for a deceased loved one:
 </details>
 
 <details>
-<summary><strong>🎨 Personalization & UX</strong></summary>
+<summary><strong>Personalization & UX</strong></summary>
 <br />
 
 - **Palette Selector** — select color to customize the UI
@@ -195,44 +193,37 @@ Create a personalized memorial page for a deceased loved one:
 
 </details>
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 📊 At a Glance
+## At a Glance
 
-| Resource | Count |
-|----------|-------|
-| 🎧 Reciters | 14 World-Class |
-| 📜 Hadiths | 20,000+ Authentic |
-| 📚 Hadith Collections | 8 Major Books |
-| 🤲 Azkar & Duas | 127+ Supplications |
-| 📖 Quran Surahs | 114 Surahs |
-| 🗓️ Juz Navigation | 30 Juz |
+| Feature | Value |
+|--------|------|
+| Reciters | **14** world-class |
+| Hadiths | **20,000+** |
+| Collections | **8 major books** |
+| Azkar | **127+** |
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | [Next.js](https://nextjs.org/) |
-| Language | [TypeScript](https://www.typescriptlang.org/) |
-| Styling | [Tailwind CSS](https://tailwindcss.com/) |
-| Database | [Supabase](https://supabase.com/) |
+| Layer | Stack |
+|------|------|
+| Framework | Next.js |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Database | Supabase |
 
-**External APIs:**
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-| API | Purpose |
-|-----|---------|
-| [AlQuran Cloud](https://alquran.cloud/api) | Quran text & audio |
-| [Quran Tafseer API](http://api.quran-tafseer.com) | Arabic Tafseer |
-| [Aladhan API](https://aladhan.com/prayer-times-api) | Prayer time calculation |
-| [Hadith API](https://hadithapi.com/) | Hadith collections |
-| [Azkar API](https://github.com/nawafalqari/azkar-api) | Daily Azkar & Duas |
-| [Islamic Network CDN](https://cdn.islamic.network/) | Quran audio files |
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -282,19 +273,34 @@ This project uses **Supabase** for the Sadaqah Jariyah feature.
 2. Navigate to the **SQL Editor**
 3. Copy and run the schema from [`data/sadaqa_supabase_schema.sql`](data/sadaqa_supabase_schema.sql)
 
-That's it — your database is ready.
+That's it, your database is ready.
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 📚 API Documentation
+## API Documentation
 
-Full documentation for all APIs used in this project — including endpoints, authentication, parameters, and usage examples — is available in:
+**External APIs Used:**
+
+| API | Purpose |
+|-----|---------|
+| [AlQuran Cloud](https://alquran.cloud/api) | Quran text & audio |
+| [Quran Tafseer API](http://api.quran-tafseer.com) | Arabic Tafseer |
+| [Aladhan API](https://aladhan.com/prayer-times-api) | Prayer time calculation |
+| [Hadith API](https://hadithapi.com/) | Hadith collections |
+| [Azkar API](https://github.com/nawafalqari/azkar-api) | Daily Azkar & Duas |
+| [Islamic Network CDN](https://cdn.islamic.network/) | Quran audio files |
+
+And also a Full documentation for all APIs used in this project — including endpoints, authentication, parameters, and usage examples — is available in:
 
 **[`API_Doc.md`](API_Doc.md)**
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are **greatly appreciated** and are considered a Sadaqah Jariyah for you too, in sha' Allah.
 
@@ -305,25 +311,31 @@ To contribute:
 3. Commit your changes: `git commit -m 'feat: add new feature'`
 4. Push to your branch: `git push origin feature/new-feature`
 5. **Open a Pull Request**
----
 
-## 🐛 Bug Reports & Feature Requests
+<br />
+<p align="center">— ✦ —</p>
+<br />
+
+## Bug Reports & Feature Requests
 
 Found a bug or have a feature idea? Please [open an issue](../../issues/new/choose)
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
 ## 📄 License
 
 This project is **open source** and free to use, modify, and distribute.
 
----
+<br />
+<p align="center">— ✦ —</p>
+<br />
 
 If you find this project valuable, please consider:
 - ⭐ **Starring** the repository
 - 🔀 **Sharing** it with others
 - 🤝 **Contributing** improvements
----
 
 <div align="center">
 </div>
