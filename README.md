@@ -44,7 +44,7 @@
 - [Getting Started](#getting-started)
 - [API](#api-documentation)
 - [Contributing](#contributing)
-- [License](#-license)
+- [License](#license)
 
 <br />
 <p align="center">— ✦ —</p>
@@ -324,7 +324,7 @@ Found a bug or have a feature idea? Please [open an issue](../../issues/new/choo
 <p align="center">— ✦ —</p>
 <br />
 
-## 📄 License
+## License
 
 This project is **open source** and free to use, modify, and distribute.
 
