@@ -12,6 +12,7 @@ import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
 import AppHydrationGate from "@/components/general/AppHydrationGate";
 import { QuranAudioProvider } from "../context/features/QuranAudioContext";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -64,6 +65,7 @@ export default function RootLayout({
             </PaletteContextProvider>
           </ThemeContextProvider>
         </LanguageContextProvider>
+        <Analytics />
       </body>
     </html>
   );
