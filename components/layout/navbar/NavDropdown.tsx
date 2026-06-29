@@ -106,7 +106,6 @@ export default function NavDropdown({
           role="menu"
         >
           <div className="flex items-center gap-2 border-b border-border/50 px-4 py-2.5 bg-muted/30">
-            <FontAwesomeIcon icon={icon} className="text-xs text-primary" />
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground ">
               {label}
             </span>

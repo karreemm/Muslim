@@ -283,6 +283,15 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     setContextIsPlaying(isPlaying);
   }, [isPlaying, setContextIsPlaying]);
 
+  // Listen for radio starting — stop Quran audio
+  useEffect(() => {
+    const handleRadioStarted = () => {
+      handleClose();
+    };
+    window.addEventListener("radio:started", handleRadioStarted);
+    return () => window.removeEventListener("radio:started", handleRadioStarted);
+  }, []);
+
   useEffect(() => {
     setActiveAyahIndex(currentAyahIndex);
     setCurrentAyahTime(currentAyahElapsedTime);
@@ -401,7 +410,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
           onJumpToAyah={triggerScrollToAyah}
         />
 
-        <div className="py-2.5 max-w-7xl mx-auto w-full">
+        <div className="py-2.5 px-4 max-w-7xl mx-auto w-full">
           <div className="flex md:hidden items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
               <div

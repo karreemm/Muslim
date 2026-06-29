@@ -1,0 +1,28 @@
+{
+  "title": "Live Quran Radio",
+  "subtitle": "Listen to the Holy Quran live, 24/7",
+  "searchPlaceholder": "Search stations...",
+  "noResults": "No stations found",
+  "categories": {
+    "main": "Main Stations",
+    "thematic": "Specialised Channels",
+    "reciters": "Reciters",
+    "translations": "Translations"
+  },
+  "player": {
+    "selectStation": "Select a station above",
+    "connecting": "Connecting...",
+    "nowStreaming": "Live now",
+    "paused": "Paused",
+    "error": "Connection failed — try another station",
+    "live": "LIVE"
+  },
+  "actions": {
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "favorite": "Favorite",
+    "removeFavorite": "Remove from favorites"
+  }
+}

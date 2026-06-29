@@ -106,6 +106,9 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsPlaying(true);
       setPlayTrigger((t) => t + 1);
       setScrollToAyahTrigger((t) => t + 1);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("quran:started"));
+      }
     },
     [],
   );
@@ -131,6 +134,9 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsPlaying(true);
       setPlayAyahTrigger((t) => t + 1);
       setScrollToAyahTrigger((t) => t + 1);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("quran:started"));
+      }
     },
     [],
   );

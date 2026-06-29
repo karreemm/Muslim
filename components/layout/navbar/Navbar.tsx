@@ -18,6 +18,7 @@ import {
   faSearch,
   faImage,
   faChevronDown,
+  faRadio,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
@@ -30,6 +31,7 @@ import NavDropdown from "./NavDropdown";
 const quranLinks = (t: (key: string) => string) => [
   { href: "/read-quran", label: t("navbar.readQuran"), icon: faBookOpen },
   { href: "/listen-quran", label: t("navbar.listenQuran"), icon: faHeadphones },
+  { href: "/radios", label: t("navbar.radios"), icon: faRadio },
   { href: "/search-ayah", label: t("navbar.searchAyah"), icon: faSearch },
   { href: "/generate-ayah-image", label: t("navbar.generateAyahImage"), icon: faImage },
 ];
