@@ -9,7 +9,7 @@ import React, {
   useRef,
 } from "react";
 import { RadioStation } from "@/constants/radioStationsData";
-import { RadioPlayerContextType } from "@/types/radio";
+import { RadioPlayerContextType } from "@/app/(pages)/radios/types";
 
 const RadioContext = createContext<RadioPlayerContextType | null>(null);
 
@@ -36,12 +36,10 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
   const userStoppedRef = useRef<boolean>(false);
   const currentStationRef = useRef<RadioStation | null>(null);
 
-  // Keep ref in sync
   useEffect(() => {
     currentStationRef.current = currentStation;
   }, [currentStation]);
 
-  // Load favorites from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("favoriteRadioStations");
@@ -56,7 +54,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  // Save favorites to localStorage only after hydration
   useEffect(() => {
     if (typeof window !== "undefined" && isHydrated) {
       localStorage.setItem(
@@ -85,7 +82,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     return audioRef.current;
   }, []);
 
-  // Internal stop without dispatching events (to avoid loops)
   const internalStop = useCallback(() => {
     clearTimers();
     userStoppedRef.current = true;
@@ -97,7 +93,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
   }, [clearTimers, getAudio]);
 
-  // Listen for Quran starting — stop radio
   useEffect(() => {
     const handleQuranStarted = () => {
       internalStop();
@@ -107,7 +102,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => window.removeEventListener("quran:started", handleQuranStarted);
   }, [internalStop]);
 
-  // Use ref for beginStream to break circular dependency
   const beginStreamRef = useRef<(station: RadioStation) => void>(() => {});
 
   const onPlaySuccess = useCallback(() => {
@@ -140,7 +134,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [clearTimers]);
 
-  // Keep onPlayErrorFn ref in sync for beginStream
   const onPlayErrorFnRef = useRef(onPlayErrorFn);
   useEffect(() => {
     onPlayErrorFnRef.current = onPlayErrorFn;
@@ -176,7 +169,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     [clearTimers, getAudio, onPlaySuccess],
   );
 
-  // Keep beginStream ref in sync for onPlayErrorFn retry
   useEffect(() => {
     beginStreamRef.current = beginStream;
   }, [beginStream]);
@@ -188,7 +180,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
       retryCountRef.current = 0;
       userStoppedRef.current = false;
 
-      // Dispatch event so Quran audio stops
       window.dispatchEvent(new CustomEvent("radio:started"));
 
       if (isChanging) {
@@ -215,7 +206,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsPlaying(false);
       setIsConnecting(false);
     } else {
-      // Dispatch event so Quran audio stops
       window.dispatchEvent(new CustomEvent("radio:started"));
       retryCountRef.current = 0;
       userStoppedRef.current = false;
@@ -249,7 +239,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     [favoriteStations],
   );
 
-  // Audio event listeners
   useEffect(() => {
     const audio = getAudio();
 
@@ -298,7 +287,6 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [getAudio, clearTimers]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       clearTimers();
