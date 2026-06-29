@@ -3,10 +3,10 @@
   "quran": "القرآن الكريم",
   "hadith": "الحديث الشريف",
   "azkar": "أذكار",
-  "readQuran": "اقرأ القرآن الكريم",
-  "listenQuran": "استمع للقرآن الكريم",
+  "readQuran": "القرآن الكريم",
+  "listenQuran": "القرآن الكريم",
   "searchAyah": "البحث عن آية",
-  "generateAyahImage": "الآية إلى صورة",
+  "generateAyahImage": "آية الى صورة",
   "favourites": "المفضلة",
   "savedAyahs": "الآيات المحفوظة",
   "home": "الرئيسية",
@@ -14,6 +14,8 @@
   "prayerTimes": "مواقيت الصلاة",
   "sadaqaGarya": "صدقة جارية",
   "yourSadaqat": "صدقاتك",
-  "tools": "عبادات",
-  "radios": "البث المباشر"
+  "tools": "أدوات",
+  "read": "قراءة",
+  "listen": "استماع",
+  "radios": "الإذاعة"
 }

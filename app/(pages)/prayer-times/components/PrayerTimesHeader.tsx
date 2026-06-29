@@ -49,14 +49,12 @@ export default function PrayerTimesHeader({
         </div>
 
         <div
-          className={`flex flex-col gap-1 ${
-            language === "ar" ? "items-end" : "items-start lg:items-end"
-          }`}
+          className={`flex flex-row md:flex md:flex-col gap-1`}
         >
-          <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
+          <div className="w-fit flex items-center gap-2 text-sm font-semibold text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
             {hijriDate}
           </div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
+          <div className="w-fit flex items-center gap-2 text-sm font-semibold text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
             {gregorianDate}
           </div>
         </div>

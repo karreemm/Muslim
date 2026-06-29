@@ -22,13 +22,13 @@
       "title": "Listen to Quran",
       "desc": "Choose your favorite reciter and listen with ease wherever you are."
     },
+    "listenRadio": {
+      "title": "Listen to Radio",
+      "desc": "Listen to a variety of radio programs through live streaming."
+    },
     "searchAyah": {
       "title": "Find an Ayah",
       "desc": "Search by words or sentences and reach the verses you’re looking for in seconds."
-    },
-    "prayerTimes": {
-      "title": "Prayer Times",
-      "desc": "Stay aware of your prayers with accurate timings based on your location."
     },
     "azkar": {
       "title": "Azkar & Duaa",
@@ -42,6 +42,10 @@
   "tools": {
     "heading": "Small tools that make a big difference",
     "subheading": "To help you stay consistent, even on busy days.",
+    "prayerTimes": {
+      "title": "Prayer Times",
+      "desc": "Stay aware of your prayers with accurate timings based on your location."
+    },
     "tasbeeh": {
       "title": "Tasbeeh Counter",
       "desc": "Say azkar in a simple and quick way"

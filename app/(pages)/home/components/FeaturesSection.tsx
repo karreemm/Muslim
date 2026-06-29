@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { featuredFeatures } from "./homeData";
-import type { ArrowIcon, TranslateFn } from "./types";
+import { featuredFeatures } from "@/constants/homeData";
+import type { ArrowIcon, TranslateFn } from "../types";
 
 type FeaturesSectionProps = {
   t: TranslateFn;
@@ -39,7 +39,7 @@ export default function FeaturesSection({
 
             <div className="relative z-10">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md group-hover:shadow-primary/25">
-                <FontAwesomeIcon icon={feature.icon} className="text-lg" />
+                <FontAwesomeIcon icon={feature.icon} className={`${feature.href === "/read-hadith" ? "text-2xl" : "text-lg"}`} />
               </div>
 
               <h3 className="mb-2 text-lg font-bold text-foreground group-hover:text-primary transition-colors">

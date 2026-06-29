@@ -1,15 +1,15 @@
 import {
   faBookOpen,
-  faHeadphones,
   faSearch,
-  faClock,
+  faRadio,
   faListOl,
   faSeedling,
   faBookmark,
-  faStar,
-  faMoon,
-  faImage
+  faImage,
+  faClock,
+  faHandsPraying,
 } from "@fortawesome/free-solid-svg-icons";
+import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 export type HomeFeature = {
@@ -37,9 +37,16 @@ export const featuredFeatures: HomeFeature[] = [
   },
   {
     href: "/listen-quran",
-    icon: faHeadphones,
+    icon: faBookOpen,
     title: "features.listenQuran.title",
     desc: "features.listenQuran.desc",
+    gradient: "from-primary/20 to-primary/5",
+  },
+  {
+    href: "/radios",
+    icon: faRadio,
+    title: "features.listenRadio.title",
+    desc: "features.listenRadio.desc",
     gradient: "from-primary/20 to-primary/5",
   },
   {
@@ -50,22 +57,15 @@ export const featuredFeatures: HomeFeature[] = [
     gradient: "from-primary/30 to-primary/5",
   },
   {
-    href: "/prayer-times",
-    icon: faClock,
-    title: "features.prayerTimes.title",
-    desc: "features.prayerTimes.desc",
-    gradient: "from-primary/20 to-primary/5",
-  },
-  {
     href: "/azkar",
-    icon: faMoon,
+    icon: faHandsPraying,
     title: "features.azkar.title",
     desc: "features.azkar.desc",
     gradient: "from-primary/50 to-primary/10",
   },
   {
     href: "/read-hadith",
-    icon: faStar,
+    icon: faUssunnah,
     title: "features.hadith.title",
     desc: "features.hadith.desc",
     gradient: "from-primary/20 to-primary/5",
@@ -73,6 +73,18 @@ export const featuredFeatures: HomeFeature[] = [
 ];
 
 export const secondaryTools: HomeTool[] = [
+  {
+    href: "/prayer-times",
+    icon: faClock,
+    title: "tools.prayerTimes.title",
+    desc: "tools.prayerTimes.desc",
+  },
+  {
+    href: "/ayah-to-image",
+    icon: faImage,
+    title: "tools.ayahToImage.title",
+    desc: "tools.ayahToImage.desc",
+  },
   {
     href: "/tasbeeh",
     icon: faListOl,
@@ -91,10 +103,4 @@ export const secondaryTools: HomeTool[] = [
     title: "tools.favourites.title",
     desc: "tools.favourites.desc",
   },
-  {
-    href: "/ayah-to-image",
-    icon: faImage,
-    title: "tools.ayahToImage.title",
-    desc: "tools.ayahToImage.desc",
-  }
 ];

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { GeometricPattern } from "@/utils/decorations";
-import type { ArrowIcon, TranslateFn } from "./types";
+import type { ArrowIcon, TranslateFn } from "../types";
 
 type CtaSectionProps = {
   t: TranslateFn;

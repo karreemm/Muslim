@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GeometricPattern } from "@/utils/decorations";
-import { secondaryTools } from "./homeData";
-import type { TranslateFn } from "./types";
+import { secondaryTools } from "@/constants/homeData";
+import type { TranslateFn } from "../types";
 
 type ToolsSectionProps = {
   t: TranslateFn;

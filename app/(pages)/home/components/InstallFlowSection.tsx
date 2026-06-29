@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMobileScreen } from "@fortawesome/free-solid-svg-icons";
-import type { TranslateFn } from "./types";
+import type { TranslateFn } from "../types";
 import { useLanguage } from "@/context/general/LanguageContext";
 
 type InstallFlowSectionProps = {

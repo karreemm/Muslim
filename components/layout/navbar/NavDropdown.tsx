@@ -132,7 +132,7 @@ export default function NavDropdown({
                       : "bg-secondary/50 group-hover:bg-primary/10"
                   }`}
                 >
-                  <FontAwesomeIcon icon={routeIcon} className="text-xs" />
+                  <FontAwesomeIcon icon={routeIcon} className={`${href === "/read-hadith" ? "text-sm" : "text-xs"}`} />
                 </div>
                 <span className="">{routeLabel}</span>
                 {isActive(href) && (

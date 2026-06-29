@@ -1,12 +1,9 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faMosque,
-  faStar,
   faRadio,
   faMicrophone,
   faGlobe,
   faScaleBalanced,
-  faScroll,
   faHamsa
 } from "@fortawesome/free-solid-svg-icons";
 

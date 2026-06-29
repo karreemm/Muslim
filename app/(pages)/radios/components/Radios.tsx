@@ -226,11 +226,14 @@ export default function Radios() {
                                 {getStationName(station)}
                               </h3>
                               {active && isPlaying && (
-                                <span className="flex items-center gap-1 shrink-0">
-                                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                  <span className="text-[10px] font-bold text-green-500 uppercase">
-                                    {t("radio.player.live")}
-                                  </span>
+                                <span className="flex items-end gap-[2px] h-4 shrink-0">
+                                  {[0, 150, 300, 450].map((delay) => (
+                                    <span
+                                      key={delay}
+                                      className="w-0.5 h-4 bg-green-500 rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
+                                      style={{ animationDelay: `${delay}ms` }}
+                                    />
+                                  ))}
                                 </span>
                               )}
                               {active && isConnecting && (

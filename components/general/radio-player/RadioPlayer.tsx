@@ -13,6 +13,7 @@ import {
   faSpinner,
   faRadio,
   faXmark,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import PlayerIconButton from "@/components/general/PlayerIconButton";
 
@@ -26,6 +27,8 @@ export default function RadioPlayer() {
     toggleMute,
     stop,
     isMuted,
+    toggleFavorite,
+    isFavorite,
   } = useRadioPlayer();
 
   const { language } = useLanguage();
@@ -92,7 +95,7 @@ export default function RadioPlayer() {
             </div>
           </div>
 
-          <div dir="ltr" className="flex items-center gap-0.5 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             <PlayerIconButton
               onClick={togglePlayPause}
               disabled={isConnecting}
@@ -115,22 +118,21 @@ export default function RadioPlayer() {
             </PlayerIconButton>
 
             <PlayerIconButton
-              onClick={toggleMute}
+              onClick={() => currentStation && toggleFavorite(currentStation)}
               tooltip={
-                isMuted ? t("radio.actions.unmute") : t("radio.actions.mute")
+                currentStation && isFavorite(currentStation)
+                  ? t("radio.actions.removeFavorite")
+                  : t("radio.actions.favorite")
               }
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isMuted ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary"}`}
+              className={`h-8 flex items-center justify-center transition-all ${currentStation && isFavorite(currentStation) ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500"}`}
             >
-              <FontAwesomeIcon
-                icon={isMuted ? faVolumeMute : faVolumeHigh}
-                className="text-xs"
-              />
+              <FontAwesomeIcon icon={faStar} className="text-xs" />
             </PlayerIconButton>
 
             <PlayerIconButton
               onClick={stop}
               tooltip={language === "ar" ? "إغلاق" : "Close"}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+              className="h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
             >
               <FontAwesomeIcon icon={faXmark} className="text-xs" />
             </PlayerIconButton>
@@ -210,6 +212,21 @@ export default function RadioPlayer() {
                 className="text-sm"
               />
             </PlayerIconButton>
+
+            <div className="h-5 w-px bg-border/60 mx-0.5" />
+
+            <PlayerIconButton
+              onClick={() => currentStation && toggleFavorite(currentStation)}
+              tooltip={
+                currentStation && isFavorite(currentStation)
+                  ? t("radio.actions.removeFavorite")
+                  : t("radio.actions.favorite")
+              }
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${currentStation && isFavorite(currentStation) ? "text-yellow-500 bg-yellow-500/10" : "text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/10 hover:scale-110"}`}
+            >
+              <FontAwesomeIcon icon={faStar} className="text-sm" />
+            </PlayerIconButton>
+
             <PlayerIconButton
               onClick={stop}
               tooltip={language === "ar" ? "إغلاق" : "Close"}

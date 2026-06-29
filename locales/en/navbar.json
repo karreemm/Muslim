@@ -3,10 +3,10 @@
   "quran": "Quran",
   "hadith": "Hadith",
   "azkar": "Azkar",
-  "readQuran": "Read Quran",
-  "listenQuran": "Listen Quran",
+  "readQuran": "Quran Kareem",
+  "listenQuran": "Quran Kareem",
   "searchAyah": "Search Ayah",
-  "generateAyahImage": "Ayah to Image",
+  "generateAyahImage": "Ayah Image Generator",
   "favourites": "Favourites",
   "savedAyahs": "Saved Ayahs",
   "home": "Home",
@@ -14,6 +14,8 @@
   "prayerTimes": "Prayer Times",
   "sadaqaGarya": "Sadaqa Garya",
   "yourSadaqat": "Your Sadaqat",
-  "tools": "Ibadat",
+  "tools": "Tools",
+  "read": "Read",
+  "listen": "Listen",
   "radios": "Live Radio"
 }

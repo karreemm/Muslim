@@ -578,7 +578,6 @@
 }
 
 .scrollbar-hover-hidden {
-  /* Always reserve scrollbar space with invisible scrollbar */
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
   overflow-y: auto;
@@ -627,4 +626,14 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+@keyframes equalizer {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
 }
