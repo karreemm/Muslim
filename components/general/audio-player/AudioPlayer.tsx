@@ -438,6 +438,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
             <div dir="ltr" className="flex items-center gap-0.5 shrink-0">
               {!isListenPage && (
+                <>
                 <PlayerIconButton
                   onClick={handleClose}
                   tooltip={language === "ar" ? "إغلاق" : "Close"}
@@ -445,9 +446,10 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 >
                   <FontAwesomeIcon icon={faXmark} className="text-xs" />
                 </PlayerIconButton>
+               <div className="w-px h-5 bg-border mx-1" />
+                </>
               )}
 
-              <div className="w-px h-5 bg-border mx-1" />
 
               <PlayerIconButton
                 onClick={previous}

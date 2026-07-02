@@ -1,7 +1,8 @@
 "use client";
 
 import { useLanguage } from "@/context/general/LanguageContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Sidebar from "../../components/Sidebar";
 import {
   useReciterSurahSelection,
@@ -27,7 +28,9 @@ export default function ReciterPage() {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { playSurah, isPlaying, surahNumber } = useQuranAudio();
+  const pathname = usePathname();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const initialPlayPathRef = useRef<string | null>(null);
   const isArabic = language === "ar";
 
   const {
@@ -41,10 +44,13 @@ export default function ReciterPage() {
   } = useReciterSurahSelection();
 
   useEffect(() => {
-    if (reciterId) {
-      playSurah(1, reciterId);
-    }
-  }, [reciterId]);
+    if (!reciterId || !selectedSurah) return;
+
+    if (initialPlayPathRef.current === pathname) return;
+
+    initialPlayPathRef.current = pathname;
+    playSurah(selectedSurah, reciterId);
+  }, [pathname, playSurah, reciterId, selectedSurah]);
 
   const handleSurahChange = (id: number) => {
     handleReciterSurahChange(id);

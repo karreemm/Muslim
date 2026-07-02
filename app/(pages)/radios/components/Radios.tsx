@@ -185,7 +185,7 @@ export default function Radios() {
                     className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all duration-300 ${
                       isCollapsed
                         ? "max-h-0 opacity-0 pointer-events-none"
-                        : "max-h-[5000px] opacity-100"
+                        : "opacity-100"
                     }`}
                   >
                     {catStations.map((station) => {
@@ -202,9 +202,8 @@ export default function Radios() {
                           }`}
                           onClick={() => playStation(station)}
                         >
-                          {/* Station Icon */}
                           <div
-                            className={`flex h-12 w-12 items-center justify-center rounded-xl shrink-0 transition-all duration-300 ${
+                            className={`relative flex h-12 w-12 items-center justify-center rounded-xl shrink-0 transition-all duration-300 ${
                               active
                                 ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
                                 : "bg-secondary/50 text-primary group-hover:bg-primary/10"
@@ -212,45 +211,47 @@ export default function Radios() {
                           >
                             <FontAwesomeIcon
                               icon={station.icon}
-                              className="text-lg"
+                              className={`text-lg transition-opacity duration-200 ${
+                                active && (isPlaying || isConnecting)
+                                  ? "opacity-0"
+                                  : "opacity-100"
+                              }`}
                             />
+
+                            {active && isPlaying && !isConnecting && (
+                              <span className="absolute inset-0 flex items-center justify-center gap-[3px]">
+                                {[0, 150, 300, 450].map((delay) => (
+                                  <span
+                                    key={delay}
+                                    className="w-0.5 h-4 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
+                                    style={{ animationDelay: `${delay}ms` }}
+                                  />
+                                ))}
+                              </span>
+                            )}
+
+                            {active && isConnecting && (
+                              <span className="absolute inset-0 flex items-center justify-center">
+                                <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h3
-                                className={`text-sm font-semibold truncate ${
-                                  active ? "text-primary" : "text-foreground"
-                                }`}
-                              >
-                                {getStationName(station)}
-                              </h3>
-                              {active && isPlaying && (
-                                <span className="flex items-end gap-[2px] h-4 shrink-0">
-                                  {[0, 150, 300, 450].map((delay) => (
-                                    <span
-                                      key={delay}
-                                      className="w-0.5 h-4 bg-green-500 rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
-                                      style={{ animationDelay: `${delay}ms` }}
-                                    />
-                                  ))}
-                                </span>
-                              )}
-                              {active && isConnecting && (
-                                <span className="flex items-center gap-1 shrink-0">
-                                  <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse" />
-                                  <span className="text-[10px] font-bold text-yellow-500 uppercase">
-                                    {t("radio.player.connecting")}
-                                  </span>
-                                </span>
-                              )}
-                            </div>
+                            <h3
+                              className={`text-sm font-semibold truncate ${
+                                active ? "text-primary" : "text-foreground"
+                              }`}
+                            >
+                              {getStationName(station)}
+                            </h3>
                             <p className="text-xs text-muted-foreground mt-0.5">
-                              {t(`radio.categories.${station.category}`)}
+                              {active && isConnecting
+                                ? t("radio.player.connecting")
+                                : t(`radio.categories.${station.category}`)}
                             </p>
                           </div>
 
-                          {/* Favorite Button */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();

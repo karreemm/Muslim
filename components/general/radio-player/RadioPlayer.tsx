@@ -117,6 +117,8 @@ export default function RadioPlayer() {
               )}
             </PlayerIconButton>
 
+            <div className="w-px h-5 bg-border mx-1" />
+
             <PlayerIconButton
               onClick={() => currentStation && toggleFavorite(currentStation)}
               tooltip={
@@ -124,15 +126,17 @@ export default function RadioPlayer() {
                   ? t("radio.actions.removeFavorite")
                   : t("radio.actions.favorite")
               }
-              className={`h-8 flex items-center justify-center transition-all ${currentStation && isFavorite(currentStation) ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500"}`}
+              className={`w-4 h-8 flex items-center justify-center transition-all ${currentStation && isFavorite(currentStation) ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500"}`}
             >
               <FontAwesomeIcon icon={faStar} className="text-xs" />
             </PlayerIconButton>
 
+            <div className="w-px h-5 bg-border mx-1" />
+
             <PlayerIconButton
               onClick={stop}
               tooltip={language === "ar" ? "إغلاق" : "Close"}
-              className="h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+              className="w-4 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
             >
               <FontAwesomeIcon icon={faXmark} className="text-xs" />
             </PlayerIconButton>
@@ -213,7 +217,7 @@ export default function RadioPlayer() {
               />
             </PlayerIconButton>
 
-            <div className="h-5 w-px bg-border/60 mx-0.5" />
+            <div className="w-px h-5 bg-border mx-1" />
 
             <PlayerIconButton
               onClick={() => currentStation && toggleFavorite(currentStation)}
@@ -226,6 +230,8 @@ export default function RadioPlayer() {
             >
               <FontAwesomeIcon icon={faStar} className="text-sm" />
             </PlayerIconButton>
+
+            <div className="w-px h-5 bg-border mx-1" />
 
             <PlayerIconButton
               onClick={stop}

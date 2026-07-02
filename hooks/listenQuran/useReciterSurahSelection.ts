@@ -7,28 +7,38 @@ export function useReciterSurahSelection() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [reciterId, setReciterId] = useState<string | null>("Abdul-Basit");
-  const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
+  const getRouteReciterId = () => {
+    const parts = pathname.split("/");
+    return parts[parts.length - 1] || null;
+  };
+
+  const getRouteSurahNumber = () => {
+    const surahNumber = searchParams.get("surah");
+    const parsedSurahNumber = surahNumber ? parseInt(surahNumber, 10) : NaN;
+    return Number.isFinite(parsedSurahNumber) ? parsedSurahNumber : 1;
+  };
+
+  const [reciterId, setReciterId] = useState<string | null>(
+    getRouteReciterId(),
+  );
+  const [selectedSurah, setSelectedSurah] = useState<number | null>(
+    getRouteSurahNumber(),
+  );
   const [selectedSurahNameEn, setSelectedSurahNameEn] = useState<string | null>(
-    null
+    null,
   );
   const [selectedSurahNameAr, setSelectedSurahNameAr] = useState<string | null>(
-    null
+    null,
   );
   const [reciterNameEn, setReciterNameEn] = useState<string>("");
   const [reciterNameAr, setReciterNameAr] = useState<string>("");
 
   useEffect(() => {
-    const parts = pathname.split("/");
-    const id = parts[parts.length - 1];
-    const surahNumber = searchParams.get("surah");
+    const id = getRouteReciterId();
+    const surahNumber = getRouteSurahNumber();
 
-    if (id) setReciterId(id);
-    if (surahNumber) {
-      setSelectedSurah(parseInt(surahNumber, 10));
-    } else {
-      setSelectedSurah(1);
-    }
+    setReciterId(id);
+    setSelectedSurah(surahNumber);
   }, [pathname, searchParams]);
 
   useEffect(() => {
@@ -50,11 +60,11 @@ export function useReciterSurahSelection() {
       console.log("Selected Surah:", selectedSurah);
       console.log(
         "Selected Surah Name (EN):",
-        surahNames[selectedSurah - 1].en
+        surahNames[selectedSurah - 1].en,
       );
       console.log(
         "Selected Surah Name (AR):",
-        surahNames[selectedSurah - 1].ar
+        surahNames[selectedSurah - 1].ar,
       );
     }
   }, [selectedSurah]);
