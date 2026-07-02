@@ -16,6 +16,10 @@ const RadioContext = createContext<RadioPlayerContextType | null>(null);
 const MAX_RETRIES = 6;
 const STALL_TIMEOUT = 7000;
 
+function getRadioStreamUrl(rawUrl: string): string {
+  return `/api/radio-proxy?url=${encodeURIComponent(rawUrl)}`;
+}
+
 export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -147,7 +151,7 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const audio = getAudio();
       audio.src =
-        station.url +
+        getRadioStreamUrl(station.url) +
         (station.url.includes("?") ? "&" : "?") +
         "_t=" +
         Date.now();
