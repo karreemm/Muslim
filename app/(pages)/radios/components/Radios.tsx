@@ -182,7 +182,7 @@ export default function Radios() {
                   </button>
 
                   <div
-                    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all duration-300 overflow-hidden ${
+                    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all duration-300 ${
                       isCollapsed
                         ? "max-h-0 opacity-0 pointer-events-none"
                         : "max-h-[5000px] opacity-100"
