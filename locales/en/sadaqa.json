@@ -15,6 +15,11 @@
     "processing": "Creating...",
     "requiredHint": "Fields marked with * are required"
   },
+  "update": {
+    "title": "Coming Soon",
+    "message": "Sadaqa Garya is currently under update and will be available again soon.",
+    "backToHome": "Return to Home"
+  },
   "table": {
     "title": "Your Sadaqat",
     "noSadaqat": "You don't have any Sadaqat yet.",

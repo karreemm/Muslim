@@ -103,7 +103,7 @@ const Counter = () => {
             {t("tasbeeh.title")}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm lg:text-base">
-            {language === "ar" ? "ذكر الله يُطمئن القلوب" : "Remember Allah to find peace in your heart"}
+            {language === "ar" ? "الا بذكر الله تطمئن القلوب" : "Remember Allah to find peace in your heart"}
           </p>
         </div>
 
