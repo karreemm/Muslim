@@ -25,7 +25,10 @@ export async function GET(request: Request) {
   }
 
   if (!isAllowedRadioUrl(rawUrl)) {
-    return NextResponse.json({ error: "Radio URL not allowed" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Radio URL not allowed" },
+      { status: 400 },
+    );
   }
 
   try {

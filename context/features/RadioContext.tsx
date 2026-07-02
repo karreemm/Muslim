@@ -103,7 +103,8 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
       setCurrentStation(null);
     };
     window.addEventListener("quran:started", handleQuranStarted);
-    return () => window.removeEventListener("quran:started", handleQuranStarted);
+    return () =>
+      window.removeEventListener("quran:started", handleQuranStarted);
   }, [internalStop]);
 
   const beginStreamRef = useRef<(station: RadioStation) => void>(() => {});
@@ -253,7 +254,11 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const handleStalled = () => {
-      if (!userStoppedRef.current && currentStationRef.current && !audio.paused) {
+      if (
+        !userStoppedRef.current &&
+        currentStationRef.current &&
+        !audio.paused
+      ) {
         clearTimers();
         stallTimerRef.current = setTimeout(() => {
           if (!userStoppedRef.current) onPlayErrorFnRef.current();
