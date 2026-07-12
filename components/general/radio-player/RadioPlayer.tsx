@@ -95,7 +95,7 @@ export default function RadioPlayer() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <PlayerIconButton
               onClick={togglePlayPause}
               disabled={isConnecting}
