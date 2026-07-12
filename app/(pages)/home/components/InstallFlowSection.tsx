@@ -12,7 +12,7 @@ export default function InstallFlowSection({ t }: InstallFlowSectionProps) {
   const { language } = useLanguage();
 
   return (
-    <section className="inline-block md:hidden rounded-[2rem] border border-border bg-card/70 p-6 relative overflow-hidden backdrop-blur-md">
+    <section className="inline-block lg:hidden rounded-[2rem] border border-border bg-card/70 p-6 relative overflow-hidden backdrop-blur-md">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
 
       <div className="relative flex flex-col gap-5">

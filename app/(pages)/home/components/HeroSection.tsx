@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBookOpen,
-  faHeadphones,
   faMosque,
 } from "@fortawesome/free-solid-svg-icons";
 import { GeometricPattern } from "@/utils/decorations";
@@ -14,7 +12,7 @@ type HeroSectionProps = {
   arrowIcon: ArrowIcon;
 };
 
-export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
+export default function HeroSection({ t }: HeroSectionProps) {
 
   const { language } = useLanguage();
 
@@ -37,7 +35,7 @@ export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
         </div>
 
         <h1
-          className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.15] text-foreground tracking-tight max-w-4xl"
+          className="text-2xl md:text-4xl lg:text-5xl font-bold leading-[1.15] text-foreground tracking-tight max-w-4xl"
           style={{ textWrap: "balance" }}
         >
           {t("home.hero.title")}
@@ -52,14 +50,12 @@ export default function HeroSection({ t, arrowIcon }: HeroSectionProps) {
             href="/read-quran"
             className="group inline-flex items-center gap-2 rounded-2xl bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto justify-center"
           >
-            <FontAwesomeIcon icon={faBookOpen} className="text-xs" />
             <span>{t("home.hero.primaryCta")}</span>
           </Link>
           <Link
             href="/listen-quran"
             className="group inline-flex items-center gap-2 rounded-2xl border border-border bg-background/80 px-7 py-4 text-sm font-semibold text-foreground transition-all duration-300 hover:bg-secondary/50 hover:border-primary/30 backdrop-blur-sm w-full sm:w-auto justify-center"
           >
-            <FontAwesomeIcon icon={faHeadphones} className="text-xs" />
             <span>{t("home.hero.secondaryCta")}</span>
           </Link>
         </div>
