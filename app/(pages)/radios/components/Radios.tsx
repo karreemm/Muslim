@@ -204,7 +204,6 @@ export default function Radios() {
             : "border-border bg-card/70 hover:border-primary/30"
         }`}
                         >
-                          {/* hover gradient overlay, matches ListenQuran cards */}
                           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                           <div className="relative z-10 flex items-center gap-4">
@@ -245,11 +244,6 @@ export default function Radios() {
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <h3 className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
-                                {active && isConnecting
-                                  ? t("radio.player.connecting")
-                                  : t(`radio.categories.${station.category}`)}
-                              </h3>
                               <h2
                                 className={`text-xl font-bold transition-colors ${
                                   active
