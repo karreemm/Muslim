@@ -173,7 +173,7 @@ export default function DataTable<T>({
                   ))}
                   {actions && actions.length > 0 && (
                     <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center gap-4">
                         {actions.map((action, actionIdx) =>
                           action.customRender ? (
                             <React.Fragment key={actionIdx}>
@@ -184,7 +184,7 @@ export default function DataTable<T>({
                               key={actionIdx}
                               onClick={() => action.onClick(item)}
                               className={`
-                                p-2.5 rounded-lg transition-all duration-200
+                                transition-all duration-200
                                 ${
                                   action.variant === "destructive"
                                     ? "text-destructive hover:bg-destructive/10 hover:scale-110"
@@ -208,7 +208,6 @@ export default function DataTable<T>({
           </table>
         </div>
 
-        {/* Gradient overlay at bottom when scrollable */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card/80 to-transparent pointer-events-none" />
       </div>
 
@@ -224,7 +223,6 @@ export default function DataTable<T>({
             </button>
           </div>
 
-          {/* Delete Confirmation Modal */}
           {isDeleteModalOpen && (
             <DeleteConfirmModal
               isOpen={isDeleteModalOpen}

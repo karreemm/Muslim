@@ -75,7 +75,7 @@ export default function FavouriteAzkarTable() {
     {
       key: "content",
       title: t("common.text"),
-      align: "left" as const,
+      align: "center" as const,
       hiddenOnMobile: true,
       render: (item: any) => (
         <div

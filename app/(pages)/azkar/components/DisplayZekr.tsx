@@ -98,7 +98,7 @@ export default function DisplayZekr({
           <div className="space-y-4">
             <p
               dir="rtl"
-              className="text-xl md:text-2xl leading-loose text-foreground text-center  font-medium"
+              className="text-xl leading-loose text-foreground text-center  font-medium"
             >
               {zekr.content}
             </p>

@@ -193,7 +193,7 @@ export default function DeceasedPersonsTable() {
         canDeleteDeceased(item.slug) ? (
           <button
             onClick={() => openDeleteModal(item)}
-            className="p-2.5 rounded-lg transition-all duration-200 text-destructive hover:bg-destructive/10 hover:scale-110"
+            className="transition-all duration-200 text-destructive hover:bg-destructive/10 hover:scale-110"
             title={t("common.delete")}
           >
             <Trash2 className="w-4 h-4" />
@@ -201,7 +201,7 @@ export default function DeceasedPersonsTable() {
         ) : (
           <button
             disabled
-            className="p-2.5 rounded-lg text-muted-foreground/50 cursor-not-allowed"
+            className="text-muted-foreground/50 cursor-not-allowed"
             title={
               language === "ar"
                 ? "لا يمكنك حذف هذه الصفحة لأنها ليست من إنشائك"

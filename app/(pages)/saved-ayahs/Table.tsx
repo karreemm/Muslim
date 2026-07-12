@@ -64,12 +64,12 @@ export default function SavedAyahsTable() {
     {
       key: "text",
       title: t("common.ayahs"),
-      align: "right" as const,
+      align: "center" as const,
       hiddenOnMobile: true,
       render: (item: any) => (
         <div
           dir="rtl"
-          className="max-w-lg truncate text-lg text-foreground leading-loose font-medium"
+          className="max-w-md truncate text-muted-foreground leading-relaxed"
         >
           {item.text}
         </div>

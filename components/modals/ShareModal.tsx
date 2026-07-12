@@ -81,7 +81,7 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
     <>
       <button
         onClick={() => setIsShareOpen(true)}
-        className={`group text-${iconSize} transition-all duration-200 hover:scale-110 active:scale-95`}
+        className={`flex items-center justify-center group text-${iconSize} transition-all duration-200 hover:scale-110 active:scale-95`}
         aria-label="Share"
       >
         <FontAwesomeIcon

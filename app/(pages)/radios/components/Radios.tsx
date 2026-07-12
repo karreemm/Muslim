@@ -166,16 +166,16 @@ export default function Radios() {
                     className="w-full flex items-center justify-between px-1 py-2 group cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
-                      <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      <h2 className="text-base font-bold text-muted-foreground uppercase tracking-wider">
                         {t(`radio.categories.${cat}`)}
                       </h2>
-                      <span className="text-[10px] text-muted-foreground/60 font-medium">
+                      <span className="text-sm text-muted-foreground/60 font-medium">
                         ({catStations.length})
                       </span>
                     </div>
                     <FontAwesomeIcon
                       icon={faChevronDown}
-                      className={`text-xs text-muted-foreground/50 transition-transform duration-200 ${
+                      className={`text-base text-muted-foreground/50 transition-transform duration-200 ${
                         isCollapsed ? "" : "rotate-180"
                       }`}
                     />
@@ -195,79 +195,89 @@ export default function Radios() {
                       return (
                         <div
                           key={station.url}
-                          className={`group relative flex items-center gap-3 p-3 rounded-2xl border cursor-pointer transition-all duration-300 ${
-                            active
-                              ? "border-primary/50 bg-primary/5 shadow-lg shadow-primary/10"
-                              : "border-border/50 bg-card/70 hover:border-primary/20 hover:bg-card hover:-translate-y-0.5 hover:shadow-md"
-                          }`}
                           onClick={() => playStation(station)}
+                          className={`group relative rounded-2xl border p-5 cursor-pointer backdrop-blur-sm
+        transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
+        ${
+          active
+            ? "border-primary/50 bg-primary/5 shadow-lg shadow-primary/10"
+            : "border-border bg-card/70 hover:border-primary/30"
+        }`}
                         >
-                          <div
-                            className={`relative flex h-12 w-12 items-center justify-center rounded-xl shrink-0 transition-all duration-300 ${
-                              active
-                                ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
-                                : "bg-secondary/50 text-primary group-hover:bg-primary/10"
-                            }`}
-                          >
-                            <FontAwesomeIcon
-                              icon={station.icon}
-                              className={`text-lg transition-opacity duration-200 ${
-                                active && (isPlaying || isConnecting)
-                                  ? "opacity-0"
-                                  : "opacity-100"
-                              }`}
-                            />
+                          {/* hover gradient overlay, matches ListenQuran cards */}
+                          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                            {active && isPlaying && !isConnecting && (
-                              <span className="absolute inset-0 flex items-center justify-center gap-[3px]">
-                                {[0, 150, 300, 450].map((delay) => (
-                                  <span
-                                    key={delay}
-                                    className="w-0.5 h-4 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
-                                    style={{ animationDelay: `${delay}ms` }}
-                                  />
-                                ))}
-                              </span>
-                            )}
+                          <div className="relative z-10 flex items-center gap-4">
+                            <div
+                              className={`relative flex h-16 w-16 items-center justify-center rounded-xl shrink-0
+            transition-all duration-300 group-hover:scale-110 shadow-lg ${
+              active
+                ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground"
+                : "bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+            }`}
+                            >
+                              <FontAwesomeIcon
+                                icon={station.icon}
+                                className={`text-2xl transition-opacity duration-200 ${
+                                  active && (isPlaying || isConnecting)
+                                    ? "opacity-0"
+                                    : "opacity-100"
+                                }`}
+                              />
 
-                            {active && isConnecting && (
-                              <span className="absolute inset-0 flex items-center justify-center">
-                                <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                              </span>
-                            )}
-                          </div>
+                              {active && isPlaying && !isConnecting && (
+                                <span className="absolute inset-0 flex items-center justify-center gap-[3px]">
+                                  {[0, 150, 300, 450].map((delay) => (
+                                    <span
+                                      key={delay}
+                                      className="w-0.5 h-4 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
+                                      style={{ animationDelay: `${delay}ms` }}
+                                    />
+                                  ))}
+                                </span>
+                              )}
 
-                          <div className="flex-1 min-w-0">
-                            <h3
-                              className={`text-sm font-semibold truncate ${
-                                active ? "text-primary" : "text-foreground"
+                              {active && isConnecting && (
+                                <span className="absolute inset-0 flex items-center justify-center">
+                                  <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                                {active && isConnecting
+                                  ? t("radio.player.connecting")
+                                  : t(`radio.categories.${station.category}`)}
+                              </h3>
+                              <h2
+                                className={`text-xl font-bold transition-colors ${
+                                  active
+                                    ? "text-primary"
+                                    : "text-foreground group-hover:text-primary"
+                                }`}
+                              >
+                                {getStationName(station)}
+                              </h2>
+                            </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(station);
+                              }}
+                              className={`shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300 z-20 ${
+                                fav
+                                  ? "text-yellow-500 bg-yellow-500/10"
+                                  : "text-muted-foreground/30 hover:text-yellow-500 hover:bg-yellow-500/10"
                               }`}
                             >
-                              {getStationName(station)}
-                            </h3>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {active && isConnecting
-                                ? t("radio.player.connecting")
-                                : t(`radio.categories.${station.category}`)}
-                            </p>
+                              <FontAwesomeIcon
+                                icon={faStar}
+                                className="text-xs md:text-sm"
+                              />
+                            </button>
                           </div>
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(station);
-                            }}
-                            className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-                              fav
-                                ? "text-yellow-500 bg-yellow-500/10"
-                                : "text-muted-foreground/30 hover:text-yellow-500 hover:bg-yellow-500/10"
-                            }`}
-                          >
-                            <FontAwesomeIcon
-                              icon={faStar}
-                              className="text-xs"
-                            />
-                          </button>
                         </div>
                       );
                     })}

@@ -50,12 +50,12 @@ export default function ListenQuranPage() {
                   <h3 className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
                     {t("listenQuran.reciter")}
                   </h3>
-                  <h2 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                  <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
                     {isArabic ? reciter.NameAr : reciter.NameEn}
                   </h2>
                 </div>
 
-                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                <div className="hidden md:inline-block opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <FontAwesomeIcon
                       icon={isArabic ? faArrowLeft : faArrowRight}

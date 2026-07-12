@@ -96,7 +96,7 @@ export default function DisplayAzkar({
                 <div className="space-y-4">
                   <p
                     dir="rtl"
-                    className="text-xl md:text-2xl leading-loose text-foreground text-center  font-medium"
+                    className="text-xl leading-loose text-foreground text-center  font-medium"
                   >
                     {azkar.content}
                   </p>

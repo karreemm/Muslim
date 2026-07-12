@@ -75,7 +75,7 @@ export default function ReadHadithPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                      <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
                         {language === "en" ? book.name_en : book.name_ar}
                       </h2>
                     </div>

@@ -283,7 +283,6 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     setContextIsPlaying(isPlaying);
   }, [isPlaying, setContextIsPlaying]);
 
-  // Listen for radio starting — stop Quran audio
   useEffect(() => {
     const handleRadioStarted = () => {
       handleClose();
