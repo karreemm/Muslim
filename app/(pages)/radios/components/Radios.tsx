@@ -196,24 +196,22 @@ export default function Radios() {
                         <div
                           key={station.url}
                           onClick={() => playStation(station)}
-                          className={`group relative rounded-2xl border p-5 cursor-pointer backdrop-blur-sm
-        transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
-        ${
-          active
-            ? "border-primary/50 bg-primary/5 shadow-lg shadow-primary/10"
-            : "border-border bg-card/70 hover:border-primary/30"
-        }`}
+                          className={`group relative rounded-2xl border p-5 cursor-pointer backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
+                                    ${
+                                      active
+                                        ? "border-primary/50 bg-primary/5 shadow-lg shadow-primary/10"
+                                        : "border-border bg-card/70 hover:border-primary/30"
+                                    }`}
                         >
                           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                           <div className="relative z-10 flex items-center gap-4">
                             <div
-                              className={`relative flex h-16 w-16 items-center justify-center rounded-xl shrink-0
-            transition-all duration-300 group-hover:scale-110 shadow-lg ${
-              active
-                ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground"
-                : "bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-            }`}
+                              className={`relative flex h-16 w-16 items-center justify-center rounded-xl shrink-0 transition-all duration-300 group-hover:scale-110 shadow-lg ${
+                                        active
+                                          ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground"
+                                          : "bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                                      }`}
                             >
                               <FontAwesomeIcon
                                 icon={station.icon}
@@ -229,7 +227,7 @@ export default function Radios() {
                                   {[0, 150, 300, 450].map((delay) => (
                                     <span
                                       key={delay}
-                                      className="w-0.5 h-4 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
+                                      className="w-0.5 h-7 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
                                       style={{ animationDelay: `${delay}ms` }}
                                     />
                                   ))}
