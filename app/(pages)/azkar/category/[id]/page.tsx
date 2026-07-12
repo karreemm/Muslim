@@ -8,6 +8,7 @@ import Pagination from "@/components/general/Pagination";
 import { toArabicNumber } from "@/utils/helpers";
 import DisplayZekr from "../../components/DisplayZekr";
 import DisplayAzkar from "../../components/DisplayAzkar";
+import { fetchAzkarCategoryCount } from "../../service/GetAzkar";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrayingHands, faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -34,8 +35,13 @@ export default function CategoryPage() {
 
     if (id) {
       setCategoryId(id);
-      const total = AzkarCategories.find((b) => b.id === id)?.number || 0;
-      setTotalPages(Math.ceil(total / 5));
+      const category = AzkarCategories.find((b) => b.id === id);
+      if (category) {
+        fetchAzkarCategoryCount(category.ar).then((count) => {
+          const actualCount = count > 0 ? count : category.number;
+          setTotalPages(Math.ceil(actualCount / 5));
+        });
+      }
     } else {
       setCategoryId("morning_azkar");
     }

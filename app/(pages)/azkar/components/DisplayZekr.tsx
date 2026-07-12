@@ -14,6 +14,7 @@ import { useSingleZekr } from "@/hooks/azkar/useSingleZekr";
 import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import Link from "next/link";
 import { toArabicNumber } from "@/utils/helpers";
+import ZekrCounter from "./ZekrCounter";
 
 interface SingleZekrProps {
   zekrNumber: number;
@@ -73,7 +74,7 @@ export default function DisplayZekr({
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <ShareModal
                 size="xl"
                 url={`https://muslim-one.vercel.app/azkar/category/${zekrData?.id ?? categoryId}?zekr=${zekr.number}`}
@@ -92,13 +93,19 @@ export default function DisplayZekr({
                   className="text-lg"
                 />
               </button>
+
+              <ZekrCounter
+                categoryId={categoryId}
+                number={zekr.number!}
+                totalCount={zekr.totalCount}
+              />
             </div>
           </div>
 
           <div className="space-y-4">
             <p
               dir="rtl"
-              className="text-xl leading-loose text-foreground text-center  font-medium"
+              className="tex-base lg:text-xl leading-loose text-foreground text-center  font-medium"
             >
               {zekr.content}
             </p>
@@ -107,18 +114,6 @@ export default function DisplayZekr({
               <p className="text-center text-muted-foreground text-sm md:text-base leading-relaxed pt-4 border-t border-border/30">
                 {zekr.description}
               </p>
-            )}
-
-            {zekr.count && parseInt(zekr.count) > 1 && (
-              <div className="mt-5 flex justify-center">
-                <span className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-bold">
-                  <span>{isArabic ? "التكرار:" : "Repeat:"}</span>
-                  <span>
-                    {isArabic ? toArabicNumber(parseInt(zekr.count)) : zekr.count}
-                  </span>
-                  <span>{isArabic ? "مرات" : "times"}</span>
-                </span>
-              </div>
             )}
           </div>
         </div>

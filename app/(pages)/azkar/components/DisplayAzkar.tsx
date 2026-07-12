@@ -15,6 +15,7 @@ import { useAzkarData } from "@/hooks/azkar/useAzkarData";
 import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import { AzkarCategories } from "@/constants/azkarData";
 import { AzkarCardSkeleton } from "./AzkarCardSkeleton";
+import ZekrCounter from "./ZekrCounter";
 import { toArabicNumber } from "@/utils/helpers";
 
 interface AzkarPageProps {
@@ -71,7 +72,7 @@ export default function DisplayAzkar({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <ShareModal
                       size="xl"
                       url={`https://muslim-one.vercel.app/azkar/category/${zekr?.id}?zekr=${azkar.number}`}
@@ -90,13 +91,19 @@ export default function DisplayAzkar({
                         className="text-lg"
                       />
                     </button>
+
+                    <ZekrCounter
+                      categoryId={categoryId}
+                      number={azkar.number!}
+                      totalCount={azkar.totalCount}
+                    />
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <p
                     dir="rtl"
-                    className="text-xl leading-loose text-foreground text-center  font-medium"
+                    className="tex-base lg:text-xl leading-loose text-foreground text-center  font-medium"
                   >
                     {azkar.content}
                   </p>
@@ -107,18 +114,6 @@ export default function DisplayAzkar({
                     </p>
                   )}
                 </div>
-
-                {azkar.count && parseInt(azkar.count) > 1 && (
-                  <div className="mt-5 flex justify-center">
-                    <span className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-sm font-bold">
-                      <span>{isArabic ? "التكرار:" : "Repeat:"}</span>
-                      <span>
-                        {isArabic ? toArabicNumber(parseInt(azkar.count)) : azkar.count}
-                      </span>
-                      <span>{isArabic ? "مرات" : "times"}</span>
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           );
