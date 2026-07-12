@@ -6,6 +6,7 @@ import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
 interface SadaqaGaryaContextProps {
   deceasedPersons: DeceasedPerson[];
   isLoading: boolean;
+  hasDatabaseError: boolean;
   addDeceasedPerson: (person: DeceasedPerson) => void;
   removeDeceasedPerson: (id: string) => void;
   getDeceasedPerson: (slug: string) => DeceasedPerson | undefined;
@@ -22,6 +23,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [deceasedPersons, setDeceasedPersons] = useState<DeceasedPerson[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasDatabaseError, setHasDatabaseError] = useState(false);
   const [ownedSlugs, setOwnedSlugs] = useState<string[]>([]);
 
   const getLocalOwnedSlugs = (): string[] => {
@@ -41,6 +43,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const loadRecords = async () => {
       try {
+        setHasDatabaseError(false);
         const response = await fetch("/api/sadaqa-garya", {
           method: "GET",
           cache: "no-store",
@@ -65,6 +68,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch (error) {
         console.error("Error loading Sadaqa records:", error);
         if (isActive) {
+          setHasDatabaseError(true);
           setDeceasedPersons([]);
           setOwnedSlugs([]);
         }
@@ -134,6 +138,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         deceasedPersons,
         isLoading,
+        hasDatabaseError,
         addDeceasedPerson,
         removeDeceasedPerson,
         getDeceasedPerson,

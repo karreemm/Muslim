@@ -11,6 +11,7 @@ import Loading from "@/components/general/Loading";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
+import HasUpdatesCard from "@/components/general/HasUpdatesCard";
 
 export default function DeceasedPersonsTable() {
   const {
@@ -18,6 +19,7 @@ export default function DeceasedPersonsTable() {
     removeDeceasedPerson,
     isLoading,
     canDeleteDeceased,
+    hasDatabaseError,
   } = useSadaqaGarya();
   const [shareableUrls, setShareableUrls] = useState<Record<string, string>>(
     {},
@@ -30,9 +32,14 @@ export default function DeceasedPersonsTable() {
   } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
   const { language } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const urls: Record<string, string> = {};
@@ -212,6 +219,18 @@ export default function DeceasedPersonsTable() {
       <div className="flex justify-center items-center min-h-screen">
         <Loading />
       </div>
+    );
+  }
+
+  if (hasDatabaseError) {
+    return (
+      <HasUpdatesCard
+        mounted={mounted}
+        title={t("sadaqa.update.title")}
+        message={t("sadaqa.update.message")}
+        backToHomeLabel={t("sadaqa.update.backToHome")}
+        onBackToHome={() => router.push("/")}
+      />
     );
   }
 
