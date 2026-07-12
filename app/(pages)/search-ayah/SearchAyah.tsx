@@ -58,7 +58,7 @@ export default function SearchAyah() {
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground pb-20">
-      <div className="relative z-10 w-[92%] max-w-[1500px] mx-auto pt-10">
+      <div className="relative z-10 w-[92%] max-w-7xl mx-auto pt-10">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-5xl font-bold text-foreground  mb-3">
             {t("searchAyah.title")}
