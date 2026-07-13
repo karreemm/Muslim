@@ -8,6 +8,7 @@ import {
   faImage,
   faClock,
   faHandsPraying,
+  faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -40,6 +41,20 @@ export const featuredFeatures: HomeFeature[] = [
     icon: faBookOpen,
     title: "features.listenQuran.title",
     desc: "features.listenQuran.desc",
+    gradient: "from-primary/20 to-primary/5",
+  },
+  {
+    href: "/listen-quran",
+    icon: faRepeat,
+    title: "features.repeatHifz.title",
+    desc: "features.repeatHifz.desc",
+    gradient: "from-primary/20 to-primary/5",
+  },
+  {
+    href: "/ayah-to-image",
+    icon: faImage,
+    title: "features.ayahToImage.title",
+    desc: "features.ayahToImage.desc",
     gradient: "from-primary/20 to-primary/5",
   },
   {
@@ -78,12 +93,6 @@ export const secondaryTools: HomeTool[] = [
     icon: faClock,
     title: "tools.prayerTimes.title",
     desc: "tools.prayerTimes.desc",
-  },
-  {
-    href: "/ayah-to-image",
-    icon: faImage,
-    title: "tools.ayahToImage.title",
-    desc: "tools.ayahToImage.desc",
   },
   {
     href: "/tasbeeh",

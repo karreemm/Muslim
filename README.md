@@ -107,6 +107,20 @@ Choose from **14 world-renowned reciters**:
 </details>
 
 <details>
+<summary><strong>Repeat (Hifz) Mode</strong></summary>
+<br />
+
+Memorize the Quran ayah by ayah with built-in repetition:
+
+- Start repeating from any ayah via the ayah popover or audio player
+- Set custom ayah ranges for focused memorization
+- Adjustable repeat count per ayah (including infinite repeat)
+- Visual repeat bar shows current ayah and repetition progress
+- Cancel repeat mode anytime to continue normal playback
+
+</details>
+
+<details>
 <summary><strong>Ayah to Image</strong></summary>
 <br />
 

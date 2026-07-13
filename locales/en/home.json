@@ -37,6 +37,14 @@
     "hadith": {
       "title": "Read Hadith",
       "desc": "Browse authentic hadith in a simple and focused way."
+    },
+    "repeatHifz": {
+      "title": "Repeat (Hifz) Mode",
+      "desc": "Repeat ayahs to help memorize the Quran verse by verse."
+    },
+    "ayahToImage": {
+      "title": "Ayah to Image",
+      "desc": "Turn any Ayah into a beautiful image."
     }
   },
   "tools": {
@@ -61,10 +69,6 @@
     "sadaqat": {
       "title": "My Sadaqat",
       "desc": "Keep a personal record of your charity and intentions."
-    },
-    "ayahToImage": {
-      "title": "Ayah to Image",
-      "desc": "Turn any Ayah into a beautiful image."
     }
   },
   "installFlow": {
