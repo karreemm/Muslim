@@ -13,20 +13,16 @@ import {
   faPause,
   faStepBackward,
   faStepForward,
-  faRotateLeft,
-  faRotateRight,
   faDownload,
   faCheck,
   faExclamationTriangle,
   faXmark,
-  faMicrophone,
   faArrowUp,
   faEllipsisVertical,
-  faChevronLeft,
-  faChevronRight,
   faVolumeHigh,
   faVolumeMute,
   faSpinner,
+  faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   useSurahData,
@@ -35,18 +31,34 @@ import {
 } from "@/hooks/listenQuran";
 import PlayerIconButton from "@/components/general/PlayerIconButton";
 import { ClipLoader } from "react-spinners";
-import styles from "@/app/styles/modules/AudioPlayer.module.css";
 import AudioPlayerProgressBar from "@/components/general/audio-player/AudioPlayerProgressBar";
 import AudioPlayerReciterDropdown from "@/components/general/audio-player/AudioPlayerReciterDropdown";
 import AudioPlayerMobileSheet from "@/components/general/audio-player/AudioPlayerMobileSheet";
+import RepeatModePanel from "@/components/general/audio-player/RepeatModePanel";
+import { useMediaQuery } from "@/hooks/general/useMediaQuery";
+import {
+  RepeatConfig,
+  RepeatRangeMode,
+  PlaybackSpeed,
+  PLAYBACK_SPEED_OPTIONS,
+} from "@/components/general/audio-player/types";
+import { toArabicNumber } from "@/utils/helpers";
 
-type DownloadStatus = "idle" | "downloading" | "success" | "error";
+interface RepeatPanelInitial {
+  startAyah?: number;
+  mode?: RepeatRangeMode;
+  openEndPicker?: boolean;
+}
 
 interface AudioPlayerRefs {
   dropdownRef: React.RefObject<HTMLDivElement>;
   micBtnRef: React.RefObject<HTMLButtonElement>;
   mobileSheetRef: React.RefObject<HTMLDivElement>;
   progressRef: React.RefObject<HTMLInputElement>;
+  repeatBtnRef: React.RefObject<HTMLButtonElement>;
+  repeatDropdownRef: React.RefObject<HTMLDivElement>;
+  speedBtnRef: React.RefObject<HTMLButtonElement>;
+  speedDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
 export const AudioPlayer = () => {
@@ -68,6 +80,14 @@ export const AudioPlayer = () => {
     stopAfterAyahIndex,
     triggerScrollToAyah,
     clearStopAfterAyah,
+    repeatConfig,
+    isRepeatModeActive,
+    startRepeatMode,
+    stopRepeatMode,
+    hifzRequest,
+    clearHifzRequest,
+    playbackRate,
+    setPlaybackRate,
   } = useQuranAudio();
 
   const pathname = usePathname();
@@ -81,8 +101,22 @@ export const AudioPlayer = () => {
   >("idle");
   const [showMobileSheet, setShowMobileSheet] = useState(false);
   const [showReciterSheet, setShowReciterSheet] = useState(false);
+  const [showRepeatDropdown, setShowRepeatDropdown] = useState(false);
+  const [showRepeatSheet, setShowRepeatSheet] = useState(false);
+  const [showSpeedSheet, setShowSpeedSheet] = useState(false);
+  const [showSpeedDropdown, setShowSpeedDropdown] = useState(false);
+  const [speedDropdownSide, setSpeedDropdownSide] = useState<"left" | "right">(
+    "right",
+  );
+  const [repeatDropdownSide, setRepeatDropdownSide] = useState<
+    "left" | "right"
+  >("right");
   const [isMuted, setIsMuted] = useState(false);
   const [skipMode, setSkipMode] = useState<"verse" | "15sec">("verse");
+
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const [repeatInitial, setRepeatInitial] = useState<RepeatPanelInitial>({});
 
   useEffect(() => {
     const saved = localStorage.getItem("audioSkipMode");
@@ -99,11 +133,19 @@ export const AudioPlayer = () => {
   const micBtnRef = useRef<HTMLButtonElement>(null);
   const mobileSheetRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLInputElement>(null);
+  const repeatBtnRef = useRef<HTMLButtonElement>(null);
+  const repeatDropdownRef = useRef<HTMLDivElement>(null);
+  const speedBtnRef = useRef<HTMLButtonElement>(null);
+  const speedDropdownRef = useRef<HTMLDivElement>(null);
   const playerRefs: AudioPlayerRefs = {
     dropdownRef,
     micBtnRef,
     mobileSheetRef,
     progressRef,
+    repeatBtnRef,
+    repeatDropdownRef,
+    speedBtnRef,
+    speedDropdownRef,
   };
 
   if (!isPlayerVisible || !surahNumber || !reciterId) return null;
@@ -143,6 +185,33 @@ export const AudioPlayer = () => {
       stopAfterAyahIndex={stopAfterAyahIndex}
       triggerScrollToAyah={triggerScrollToAyah}
       clearStopAfterAyah={clearStopAfterAyah}
+      repeatConfig={repeatConfig}
+      isRepeatModeActive={isRepeatModeActive}
+      startRepeatMode={startRepeatMode}
+      stopRepeatMode={stopRepeatMode}
+      hifzRequest={hifzRequest}
+      clearHifzRequest={clearHifzRequest}
+      showRepeatDropdown={showRepeatDropdown}
+      setShowRepeatDropdown={setShowRepeatDropdown}
+      showRepeatSheet={showRepeatSheet}
+      setShowRepeatSheet={setShowRepeatSheet}
+      showSpeedSheet={showSpeedSheet}
+      setShowSpeedSheet={setShowSpeedSheet}
+      repeatInitial={repeatInitial}
+      setRepeatInitial={setRepeatInitial}
+      isDesktop={isDesktop}
+      repeatBtnRef={playerRefs.repeatBtnRef}
+      repeatDropdownRef={playerRefs.repeatDropdownRef}
+      showSpeedDropdown={showSpeedDropdown}
+      setShowSpeedDropdown={setShowSpeedDropdown}
+      speedBtnRef={playerRefs.speedBtnRef}
+      speedDropdownRef={playerRefs.speedDropdownRef}
+      speedDropdownSide={speedDropdownSide}
+      setSpeedDropdownSide={setSpeedDropdownSide}
+      repeatDropdownSide={repeatDropdownSide}
+      setRepeatDropdownSide={setRepeatDropdownSide}
+      playbackRate={playbackRate}
+      setPlaybackRate={setPlaybackRate}
       skipMode={skipMode}
       setSkipMode={setSkipMode}
     />
@@ -187,6 +256,45 @@ interface InnerProps {
   stopAfterAyahIndex: number | null;
   triggerScrollToAyah: () => void;
   clearStopAfterAyah: () => void;
+  repeatConfig: RepeatConfig | null;
+  isRepeatModeActive: boolean;
+  startRepeatMode: (config: RepeatConfig) => void;
+  stopRepeatMode: () => void;
+  hifzRequest: {
+    startAyah: number;
+    mode: RepeatRangeMode;
+    openEndPicker: boolean;
+  } | null;
+  clearHifzRequest: () => void;
+  showRepeatDropdown: boolean;
+  setShowRepeatDropdown: (v: boolean) => void;
+  showRepeatSheet: boolean;
+  setShowRepeatSheet: (v: boolean) => void;
+  showSpeedSheet: boolean;
+  setShowSpeedSheet: (v: boolean) => void;
+  repeatInitial: {
+    startAyah?: number;
+    mode?: RepeatRangeMode;
+    openEndPicker?: boolean;
+  };
+  setRepeatInitial: (v: {
+    startAyah?: number;
+    mode?: RepeatRangeMode;
+    openEndPicker?: boolean;
+  }) => void;
+  isDesktop: boolean;
+  repeatBtnRef: React.RefObject<HTMLButtonElement>;
+  repeatDropdownRef: React.RefObject<HTMLDivElement>;
+  showSpeedDropdown: boolean;
+  setShowSpeedDropdown: (v: boolean) => void;
+  speedBtnRef: React.RefObject<HTMLButtonElement>;
+  speedDropdownRef: React.RefObject<HTMLDivElement>;
+  speedDropdownSide: "left" | "right";
+  setSpeedDropdownSide: (v: "left" | "right") => void;
+  repeatDropdownSide: "left" | "right";
+  setRepeatDropdownSide: (v: "left" | "right") => void;
+  playbackRate: number;
+  setPlaybackRate: (rate: number) => void;
   skipMode: "verse" | "15sec";
   setSkipMode: (mode: "verse" | "15sec") => void;
 }
@@ -225,6 +333,33 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   stopAfterAyahIndex,
   triggerScrollToAyah,
   clearStopAfterAyah,
+  repeatConfig,
+  isRepeatModeActive,
+  startRepeatMode,
+  stopRepeatMode,
+  hifzRequest,
+  clearHifzRequest,
+  showRepeatDropdown,
+  setShowRepeatDropdown,
+  showRepeatSheet,
+  setShowRepeatSheet,
+  showSpeedSheet,
+  setShowSpeedSheet,
+  repeatInitial,
+  setRepeatInitial,
+  isDesktop,
+  repeatBtnRef,
+  repeatDropdownRef,
+  showSpeedDropdown,
+  setShowSpeedDropdown,
+  speedBtnRef,
+  speedDropdownRef,
+  speedDropdownSide,
+  setSpeedDropdownSide,
+  repeatDropdownSide,
+  setRepeatDropdownSide,
+  playbackRate,
+  setPlaybackRate,
   skipMode,
   setSkipMode,
 }) => {
@@ -253,7 +388,14 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     currentAyahTotalDuration,
     playAyah,
     restart,
-  } = useAudioPlayer(surah, reciterId, surahNumber, stopAfterAyahIndex);
+    currentRepeatCount,
+  } = useAudioPlayer(surah, reciterId, surahNumber, {
+    stopAfterAyahIndex,
+    repeatConfig,
+    isRepeatModeActive,
+    onStopRepeat: stopRepeatMode,
+    playbackRate,
+  });
 
   const handleTogglePlayPause = () => {
     if (!isPlaying && stopAfterAyahIndex !== null) {
@@ -364,10 +506,36 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
       ) {
         setShowReciterDropdown(false);
       }
+      if (
+        repeatDropdownRef.current &&
+        !repeatDropdownRef.current.contains(e.target as Node) &&
+        repeatBtnRef.current &&
+        !repeatBtnRef.current.contains(e.target as Node)
+      ) {
+        setShowRepeatDropdown(false);
+      }
+      if (
+        speedDropdownRef.current &&
+        !speedDropdownRef.current.contains(e.target as Node) &&
+        speedBtnRef.current &&
+        !speedBtnRef.current.contains(e.target as Node)
+      ) {
+        setShowSpeedDropdown(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [dropdownRef, micBtnRef, setShowReciterDropdown]);
+  }, [
+    dropdownRef,
+    micBtnRef,
+    setShowReciterDropdown,
+    repeatDropdownRef,
+    repeatBtnRef,
+    setShowRepeatDropdown,
+    speedDropdownRef,
+    speedBtnRef,
+    setShowSpeedDropdown,
+  ]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -390,8 +558,93 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     setTimeout(() => setDownloadStatus("idle"), 3000);
   };
 
+  const handleStartRepeat = (config: RepeatConfig) => {
+    startRepeatMode(config);
+    playAyah(config.startAyah - 1);
+    setShowRepeatDropdown(false);
+    setShowMobileSheet(false);
+    setShowRepeatSheet(false);
+  };
+
+  const handleChangeSpeed = (rate: number) => {
+    setPlaybackRate(rate as PlaybackSpeed);
+    setShowSpeedDropdown(false);
+  };
+
+  const handleCancelRepeat = () => {
+    stopRepeatMode();
+    playAyah(currentAyahIndex);
+  };
+
+  const computeDropdownSide = (
+    btn: React.RefObject<HTMLButtonElement>,
+    width: number,
+  ): "left" | "right" => {
+    const el = btn.current;
+    if (!el || typeof window === "undefined") return "right";
+    const rect = el.getBoundingClientRect();
+    const margin = 8;
+    if (rect.right - width >= margin) return "right";
+    if (rect.left + width <= window.innerWidth - margin) return "left";
+    return "right";
+  };
+
+  const openRepeatPanel = (initial?: RepeatPanelInitial) => {
+    setRepeatInitial(
+      initial ?? {
+        startAyah: currentAyahIndex + 1,
+        mode: "custom",
+        openEndPicker: false,
+      },
+    );
+    if (isDesktop) {
+      setShowRepeatDropdown(true);
+      setRepeatDropdownSide(computeDropdownSide(repeatBtnRef, 320));
+    } else {
+      setShowMobileSheet(true);
+      setShowReciterSheet(false);
+      setShowRepeatSheet(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!hifzRequest) return;
+    openRepeatPanel({
+      startAyah: hifzRequest.startAyah,
+      mode: hifzRequest.mode,
+      openEndPicker: hifzRequest.openEndPicker,
+    });
+    clearHifzRequest();
+  }, [hifzRequest]);
+
   const progressPercentage =
     duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
+
+  const repeatStatus = (() => {
+    if (!repeatConfig) return null;
+    const reps =
+      repeatConfig.repeatsPerAyah === Infinity
+        ? Infinity
+        : repeatConfig.repeatsPerAyah;
+    const repsDisplay = reps === Infinity ? "∞" : String(reps);
+    const currentRep =
+      reps === Infinity
+        ? currentRepeatCount + 1
+        : Math.min(currentRepeatCount + 1, reps);
+    return { repsDisplay, currentRep };
+  })();
+
+  const repeatRange =
+    isRepeatModeActive && repeatConfig
+      ? { start: repeatConfig.startAyah - 1, end: repeatConfig.endAyah - 1 }
+      : null;
+  const prevAyahDisabled = repeatRange
+    ? currentAyahIndex <= repeatRange.start
+    : isFirstAyah;
+  const nextAyahDisabled = repeatRange
+    ? currentAyahIndex >= repeatRange.end
+    : isLastAyah;
+  const currentAyah = currentAyahIndex + 1;
 
   const handleClose = () => {
     setIsPlayerVisible(false);
@@ -419,6 +672,89 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
       )}
 
       <div className="fixed bottom-0 left-0 right-0 z-[200] bg-background/90 backdrop-blur-2xl border-t border-border/50 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
+        {isRepeatModeActive && repeatConfig && repeatStatus && (
+          <div className="px-4 max-w-7xl mx-auto w-full">
+            <div
+              className="flex items-center justify-between rounded-full border px-3 py-1.5 shadow-sm transition-all duration-200 hover:shadow-md"
+              style={{
+                background: "hsl(var(--primary) / 0.08)",
+                borderColor: "hsl(var(--primary) / 0.15)",
+              }}
+            >
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div
+                  className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                  style={{ background: "hsl(var(--primary) / 0.12)" }}
+                >
+                  <FontAwesomeIcon
+                    icon={faRepeat}
+                    className="text-[10px] animate-spin"
+                    style={{
+                      color: "hsl(var(--primary))",
+                      animationDuration: "3s",
+                    }}
+                  />
+                </div>
+                <span
+                  className="text-[11px] font-medium truncate"
+                  style={{ color: "hsl(var(--primary))" }}
+                >
+                  {repeatConfig.startAyah === repeatConfig.endAyah
+                    ? language === "ar"
+                      ? `تكرار الآية ${toArabicNumber(repeatConfig.startAyah)}`
+                      : `Repeating ayah ${repeatConfig.startAyah}`
+                    : language === "ar"
+                      ? `تكرار الآيات ${toArabicNumber(repeatConfig.startAyah)}–${toArabicNumber(repeatConfig.endAyah)}`
+                      : `Repeating ayahs ${repeatConfig.startAyah}–${repeatConfig.endAyah}`}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span
+                  className="text-[11px] font-bold"
+                  style={{ color: "hsl(var(--primary))" }}
+                >
+                  {language === "ar"
+                    ? `الآية ${toArabicNumber(currentAyah)}`
+                    : `Ayah ${currentAyah}`}
+                </span>
+                <span
+                  className="text-[10px] font-medium"
+                  style={{ color: "hsl(var(--primary) / 0.9)" }}
+                >
+                  {language === "ar"
+                    ? `(${toArabicNumber(parseInt(repeatStatus.repsDisplay))}/${toArabicNumber(repeatStatus.currentRep)})`
+                    : `(${repeatStatus.currentRep}/${repeatStatus.repsDisplay})`}
+                </span>
+              </div>
+
+              <button
+                onClick={handleCancelRepeat}
+                aria-label={
+                  language === "ar" ? "إلغاء التكرار" : "Cancel repeat"
+                }
+                className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 shrink-0 hover:scale-110"
+                style={{
+                  background: "hsl(var(--primary) / 0.1)",
+                  color: "hsl(var(--primary) / 0.6)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background =
+                    "hsl(var(--destructive) / 0.12)";
+                  e.currentTarget.style.color = "hsl(var(--destructive))";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background =
+                    "hsl(var(--primary) / 0.1)";
+                  e.currentTarget.style.color = "hsl(var(--primary) / 0.6)";
+                }}
+              >
+                <FontAwesomeIcon icon={faXmark} className="text-[10px]" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <AudioPlayerProgressBar
           progressRef={progressRef}
           currentTime={currentTime}
@@ -478,13 +814,15 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 </>
               )}
 
-              {skipMode === "verse" ? (
+              {isRepeatModeActive || skipMode === "verse" ? (
                 <>
                   <PlayerIconButton
                     onClick={previous}
-                    disabled={isFirstAyah}
-                    tooltip={language === "ar" ? "الآية السابقة" : "Previous Verse"}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isFirstAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
+                    disabled={prevAyahDisabled}
+                    tooltip={
+                      language === "ar" ? "الآية السابقة" : "Previous Verse"
+                    }
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${prevAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
                   >
                     <FontAwesomeIcon
                       icon={faStepBackward}
@@ -514,8 +852,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   <PlayerIconButton
                     tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
                     onClick={next}
-                    disabled={isLastAyah}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isLastAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
+                    disabled={nextAyahDisabled}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${nextAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
                   >
                     <FontAwesomeIcon icon={faStepForward} className="text-xs" />
                   </PlayerIconButton>
@@ -621,19 +959,20 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
             >
               <PlayerIconButton
                 onClick={previous}
-                disabled={isFirstAyah}
+                disabled={prevAyahDisabled}
                 tooltip={language === "ar" ? "الآية السابقة" : "Previous Verse"}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isFirstAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${prevAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepBackward} className="text-sm" />
               </PlayerIconButton>
 
               <PlayerIconButton
                 onClick={skipBackward15}
+                disabled={isRepeatModeActive}
                 tooltip={
                   language === "ar" ? "تراجع 15 ثانية" : "Back 15 seconds"
                 }
-                className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="backward" className="w-6 h-6" />
               </PlayerIconButton>
@@ -667,35 +1006,26 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
               <PlayerIconButton
                 onClick={skipForward15}
+                disabled={isRepeatModeActive}
                 tooltip={
                   language === "ar" ? "تقديم 15 ثانية" : "Forward 15 seconds"
                 }
-                className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="forward" className="w-6 h-6" />
               </PlayerIconButton>
 
               <PlayerIconButton
                 onClick={next}
-                disabled={isLastAyah}
+                disabled={nextAyahDisabled}
                 tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isLastAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${nextAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepForward} className="text-sm" />
               </PlayerIconButton>
             </div>
 
             <div className="flex items-center gap-1 flex-1 justify-end">
-              {isReadQuranPage && (
-                <PlayerIconButton
-                  onClick={triggerScrollToAyah}
-                  tooltip={language === "ar" ? "انتقال للآية" : "Jump to Ayah"}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110"
-                >
-                  <FontAwesomeIcon icon={faArrowUp} className="text-sm" />
-                </PlayerIconButton>
-              )}
-
               <PlayerIconButton
                 onClick={() => {
                   setIsMuted(!isMuted);
@@ -718,6 +1048,57 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 />
               </PlayerIconButton>
 
+              <div className="relative">
+                <PlayerIconButton
+                  buttonRef={speedBtnRef}
+                  onClick={() => {
+                    const next = !showSpeedDropdown;
+                    setShowSpeedDropdown(next);
+                    if (next)
+                      setSpeedDropdownSide(
+                        computeDropdownSide(speedBtnRef, 160),
+                      );
+                  }}
+                  tooltip={
+                    language === "ar" ? "سرعة التشغيل" : "Playback Speed"
+                  }
+                  className={`h-9 px-2.5 mt-1 min-w-[2.5rem] rounded-full flex items-center justify-center text-base font-bold tabular-nums transition-all duration-200 ${showSpeedDropdown ? "text-primary bg-secondary ring-2 ring-primary/20" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
+                >
+                  {playbackRate}×
+                </PlayerIconButton>
+
+                {showSpeedDropdown && (
+                  <div
+                    ref={speedDropdownRef}
+                    className={`absolute bottom-[calc(100%+12px)] ${speedDropdownSide === "right" ? "right-0" : "left-0"} w-40 max-w-[calc(100vw-1rem)] bg-popover/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-border overflow-hidden z-[500] animate-in slide-in-from-bottom-2 fade-in duration-200`}
+                  >
+                    <div className="px-4 py-3 bg-muted/50 border-b border-border">
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                        {language === "ar" ? "سرعة التشغيل" : "Playback Speed"}
+                      </span>
+                    </div>
+                    <div className="py-1">
+                      {PLAYBACK_SPEED_OPTIONS.map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => handleChangeSpeed(s)}
+                          className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3 ${playbackRate === s ? "bg-primary/10 text-primary font-semibold" : "text-foreground hover:bg-muted"}`}
+                        >
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${playbackRate === s ? "border-primary" : "border-muted-foreground/30"}`}
+                          >
+                            {playbackRate === s && (
+                              <div className="w-2 h-2 rounded-full bg-primary" />
+                            )}
+                          </div>
+                          {s}x
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <PlayerIconButton
                 onClick={handleDownload}
                 disabled={
@@ -739,6 +1120,18 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 />
               </PlayerIconButton>
 
+              <div className="w-px h-5 bg-border mx-1" />
+
+              {isReadQuranPage && (
+                <PlayerIconButton
+                  onClick={triggerScrollToAyah}
+                  tooltip={language === "ar" ? "انتقال للآية" : "Jump to Ayah"}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110"
+                >
+                  <FontAwesomeIcon icon={faArrowUp} className="text-sm" />
+                </PlayerIconButton>
+              )}
+
               <AudioPlayerReciterDropdown
                 language={language}
                 reciterId={reciterId}
@@ -750,14 +1143,50 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 micBtnRef={micBtnRef}
               />
 
-              {!isListenPage && (
+              <div className="relative">
                 <PlayerIconButton
-                  onClick={handleClose}
-                  tooltip={language === "ar" ? "إغلاق" : "Close"}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 hover:rotate-90 ml-1"
+                  buttonRef={repeatBtnRef}
+                  onClick={() => openRepeatPanel()}
+                  tooltip={language === "ar" ? "وضع التكرار" : "Repeat Mode"}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isRepeatModeActive ? "text-primary bg-primary/10 ring-2 ring-primary/20" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
                 >
-                  <FontAwesomeIcon icon={faXmark} className="text-base" />
+                  <FontAwesomeIcon icon={faRepeat} className="text-sm" />
                 </PlayerIconButton>
+
+                {showRepeatDropdown && (
+                  <div
+                    ref={repeatDropdownRef}
+                    className={`absolute bottom-[calc(100%+12px)] ${repeatDropdownSide === "right" ? "right-0" : "left-0"} w-80 max-w-[calc(100vw-1rem)] bg-popover/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-border overflow-hidden z-[500] animate-in slide-in-from-bottom-2 fade-in duration-200`}
+                  >
+                    <RepeatModePanel
+                      language={language}
+                      totalAyahs={totalAyahs}
+                      currentAyahIndex={currentAyahIndex}
+                      initialStartAyah={
+                        repeatInitial.startAyah ?? currentAyahIndex + 1
+                      }
+                      initialMode={repeatInitial.mode}
+                      openEndPicker={repeatInitial.openEndPicker}
+                      onStart={handleStartRepeat}
+                      onClose={() => setShowRepeatDropdown(false)}
+                      playbackRate={playbackRate}
+                      onChangePlaybackRate={setPlaybackRate}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {!isListenPage && (
+                <>
+                  <div className="w-px h-5 bg-border mx-1" />
+                  <PlayerIconButton
+                    onClick={handleClose}
+                    tooltip={language === "ar" ? "إغلاق" : "Close"}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 hover:rotate-90 ml-1"
+                  >
+                    <FontAwesomeIcon icon={faXmark} className="text-base" />
+                  </PlayerIconButton>
+                </>
               )}
             </div>
           </div>
@@ -776,6 +1205,12 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
         setShowMobileSheet={setShowMobileSheet}
         showReciterSheet={showReciterSheet}
         setShowReciterSheet={setShowReciterSheet}
+        showRepeatSheet={showRepeatSheet}
+        setShowRepeatSheet={setShowRepeatSheet}
+        showSpeedSheet={showSpeedSheet}
+        setShowSpeedSheet={setShowSpeedSheet}
+        playbackRate={playbackRate}
+        setPlaybackRate={setPlaybackRate}
         setReciterId={setReciterId}
         mobileSheetRef={mobileSheetRef}
         surahNumber={surahNumber}
@@ -788,6 +1223,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
         onDownload={handleDownload}
         skipMode={skipMode}
         setSkipMode={setSkipMode}
+        onStartRepeat={handleStartRepeat}
+        repeatInitial={repeatInitial}
       />
     </>
   );

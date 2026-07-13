@@ -1,11 +1,12 @@
-{
+﻿{
   "popover": {
     "saveAyah": "حفظ الآية",
     "listenAyah": "استمع للآية",
     "selectReciter": "اختر القارئ",
     "viewTafseer": "التفسير",
     "viewTranslation": "الترجمة",
-    "convertToImage": "تحويل لصورة"
+    "convertToImage": "تحويل لصورة",
+    "startHifz": "ابدأ الحفظ من هنا"
   },
   "tafseer": {
     "title": "تفسير الآية",

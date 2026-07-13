@@ -140,7 +140,12 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
     const { lineOrder, lines } = useQuranPageLines(verses, pageNumber);
-    const { surahNumber, activeAyahIndex, isPlayerVisible } = useQuranAudio();
+    const {
+      surahNumber,
+      activeAyahIndex,
+      isPlayerVisible,
+      requestHifzFromAyah,
+    } = useQuranAudio();
 
     const playingSurahStr = isPlayerVisible
       ? surahNumber?.toString()
@@ -798,6 +803,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
             onOpenTafseer={handleOpenTafseer}
             onOpenTranslation={handleOpenTranslation}
             onConvertToImage={handleConvertToImage}
+            onStartHifz={() => {
+              handleClosePopover();
+              requestHifzFromAyah(selectedSurahNumber, selectedAyahNumber);
+            }}
             surahNameAr={selectedSurahNameAr}
             surahNameEn={selectedSurahNameEn}
           />

@@ -12,6 +12,7 @@ import {
   faBook,
   faLanguage,
   faImage,
+  faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -29,6 +30,7 @@ interface AyahPopoverProps {
   onOpenTafseer: () => void;
   onOpenTranslation: () => void;
   onConvertToImage?: () => void;
+  onStartHifz?: () => void;
   surahNameAr?: string;
   surahNameEn?: string;
 }
@@ -44,6 +46,7 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
     onOpenTafseer,
     onOpenTranslation,
     onConvertToImage,
+    onStartHifz,
   }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
@@ -150,6 +153,19 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
                   ))}
                 </div>
               )}
+            </button>
+
+            <button
+              onClick={onStartHifz}
+              className="w-full px-2 py-2 sm:px-4 sm:py-2.5 flex items-center gap-2 rounded-lg sm:rounded-xl transition-all duration-200
+              hover:bg-secondary text-foreground hover:text-primary"
+            >
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg bg-secondary/50">
+                <FontAwesomeIcon icon={faRepeat} className="text-xs sm:text-sm" />
+              </div>
+              <span className="flex-1 text-start font-medium text-xs sm:text-sm truncate">
+                {t("readQuran.popover.startHifz")}
+              </span>
             </button>
 
             <button

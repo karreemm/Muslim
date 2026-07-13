@@ -1,11 +1,12 @@
-{
+﻿{
   "popover": {
     "saveAyah": "Save Ayah",
     "listenAyah": "Listen to Ayah",
     "selectReciter": "Select Reciter",
     "viewTafseer": "Tafseer",
     "viewTranslation": "Translation",
-    "convertToImage": "Convert to Image"
+    "convertToImage": "Convert to Image",
+    "startHifz": "Start hifz from here"
   },
   "tafseer": {
     "title": "Ayah Tafseer",
@@ -22,3 +23,4 @@
   },
   "saveThisAyah": "Save this Ayah?"
 }
+

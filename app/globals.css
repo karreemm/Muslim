@@ -667,6 +667,15 @@
   background-color: hsl(var(--scrollbar-thumb-hover));
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* NUMBER INPUT STYLES (remove spinners) 
 ═══════════════════════════════════════════════ */
 input[type="number"]::-webkit-outer-spin-button,
