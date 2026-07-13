@@ -32,6 +32,8 @@ interface AudioPlayerMobileSheetProps {
   downloadStatus: "idle" | "downloading" | "success" | "error";
   onJumpToAyah: () => void;
   onDownload: () => void;
+  skipMode: "verse" | "15sec";
+  setSkipMode: (mode: "verse" | "15sec") => void;
 }
 
 export default function AudioPlayerMobileSheet({
@@ -53,6 +55,8 @@ export default function AudioPlayerMobileSheet({
   downloadStatus,
   onJumpToAyah,
   onDownload,
+  skipMode,
+  setSkipMode,
 }: AudioPlayerMobileSheetProps) {
   if (!showMobileSheet) return null;
 
@@ -135,6 +139,48 @@ export default function AudioPlayerMobileSheet({
                 {language === "ar" ? "تغيير القارئ" : "Change Reciter"}
               </span>
             </button>
+          </div>
+
+          <div className="border-t border-border pt-3 mt-3">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+              {language === "ar" ? "وضع التخطي" : "Skip Mode"}
+            </p>
+            <div className="flex gap-1">
+              <button
+                onClick={() => {
+                  setSkipMode("verse");
+                  setShowMobileSheet(false);
+                }}
+                className="w-full text-left px-4 py-3 rounded-xl text-sm transition-all flex items-center gap-3 text-foreground hover:bg-muted active:scale-[0.98]"
+              >
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${skipMode === "verse" ? "border-primary bg-primary" : "border-muted-foreground/30"}`}
+                >
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className={`text-[10px] ${skipMode === "verse" ? "text-primary-foreground opacity-100" : "opacity-0"}`}
+                  />
+                </div>
+                {language === "ar" ? "بالآية" : "By Verse"}
+              </button>
+              <button
+                onClick={() => {
+                  setSkipMode("15sec");
+                  setShowMobileSheet(false);
+                }}
+                className="w-full text-left px-4 py-3 rounded-xl text-sm transition-all flex items-center gap-3 text-foreground hover:bg-muted active:scale-[0.98]"
+              >
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${skipMode === "15sec" ? "border-primary bg-primary" : "border-muted-foreground/30"}`}
+                >
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className={`text-[10px] ${skipMode === "15sec" ? "text-primary-foreground opacity-100" : "opacity-0"}`}
+                  />
+                </div>
+                {language === "ar" ? "بالثواني" : "By Seconds"}
+              </button>
+            </div>
           </div>
         </div>
       ) : (

@@ -543,6 +543,99 @@ export function useAudioPlayer(
     }
   };
 
+  const seekToAbsoluteTime = (targetTime: number) => {
+    if (!surah || cumulativeDurations.length === 0) return;
+
+    const lastAyahIndex = cumulativeDurations.length - 1;
+    const totalDuration =
+      cumulativeDurations[lastAyahIndex] +
+      (ayahDurations[lastAyahIndex] || 0);
+    const clamped = Math.max(0, Math.min(targetTime, totalDuration));
+
+    let targetAyahIndex = 0;
+    for (let i = cumulativeDurations.length - 1; i >= 0; i--) {
+      if (clamped >= cumulativeDurations[i]) {
+        targetAyahIndex = i;
+        break;
+      }
+    }
+
+    const timeWithinAyah = clamped - cumulativeDurations[targetAyahIndex];
+    const wasPlaying = isPlaying;
+
+    setCurrentTime(clamped);
+    setCurrentAyahElapsedTime(timeWithinAyah);
+
+    if (targetAyahIndex === currentAyahIndex) {
+      const activePlayer = isUsingPrimary
+        ? audioPlayer.current
+        : nextAudioPlayer.current;
+      if (activePlayer) {
+        activePlayer.currentTime = timeWithinAyah;
+      }
+      return;
+    }
+
+    const shouldUsePrimary = targetAyahIndex % 2 === 0;
+    setCurrentAyahIndex(targetAyahIndex);
+    setIsUsingPrimary(shouldUsePrimary);
+
+    stopAllPlayers();
+    setIsPlaying(false);
+    if (wasPlaying) setIsBuffering(true);
+
+    const targetPlayer = shouldUsePrimary
+      ? audioPlayer.current
+      : nextAudioPlayer.current;
+    const targetAyah = surah.ayahs[targetAyahIndex];
+
+    const applySeek = () => {
+      if (!targetPlayer) {
+        seekingRef.current = false;
+        return;
+      }
+      targetPlayer.currentTime = timeWithinAyah;
+      setCurrentAyahTotalDuration(
+        targetPlayer.duration || ayahDurations[targetAyahIndex] || 1,
+      );
+      if (wasPlaying) {
+        targetPlayer
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+            seekingRef.current = false;
+          })
+          .catch(() => {
+            seekingRef.current = false;
+          });
+      } else {
+        seekingRef.current = false;
+      }
+    };
+
+    if (targetPlayer && targetAyah) {
+      if (targetPlayer.src !== targetAyah.audio) {
+        targetPlayer.src = targetAyah.audio;
+        targetPlayer.load();
+        targetPlayer.addEventListener("loadeddata", applySeek, {
+          once: true,
+        });
+      } else {
+        applySeek();
+      }
+    } else {
+      seekingRef.current = false;
+    }
+  };
+
+  const skipForward15 = () => {
+    seekToAbsoluteTime((currentTime || 0) + 15);
+  };
+
+  const skipBackward15 = () => {
+    seekToAbsoluteTime((currentTime || 0) - 15);
+  };
+
   const handleSliderChange = (value: number) => {
     setCurrentTime(value);
   };
@@ -560,114 +653,10 @@ export function useAudioPlayer(
       return;
     }
 
-    console.log("Seeking to time:", currentTime);
-
-    let targetAyahIndex = 0;
-    for (let i = cumulativeDurations.length - 1; i >= 0; i--) {
-      if (currentTime >= cumulativeDurations[i]) {
-        targetAyahIndex = i;
-        break;
-      }
-    }
-
-    const timeWithinAyah = currentTime - cumulativeDurations[targetAyahIndex];
-
-    console.log(
-      "Target ayah:",
-      targetAyahIndex,
-      "Time within ayah:",
-      timeWithinAyah,
-    );
-
-    const wasPlaying = isPlaying;
-
-    stopAllPlayers();
-    setIsPlaying(false);
-    setIsBuffering(false);
-
-    if (wasPlaying) {
-      setIsBuffering(true);
-    }
-
-    if (targetAyahIndex !== currentAyahIndex) {
-      console.log(
-        "Switching from ayah",
-        currentAyahIndex,
-        "to",
-        targetAyahIndex,
-      );
-
-      setCurrentAyahIndex(targetAyahIndex);
-
-      const shouldUsePrimary = targetAyahIndex % 2 === 0;
-      setIsUsingPrimary(shouldUsePrimary);
-
-      const targetPlayer = shouldUsePrimary
-        ? audioPlayer.current
-        : nextAudioPlayer.current;
-      const targetAyah = surah.ayahs[targetAyahIndex];
-
-      if (targetPlayer && targetAyah) {
-        targetPlayer.src = targetAyah.audio;
-        targetPlayer.load();
-
-        targetPlayer.addEventListener(
-          "loadeddata",
-          () => {
-            targetPlayer.currentTime = timeWithinAyah;
-
-            if (wasPlaying) {
-              targetPlayer
-                .play()
-                .then(() => {
-                  setIsPlaying(true);
-                  seekingRef.current = false;
-                })
-                .catch((error) => {
-                  console.error("Error playing after seek:", error);
-                  seekingRef.current = false;
-                });
-            } else {
-              seekingRef.current = false;
-            }
-          },
-          { once: true },
-        );
-      }
-    } else {
-      const activePlayer = isUsingPrimary
-        ? audioPlayer.current
-        : nextAudioPlayer.current;
-
-      if (activePlayer) {
-        activePlayer.currentTime = timeWithinAyah;
-
-        if (wasPlaying) {
-          activePlayer
-            .play()
-            .then(() => {
-              setIsPlaying(true);
-              seekingRef.current = false;
-            })
-            .catch((error) => {
-              console.error("Error playing after seek:", error);
-              seekingRef.current = false;
-            });
-        } else {
-          seekingRef.current = false;
-        }
-      }
-    }
+    seekToAbsoluteTime(currentTime);
 
     transitionTriggeredRef.current = false;
     isTransitioningRef.current = false;
-    setCurrentAyahElapsedTime(timeWithinAyah);
-    const activePlayer = isUsingPrimary
-      ? audioPlayer.current
-      : nextAudioPlayer.current;
-    if (activePlayer && activePlayer.duration) {
-      setCurrentAyahTotalDuration(activePlayer.duration);
-    }
   };
 
   const formatTime = (time: number) => {
@@ -699,6 +688,8 @@ export function useAudioPlayer(
     togglePlayPause,
     next,
     previous,
+    skipForward15,
+    skipBackward15,
     isLastAyah: surah ? currentAyahIndex >= surah.ayahs.length - 1 : false,
     isFirstAyah: currentAyahIndex === 0,
     currentTime,

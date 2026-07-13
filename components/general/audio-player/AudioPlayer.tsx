@@ -7,11 +7,14 @@ import { useLanguage } from "@/context/general/LanguageContext";
 import { reciters } from "@/constants/recitersData";
 import { surahNames } from "@/constants/quranData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SkipIcon from "@/components/general/audio-player/SkipIcon";
 import {
   faPlay,
   faPause,
   faStepBackward,
   faStepForward,
+  faRotateLeft,
+  faRotateRight,
   faDownload,
   faCheck,
   faExclamationTriangle,
@@ -79,6 +82,18 @@ export const AudioPlayer = () => {
   const [showMobileSheet, setShowMobileSheet] = useState(false);
   const [showReciterSheet, setShowReciterSheet] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [skipMode, setSkipMode] = useState<"verse" | "15sec">("verse");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("audioSkipMode");
+    if (saved === "15sec" || saved === "verse") {
+      setSkipMode(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("audioSkipMode", skipMode);
+  }, [skipMode]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const micBtnRef = useRef<HTMLButtonElement>(null);
@@ -128,6 +143,8 @@ export const AudioPlayer = () => {
       stopAfterAyahIndex={stopAfterAyahIndex}
       triggerScrollToAyah={triggerScrollToAyah}
       clearStopAfterAyah={clearStopAfterAyah}
+      skipMode={skipMode}
+      setSkipMode={setSkipMode}
     />
   );
 };
@@ -170,6 +187,8 @@ interface InnerProps {
   stopAfterAyahIndex: number | null;
   triggerScrollToAyah: () => void;
   clearStopAfterAyah: () => void;
+  skipMode: "verse" | "15sec";
+  setSkipMode: (mode: "verse" | "15sec") => void;
 }
 
 const AudioPlayerInner: React.FC<InnerProps> = ({
@@ -206,6 +225,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   stopAfterAyahIndex,
   triggerScrollToAyah,
   clearStopAfterAyah,
+  skipMode,
+  setSkipMode,
 }) => {
   const { surah, loading } = useSurahData(surahNumber, reciterId);
   const {
@@ -215,6 +236,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
     totalAyahs,
     next,
     previous,
+    skipForward15,
+    skipBackward15,
     isFirstAyah,
     isLastAyah,
     isPlaying,
@@ -288,7 +311,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
       handleClose();
     };
     window.addEventListener("radio:started", handleRadioStarted);
-    return () => window.removeEventListener("radio:started", handleRadioStarted);
+    return () =>
+      window.removeEventListener("radio:started", handleRadioStarted);
   }, []);
 
   useEffect(() => {
@@ -421,13 +445,18 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 )}
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-primary/80 rounded-xl">
-                    <ClipLoader color="hsl(var(--primary-foreground))" size={16} />
+                    <ClipLoader
+                      color="hsl(var(--primary-foreground))"
+                      size={16}
+                    />
                   </div>
                 )}
               </div>
               <div className="min-w-0 flex flex-col justify-center flex-1">
                 <h3 className="text-sm font-bold text-foreground truncate leading-tight">
-                  {language === "ar" ? `سورة ${surahName}` : `Surah ${surahName}`}
+                  {language === "ar"
+                    ? `سورة ${surahName}`
+                    : `Surah ${surahName}`}
                 </h3>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
                   <span className="truncate font-medium">{reciterName}</span>
@@ -438,51 +467,103 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
             <div dir="ltr" className="flex items-center gap-0.5 shrink-0">
               {!isListenPage && (
                 <>
-                <PlayerIconButton
-                  onClick={handleClose}
-                  tooltip={language === "ar" ? "إغلاق" : "Close"}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
-                >
-                  <FontAwesomeIcon icon={faXmark} className="text-xs" />
-                </PlayerIconButton>
-               <div className="w-px h-5 bg-border mx-1" />
+                  <PlayerIconButton
+                    onClick={handleClose}
+                    tooltip={language === "ar" ? "إغلاق" : "Close"}
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+                  >
+                    <FontAwesomeIcon icon={faXmark} className="text-xs" />
+                  </PlayerIconButton>
+                  <div className="w-px h-5 bg-border mx-1" />
                 </>
               )}
 
+              {skipMode === "verse" ? (
+                <>
+                  <PlayerIconButton
+                    onClick={previous}
+                    disabled={isFirstAyah}
+                    tooltip={language === "ar" ? "الآية السابقة" : "Previous Verse"}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isFirstAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faStepBackward}
+                      className="text-xs"
+                    />
+                  </PlayerIconButton>
 
-              <PlayerIconButton
-                onClick={previous}
-                disabled={isFirstAyah}
-                tooltip={language === "ar" ? "السابق" : "Previous"}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isFirstAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
-              >
-                <FontAwesomeIcon icon={faStepBackward} className="text-xs" />
-              </PlayerIconButton>
+                  <PlayerIconButton
+                    tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
+                    onClick={handleTogglePlayPause}
+                    disabled={isBuffering}
+                    className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
+                  >
+                    {isBuffering ? (
+                      <FontAwesomeIcon
+                        icon={faSpinner}
+                        className="animate-spin text-sm"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={isPlaying ? faPause : faPlay}
+                        className={`text-sm ${!isPlaying ? "ml-0.5" : ""}`}
+                      />
+                    )}
+                  </PlayerIconButton>
 
-              <PlayerIconButton
-                tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
-                onClick={handleTogglePlayPause}
-                disabled={isBuffering}
-                className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
-              >
-                {isBuffering ? (
-                  <FontAwesomeIcon icon={faSpinner} className="animate-spin text-sm" />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={isPlaying ? faPause : faPlay}
-                    className={`text-sm ${!isPlaying ? "ml-0.5" : ""}`}
-                  />
-                )}
-              </PlayerIconButton>
+                  <PlayerIconButton
+                    tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
+                    onClick={next}
+                    disabled={isLastAyah}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isLastAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
+                  >
+                    <FontAwesomeIcon icon={faStepForward} className="text-xs" />
+                  </PlayerIconButton>
+                </>
+              ) : (
+                <>
+                  <PlayerIconButton
+                    onClick={skipBackward15}
+                    tooltip={
+                      language === "ar" ? "تراجع 15 ثانية" : "Back 15 seconds"
+                    }
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
+                  >
+                    <SkipIcon direction="backward" className="w-5 h-5" />
+                  </PlayerIconButton>
 
-              <PlayerIconButton
-                tooltip={language === "ar" ? "التالي" : "Next"}
-                onClick={next}
-                disabled={isLastAyah}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isLastAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
-              >
-                <FontAwesomeIcon icon={faStepForward} className="text-xs" />
-              </PlayerIconButton>
+                  <PlayerIconButton
+                    tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
+                    onClick={handleTogglePlayPause}
+                    disabled={isBuffering}
+                    className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
+                  >
+                    {isBuffering ? (
+                      <FontAwesomeIcon
+                        icon={faSpinner}
+                        className="animate-spin text-sm"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={isPlaying ? faPause : faPlay}
+                        className={`text-sm ${!isPlaying ? "ml-0.5" : ""}`}
+                      />
+                    )}
+                  </PlayerIconButton>
+
+                  <PlayerIconButton
+                    onClick={skipForward15}
+                    tooltip={
+                      language === "ar"
+                        ? "تقديم 15 ثانية"
+                        : "Forward 15 seconds"
+                    }
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
+                  >
+                    <SkipIcon direction="forward" className="w-5 h-5" />
+                  </PlayerIconButton>
+                </>
+              )}
 
               <div className="w-px h-5 bg-border mx-1" />
 
@@ -491,7 +572,10 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 onClick={() => setShowMobileSheet(true)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
               >
-                <FontAwesomeIcon icon={faEllipsisVertical} className="text-xs" />
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className="text-xs"
+                />
               </PlayerIconButton>
             </div>
           </div>
@@ -538,10 +622,20 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={previous}
                 disabled={isFirstAyah}
-                tooltip={language === "ar" ? "السابق" : "Previous"}
+                tooltip={language === "ar" ? "الآية السابقة" : "Previous Verse"}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isFirstAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepBackward} className="text-sm" />
+              </PlayerIconButton>
+
+              <PlayerIconButton
+                onClick={skipBackward15}
+                tooltip={
+                  language === "ar" ? "تراجع 15 ثانية" : "Back 15 seconds"
+                }
+                className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+              >
+                <SkipIcon direction="backward" className="w-6 h-6" />
               </PlayerIconButton>
 
               <PlayerIconButton
@@ -572,9 +666,19 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               </PlayerIconButton>
 
               <PlayerIconButton
+                onClick={skipForward15}
+                tooltip={
+                  language === "ar" ? "تقديم 15 ثانية" : "Forward 15 seconds"
+                }
+                className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110 active:scale-95"
+              >
+                <SkipIcon direction="forward" className="w-6 h-6" />
+              </PlayerIconButton>
+
+              <PlayerIconButton
                 onClick={next}
                 disabled={isLastAyah}
-                tooltip={language === "ar" ? "التالي" : "Next"}
+                tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isLastAyah ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepForward} className="text-sm" />
@@ -682,6 +786,8 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
         downloadStatus={downloadStatus}
         onJumpToAyah={triggerScrollToAyah}
         onDownload={handleDownload}
+        skipMode={skipMode}
+        setSkipMode={setSkipMode}
       />
     </>
   );
