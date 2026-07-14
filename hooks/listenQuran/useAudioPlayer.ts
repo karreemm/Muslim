@@ -60,7 +60,6 @@ export function useAudioPlayer(
   stopRepeatRef.current = onStopRepeat;
   playbackRateRef.current = playbackRate;
 
-
   useEffect(() => {
     const handleUserInteraction = () => {
       setUserInteracted(true);
@@ -73,6 +72,7 @@ export function useAudioPlayer(
     });
 
     return () => {
+      setIsPlaying(false);
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };
@@ -331,8 +331,7 @@ export function useAudioPlayer(
         seekingRef.current = true;
         try {
           active.currentTime = 0;
-        } catch {
-        }
+        } catch {}
         active
           .play()
           .then(() => {
@@ -381,13 +380,14 @@ export function useAudioPlayer(
           }
           pause();
           setShouldAutoPlay(false);
+          setIsBuffering(false);
           stopRepeatRef.current();
-          transitionTriggeredRef.current = false;
           return;
         }
 
         const shouldStopAfter =
-          stopAfterAyahIndex !== null && stopAfterAyahIndex === currentAyahIndex;
+          stopAfterAyahIndex !== null &&
+          stopAfterAyahIndex === currentAyahIndex;
         if (shouldStopAfter) {
           setShouldAutoPlay(false);
           setIsPlaying(false);
@@ -581,8 +581,8 @@ export function useAudioPlayer(
     if (activePlayer && !activePlayer.paused) {
       isTransitioningRef.current = false;
       activePlayer.pause();
-      setIsPlaying(false);
     }
+    setIsPlaying(false);
   };
 
   const play = () => {
@@ -590,6 +590,7 @@ export function useAudioPlayer(
       ? audioPlayer.current
       : nextAudioPlayer.current;
     if (activePlayer) {
+      transitionTriggeredRef.current = false;
       setUserInteracted(true);
       console.log("Play function called, audio element state:", {
         paused: activePlayer.paused,
@@ -600,7 +601,6 @@ export function useAudioPlayer(
       activePlayer
         .play()
         .then(() => {
-          console.log("Audio play() promise resolved");
           setIsPlaying(true);
         })
         .catch((error) => {
@@ -676,8 +676,7 @@ export function useAudioPlayer(
 
     const lastAyahIndex = cumulativeDurations.length - 1;
     const totalDuration =
-      cumulativeDurations[lastAyahIndex] +
-      (ayahDurations[lastAyahIndex] || 0);
+      cumulativeDurations[lastAyahIndex] + (ayahDurations[lastAyahIndex] || 0);
     let clamped = Math.max(0, Math.min(targetTime, totalDuration));
 
     let targetAyahIndex = 0;

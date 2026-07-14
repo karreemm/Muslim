@@ -114,7 +114,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
+      <div className="hidden md:flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <FontAwesomeIcon icon={faRepeat} className="text-xs" />
