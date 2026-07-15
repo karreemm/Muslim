@@ -183,6 +183,23 @@ Memorize the Quran ayah by ayah with built-in repetition:
 </details>
 
 <details>
+<summary><strong>Live Radios</strong></summary>
+<br />
+
+Listen to a variety of Islamic radio stations through seamless 24/7 live streaming:
+
+- **125+ live stations** across 4 categories:
+  - **Main Stations** — General Quran broadcasts
+  - **Specialised Channels** — Ruqyah, Fatawa, beautiful recitations, and more
+  - **Reciters** — Dedicated channels for 120+ renowned Qaris 
+  - **Translations** — Quran recitation with translations in multiple languages
+- Search stations by name (Arabic or English)
+- **Favorites** — Save your preferred stations for quick access (persisted locally)
+- Full playback controls: play, pause, and mute
+
+</details>
+
+<details>
 <summary><strong>Sadaqah Jariyah Pages</strong></summary>
 <br />
 
@@ -219,6 +236,7 @@ Create a personalized memorial page for a deceased loved one:
 | Hadiths | **20,000+** |
 | Collections | **8 major books** |
 | Azkar | **127+** |
+| Radio Stations | **125+** live |
 
 <br />
 <p align="center">— ✦ —</p>
@@ -305,6 +323,7 @@ That's it, your database is ready.
 | [Hadith API](https://hadithapi.com/) | Hadith collections |
 | [Azkar API](https://github.com/nawafalqari/azkar-api) | Daily Azkar & Duas |
 | [Islamic Network CDN](https://cdn.islamic.network/) | Quran audio files |
+| [MP3Quran](https://mp3quran.net/) & [Qurango](https://qurango.net/) | Live radio streams |
 
 And also a Full documentation for all APIs used in this project — including endpoints, authentication, parameters, and usage examples — is available in:
 
