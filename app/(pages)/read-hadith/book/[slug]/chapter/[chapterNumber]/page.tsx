@@ -15,6 +15,8 @@ import {
   faCheckCircle,
   faExclamationCircle,
   faQuestionCircle,
+  faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import ShareModal from "../../../../../../../components/modals/ShareModal";
@@ -25,6 +27,7 @@ export default function ChapterHadithsPage() {
   const bookSlug = params.slug as string;
   const chapterNumber = params.chapterNumber as string;
   const { language } = useLanguage();
+  const isArabic = language === "ar";
   const { t } = useTranslation();
 
   const {
@@ -38,6 +41,7 @@ export default function ChapterHadithsPage() {
     searchType,
     isSearching,
     showingSingleHadith,
+    hadithNumber,
     setSearchQuery,
     setSearchType,
     handlePageChange,
@@ -81,7 +85,7 @@ export default function ChapterHadithsPage() {
           )}
         </div>
 
-        {!showingSingleHadith && (
+        {!hadithNumber && (
           <div className="max-w-4xl mx-auto mb-10">
             <div className="bg-card/70 backdrop-blur-sm border border-border/50 rounded-2xl p-5 shadow-lg">
               <div className="flex flex-col md:flex-row gap-4">
@@ -148,26 +152,28 @@ export default function ChapterHadithsPage() {
 
         {showingSingleHadith && (
           <div className="max-w-4xl mx-auto mb-8">
-            <div className="bg-accent/10 border border-accent/20 rounded-2xl p-4 flex items-center justify-between">
-              <span className="text-accent font-medium">
-                {t("hadith.chapter.showingSingle")}
-              </span>
-              <button
-                onClick={clearHadithFilter}
-                className="px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold 
-                  hover:bg-accent/90 transition-all duration-300 text-sm"
-              >
+            <button
+              onClick={clearHadithFilter}
+              className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors w-fit mx-auto"
+            >
+              <FontAwesomeIcon
+                icon={isArabic ? faArrowRight : faArrowLeft}
+                className="text-sm transition-transform group-hover:-translate-x-1"
+              />
+              <span className="font-medium">
                 {language === "ar" ? "عرض جميع الأحاديث" : "View All Hadiths"}
-              </button>
-            </div>
+              </span>
+            </button>
           </div>
         )}
 
         {loading ? (
           <div className="max-w-4xl mx-auto flex flex-col gap-6">
-            {[...Array(3)].map((_, i) => (
-              <HadithCardSkeleton key={i} />
-            ))}
+            {showingSingleHadith ? (
+              <HadithCardSkeleton />
+            ) : (
+              [...Array(3)].map((_, i) => <HadithCardSkeleton key={i} />)
+            )}
           </div>
         ) : error ? (
           <div className="text-center py-20 text-destructive text-xl">

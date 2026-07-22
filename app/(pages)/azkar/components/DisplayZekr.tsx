@@ -15,6 +15,7 @@ import { useFavoriteZekrActions } from "@/hooks/azkar/useFavoriteZekrActions";
 import Link from "next/link";
 import { toArabicNumber } from "@/utils/helpers";
 import ZekrCounter from "./ZekrCounter";
+import { AzkarCardSkeleton } from "./AzkarCardSkeleton";
 
 interface SingleZekrProps {
   zekrNumber: number;
@@ -34,11 +35,8 @@ export default function DisplayZekr({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
+      <div className="flex flex-col gap-6">
+        <AzkarCardSkeleton />
       </div>
     );
   }

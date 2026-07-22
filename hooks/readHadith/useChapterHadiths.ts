@@ -14,8 +14,7 @@ export function useChapterHadiths(
   itemsPerPage: number = 10,
 ) {
   const searchParams = useSearchParams();
-  const hadithNumber = searchParams.get("hadith");
-
+  
   const [hadiths, setHadiths] = useState<Hadith[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +24,9 @@ export function useChapterHadiths(
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"number" | "content">("content");
   const [isSearching, setIsSearching] = useState(false);
-  const [showingSingleHadith, setShowingSingleHadith] = useState(false);
+
+  const hadithNumber = searchParams.get("hadith");
+  const showingSingleHadith = !!hadithNumber && !isSearching;
 
   const { favoriteHadiths, addFavoriteHadith, removeFavoriteHadith } =
     useFavoriteHadiths();
@@ -37,7 +38,6 @@ export function useChapterHadiths(
       try {
         setLoading(true);
 
-        // If hadith number is provided in URL, fetch only that hadith
         if (hadithNumber && !isSearching) {
           const data = await searchHadithByNumber(hadithNumber, bookSlug);
 
@@ -45,10 +45,8 @@ export function useChapterHadiths(
             setHadiths(data.hadiths.data);
             setTotalPages(1);
             setTotalHadiths(1);
-            setShowingSingleHadith(true);
           }
         } else {
-          // Normal pagination mode
           const data = await getChapterHadiths(
             bookSlug,
             chapterNumber,
@@ -61,7 +59,6 @@ export function useChapterHadiths(
             setTotalPages(data.hadiths.last_page);
             setTotalHadiths(data.hadiths.total);
           }
-          setShowingSingleHadith(false);
         }
 
         setError(null);
@@ -139,13 +136,10 @@ export function useChapterHadiths(
   };
 
   const clearHadithFilter = () => {
-    // Remove the hadith query parameter and reload all hadiths
     const url = new URL(window.location.href);
     url.searchParams.delete("hadith");
     window.history.replaceState({}, "", url);
-    setShowingSingleHadith(false);
     setCurrentPage(1);
-    // Trigger re-fetch by updating state
     window.location.reload();
   };
 
@@ -184,6 +178,7 @@ export function useChapterHadiths(
     searchType,
     isSearching,
     showingSingleHadith,
+    hadithNumber,
     setSearchQuery,
     setSearchType,
     handlePageChange,

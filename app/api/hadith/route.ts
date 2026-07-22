@@ -86,8 +86,8 @@ export async function GET(req: Request) {
 
     const response = await fetch(targetUrl, {
       method: "GET",
-      cache: "no-store",
-      headers: {
+        cache: "force-cache",
+        headers: {
         Accept: "application/json",
         "x-api-key": apiKey,
         apikey: apiKey,
