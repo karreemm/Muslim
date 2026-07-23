@@ -29,7 +29,7 @@ export default function FeaturesSection({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {featuredFeatures.map((feature) => (
           <Link
-            key={feature.href}
+            key={`${feature.href}-${feature.title}`}
             href={feature.href}
             className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm"
           >

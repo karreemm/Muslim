@@ -16,20 +16,20 @@ import SurahSection from "./components/SurahSection";
 import DuaSection from "./components/DuaSection";
 
 export default function DeceasedPage() {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { language } = useLanguage();
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   const { deceased, expandedSurah, loading, toggleSurahExpansion, goHome } =
-    useDeceasedPage(slug.toString());
+    useDeceasedPage(slug);
   const {
     versesByCard,
     loading: versesLoading,
     error: versesError,
   } = useSadaqaSurahVerses();
 
-  const { shareableUrl } = useShareableUrl(slug.toString());
+  const { shareableUrl } = useShareableUrl(slug);
 
   useEffect(() => {
     if (!loading) {

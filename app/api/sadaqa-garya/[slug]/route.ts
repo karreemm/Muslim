@@ -15,9 +15,10 @@ export const runtime = "nodejs";
 
 export async function GET(
   _req: Request,
-  context: { params: { slug: string } },
+  context: { params: Promise<{ slug: string }> },
 ) {
-  const slug = decodeURIComponent(context.params.slug || "").trim();
+  const { slug: rawSlug } = await context.params;
+  const slug = decodeURIComponent(rawSlug || "").trim();
 
   if (!slug) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
@@ -34,7 +35,7 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  context: { params: { slug: string } },
+  context: { params: Promise<{ slug: string }> },
 ) {
   const ip = getClientIp(req);
   const limit = isRateLimited(`sadaqa:delete:${ip}`, 10, 60_000);
@@ -51,7 +52,8 @@ export async function DELETE(
     );
   }
 
-  const slug = decodeURIComponent(context.params.slug || "").trim();
+  const { slug: rawSlug } = await context.params;
+  const slug = decodeURIComponent(rawSlug || "").trim();
 
   if (!slug) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
