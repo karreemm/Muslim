@@ -16,6 +16,21 @@ const arabicMonthNames = [
   "ديسمبر",
 ];
 
+const englishMonthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const hijriArabicMonthNames = [
   "محرم",
   "صفر",
@@ -66,49 +81,93 @@ export interface UseDateFormattingReturn {
 }
 
 const toArabicDate = (date: string): string => {
-  const gregorianDate = moment(date, "DD-MM-YYYY").format("D MMMM, YYYY");
-  const [day, month, year] = gregorianDate.split(" ");
+  const m = moment(date, "DD-MM-YYYY");
+  if (!m.isValid()) {
+    console.warn("Invalid date passed to toArabicDate:", date);
+    return date;
+  }
+
+  const day = m.date();
+  const year = m.year();
+  const monthIndex = m.month();
+
   const arabicDay = day
+    .toString()
     .split("")
-    .map((d) => arabicNumbers[Number(d)])
+    .map((d) => arabicNumbers[Number(d)] ?? d)
     .join("");
   const arabicYear = year
+    .toString()
     .split("")
-    .map((d) => arabicNumbers[Number(d)])
+    .map((d) => arabicNumbers[Number(d)] ?? d)
     .join("");
-  const arabicMonth = arabicMonthNames[moment(date, "DD-MM-YYYY").month()];
+  const arabicMonth = arabicMonthNames[monthIndex] || "";
+
   return `${arabicDay} ${arabicMonth}، ${arabicYear}`;
 };
 
+const toEnglishDate = (date: string): string => {
+  const m = moment(date, "DD-MM-YYYY");
+  if (!m.isValid()) {
+    console.warn("Invalid date passed to toEnglishDate:", date);
+    return date;
+  }
+
+  const day = m.date();
+  const year = m.year();
+  const monthIndex = m.month();
+  const monthName = englishMonthNames[monthIndex] || "";
+
+  return `${day} ${monthName}, ${year}`;
+};
+
 const toHijriDate = (date: string, lang: "en" | "ar"): string => {
-  const hijriDate = moment(date, "DD-MM-YYYY").format("iYYYY/iM/iD");
-  const [year, month, day] = hijriDate.split("/");
+  const m = moment(date, "DD-MM-YYYY");
+  if (!m.isValid()) {
+    console.warn("Invalid date passed to toHijriDate:", date);
+    return date;
+  }
+
+  const hijriYear = m.iYear();
+  const hijriMonth = m.iMonth(); // 0-indexed (0 = Muharram)
+  const hijriDay = m.iDate();
+
+  if (hijriMonth < 0 || hijriMonth >= hijriArabicMonthNames.length) {
+    console.warn("Invalid Hijri month index for date:", date, "month:", hijriMonth);
+    return date;
+  }
+
   if (lang === "en") {
-    return `${day} ${hijriMonthNamesInEnglish[parseInt(month) - 1]}, ${year}`;
+    const monthName = hijriMonthNamesInEnglish[hijriMonth] || "";
+    return `${hijriDay} ${monthName}, ${hijriYear}`;
   } else {
-    return `${day
+    const monthName = hijriArabicMonthNames[hijriMonth] || "";
+    const arabicDay = hijriDay
+      .toString()
       .split("")
-      .map((d) => arabicNumbers[Number(d)])
-      .join("")} ${hijriArabicMonthNames[parseInt(month) - 1]}, ${year
+      .map((d) => arabicNumbers[Number(d)] ?? d)
+      .join("");
+    const arabicYear = hijriYear
+      .toString()
       .split("")
-      .map((d) => arabicNumbers[Number(d)])
-      .join("")}`;
+      .map((d) => arabicNumbers[Number(d)] ?? d)
+      .join("");
+    return `${arabicDay} ${monthName}, ${arabicYear}`;
   }
 };
 
 export const useDateFormatting = (): UseDateFormattingReturn => {
-  const [date, setDate] = useState<string>(
-    new Date().toLocaleDateString("en-GB").replace(/\//g, "-")
-  );
+  const [date, setDate] = useState<string>(() => {
+    const now = new Date();
+    return `${String(now.getDate()).padStart(2, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()}`;
+  });
   const [formattedDates, setFormattedDates] = useState<FormattedDates>({
     gregorian: { en: "", ar: "" },
     hijri: { en: "", ar: "" },
   });
 
   useEffect(() => {
-    const formattedGregorianDate = moment(date, "DD-MM-YYYY").format(
-      "D MMMM, YYYY"
-    );
+    const formattedGregorianDate = toEnglishDate(date);
     const formattedDateAr = toArabicDate(date);
     const formattedHijriDate = toHijriDate(date, "en");
     const formattedHijriDateAr = toHijriDate(date, "ar");
