@@ -41,6 +41,7 @@
 - [About](#about-the-project)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Documentation](#documentation)
 - [Getting Started](#getting-started)
 - [API](#api-documentation)
 - [Contributing](#contributing)
@@ -161,13 +162,15 @@ Memorize the Quran ayah by ayah with built-in repetition:
 |----------|-------|
 | Morning Azkar (أذكار الصباح) | 25 |
 | Evening Azkar (أذكار المساء) | 25 |
+| Post-Salah Azkar (أذكار بعد السلام من الصلاة) | 9 |
+| Tasbeeh (تسابيح) | 16 |
 | Sleep Azkar (أذكار النوم) | 10 |
 | Wake Up Azkar (أذكار الاستيقاظ) | 3 |
-| After Prayer Azkar (أذكار الصلاة) | 9 |
 | Quranic Duas (أدعية قرآنية) | 26 |
 | Prophets' Duas (أدعية الأنبياء) | 13 |
 
 - Per-zikr repetition counter
+- Daily completion tracking
 - Save and manage favorite Azkar
 
 </details>
@@ -246,10 +249,12 @@ Create a personalized memorial page for a deceased loved one:
 
 | Layer | Stack |
 |------|------|
-| Framework | Next.js |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
+| Framework | Next.js 16 (App Router) |
+| UI runtime | React 18 |
+| Language | TypeScript 5 (strict) |
+| Styling | Tailwind CSS v4 |
 | Database | Supabase |
+| Deployment | Vercel |
 
 <br />
 <p align="center">— ✦ —</p>
@@ -261,8 +266,8 @@ Create a personalized memorial page for a deceased loved one:
 
 Make sure you have the following installed:
 
-- **Node.js** `>= 18.x`
-- **npm** `>= 9.x`
+- **Node.js** `>= 20.9.x`
+- **npm** `>= 10.x`
 - A **Supabase** account
 - A **Hadith API** key from [hadithapi.com](https://hadithapi.com/)
 
@@ -325,9 +330,11 @@ That's it, your database is ready.
 | [Islamic Network CDN](https://cdn.islamic.network/) | Quran audio files |
 | [MP3Quran](https://mp3quran.net/) & [Qurango](https://qurango.net/) | Live radio streams |
 
-And also a Full documentation for all APIs used in this project — including endpoints, authentication, parameters, and usage examples — is available in:
+Full documentation for the internal API routes and all external APIs used in this
+project — including endpoints, authentication, parameters, and usage examples — is
+available in:
 
-**[`API_Doc.md`](API_Doc.md)**
+**[`docs/api.md`](docs/api.md)**
 
 <br />
 <p align="center">— ✦ —</p>

@@ -1,27 +1,84 @@
-# Muslim App - API Documentation
+# Muslim — API Reference
 
-This document provides comprehensive information about all APIs used in the Muslim web application. Each API is documented with its endpoints, parameters, authentication requirements, and usage examples.
+This document covers **internal route handlers** (`app/api/`) and the **external
+APIs** used by the Muslim web application: endpoints, parameters, authentication,
+and usage notes.
+
+> This is a living document. If you add or change an API route, update this file in
+> the same change and link the change record.
 
 ---
 
 ## Table of Contents
 
-1. [Quran APIs](#quran-apis)
-2. [Hadith API](#hadith-api)
-3. [Prayer Times API](#prayer-times-api)
-4. [Azkar API](#azkar-api)
+0. [Internal API Routes](#0-internal-api-routes)
+1. [Quran APIs](#1-quran-apis)
+2. [Hadith API](#2-hadith-api)
+3. [Prayer Times API](#3-prayer-times-api)
+4. [Azkar API](#4-azkar-api)
+5. [Radio APIs](#5-radio-apis)
+6. [Supabase](#6-supabase)
+
+---
+
+## 0. Internal API Routes
+
+All routes are implemented under `app/api/` and run on the Node.js runtime unless
+noted otherwise.
+
+| Route | Methods | Auth / limits | Purpose |
+|---|---|---|---|
+| `/api/hadith` | `GET` | Requires `HADITH_API_KEY` | Proxy for `hadithapi.com`. `mode=books\|chapters\|hadiths`. |
+| `/api/search-quran` | `GET` | Query ≥ 2 letters after diacritic removal | Searches the local Quran index. Returns 404 when no matches. |
+| `/api/tafseer` | `GET` | None | Proxies `api.quran-tafseer.com`; caches for 1 day. |
+| `/api/proxy` | `GET` | Fixed CDN host | Converts surah/ayah to an absolute ayah number and proxies audio from `cdn.islamic.network`. |
+| `/api/radio-proxy` | `GET` | Host allowlist | Proxies radio streams from `live.mp3quran.net` / `qurango.net`; supports `Range`. |
+| `/api/download-audio` | `POST` | Host allowlist | Streams a surah download; sanitizes file names. |
+| `/api/sadaqa-garya` | `GET`, `POST` | POST: 8 req/min/IP | Lists public memorials / creates one. |
+| `/api/sadaqa-garya/[slug]` | `GET`, `DELETE` | DELETE: 10 req/min/IP + delete token | Public memorial page / owner delete. |
+
+### Security notes
+
+- The rate limiter in `lib/apiSecurity.ts` is **in-memory** and therefore limited on
+  serverless/multi-instance deployments. Replace with a shared store before relying
+  on it for abuse protection.
+- Keep the host allowlists in `/api/radio-proxy` and `/api/download-audio`; they are
+  the SSRF boundary.
+- `sadaqaGaryaStore` uses the Supabase **service-role** key. It must never be
+  imported into client code or exposed with a `NEXT_PUBLIC_` prefix.
 
 ---
 
 ## 1. Quran APIs
 
-### 1.1 AlQuran Cloud API
+### 1.1 Quran.com API (reading)
+
+**Base URL:** `https://api.quran.com/api/v4`
+
+**Authentication:** ❌ No API Key Required
+
+**Description:** Provides Uthmani words, page/line metadata, and verse data used by
+the Quran reader.
+
+**Endpoints used:**
+
+```
+GET /verses/by_chapter/{surah}?words=true&word_fields=text_uthmani,code_v2,line_number,page_number&per_page=1000
+GET /verses/by_juz/{juz}?words=true&word_fields=text_uthmani,code_v2,line_number,page_number&per_page=1000
+GET /verses/by_page/{page}?words=true&word_fields=text_uthmani,code_v2,line_number,page_number
+```
+
+Implemented in `app/(pages)/read-quran/service/GetSurah.ts`, `GetJuz.ts`, and
+`GetPage.ts`.
+
+### 1.2 AlQuran Cloud API (audio + translations)
 
 **Base URL:** `https://api.alquran.cloud/v1`
 
 **Authentication:** ❌ No API Key Required
 
-**Description:** Provides Quran text, audio, and surah information in various editions and languages.
+**Description:** Provides Quran audio editions, translation editions, and surah
+metadata used by the audio player, search cards, and translation modal.
 
 #### Endpoints:
 
@@ -137,7 +194,7 @@ https://api.alquran.cloud/v1/surah/1/ar.alafasy
 
 ---
 
-### 1.2 Quran Tafseer API
+### 1.3 Quran Tafseer API
 
 **Base URL:** `http://api.quran-tafseer.com`
 
@@ -207,7 +264,7 @@ http://api.quran-tafseer.com/tafseer/1/1/1
 
 ---
 
-### 1.3 Islamic Network Audio CDN
+### 1.4 Islamic Network Audio CDN
 
 **Base URL:** `https://cdn.islamic.network/quran/audio`
 
@@ -500,10 +557,69 @@ https://raw.githubusercontent.com/nawafalqari/azkar-api/56df51279ab6eb86dc2f6202
 
 ---
 
+## 5. Radio APIs
+
+### 5.1 MP3Quran
+
+**Base URL:** `https://live.mp3quran.net`
+
+**Authentication:** ❌ No API Key Required
+
+**Description:** Live Quran radio streams. The browser never calls the upstream host
+directly; `/api/radio-proxy` forwards the request and supports HTTP `Range`.
+
+### 5.2 Qurango
+
+**Base URL:** `https://qurango.net`
+
+**Authentication:** ❌ No API Key Required
+
+**Description:** Additional live radio streams, proxied through `/api/radio-proxy`.
+
+Station metadata (names, URLs, categories) lives in
+`constants/radioStationsData.ts`.
+
+---
+
+## 6. Supabase
+
+**Base URL:** `https://<project>.supabase.co/rest/v1`
+
+**Authentication:** ✅ Service-role key required (server only)
+
+**Description:** Stores Sadaqa Jariyah memorial pages in
+`public.sadaqa_garya_records`.
+
+Schema: `data/sadaqaGarya/sadaqa_supabase_schema.sql`.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `text` primary key | Same as slug in current implementation |
+| `slug` | `text` unique | Public URL key |
+| `name_en` | `text` | Required |
+| `name_ar` | `text` | Required |
+| `message_en` | `text` | Default `''` |
+| `message_ar` | `text` | Default `''` |
+| `delete_token_hash` | `text` | SHA-256 of the browser delete token |
+| `created_at` | `timestamptz` | Default `now()` |
+
+RLS is enabled and `anon` / `authenticated` are revoked. Access happens only through
+server route handlers using `SUPABASE_SERVICE_ROLE_KEY`.
+
+### Keep-alive
+
+Supabase free projects pause after 7 days without activity. See
+`scripts/supabase-keepalive.mjs` and `.github/workflows/supabase-keepalive.yml`.
+The workflow runs a read-only `GET /rest/v1/<table>?select=id&limit=1` daily.
+
+---
+
 ## Additional Resources
 
+- **Quran.com API Docs:** https://api-docs.quran.com/
 - **AlQuran Cloud API Docs:** https://alquran.cloud/api
 - **Aladhan API Docs:** https://aladhan.com/prayer-times-api
+- **Hadith API:** https://hadithapi.com/
 - **Nominatim Docs:** https://nominatim.org/release-docs/latest/api/Overview/
 
 ---

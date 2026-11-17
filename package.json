@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "keepalive": "node scripts/supabase-keepalive.mjs"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
