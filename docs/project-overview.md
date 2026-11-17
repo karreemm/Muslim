@@ -31,12 +31,16 @@ the bottom of the layout: Quran audio and live radio.
 
 | Fact | Value |
 |---|---|
-| Framework | Next.js `16.2.11` (App Router) |
-| UI runtime | React `18.3.1` |
+| Framework | Next.js `16.4.6` (App Router) |
+| UI runtime | React `18.3.1` (Next 16 supports it but deprecates it; React 19 upgrade planned) |
+| Runtime | Node.js `>= 20.9`; CI uses Node 24 |
+| Package manager | npm 11, pinned via `packageManager` in `package.json` |
 | Language | TypeScript 5, `strict: true` |
 | Styling | Tailwind CSS `4.1.13` + HSL CSS variables + a few CSS Modules |
 | Icons | FontAwesome (majority) + Lucide (subset) |
 | Data | REST APIs + local JSON + Supabase REST |
+| Testing | Vitest + Testing Library + MSW + Playwright + axe |
+| CI | GitHub Actions (`.github/workflows/ci.yml`) |
 | Deployment | Vercel |
 | Default language | Arabic (`ar`, RTL) |
 | Default theme | Light; system preference respected |
@@ -502,18 +506,39 @@ can access the table. The service-role key must never be exposed to the browser.
 | `NEXT_PUBLIC_HADITH_API_BASE_URL` | server fallback | no | Legacy fallback |
 
 `supabaseGaryaStore` validates the Supabase config lazily and throws a clear error
-if it is missing. Phase 1 adds centralized env validation with Zod.
+if it is missing. `lib/env.ts` with Zod validation is planned for Phase 2.
 
 ### Local commands
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+npm run dev            # http://localhost:3000
 npm run build
 npm run start
-npx tsc --noEmit     # currently affected by stale .next artifacts
-npm run lint         # currently broken (Next 16 removed `next lint`)
+
+npm run typecheck      # next typegen && tsc --noEmit
+npm run lint           # ESLint 9 flat config
+npm run lint:fix
+npm test               # Vitest unit + integration
+npm run test:watch
+npm run test:coverage
+npm run test:e2e       # Playwright (install browser once: npx playwright install chromium)
+npm run test:e2e:ui
+npm run format         # Prettier (not applied to the legacy code yet)
+npm run format:check
+npm run check          # typecheck + lint + tests
 ```
+
+### Tooling
+
+| Tool | Config | Notes |
+|---|---|---|
+| ESLint 9 | `eslint.config.mjs` | Flat config based on `eslint-config-next/core-web-vitals`. React Compiler hook rules are warnings until Phase 2. |
+| Prettier | `.prettierrc.json`, `.prettierignore` | Config is ready; a repo-wide formatting pass is deferred to Phase 2 to keep diffs reviewable. |
+| Vitest | `vitest.config.mts`, `tests/setup.ts` | jsdom, Testing Library, MSW server, v8 coverage. |
+| Playwright | `playwright.config.ts` | Chromium, local dev server, CI uses `next start` after a build. |
+| CI | `.github/workflows/ci.yml` | Typecheck, lint, unit/integration, build, then Playwright smoke + a11y. |
+| Env template | `.env.example` | Copy to `.env.local`; never commit real secrets. |
 
 ### Supabase keep-alive
 
@@ -541,19 +566,23 @@ This is a **foundation** snapshot, not the target state.
 
 | Area | Status |
 |---|---|
-| Typecheck | Source clean; stale `.next` causes one false error. |
-| Lint | Broken (`next lint` removed in Next 16; ESLint config is v14). |
-| Unit tests | None. |
-| E2E/regression | None. |
-| CI | None. |
-| Error boundaries | None (`error.tsx` / `global-error.tsx` missing). |
-| Metadata/SEO | Root metadata only; no sitemap/robots; `<html lang>` not updated. |
-| Performance | 2s hydration gate; 1.54 MB audio JSON in client; no `next/image`; fonts via `<link>`. |
-| Accessibility | Modals lack focus trap/Escape/ARIA; some icon-only buttons unlabeled. |
-| Security | In-memory rate limit on serverless; raw errors; no security headers. |
+| Typecheck | ✅ `npm run typecheck` passes. |
+| Lint | ✅ `npm run lint` passes with **0 errors / 112 warnings**. The new React Compiler hook rules are warnings until the Phase 2 hook refactor. |
+| Unit/integration | ✅ 7 test files, 36 tests (utils, security, cookies, search API, download allowlist, Loading). |
+| E2E/regression | ✅ 16 Playwright tests: 15 route smoke tests + 1 home-page axe scan. |
+| CI | ✅ Workflow added; first GitHub run is pending. |
+| Error boundaries | ✅ `app/error.tsx` and `app/global-error.tsx` added. |
+| Metadata/SEO | ⚠️ Root metadata only; no sitemap/robots; `<html lang>` not updated. |
+| Performance | ⚠️ 2s hydration gate; 1.54 MB audio JSON in client; no `next/image`; fonts via `<link>`. |
+| Accessibility | ⚠️ Loading region labelled; modal focus trap/Escape/ARIA still pending. |
+| Security | ⚠️ Production dependency audit is clean; in-memory rate limit, raw errors, and security headers remain. |
+| React | ⚠️ Next 16 warns that React 18 support is deprecated. Plan the React 19 upgrade in Phase 2/3. |
+| Dev dependencies | ⚠️ `npm audit` reports 19 high findings in dev-only tooling (`picomatch`, `brace-expansion`). No production findings. |
 
-The phased plan is tracked in
-[`changes/2026-11-17-professional-foundation.md`](./changes/2026-11-17-professional-foundation.md).
+Phase records:
+
+- [Professional foundation](./changes/2026-11-17-professional-foundation.md)
+- [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md)
 
 ---
 
@@ -591,9 +620,8 @@ Before changing anything:
 
 Before finishing:
 
-- [ ] `npm run typecheck` passes.
-- [ ] `npm run lint` passes (once repaired).
-- [ ] Relevant tests pass.
+- [ ] `npm run check` passes (typecheck + lint + tests).
+- [ ] Relevant E2E tests pass (`npm run test:e2e`) when a route or flow changed.
 - [ ] No new hardcoded user-facing strings.
 - [ ] No new raw colors.
 - [ ] No new direct `localStorage` access.

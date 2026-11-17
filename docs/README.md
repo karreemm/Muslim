@@ -13,8 +13,8 @@ lives here.
 | Order | Document | Read it when |
 |---|---|---|
 | 1 | [`project-overview.md`](./project-overview.md) | Always. It explains the product, routes, architecture, patterns, state, and invariants. |
-| 2 | `ui-ux-guidelines.md` *(planned, Phase 2)* | Before changing UI, copy, layout, tokens, or accessibility. |
-| 3 | `testing.md` *(planned, Phase 1)* | Before adding tests or changing CI. |
+| 2 | [`testing.md`](./testing.md) | Before adding tests or changing CI. |
+| 3 | `ui-ux-guidelines.md` *(planned, Phase 2)* | Before changing UI, copy, layout, tokens, or accessibility. |
 | 4 | `operations.md` *(planned, Phase 5)* | Before changing env vars, Supabase, deployment, or keep-alive. |
 | 5 | [`api.md`](./api.md) | Before changing an API route or external integration. |
 | 6 | The active file in [`changes/`](./changes/) | Before continuing in-progress work. |
@@ -71,7 +71,8 @@ Update this table whenever a change record moves status.
 
 | Date | Branch | Scope | Status | Record |
 |---|---|---|---|---|
-| 2026-11-17 | `chore/professional-foundation` | docs, repo foundation, Supabase keep-alive | `review` | [Professional foundation](./changes/2026-11-17-professional-foundation.md) |
+| 2026-11-17 | `chore/professional-foundation` | docs, repo foundation, Supabase keep-alive | `done` | [Professional foundation](./changes/2026-11-17-professional-foundation.md) |
+| 2026-11-17 | `chore/professional-foundation` | tooling, tests, CI, error boundaries | `done` | [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md) |
 
 ---
 
@@ -108,10 +109,8 @@ Update this table whenever a change record moves status.
 A change is done when:
 
 - [ ] It follows the patterns in `project-overview.md` (or documents a deliberate deviation).
-- [ ] Typecheck passes.
-- [ ] Lint passes.
-- [ ] Relevant unit/integration tests pass.
-- [ ] Relevant E2E/regression tests pass (once the suite exists).
+- [ ] `npm run check` passes (typecheck + lint + unit/integration/component tests).
+- [ ] `npm run test:e2e` passes when a route or user flow changed.
 - [ ] No new user-facing strings outside `locales/`.
 - [ ] No new raw colors outside design tokens.
 - [ ] No new direct `localStorage` access outside the storage helper.
