@@ -12,8 +12,8 @@ interface AudioPlayerReciterDropdownProps {
   showReciterDropdown: boolean;
   setShowReciterDropdown: (value: boolean) => void;
   onReciterChange: (value: string) => void;
-  dropdownRef?: React.RefObject<HTMLDivElement>;
-  micBtnRef?: React.RefObject<HTMLButtonElement>;
+  dropdownRef?: React.RefObject<HTMLDivElement | null>;
+  micBtnRef?: React.RefObject<HTMLButtonElement | null>;
   triggerVariant?: "icon" | "label";
   reciterName?: string;
   align?: "start" | "end";

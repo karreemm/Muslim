@@ -35,7 +35,7 @@ interface AudioPlayerMobileSheetProps {
   playbackRate: number;
   setPlaybackRate: (value: number) => void;
   setReciterId: (value: string) => void;
-  mobileSheetRef: React.RefObject<HTMLDivElement>;
+  mobileSheetRef: React.RefObject<HTMLDivElement | null>;
   surahNumber: number;
   surahName: string;
   reciterName?: string;

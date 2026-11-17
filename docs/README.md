@@ -73,6 +73,7 @@ Update this table whenever a change record moves status.
 |---|---|---|---|---|
 | 2026-11-17 | `chore/professional-foundation` | docs, repo foundation, Supabase keep-alive | `done` | [Professional foundation](./changes/2026-11-17-professional-foundation.md) |
 | 2026-11-17 | `chore/professional-foundation` | tooling, tests, CI, error boundaries | `done` | [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md) |
+| 2026-11-17 | `chore/professional-foundation` | React 19 + type migration | `done` | [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md) |
 
 ---
 

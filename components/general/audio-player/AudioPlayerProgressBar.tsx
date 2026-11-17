@@ -3,7 +3,7 @@
 import styles from "@/app/styles/modules/AudioPlayer.module.css";
 
 interface AudioPlayerProgressBarProps {
-  progressRef: React.RefObject<HTMLInputElement>;
+  progressRef: React.RefObject<HTMLInputElement | null>;
   currentTime: number;
   duration: number;
   formatTime: (value: number) => string;

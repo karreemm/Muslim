@@ -206,7 +206,7 @@ contract changed.
 - [ ] Phase 2: UI primitives, i18n migration, storage helper, data layer, palette
       single source, remove 2s hydration gate.
 - [ ] Phase 2: fix the 112 lint warnings and re-enable React Compiler rules as errors.
-- [ ] Phase 2/3: plan and execute the React 19 upgrade.
+- [x] React 19 upgrade completed in [the React 19 record](./2026-11-17-react-19-upgrade.md).
 - [ ] Phase 3: security headers, shared rate limiting, env validation with Zod.
 - [ ] Phase 4: full route matrix, user journeys, dynamic-route mocks, visual
       regression, broader axe coverage.

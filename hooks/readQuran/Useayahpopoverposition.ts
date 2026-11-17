@@ -8,7 +8,7 @@ interface Position {
 }
 
 interface PopoverPositionResult {
-  contentRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
   left: number;
   top: number;
   isMobile: boolean;

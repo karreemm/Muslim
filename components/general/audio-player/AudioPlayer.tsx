@@ -51,14 +51,14 @@ interface RepeatPanelInitial {
 }
 
 interface AudioPlayerRefs {
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  micBtnRef: React.RefObject<HTMLButtonElement>;
-  mobileSheetRef: React.RefObject<HTMLDivElement>;
-  progressRef: React.RefObject<HTMLInputElement>;
-  repeatBtnRef: React.RefObject<HTMLButtonElement>;
-  repeatDropdownRef: React.RefObject<HTMLDivElement>;
-  speedBtnRef: React.RefObject<HTMLButtonElement>;
-  speedDropdownRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  micBtnRef: React.RefObject<HTMLButtonElement | null>;
+  mobileSheetRef: React.RefObject<HTMLDivElement | null>;
+  progressRef: React.RefObject<HTMLInputElement | null>;
+  repeatBtnRef: React.RefObject<HTMLButtonElement | null>;
+  repeatDropdownRef: React.RefObject<HTMLDivElement | null>;
+  speedBtnRef: React.RefObject<HTMLButtonElement | null>;
+  speedDropdownRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const AudioPlayer = () => {
@@ -230,10 +230,10 @@ interface InnerProps {
   setShowMobileSheet: (v: boolean) => void;
   showReciterSheet: boolean;
   setShowReciterSheet: (v: boolean) => void;
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  micBtnRef: React.RefObject<HTMLButtonElement>;
-  mobileSheetRef: React.RefObject<HTMLDivElement>;
-  progressRef: React.RefObject<HTMLInputElement>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  micBtnRef: React.RefObject<HTMLButtonElement | null>;
+  mobileSheetRef: React.RefObject<HTMLDivElement | null>;
+  progressRef: React.RefObject<HTMLInputElement | null>;
   downloadStatus: "idle" | "downloading" | "success" | "error";
   setDownloadStatus: (v: "idle" | "downloading" | "success" | "error") => void;
   isMuted: boolean;
@@ -283,12 +283,12 @@ interface InnerProps {
     openEndPicker?: boolean;
   }) => void;
   isDesktop: boolean;
-  repeatBtnRef: React.RefObject<HTMLButtonElement>;
-  repeatDropdownRef: React.RefObject<HTMLDivElement>;
+  repeatBtnRef: React.RefObject<HTMLButtonElement | null>;
+  repeatDropdownRef: React.RefObject<HTMLDivElement | null>;
   showSpeedDropdown: boolean;
   setShowSpeedDropdown: (v: boolean) => void;
-  speedBtnRef: React.RefObject<HTMLButtonElement>;
-  speedDropdownRef: React.RefObject<HTMLDivElement>;
+  speedBtnRef: React.RefObject<HTMLButtonElement | null>;
+  speedDropdownRef: React.RefObject<HTMLDivElement | null>;
   speedDropdownSide: "left" | "right";
   setSpeedDropdownSide: (v: "left" | "right") => void;
   repeatDropdownSide: "left" | "right";
@@ -577,7 +577,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   };
 
   const computeDropdownSide = (
-    btn: React.RefObject<HTMLButtonElement>,
+    btn: React.RefObject<HTMLButtonElement | null>,
     width: number,
   ): "left" | "right" => {
     const el = btn.current;

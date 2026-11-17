@@ -23,7 +23,7 @@ interface AyahImagePreviewProps {
   showPageNumber: boolean;
   showWebsiteAttribution: boolean;
   isLoading: boolean;
-  previewRef: React.RefObject<HTMLDivElement>;
+  previewRef: React.RefObject<HTMLDivElement | null>;
   onFontReadyChange: (ready: boolean) => void;
   onHeaderReadyChange?: (ready: boolean) => void;
   renderMode?: "preview" | "export";

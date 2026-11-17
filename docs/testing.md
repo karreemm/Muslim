@@ -174,8 +174,8 @@ Playwright reports are uploaded on failure.
 
 ## Known limitations
 
-- The app currently uses React 18; Next 16 warns that React 18 support is
-  deprecated. The test stack works, but the React 19 upgrade is planned.
+- The app uses React 19.3.1 and `react-spinners` 0.17.1. React 19’s stricter ref
+  types are reflected in component props (`RefObject<T | null>`).
 - `npm audit` reports high findings in **dev-only** tooling (`picomatch`,
   `brace-expansion`). Production dependencies audit clean. Revisit when Vitest/Vite
   publish a patched tree.

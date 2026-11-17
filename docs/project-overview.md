@@ -32,7 +32,7 @@ the bottom of the layout: Quran audio and live radio.
 | Fact | Value |
 |---|---|
 | Framework | Next.js `16.4.6` (App Router) |
-| UI runtime | React `18.3.1` (Next 16 supports it but deprecates it; React 19 upgrade planned) |
+| UI runtime | React `19.3.1` |
 | Runtime | Node.js `>= 20.9`; CI uses Node 24 |
 | Package manager | npm 11, pinned via `packageManager` in `package.json` |
 | Language | TypeScript 5, `strict: true` |
@@ -576,7 +576,7 @@ This is a **foundation** snapshot, not the target state.
 | Performance | ⚠️ 2s hydration gate; 1.54 MB audio JSON in client; no `next/image`; fonts via `<link>`. |
 | Accessibility | ⚠️ Loading region labelled; modal focus trap/Escape/ARIA still pending. |
 | Security | ⚠️ Production dependency audit is clean; in-memory rate limit, raw errors, and security headers remain. |
-| React | ⚠️ Next 16 warns that React 18 support is deprecated. Plan the React 19 upgrade in Phase 2/3. |
+| React | ✅ React 19.3.1. The Next 16 React 18 deprecation warning is resolved. |
 | Dev dependencies | ⚠️ `npm audit` reports 19 high findings in dev-only tooling (`picomatch`, `brace-expansion`). No production findings. |
 
 Phase records:
