@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { localizePath } from "@/lib/i18n";
 import { surahNames, juzNames } from "../../constants/quranData";
 
 type NavigationType = "surah" | "juz" | "page";
@@ -15,6 +17,7 @@ interface NavigationConfig {
 export const useQuranNavigation = (type: NavigationType) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { language } = useLanguage();
   const [number, setNumber] = useState<string | null>(null);
 
   const config: NavigationConfig = {
@@ -42,17 +45,17 @@ export const useQuranNavigation = (type: NavigationType) => {
       !isNaN(parseInt(pageNumber)) &&
       (parseInt(pageNumber) > config.maxNumber || parseInt(pageNumber) < 1)
     ) {
-      router.push(`${config.basePath}/1`);
+      router.push(localizePath(language, `${config.basePath}/1`));
       return;
     }
 
     setNumber(pageNumber ?? null);
-  }, [pathname, router, config.basePath, config.maxNumber]);
+  }, [pathname, router, language, config.basePath, config.maxNumber]);
 
   const handleNavigation = (direction: "next" | "prev") => {
     const currentNum = number ? parseInt(number) : 1;
     const newNumber = direction === "next" ? currentNum + 1 : currentNum - 1;
-    router.push(`${config.basePath}/${newNumber}`);
+    router.push(localizePath(language, `${config.basePath}/${newNumber}`));
   };
 
   const getNavigationData = () => {

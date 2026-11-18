@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { localizePath } from "@/lib/i18n";
 import { useSadaqaGarya } from "../../context/features/SadaqatContext";
 import { slugify } from "../../utils/helpers";
 import { DeceasedPerson } from "@/types/sadaqa";
@@ -10,6 +12,7 @@ import {
 
 export default function useSadaqaGaryaForm() {
   const router = useRouter();
+  const { language } = useLanguage();
   const { addDeceasedPerson } = useSadaqaGarya();
 
   const [nameEn, setNameEn] = useState("");
@@ -70,7 +73,7 @@ export default function useSadaqaGaryaForm() {
 
       addDeceasedPerson(result.deceased);
 
-      await router.push(`/sadaqa-garya/${result.deceased.slug}`);
+      await router.push(localizePath(language, `/sadaqa-garya/${result.deceased.slug}`));
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {

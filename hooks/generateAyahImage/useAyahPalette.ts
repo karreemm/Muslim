@@ -4,7 +4,7 @@ import {
   FIXED_AYAH_PALETTES,
   type AyahImagePaletteMode,
   type FixedAyahPaletteId,
-} from "@/app/(pages)/generate-ayah-image/palettePresets";
+} from "@/app/[locale]/(pages)/generate-ayah-image/palettePresets";
 
 interface PaletteDefaults {
   customHue: number;

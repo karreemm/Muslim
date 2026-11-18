@@ -7,59 +7,84 @@ import {
   useContext,
   useEffect,
   useState,
-  startTransition,
 } from "react";
-import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
+import { usePathname, useRouter } from "next/navigation";
+import { STORAGE_KEYS, writeString } from "@/lib/storage";
+import {
+  LANGUAGE_COOKIE,
+  type Locale,
+  getLocaleFromPathname,
+  localeDirection,
+  normalizeLocale,
+  swapLocaleInPathname,
+} from "@/lib/i18n";
 
 interface LanguageContextType {
-  language: string;
-  dir: string;
+  language: Locale;
+  dir: "rtl" | "ltr";
+  setLanguage: (language: Locale) => void;
   toggleLanguage: () => void;
   isHydrated: boolean;
 }
 
 interface IProps {
   children: ReactNode;
+  initialLocale?: Locale;
 }
 
 export const LanguageContext = createContext<LanguageContextType | null>(null);
 
-const LanguageContextProvider = ({ children }: IProps) => {
-  const [language, setLanguage] = useState<string>("ar");
-  const [dir, setDir] = useState<string>("rtl");
+function persistLanguage(locale: Locale) {
+  if (typeof window === "undefined") return;
+
+  writeString(STORAGE_KEYS.language, locale);
+  document.cookie = `${LANGUAGE_COOKIE}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  document.documentElement.lang = locale;
+  document.documentElement.dir = localeDirection(locale);
+}
+
+const LanguageContextProvider = ({ children, initialLocale = "ar" }: IProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // The URL is the source of truth. This keeps server-rendered and
+  // client-rendered content in the same language.
+  const pathLocale = pathname ? getLocaleFromPathname(pathname) : null;
+  const language =
+    pathLocale && pathname?.match(/^\/(ar|en)(?=\/|$)/)
+      ? pathLocale
+      : normalizeLocale(initialLocale);
+  const dir = localeDirection(language);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedLanguage = readString(STORAGE_KEYS.language);
-      const nextLanguage = savedLanguage === "en" ? "en" : "ar";
-      if (savedLanguage) {
-        setLanguage(nextLanguage);
-        setDir(nextLanguage === "en" ? "ltr" : "rtl");
-        document.documentElement.dir = nextLanguage === "en" ? "ltr" : "rtl";
-        document.documentElement.lang = nextLanguage;
-      }
-    }
+    persistLanguage(language);
     setIsHydrated(true);
-  }, []);
+  }, [language]);
+
+  const setLanguage = useCallback(
+    (nextLanguage: Locale) => {
+      if (nextLanguage === language || typeof window === "undefined") return;
+
+      persistLanguage(nextLanguage);
+
+      const search = window.location.search;
+      const hash = window.location.hash;
+      const nextPath = swapLocaleInPathname(pathname || "/", nextLanguage);
+
+      router.push(`${nextPath}${search}${hash}`);
+    },
+    [language, pathname, router],
+  );
 
   const toggleLanguage = useCallback(() => {
-    const newLanguage = language === "ar" ? "en" : "ar";
-    const newDir = newLanguage === "ar" ? "rtl" : "ltr";
-    document.documentElement.dir = newDir;
-    document.documentElement.lang = newLanguage;
-    if (typeof window !== "undefined") {
-      writeString(STORAGE_KEYS.language, newLanguage);
-    }
-    startTransition(() => {
-      setLanguage(newLanguage);
-      setDir(newDir);
-    });
-  }, [language]);
+    setLanguage(language === "ar" ? "en" : "ar");
+  }, [language, setLanguage]);
 
   const value = {
     language,
     dir,
+    setLanguage,
     toggleLanguage,
     isHydrated,
   };

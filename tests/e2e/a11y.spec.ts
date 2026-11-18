@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 test("home page has no critical accessibility violations", async ({ page }) => {
-  await page.goto("/", { waitUntil: "networkidle" });
+  await page.goto("/en", { waitUntil: "networkidle" });
 
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa"])

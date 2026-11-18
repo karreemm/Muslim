@@ -1,10 +1,13 @@
 import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { localizePath } from "@/lib/i18n";
 import { DeceasedPerson } from "@/types/sadaqa";
 import { logger } from "@/lib/logger";
 
 export default function useDeceasedPage(slug: string) {
   const router = useRouter();
+  const { language } = useLanguage();
   const [deceased, setDeceased] = useState<DeceasedPerson | null>(null);
   const [expandedSurah, setExpandedSurah] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -46,7 +49,7 @@ export default function useDeceasedPage(slug: string) {
   };
 
   const goHome = () => {
-    router.push("/");
+    router.push(localizePath(language, "/"));
   };
 
   const retryLoading = () => {

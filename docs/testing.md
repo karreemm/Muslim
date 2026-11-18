@@ -11,14 +11,14 @@ audience: ["agents", "contributors", "maintainers"]
 
 This project uses a layered test strategy:
 
-| Layer | Tool | Location | Purpose |
-|---|---|---|---|
-| Unit | Vitest | `tests/unit/` | Pure functions and small modules |
-| Integration | Vitest | `tests/integration/` | Route handlers and services with mocked I/O |
-| Component | Vitest + Testing Library | `tests/components/` | UI behavior in jsdom |
-| E2E / regression | Playwright | `tests/e2e/` | Real browser, routes, flows, accessibility |
-| Accessibility | axe-core + Playwright | `tests/e2e/a11y.spec.ts` | Critical WCAG scans |
-| Mocks | MSW | `tests/mocks/` | Deterministic external API responses |
+| Layer            | Tool                     | Location                 | Purpose                                     |
+| ---------------- | ------------------------ | ------------------------ | ------------------------------------------- |
+| Unit             | Vitest                   | `tests/unit/`            | Pure functions and small modules            |
+| Integration      | Vitest                   | `tests/integration/`     | Route handlers and services with mocked I/O |
+| Component        | Vitest + Testing Library | `tests/components/`      | UI behavior in jsdom                        |
+| E2E / regression | Playwright               | `tests/e2e/`             | Real browser, routes, flows, accessibility  |
+| Accessibility    | axe-core + Playwright    | `tests/e2e/a11y.spec.ts` | Critical WCAG scans                         |
+| Mocks            | MSW                      | `tests/mocks/`           | Deterministic external API responses        |
 
 ---
 
@@ -70,18 +70,29 @@ tests/
 - `lib/sadaqaGarya/sadaqaDeleteCookie.ts` and `localDeleteTokens.ts` — token maps.
 - `lib/http.ts` — JSON/array-buffer responses and `HttpError` normalization.
 - `lib/env.ts` — Supabase/Hadith env validation, defaults, and missing-value failures.
+- `lib/i18n.ts` — locale resolution, path prefixing/swapping, stripping, and
+  language-specific SEO translation.
+- SEO — locale-aware metadata, hreflang, sitemap, robots, and manifest unit tests;
+  Playwright checks titles, descriptions, canonical links, hreflang, `/robots.txt`,
+  and `/sitemap.xml` in both locales.
 - `GET /api/search-quran` — validation, success, no-match 404.
 - `POST /api/download-audio` — missing/invalid URL and SSRF allowlist rejection.
 - Locale parity — every English key exists in Arabic and vice versa.
 - Translation key usage — every `t("…")`/`translate(…, "…")` key exists in both locales.
-- Runtime i18n — Playwright visits all main routes and fails on
+- Runtime i18n — Playwright visits all main routes in both locales and fails on
   “Translation key not found” warnings.
 - UI primitives — `Button`, `IconButton`, `Modal`, `Loading`.
-- All 14 static routes + home title (Playwright).
+- Localized route smoke coverage for English and Arabic (Playwright).
+- Root `/` redirect precedence: language cookie, then `Accept-Language`, then Arabic.
+- Unsupported locale prefixes are re-homed under a supported locale.
+- Unknown URLs return a localized HTTP 404 with `noindex`.
+- Square PWA/Apple icons are served and declared in the manifest.
+- Language switching preserves the current path and query string.
+- Internal links stay inside `/ar` or `/en` and resolve without HTTP errors.
 - Home page critical a11y violations (axe).
 
-Current totals: **16 test files, 82 unit/integration/component tests**, plus
-**22 Playwright tests**.
+Current totals: **18 test files, 104 unit/integration/component tests**, plus
+**64 Playwright tests**.
 
 **Not covered yet:** most hooks/contexts, the remaining page-level components,
 dynamic routes with mocked data, full user journeys, visual regression. These are
@@ -146,7 +157,7 @@ Prefer accessible queries (`getByRole`, `getByLabelText`) over CSS selectors.
 import { expect, test } from "@playwright/test";
 
 test("critical flow", async ({ page }) => {
-  await page.goto("/read-quran");
+  await page.goto("/en/read-quran");
   await expect(page.getByRole("heading")).toBeVisible();
 });
 ```
@@ -179,8 +190,8 @@ Coverage is generated with v8:
 5. `npm run build`
 6. Playwright smoke + a11y (`npm run test:e2e`)
 
-Playwright reports are uploaded on failure. The current suite is 16 Vitest files
-(82 tests) plus 22 Playwright tests.
+Playwright reports are uploaded on failure. The current suite is 18 Vitest files
+(104 tests) plus 64 Playwright tests.
 
 ---
 
@@ -201,10 +212,10 @@ Playwright reports are uploaded on failure. The current suite is 16 Vitest files
 
 ## Troubleshooting
 
-| Symptom | Fix |
-|---|---|
-| `Executable doesn't exist` from Playwright | `npx playwright install chromium` |
-| Port 3000 already in use | Stop the dev server or set `E2E_BASE_URL` to an existing server |
-| MSW handler not used | Check the URL/method matches exactly; use `server.use(...)` inside the test |
-| `matchMedia is not a function` | Ensure `tests/setup.ts` is loaded via `vitest.config.mts` |
-| Type errors in tests | Run `npm run typecheck`; tests are part of the TypeScript program |
+| Symptom                                    | Fix                                                                         |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
+| `Executable doesn't exist` from Playwright | `npx playwright install chromium`                                           |
+| Port 3000 already in use                   | Stop the dev server or set `E2E_BASE_URL` to an existing server             |
+| MSW handler not used                       | Check the URL/method matches exactly; use `server.use(...)` inside the test |
+| `matchMedia is not a function`             | Ensure `tests/setup.ts` is loaded via `vitest.config.mts`                   |
+| Type errors in tests                       | Run `npm run typecheck`; tests are part of the TypeScript program           |

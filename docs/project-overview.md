@@ -29,65 +29,67 @@ component because the experience is highly interactive (audio, counters, filters
 local storage). Global providers wrap the whole app, and two global players sit at
 the bottom of the layout: Quran audio and live radio.
 
-| Fact | Value |
-|---|---|
-| Framework | Next.js `16.4.6` (App Router) |
-| UI runtime | React `19.3.1` |
-| Runtime | Node.js `>= 20.9`; CI uses Node 24 |
-| Package manager | npm 11, pinned via `packageManager` in `package.json` |
-| Language | TypeScript 5, `strict: true` |
-| Styling | Tailwind CSS `4.1.13` + HSL CSS variables + a few CSS Modules |
-| Icons | FontAwesome (majority) + Lucide (subset) |
-| Data | REST APIs + local JSON + Supabase REST |
-| Testing | Vitest + Testing Library + MSW + Playwright + axe |
-| CI | GitHub Actions (`.github/workflows/ci.yml`) |
-| Deployment | Vercel |
-| Default language | Arabic (`ar`, RTL) |
-| Default theme | Light; system preference respected |
-| Source of truth | This repository; GitHub landing page at `../README.md` |
+| Fact             | Value                                                         |
+| ---------------- | ------------------------------------------------------------- |
+| Framework        | Next.js `16.4.6` (App Router)                                 |
+| UI runtime       | React `19.3.1`                                                |
+| Runtime          | Node.js `>= 20.9`; CI uses Node 24                            |
+| Package manager  | npm 11, pinned via `packageManager` in `package.json`         |
+| Language         | TypeScript 5, `strict: true`                                  |
+| Styling          | Tailwind CSS `4.1.13` + HSL CSS variables + a few CSS Modules |
+| Icons            | FontAwesome (majority) + Lucide (subset)                      |
+| Data             | REST APIs + local JSON + Supabase REST                        |
+| Testing          | Vitest + Testing Library + MSW + Playwright + axe             |
+| CI               | GitHub Actions (`.github/workflows/ci.yml`)                   |
+| Deployment       | Vercel                                                        |
+| Default language | Arabic (`ar`, RTL)                                            |
+| Default theme    | Light; system preference respected                            |
+| Source of truth  | This repository; GitHub landing page at `../README.md`        |
 
 ---
 
 ## 2. Feature map
 
-All feature pages live under `app/(pages)/`. The `(pages)` segment is a route
-group, so it does not appear in URLs.
+All feature pages live under `app/[locale]/(pages)/`. The `[locale]` segment is
+`ar` or `en` and appears in every URL; `(pages)` is a route group, so it does not
+appear in URLs. Visiting `/` redirects to `/ar` or `/en` using the saved language
+cookie, then `Accept-Language`, then Arabic.
 
-| Route | What it does | Primary code | Main data source |
-|---|---|---|---|
-| `/` | Landing page: hero, features, tools, install flow, CTA | `app/(pages)/home/Home.tsx` | Local constants / i18n |
-| `/read-quran` | Browse surahs and juz | `app/(pages)/read-quran/ReadQuran.tsx` | `constants/quranData.ts` |
-| `/read-quran/surah/[number]` | Read a surah, ayah popover, save, share, tafseer, translation | `app/(pages)/read-quran/surah/[number]/page.tsx` | `api.quran.com` v4 |
-| `/read-quran/juz/[number]` | Read a juz | `app/(pages)/read-quran/juz/[number]/page.tsx` | `api.quran.com` v4 |
-| `/read-hadith` | Browse 8 hadith collections | `app/(pages)/read-hadith/ReadHadith.tsx` | `hadithapi.com` via `/api/hadith` |
-| `/read-hadith/book/[slug]` | Chapters of a book | `app/(pages)/read-hadith/book/[slug]/page.tsx` | `/api/hadith` |
-| `/read-hadith/book/[slug]/chapter/[chapterNumber]` | Hadith list, search, pagination, favorites | `.../chapter/[chapterNumber]/page.tsx` | `/api/hadith` |
-| `/listen-quran` | Reciter list | `app/(pages)/listen-quran/ListenQuran.tsx` | `constants/recitersData.ts` |
-| `/listen-quran/reciter/[id]` | Reciter surahs + playback | `app/(pages)/listen-quran/reciter/[id]/page.tsx` | `api.alquran.cloud` + `/api/proxy` |
-| `/radios` | 125+ live stations, search, categories, favorites | `app/(pages)/radios/components/Radios.tsx` | `constants/radioStationsData.ts` + `/api/radio-proxy` |
-| `/azkar` | Azkar categories with daily completion | `app/(pages)/azkar/Azkar.tsx` | Azkar GitHub JSON |
-| `/azkar/category/[id]` | Azkar list + per-zekr counters | `app/(pages)/azkar/category/[id]/page.tsx` | Azkar GitHub JSON |
-| `/prayer-times` | Prayer times, next prayer countdown, Hijri date | `app/(pages)/prayer-times/PrayTimes.tsx` | Aladhan API |
-| `/tasbeeh` | Digital tasbeeh counter with goal | `app/(pages)/tasbeeh/Counter.tsx` | Local storage |
-| `/search-ayah` | Full Quran search with pagination | `app/(pages)/search-ayah/SearchAyah.tsx` | Local `data/searchQuran/quran-index.json` |
-| `/generate-ayah-image` | Compose an ayah image and download/share | `app/(pages)/generate-ayah-image/GenerateAyahImage.tsx` | `api.quran.com` + `html-to-image` |
-| `/sadaqa-garya` | Create a memorial page | `app/(pages)/sadaqa-garya/SadaqaGarya.tsx` | `/api/sadaqa-garya` + Supabase |
-| `/sadaqa-garya/[slug]` | Public memorial page | `app/(pages)/sadaqa-garya/[slug]/page.tsx` | `/api/sadaqa-garya/[slug]` |
-| `/saved-ayahs` | Saved ayahs table | `app/(pages)/saved-ayahs/Table.tsx` | `localStorage` |
-| `/favourites` | Favorite surahs, hadiths, azkar | `app/(pages)/favourites/page.tsx` | `localStorage` |
-| `/sadaqat` | Memorial pages owned by this browser | `app/(pages)/sadaqat/Table.tsx` | `/api/sadaqa-garya` + token cookie |
-| `*` (404) | Not-found page | `app/not-found.tsx` | Local copy |
+| Route                                                       | What it does                                                  | Primary code                                                     | Main data source                                      |
+| ----------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------- |
+| `/{locale}`                                                 | Landing page: hero, features, tools, install flow, CTA        | `app/[locale]/(pages)/home/Home.tsx`                             | Local constants / i18n                                |
+| `/{locale}/read-quran`                                      | Browse surahs and juz                                         | `app/[locale]/(pages)/read-quran/ReadQuran.tsx`                  | `constants/quranData.ts`                              |
+| `/{locale}/read-quran/surah/[number]`                       | Read a surah, ayah popover, save, share, tafseer, translation | `app/[locale]/(pages)/read-quran/surah/[number]/page.tsx`        | `api.quran.com` v4                                    |
+| `/{locale}/read-quran/juz/[number]`                         | Read a juz                                                    | `app/[locale]/(pages)/read-quran/juz/[number]/page.tsx`          | `api.quran.com` v4                                    |
+| `/{locale}/read-hadith`                                     | Browse 8 hadith collections                                   | `app/[locale]/(pages)/read-hadith/ReadHadith.tsx`                | `hadithapi.com` via `/api/hadith`                     |
+| `/{locale}/read-hadith/book/[slug]`                         | Chapters of a book                                            | `app/[locale]/(pages)/read-hadith/book/[slug]/page.tsx`          | `/api/hadith`                                         |
+| `/{locale}/read-hadith/book/[slug]/chapter/[chapterNumber]` | Hadith list, search, pagination, favorites                    | `.../chapter/[chapterNumber]/page.tsx`                           | `/api/hadith`                                         |
+| `/{locale}/listen-quran`                                    | Reciter list                                                  | `app/[locale]/(pages)/listen-quran/ListenQuran.tsx`              | `constants/recitersData.ts`                           |
+| `/{locale}/listen-quran/reciter/[id]`                       | Reciter surahs + playback                                     | `app/[locale]/(pages)/listen-quran/reciter/[id]/page.tsx`        | `api.alquran.cloud` + `/api/proxy`                    |
+| `/{locale}/radios`                                          | 125+ live stations, search, categories, favorites             | `app/[locale]/(pages)/radios/components/Radios.tsx`              | `constants/radioStationsData.ts` + `/api/radio-proxy` |
+| `/{locale}/azkar`                                           | Azkar categories with daily completion                        | `app/[locale]/(pages)/azkar/Azkar.tsx`                           | Azkar GitHub JSON                                     |
+| `/{locale}/azkar/category/[id]`                             | Azkar list + per-zekr counters                                | `app/[locale]/(pages)/azkar/category/[id]/page.tsx`              | Azkar GitHub JSON                                     |
+| `/{locale}/prayer-times`                                    | Prayer times, next prayer countdown, Hijri date               | `app/[locale]/(pages)/prayer-times/PrayTimes.tsx`                | Aladhan API                                           |
+| `/{locale}/tasbeeh`                                         | Digital tasbeeh counter with goal                             | `app/[locale]/(pages)/tasbeeh/Counter.tsx`                       | Local storage                                         |
+| `/{locale}/search-ayah`                                     | Full Quran search with pagination                             | `app/[locale]/(pages)/search-ayah/SearchAyah.tsx`                | Local `data/searchQuran/quran-index.json`             |
+| `/{locale}/generate-ayah-image`                             | Compose an ayah image and download/share                      | `app/[locale]/(pages)/generate-ayah-image/GenerateAyahImage.tsx` | `api.quran.com` + `html-to-image`                     |
+| `/{locale}/sadaqa-garya`                                    | Create a memorial page                                        | `app/[locale]/(pages)/sadaqa-garya/SadaqaGarya.tsx`              | `/api/sadaqa-garya` + Supabase                        |
+| `/{locale}/sadaqa-garya/[slug]`                             | Public memorial page                                          | `app/[locale]/(pages)/sadaqa-garya/[slug]/page.tsx`              | `/api/sadaqa-garya/[slug]`                            |
+| `/{locale}/saved-ayahs`                                     | Saved ayahs table                                             | `app/[locale]/(pages)/saved-ayahs/Table.tsx`                     | `localStorage`                                        |
+| `/{locale}/favourites`                                      | Favorite surahs, hadiths, azkar                               | `app/[locale]/(pages)/favourites/page.tsx`                       | `localStorage`                                        |
+| `/{locale}/sadaqat`                                         | Memorial pages owned by this browser                          | `app/[locale]/(pages)/sadaqat/Table.tsx`                         | `/api/sadaqa-garya` + token cookie                    |
+| `/{locale}/*` (404)                                         | Not-found page                                                | `app/[locale]/not-found.tsx`                                     | Local copy                                            |
 
 ---
 
 ## 3. Architecture at a glance
 
 ```
-app/layout.tsx
-└── LanguageProvider
+app/[locale]/layout.tsx
+└── LanguageProvider                ← locale comes from the URL
     └── ThemeProvider
         └── PaletteProvider
-            └── AppHydrationGate          ← currently blocks for 2s (tech debt)
+            └── AppHydrationGate          ← waits for client providers
                 └── QuranAudioProvider
                     └── RadioProvider
                         └── SavedAyahsProvider
@@ -107,7 +109,9 @@ app/layout.tsx
 
 Key points:
 
-- **Route group:** `app/(pages)/` is not part of the URL.
+- **Locale segment:** `app/[locale]/` is the root layout; `proxy.ts` redirects
+  unprefixed paths and keeps the language cookie aligned with the URL.
+- **Route group:** `app/[locale]/(pages)/` is not part of the URL.
 - **Feature folders:** each feature owns `components/`, `hooks/`, `service/`, `types/`.
 - **Global providers** live in `context/general/` (language, theme, palette) and
   `context/features/` + `context/favourites/` (audio, radio, saved/favorites, sadaqa,
@@ -124,13 +128,21 @@ Key points:
 
 ```
 app/
-├── layout.tsx                 # Root providers, fonts, metadata, ThemeScript
-├── page.tsx                   # Home route wrapper
+├── [locale]/
+│   ├── layout.tsx             # Locale root layout, providers, metadata, JSON-LD
+│   ├── page.tsx               # Localized home route wrapper
+│   ├── loading.tsx            # Route loading UI
+│   ├── error.tsx              # Route error boundary
+│   ├── not-found.tsx          # Localized route-level 404
+│   └── (pages)/               # All feature pages (route group)
+├── global-not-found.tsx       # Localized 404 for unmatched URLs
 ├── globals.css                # Tailwind v4 theme, tokens, palettes, utilities
-├── loading.tsx                # Global route loading UI
-├── not-found.tsx              # 404
-├── (pages)/                   # All feature pages (route group)
+├── sitemap.ts                 # Bilingual sitemap with hreflang
+├── robots.ts                  # Crawler rules
+├── manifest.ts                # PWA manifest
+├── global-error.tsx           # Last-resort error boundary
 └── api/                       # Route handlers (proxy/storage)
+proxy.ts                        # Locale redirect + language cookie
 components/
 ├── layout/                    # Navbar, footer, page shell
 ├── general/                   # DataTable, Loading, Pagination, players
@@ -146,10 +158,12 @@ data/
 ├── searchQuran/               # 3.89 MB search index (raw duplicates removed)
 └── sadaqaGarya/               # Supabase schema
 public/data/listenQuran/       # 1.54 MB audio durations, lazy-loaded at runtime
+public/icons/                  # Square app icons (192/512/maskable/Apple)
+public/logo.png                # Wide wordmark used by the README
 hooks/                         # Feature hooks, grouped by domain
-lib/                           # Cross-cutting: storage, http, logger, env, Supabase, security
+lib/                           # Cross-cutting: i18n, SEO, storage, http, logger, env, security
 lib/services/                  # External API services (azkar, hadith, Quran, prayer, search...)
-locales/{en,ar}/               # 17 namespaces per language
+locales/{en,ar}/               # 18 namespaces per language (includes `seo`)
 types/                         # Shared domain types (ayah image, hadith, radio, sadaqa, search)
 utils/                         # Helpers, palette engine, search, theme script
 docs/                          # This documentation system
@@ -166,7 +180,7 @@ docs/                          # This documentation system
    Supabase) and external API clients live in `lib/services/<domain>/`.
 6. Shared domain types live in `types/`; `lib/` must not import from `app/`.
 
-> The previous `app/(pages)/.../service` and `types` folders have been moved to
+> The previous `app/[locale]/(pages)/.../service` and `types` folders have been moved to
 > `lib/services/` and `types/`. No `lib` → `app` imports remain.
 
 ---
@@ -178,20 +192,20 @@ docs/                          # This documentation system
 Contexts are used for state shared across routes or between a page and a global
 player. Page-local UI state stays in the page/feature.
 
-| Context | File | Purpose |
-|---|---|---|
-| `LanguageContext` | `context/general/LanguageContext.tsx` | `"ar" \| "en"`, document direction |
-| `ThemeContext` | `context/general/ThemeContext.tsx` | light/dark |
-| `PaletteContext` | `context/general/PaletteContext.tsx` | preset/custom hue |
-| `QuranAudioContext` | `context/features/QuranAudioContext.tsx` | Quran playback, repeats, Hifz, speed |
-| `RadioContext` | `context/features/RadioContext.tsx` | live radio stream, favorites |
-| `SavedAyahsContext` | `context/features/SavedAyahsContext.tsx` | saved ayahs |
-| `FavoriteSurahsContext` | `context/favourites/FavoriteSurahsContext.tsx` | favorite surahs per reciter |
-| `FavoriteHadithsContext` | `context/favourites/FavoriteHadithsContext.tsx` | favorite hadiths |
-| `FavoriteAzkarContext` | `context/favourites/FavoriteAzkarContext.tsx` | favorite azkar |
-| `ZekrCounterContext` | `context/features/ZekrCounterContext.tsx` | daily azkar counters |
-| `SadaqaGaryaProvider` | `context/features/SadaqatContext.tsx` | memorial records + ownership |
-| `TasbeehContext` | `context/features/TasbeehContext.tsx` | tasbeeh count/goal |
+| Context                  | File                                            | Purpose                              |
+| ------------------------ | ----------------------------------------------- | ------------------------------------ |
+| `LanguageContext`        | `context/general/LanguageContext.tsx`           | `"ar" \| "en"`, document direction   |
+| `ThemeContext`           | `context/general/ThemeContext.tsx`              | light/dark                           |
+| `PaletteContext`         | `context/general/PaletteContext.tsx`            | preset/custom hue                    |
+| `QuranAudioContext`      | `context/features/QuranAudioContext.tsx`        | Quran playback, repeats, Hifz, speed |
+| `RadioContext`           | `context/features/RadioContext.tsx`             | live radio stream, favorites         |
+| `SavedAyahsContext`      | `context/features/SavedAyahsContext.tsx`        | saved ayahs                          |
+| `FavoriteSurahsContext`  | `context/favourites/FavoriteSurahsContext.tsx`  | favorite surahs per reciter          |
+| `FavoriteHadithsContext` | `context/favourites/FavoriteHadithsContext.tsx` | favorite hadiths                     |
+| `FavoriteAzkarContext`   | `context/favourites/FavoriteAzkarContext.tsx`   | favorite azkar                       |
+| `ZekrCounterContext`     | `context/features/ZekrCounterContext.tsx`       | daily azkar counters                 |
+| `SadaqaGaryaProvider`    | `context/features/SadaqatContext.tsx`           | memorial records + ownership         |
+| `TasbeehContext`         | `context/features/TasbeehContext.tsx`           | tasbeeh count/goal                   |
 
 > `SadaqaGaryaProvider` living in `SadaqatContext.tsx` is a naming inconsistency to
 > fix in Phase 2.
@@ -205,29 +219,29 @@ directly because it must run before React.
 
 These keys are **contracts** until a migration exists. Do not rename them silently.
 
-| Key | Owner | Purpose |
-|---|---|---|
-| `theme` | ThemeContext | `light` / `dark` |
-| `palette` | PaletteContext | `teal` / `gold` / `emerald` / `midnight` / `custom` |
-| `paletteHue` | PaletteContext | custom hue (0–360) |
-| `language` | LanguageContext | `ar` / `en` |
-| `favoriteSurahs` | FavoriteSurahsContext | favorite surahs + reciter |
-| `favoriteHadiths` | FavoriteHadithsContext | favorite hadiths |
-| `favoriteAzkar` | FavoriteAzkarContext | favorite azkar |
-| `savedAyahs` | SavedAyahsContext | saved verses |
-| `favoriteRadioStations` | RadioContext | favorite station URLs |
-| `audioPlaybackRate` | QuranAudioContext | `1` / `0.75` / `0.5` |
-| `audioSkipMode` | AudioPlayer | skip by ayah or 15 seconds |
-| `audioRepeatSettings` | RepeatModePanel | repeat count + range behavior |
-| `preferredReciter` | AudioPlayer / search card | last reciter |
-| `tasbeeh_count` | TasbeehContext | current count |
-| `tasbeeh_goal` | TasbeehContext | goal |
-| `tasbeeh_input_value` | TasbeehContext | goal input draft |
-| `azkar_daily_counts` | ZekrCounterContext | `{ date, counts }` daily reset |
-| `selectedGovernorate` | Prayer times | selected Egyptian governorate |
-| `postSalahResetPrayer` | PrayerAzkarReset | last prayer period that reset post-salah azkar |
-| `sadaqaDeleteTokens` | Sadaqa | browser mirror of delete tokens |
-| `sadaqaGarya` | SadaqatContext | **legacy**, only removed |
+| Key                     | Owner                     | Purpose                                             |
+| ----------------------- | ------------------------- | --------------------------------------------------- |
+| `theme`                 | ThemeContext              | `light` / `dark`                                    |
+| `palette`               | PaletteContext            | `teal` / `gold` / `emerald` / `midnight` / `custom` |
+| `paletteHue`            | PaletteContext            | custom hue (0–360)                                  |
+| `language`              | LanguageContext           | `ar` / `en`                                         |
+| `favoriteSurahs`        | FavoriteSurahsContext     | favorite surahs + reciter                           |
+| `favoriteHadiths`       | FavoriteHadithsContext    | favorite hadiths                                    |
+| `favoriteAzkar`         | FavoriteAzkarContext      | favorite azkar                                      |
+| `savedAyahs`            | SavedAyahsContext         | saved verses                                        |
+| `favoriteRadioStations` | RadioContext              | favorite station URLs                               |
+| `audioPlaybackRate`     | QuranAudioContext         | `1` / `0.75` / `0.5`                                |
+| `audioSkipMode`         | AudioPlayer               | skip by ayah or 15 seconds                          |
+| `audioRepeatSettings`   | RepeatModePanel           | repeat count + range behavior                       |
+| `preferredReciter`      | AudioPlayer / search card | last reciter                                        |
+| `tasbeeh_count`         | TasbeehContext            | current count                                       |
+| `tasbeeh_goal`          | TasbeehContext            | goal                                                |
+| `tasbeeh_input_value`   | TasbeehContext            | goal input draft                                    |
+| `azkar_daily_counts`    | ZekrCounterContext        | `{ date, counts }` daily reset                      |
+| `selectedGovernorate`   | Prayer times              | selected Egyptian governorate                       |
+| `postSalahResetPrayer`  | PrayerAzkarReset          | last prayer period that reset post-salah azkar      |
+| `sadaqaDeleteTokens`    | Sadaqa                    | browser mirror of delete tokens                     |
+| `sadaqaGarya`           | SadaqatContext            | **legacy**, only removed                            |
 
 ### Sadaqa ownership
 
@@ -257,46 +271,52 @@ The script currently duplicates the palette definitions from `paletteEngine.ts` 
 
 ### External APIs
 
-| API | Used for | Called from |
-|---|---|---|
-| `https://api.quran.com/api/v4` | Quran verses (Uthmani words, pages, lines) | `app/(pages)/read-quran/service/Get{Surah,Juz,Page}.ts` |
-| `https://api.alquran.cloud/v1` | Audio editions, translations | listen Quran, translation modal |
-| `http://api.quran-tafseer.com` | Arabic tafseer books and text | `/api/tafseer` |
-| `https://cdn.islamic.network/quran/audio` | Ayah audio files | `/api/proxy` |
-| `https://hadithapi.com/api` | Books, chapters, hadiths | `/api/hadith` |
-| `https://raw.githubusercontent.com/nawafalqari/azkar-api` | Azkar categories | Azkar service (direct client fetch) |
-| `https://api.aladhan.com/v1` | Prayer times | prayer-times service (direct client call) |
-| `https://live.mp3quran.net`, `https://qurango.net` | Live radio streams | `/api/radio-proxy` |
-| Supabase REST | Sadaqa memorial records | `lib/sadaqaGarya/sadaqaGaryaStore.ts` |
+| API                                                       | Used for                                   | Called from                                                      |
+| --------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------- |
+| `https://api.quran.com/api/v4`                            | Quran verses (Uthmani words, pages, lines) | `app/[locale]/(pages)/read-quran/service/Get{Surah,Juz,Page}.ts` |
+| `https://api.alquran.cloud/v1`                            | Audio editions, translations               | listen Quran, translation modal                                  |
+| `http://api.quran-tafseer.com`                            | Arabic tafseer books and text              | `/api/tafseer`                                                   |
+| `https://cdn.islamic.network/quran/audio`                 | Ayah audio files                           | `/api/proxy`                                                     |
+| `https://hadithapi.com/api`                               | Books, chapters, hadiths                   | `/api/hadith`                                                    |
+| `https://raw.githubusercontent.com/nawafalqari/azkar-api` | Azkar categories                           | Azkar service (direct client fetch)                              |
+| `https://api.aladhan.com/v1`                              | Prayer times                               | prayer-times service (direct client call)                        |
+| `https://live.mp3quran.net`, `https://qurango.net`        | Live radio streams                         | `/api/radio-proxy`                                               |
+| Supabase REST                                             | Sadaqa memorial records                    | `lib/sadaqaGarya/sadaqaGaryaStore.ts`                            |
 
 ### Internal API routes
 
-| Route | Methods | Purpose | Notes |
-|---|---|---|---|
-| `/api/hadith` | GET | Proxy to Hadith API | Requires `HADITH_API_KEY`; `mode=books\|chapters\|hadiths` |
-| `/api/search-quran` | GET | Local Quran search | Uses `data/searchQuran/quran-index.json` |
-| `/api/tafseer` | GET | Proxy to tafseer API | Caches list/text for 1 day |
-| `/api/proxy` | GET | Proxy ayah audio | Builds absolute ayah number, fixed CDN host |
-| `/api/radio-proxy` | GET | Proxy radio streams | Host allowlist, forwards `Range` |
-| `/api/download-audio` | POST | Stream a surah download | Host allowlist, sanitized filename |
-| `/api/sadaqa-garya` | GET, POST | List records / create memorial | In-memory rate limit on POST |
-| `/api/sadaqa-garya/[slug]` | GET, DELETE | Fetch public page / delete owned page | Token + rate limit on DELETE |
+| Route                      | Methods     | Purpose                               | Notes                                                      |
+| -------------------------- | ----------- | ------------------------------------- | ---------------------------------------------------------- |
+| `/api/hadith`              | GET         | Proxy to Hadith API                   | Requires `HADITH_API_KEY`; `mode=books\|chapters\|hadiths` |
+| `/api/search-quran`        | GET         | Local Quran search                    | Uses `data/searchQuran/quran-index.json`                   |
+| `/api/tafseer`             | GET         | Proxy to tafseer API                  | Caches list/text for 1 day                                 |
+| `/api/proxy`               | GET         | Proxy ayah audio                      | Builds absolute ayah number, fixed CDN host                |
+| `/api/radio-proxy`         | GET         | Proxy radio streams                   | Host allowlist, forwards `Range`                           |
+| `/api/download-audio`      | POST        | Stream a surah download               | Host allowlist, sanitized filename                         |
+| `/api/sadaqa-garya`        | GET, POST   | List records / create memorial        | In-memory rate limit on POST                               |
+| `/api/sadaqa-garya/[slug]` | GET, DELETE | Fetch public page / delete owned page | Token + rate limit on DELETE                               |
 
 ---
 
 ## 7. Internationalization (i18n)
 
-- `LanguageContext` stores `"ar"` or `"en"` and sets `document.documentElement.dir`.
-- `hooks/general/useTranslation.ts` loads all locale namespaces at module scope and
-  exposes:
-  - `t("namespace.key")` with `{{param}}` interpolation and English fallback.
+- The URL is authoritative: `/{locale}` is either `/ar` or `/en`. `proxy.ts`
+  redirects unprefixed paths and keeps the `language` cookie in sync.
+- `app/[locale]/layout.tsx` sets `<html lang>` and `<html dir>` on the server.
+- `lib/i18n.ts` is server-safe and owns locale constants, path helpers, locale
+  negotiation, and all translation namespaces.
+- `hooks/general/useTranslation.ts` wraps `lib/i18n` and exposes:
+
+  - `t("namespace.key")` with `{{param}}` interpolation and Arabic fallback.
   - `getNamespace("namespace")`.
-- Locale files: `locales/en/*.json` and `locales/ar/*.json`, 17 namespaces each.
+- `components/i18n/LocalizedLink.tsx` prefixes every internal link with the active
+  locale; `localizePath()` is used for router navigations and share URLs.
+- Locale files: `locales/en/*.json` and `locales/ar/*.json`, 18 namespaces each.
   **Key parity is currently 100%.**
 
 Namespaces: `navbar`, `home`, `quran`, `listenQuran`, `readQuran`, `hadith`,
 `prayerTimes`, `tasbeeh`, `sadaqa`, `favourites`, `savedAyahs`, `common`, `footer`,
-`searchAyah`, `generateAyahImage`, `radio`, `azkar`.
+`searchAyah`, `generateAyahImage`, `radio`, `azkar`, `seo`.
 
 ### Rules
 
@@ -308,9 +328,9 @@ Namespaces: `navbar`, `home`, `quran`, `listenQuran`, `readQuran`, `hadith`,
 
 ### Known gap
 
-Many components still use inline `language === "ar" ? "..." : "..."` (≈39 files),
-including modals, favourites, tasbeeh, and the players. Phase 2 migrates them to
-`t()`. `LanguageContext` also does not update `<html lang>` yet.
+Some components still use inline `language === "ar" ? "..." : "..."` for data
+labels, decorative badges, and the bilingual `global-error` fallback. User-facing
+UI and metadata copy live in `locales/`.
 
 ---
 
@@ -364,24 +384,24 @@ for semantic UI. Add a token instead.
 - Card: `rounded-2xl border border-border bg-card/70 backdrop-blur-sm` +
   hover `-translate-y-1.5`, `shadow-primary/10`.
 - Primary button: `rounded-xl bg-primary px-6 py-3 text-primary-foreground
-  font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/25`.
+font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/25`.
 - Secondary button: `rounded-xl border border-border bg-background/80 px-6 py-3`.
 - Icon box: `flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/50
-  text-primary`.
+text-primary`.
 - Active nav: `border-primary/30 bg-primary/10 text-primary`.
 
 Shared primitives now live in `components/ui/`:
 
-| Primitive | Use |
-|---|---|
-| `PageShell` | Page background, width container, bottom padding |
-| `PageHeader` | Page title, subtitle, optional icon |
-| `Card` | Standard surface; `interactive` adds hover motion |
-| `Button` | `primary`, `secondary`, `ghost`, `outline`, `destructive` variants |
-| `IconButton` | Icon-only action with a required accessible label |
-| `Modal` | Headless UI dialog: focus trap, Escape, ARIA, RTL close button |
-| `EmptyState` / `ErrorState` | Consistent empty and failure states |
-| `Skeleton` | Loading placeholder |
+| Primitive                   | Use                                                                |
+| --------------------------- | ------------------------------------------------------------------ |
+| `PageShell`                 | Page background, width container, bottom padding                   |
+| `PageHeader`                | Page title, subtitle, optional icon                                |
+| `Card`                      | Standard surface; `interactive` adds hover motion                  |
+| `Button`                    | `primary`, `secondary`, `ghost`, `outline`, `destructive` variants |
+| `IconButton`                | Icon-only action with a required accessible label                  |
+| `Modal`                     | Headless UI dialog: focus trap, Escape, ARIA, RTL close button     |
+| `EmptyState` / `ErrorState` | Consistent empty and failure states                                |
+| `Skeleton`                  | Loading placeholder                                                |
 
 Prefer these for new UI. All feature pages now use `PageShell` and `PageHeader`;
 `Card`/`Button`/`IconButton`/`EmptyState`/`ErrorState`/`Skeleton` are used across the
@@ -536,15 +556,15 @@ can access the table. The service-role key must never be exposed to the browser.
 
 ### Environment variables
 
-| Variable | Scope | Required | Purpose |
-|---|---|---|---|
-| `SUPABASE_URL` | server | yes | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | server | yes | Supabase REST auth (never public) |
-| `SUPABASE_SADAQA_TABLE` | server | no | Defaults to `sadaqa_garya_records` |
-| `HADITH_API_KEY` | server | yes | Hadith API key |
-| `HADITH_API_BASE_URL` | server | no | Defaults to `https://hadithapi.com/api` |
-| `NEXT_PUBLIC_HADITH_API_KEY` | server fallback | no | Legacy fallback; prefer the non-public name |
-| `NEXT_PUBLIC_HADITH_API_BASE_URL` | server fallback | no | Legacy fallback |
+| Variable                          | Scope           | Required | Purpose                                     |
+| --------------------------------- | --------------- | -------- | ------------------------------------------- |
+| `SUPABASE_URL`                    | server          | yes      | Supabase project URL                        |
+| `SUPABASE_SERVICE_ROLE_KEY`       | server          | yes      | Supabase REST auth (never public)           |
+| `SUPABASE_SADAQA_TABLE`           | server          | no       | Defaults to `sadaqa_garya_records`          |
+| `HADITH_API_KEY`                  | server          | yes      | Hadith API key                              |
+| `HADITH_API_BASE_URL`             | server          | no       | Defaults to `https://hadithapi.com/api`     |
+| `NEXT_PUBLIC_HADITH_API_KEY`      | server fallback | no       | Legacy fallback; prefer the non-public name |
+| `NEXT_PUBLIC_HADITH_API_BASE_URL` | server fallback | no       | Legacy fallback                             |
 
 `lib/env.ts` validates Supabase and Hadith environment variables lazily with Zod,
 so missing configuration produces a clear server-side error without breaking the
@@ -573,14 +593,14 @@ npm run check          # typecheck + lint + tests
 
 ### Tooling
 
-| Tool | Config | Notes |
-|---|---|---|
-| ESLint 9 | `eslint.config.mjs` | Flat config based on `eslint-config-next/core-web-vitals`. React Compiler hook rules are warnings until Phase 2. |
-| Prettier | `.prettierrc.json`, `.prettierignore` | Repo-wide formatting applied; run `npm run format` before merging. |
-| Vitest | `vitest.config.mts`, `tests/setup.ts` | jsdom, Testing Library, MSW server, v8 coverage. |
-| Playwright | `playwright.config.ts` | Chromium, local dev server, CI uses `next start` after a build. |
-| CI | `.github/workflows/ci.yml` | Typecheck, lint, unit/integration, build, then Playwright smoke + a11y. |
-| Env template | `.env.example` | Copy to `.env.local`; never commit real secrets. |
+| Tool         | Config                                | Notes                                                                                                            |
+| ------------ | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| ESLint 9     | `eslint.config.mjs`                   | Flat config based on `eslint-config-next/core-web-vitals`. React Compiler hook rules are warnings until Phase 2. |
+| Prettier     | `.prettierrc.json`, `.prettierignore` | Repo-wide formatting applied; run `npm run format` before merging.                                               |
+| Vitest       | `vitest.config.mts`, `tests/setup.ts` | jsdom, Testing Library, MSW server, v8 coverage.                                                                 |
+| Playwright   | `playwright.config.ts`                | Chromium, local dev server, CI uses `next start` after a build.                                                  |
+| CI           | `.github/workflows/ci.yml`            | Typecheck, lint, unit/integration, build, then Playwright smoke + a11y.                                          |
+| Env template | `.env.example`                        | Copy to `.env.local`; never commit real secrets.                                                                 |
 
 ### Supabase keep-alive
 
@@ -593,6 +613,26 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 (optional `SUPABASE_SADAQA_TABLE`). Run manually with `npm run keepalive` or via
 **Actions → Supabase Keep Alive → Run workflow**.
 
+### SEO and metadata
+
+- `lib/seo.ts` centralizes the site URL, localized site name/description,
+  canonical URLs, hreflang alternates, Open Graph, Twitter, and `createMetadata()`.
+- `app/[locale]/layout.tsx` defines the localized title template, metadataBase,
+  icons, manifest, OpenGraph/Twitter defaults, and WebSite/Organization JSON-LD.
+- Static feature pages have `layout.tsx` metadata; dynamic pages use
+  `generateMetadata()` with content-based names from local constants.
+- Surah, Juz, Hadith book/chapter, Reciter, and Azkar category titles use
+  `constants/*` and the `seo` namespace. Sadaqa memorial titles fetch the record
+  server-side from Supabase and fall back safely if it is unavailable.
+- `app/sitemap.ts` includes both locales, hreflang alternates, static routes,
+  114 surahs, 30 juz, hadith books, reciters, and azkar categories.
+- `app/robots.ts` allows public content and blocks `/api/`, `/*/sadaqat`,
+  `/*/saved-ayahs`, and `/*/favourites`.
+- `app/manifest.ts` provides the installable-app manifest with 192/512 square
+  icons and a maskable 512 icon; Apple uses a 180×180 touch icon. The wide
+  `public/logo.png` is reserved for the README wordmark.
+- Set `NEXT_PUBLIC_SITE_URL` in Vercel if the production domain changes.
+
 ### Deployment
 
 - Hosted on Vercel (`https://muslim-one.vercel.app`).
@@ -604,25 +644,25 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ## 14. Quality status (as of 2026-11-18)
 
-This is a **Phase 2 snapshot**, not the target state.
+This is a snapshot after Phase 3A, not the final target state.
 
-| Area | Status |
-|---|---|
-| Typecheck | ✅ `npm run typecheck` passes. |
-| Lint | ✅ `npm run lint` passes with **0 errors / 109 warnings**. React Compiler hook warnings remain until the hook refactor. |
-| Unit/integration/component | ✅ 16 test files, 82 tests (utils, storage, HTTP, locales, i18n keys, env, security, cookies, API routes, UI primitives). |
-| E2E/regression | ✅ 22 Playwright tests: 20 route smoke tests (including dynamic routes) + 1 home-page axe scan + 1 missing-translation-key scan. |
-| CI | ✅ Workflow added; first GitHub run is pending. |
-| Error boundaries | ✅ `app/error.tsx` and `app/global-error.tsx`. |
-| SEO | ⚠️ Root metadata only; no sitemap/robots. `<html lang>` now updates with language. |
-| Performance | ⚠️ 2s hydration gate removed; audio durations lazy-loaded; 8.8 MB unused JSON removed. Still no `next/image`; fonts via `<link>`. |
-| Accessibility | ✅ `DeleteConfirmModal` uses Headless UI Dialog (focus trap/Escape/ARIA); data-table actions have labels; axe home scan passes. Broader scans are Phase 4. |
-| Storage | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility. |
-| Data layer | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports. |
-| i18n | ✅ All user-facing UI copy is localized. Remaining Arabic literals are data (prayer/month names, palette labels), decorative language badges, and the `global-error` bilingual fallback. A key-usage test + Playwright runtime scan prevent missing keys. |
-| Security | ✅ Production dependency audit is clean. ⚠️ In-memory rate limit, raw errors, and security headers remain (Phase 3). |
-| React | ✅ React 19.3.1. |
-| Dependencies | ✅ `npm audit` (including dev) reports **0 vulnerabilities**. |
+| Area                       | Status                                                                                                                                                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Typecheck                  | ✅ `npm run typecheck` passes.                                                                                                                                                                                                                            |
+| Lint                       | ✅ `npm run lint` passes with **0 errors / 109 warnings**. React Compiler hook warnings remain until the hook refactor.                                                                                                                                   |
+| Unit/integration/component | ✅ 18 test files, 104 tests (utils, storage, HTTP, locales, i18n helpers and keys, env, SEO, security, cookies, API routes, UI primitives).                                                                                                               |
+| E2E/regression             | ✅ 64 Playwright tests: 27 localized route smoke tests, 6 root-redirect checks, 2 localized 404 checks, 20 locale-aware metadata checks, 1 icon-assets check, 1 robots/sitemap check, 4 i18n checks (language switch, query preservation, script warning, missing keys), 2 link-integrity checks, 1 axe scan.                                             |
+| CI                         | ✅ Workflow added; first GitHub run is pending.                                                                                                                                                                                                           |
+| Error boundaries           | ✅ Localized `app/[locale]/error.tsx` and `app/global-error.tsx`.                                                                                                                                                                                         |
+| SEO                        | ✅ Locale-aware titles, descriptions, canonical URLs, hreflang, OpenGraph/Twitter, JSON-LD, bilingual sitemap, robots, and PWA manifest.                                                                                                                  |
+| Performance                | ⚠️ 2s hydration gate removed; audio durations lazy-loaded; 8.8 MB unused JSON removed. Still no `next/image`; fonts via `<link>`.                                                                                                                         |
+| Accessibility              | ✅ `DeleteConfirmModal` uses Headless UI Dialog (focus trap/Escape/ARIA); data-table actions have labels; axe home scan passes. Broader scans are Phase 4.                                                                                                |
+| Storage                    | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility.                                                                                                                                                                            |
+| Data layer                 | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports.                                                                                                                                               |
+| i18n                       | ✅ All user-facing UI copy is localized. Remaining Arabic literals are data (prayer/month names, palette labels), decorative language badges, and the `global-error` bilingual fallback. A key-usage test + Playwright runtime scan prevent missing keys. |
+| Security                   | ✅ Production dependency audit is clean. ⚠️ In-memory rate limit, raw errors, and security headers remain (Phase 3).                                                                                                                                      |
+| React                      | ✅ React 19.3.1.                                                                                                                                                                                                                                          |
+| Dependencies               | ✅ `npm audit` (including dev) reports **0 vulnerabilities**.                                                                                                                                                                                             |
 
 Phase records:
 
@@ -630,6 +670,7 @@ Phase records:
 - [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md)
 - [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md)
 - [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)
+- [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)
 
 ---
 
@@ -640,14 +681,16 @@ Phase records:
 3. **Storage compatibility:** existing `localStorage` keys and shapes must keep
    working, or ship a migration.
 4. **Sadaqa ownership:** delete tokens stay secret; only hashes are stored.
-5. **Slug stability:** existing `/sadaqa-garya/[slug]` links must remain valid.
+5. **Slug stability:** existing `/{locale}/sadaqa-garya/[slug]` links must remain valid.
 6. **API allowlists:** `/api/radio-proxy` and `/api/download-audio` must keep host
    allowlists (SSRF protection).
 7. **Service-role key:** never import `sadaqaGaryaStore` into client code and never
    prefix the key with `NEXT_PUBLIC_`.
 8. **Locale parity:** every key exists in both `locales/en` and `locales/ar`.
-9. **RTL:** layouts must remain usable in both directions.
-10. **Static assets:** `public/quran-fonts/*` are referenced by the Quran renderer;
+9. **Locale URLs:** every page URL is prefixed with `/ar` or `/en`; new internal
+   links must go through `LocalizedLink` or `localizePath()`.
+10. **RTL:** layouts must remain usable in both directions.
+11. **Static assets:** `public/quran-fonts/*` are referenced by the Quran renderer;
     do not rename or remove them without updating the font CSS.
 
 ---
@@ -678,17 +721,17 @@ Before finishing:
 
 ## 17. Glossary
 
-| Term | Meaning |
-|---|---|
-| **Ayah** | A verse of the Quran. |
-| **Surah** | A chapter of the Quran (1–114). |
-| **Juz** | One of 30 sections of the Quran. |
-| **Tafseer** | Quranic exegesis/commentary. |
-| **Hadith** | A recorded saying or action of Prophet Muhammad ﷺ. |
-| **Zekr / Azkar** | Remembrance of Allah (singular/plural). |
-| **Tasbeeh** | Glorification of Allah; also the digital counter tool. |
-| **Hifz** | Quran memorization; the app's repeat mode. |
-| **Sadaqa Jariyah** | Ongoing charity; the memorial-page feature. |
-| **Sadaqat** | Plural of sadaqa; the page listing memorials owned by this browser. |
-| **Reciter** | Qari; the audio voice. |
-| **RTL** | Right-to-left layout used for Arabic. |
+| Term               | Meaning                                                             |
+| ------------------ | ------------------------------------------------------------------- |
+| **Ayah**           | A verse of the Quran.                                               |
+| **Surah**          | A chapter of the Quran (1–114).                                     |
+| **Juz**            | One of 30 sections of the Quran.                                    |
+| **Tafseer**        | Quranic exegesis/commentary.                                        |
+| **Hadith**         | A recorded saying or action of Prophet Muhammad ﷺ.                  |
+| **Zekr / Azkar**   | Remembrance of Allah (singular/plural).                             |
+| **Tasbeeh**        | Glorification of Allah; also the digital counter tool.              |
+| **Hifz**           | Quran memorization; the app's repeat mode.                          |
+| **Sadaqa Jariyah** | Ongoing charity; the memorial-page feature.                         |
+| **Sadaqat**        | Plural of sadaqa; the page listing memorials owned by this browser. |
+| **Reciter**        | Qari; the audio voice.                                              |
+| **RTL**            | Right-to-left layout used for Arabic.                               |

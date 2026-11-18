@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function LanguageDropdown({ className = "" }: Props) {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +30,7 @@ export default function LanguageDropdown({ className = "" }: Props) {
 
   const changeLanguage = (targetLanguage: "ar" | "en") => {
     if (targetLanguage !== language) {
-      toggleLanguage();
+      setLanguage(targetLanguage);
     }
     setIsOpen(false);
   };

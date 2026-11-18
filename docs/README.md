@@ -10,14 +10,14 @@ lives here.
 
 ## Start here
 
-| Order | Document | Read it when |
-|---|---|---|
-| 1 | [`project-overview.md`](./project-overview.md) | Always. It explains the product, routes, architecture, patterns, state, and invariants. |
-| 2 | [`testing.md`](./testing.md) | Before adding tests or changing CI. |
-| 3 | `ui-ux-guidelines.md` *(planned, Phase 2)* | Before changing UI, copy, layout, tokens, or accessibility. |
-| 4 | `operations.md` *(planned, Phase 5)* | Before changing env vars, Supabase, deployment, or keep-alive. |
-| 5 | [`api.md`](./api.md) | Before changing an API route or external integration. |
-| 6 | The active file in [`changes/`](./changes/) | Before continuing in-progress work. |
+| Order | Document                                       | Read it when                                                                            |
+| ----- | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 1     | [`project-overview.md`](./project-overview.md) | Always. It explains the product, routes, architecture, patterns, state, and invariants. |
+| 2     | [`testing.md`](./testing.md)                   | Before adding tests or changing CI.                                                     |
+| 3     | `ui-ux-guidelines.md` _(planned, Phase 2)_     | Before changing UI, copy, layout, tokens, or accessibility.                             |
+| 4     | `operations.md` _(planned, Phase 5)_           | Before changing env vars, Supabase, deployment, or keep-alive.                          |
+| 5     | [`api.md`](./api.md)                           | Before changing an API route or external integration.                                   |
+| 6     | The active file in [`changes/`](./changes/)    | Before continuing in-progress work.                                                     |
 
 ---
 
@@ -55,13 +55,13 @@ see what happened and what is still in progress.
 
 ## Status vocabulary
 
-| Status | Meaning |
-|---|---|
-| `draft` | Written, not implemented yet. |
-| `in-progress` | Implementation is underway. |
-| `review` | Code and docs are ready for review. |
-| `done` | Merged and verified. |
-| `superseded` | Replaced by a newer document. |
+| Status        | Meaning                             |
+| ------------- | ----------------------------------- |
+| `draft`       | Written, not implemented yet.       |
+| `in-progress` | Implementation is underway.         |
+| `review`      | Code and docs are ready for review. |
+| `done`        | Merged and verified.                |
+| `superseded`  | Replaced by a newer document.       |
 
 ---
 
@@ -69,12 +69,13 @@ see what happened and what is still in progress.
 
 Update this table whenever a change record moves status.
 
-| Date | Branch | Scope | Status | Record |
-|---|---|---|---|---|
-| 2026-11-17 | `chore/professional-foundation` | docs, repo foundation, Supabase keep-alive | `done` | [Professional foundation](./changes/2026-11-17-professional-foundation.md) |
-| 2026-11-17 | `chore/professional-foundation` | tooling, tests, CI, error boundaries | `done` | [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md) |
-| 2026-11-17 | `chore/professional-foundation` | React 19 + type migration | `done` | [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md) |
-| 2026-11-18 | `chore/professional-foundation` | consistency, UI primitives, storage, i18n, services, env | `done` | [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md) |
+| Date       | Branch                          | Scope                                                    | Status   | Record                                                                             |
+| ---------- | ------------------------------- | -------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------- |
+| 2026-11-17 | `chore/professional-foundation` | docs, repo foundation, Supabase keep-alive               | `done`   | [Professional foundation](./changes/2026-11-17-professional-foundation.md)         |
+| 2026-11-17 | `chore/professional-foundation` | tooling, tests, CI, error boundaries                     | `done`   | [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md) |
+| 2026-11-17 | `chore/professional-foundation` | React 19 + type migration                                | `done`   | [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md)                       |
+| 2026-11-18 | `chore/professional-foundation` | consistency, UI primitives, storage, i18n, services, env | `done`   | [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)                 |
+| 2026-11-18 | `chore/professional-foundation` | SEO metadata, sitemap, robots, manifest                  | `review` | [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)                      |
 
 ---
 
@@ -126,5 +127,5 @@ A change is done when:
 - File names: lowercase kebab-case (`project-overview.md`, `2026-11-17-supabase-keepalive.md`).
 - Language: English for docs; Arabic/English copy belongs in `locales/`.
 - Dates: ISO `YYYY-MM-DD`.
-- Code references: always use repository-relative paths, e.g. `app/(pages)/azkar/Azkar.tsx`.
+- Code references: always use repository-relative paths, e.g. `app/[locale]/(pages)/azkar/Azkar.tsx`.
 - Keep docs concise but factual. Link to files instead of pasting large code blocks.

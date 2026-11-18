@@ -1,3 +1,5 @@
+"use client";
+
 import { STORAGE_KEYS } from "@/lib/storage";
 import {
   DEFAULT_PALETTE,
@@ -8,6 +10,10 @@ import {
 export const ThemeScript = () => {
   return (
     <script
+      // The server emits an executable script; on client re-renders it must
+      // not be executable again, which also avoids React's script-tag warning.
+      type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{
         __html: `
 (function() {
@@ -116,10 +122,7 @@ export const ThemeScript = () => {
       for (var k in vars) root.style.setProperty(k, vars[k]);
     }
 
-    // ── Language / Dir ────────────────────────────
-    var storedLanguage = localStorage.getItem('${STORAGE_KEYS.language}') === 'en' ? 'en' : 'ar';
-    root.dir = storedLanguage === 'en' ? 'ltr' : 'rtl';
-    root.lang = storedLanguage;
+    // Language and direction are server-rendered from the URL locale.
 
   } catch(e) {}
 })();

@@ -24,7 +24,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
+import { stripLocaleFromPathname } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import LanguageDropdown from "./LanguageDropdown";
 import ThemeDropdown from "./ThemeDropdown";
@@ -60,6 +61,7 @@ export default function Navbar() {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const pathname = usePathname();
+  const activePath = stripLocaleFromPathname(pathname);
   const navbarContainerRef = useRef<HTMLDivElement>(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,19 +77,19 @@ export default function Navbar() {
 
   const isActive = (path: string, exact = false) => {
     if (path === "/") {
-      return pathname === "/";
+      return activePath === "/";
     }
-    return exact ? pathname === path : pathname.startsWith(path);
+    return exact ? activePath === path : activePath.startsWith(path);
   };
 
   const isReadActive = () =>
-    readLinks(t).some((route) => pathname.startsWith(route.href));
+    readLinks(t).some((route) => activePath.startsWith(route.href));
 
   const isListenActive = () =>
-    listenLinks(t).some((route) => pathname.startsWith(route.href));
+    listenLinks(t).some((route) => activePath.startsWith(route.href));
 
   const isToolsActive = () =>
-    toolsLinks(t).some((route) => pathname.startsWith(route.href));
+    toolsLinks(t).some((route) => activePath.startsWith(route.href));
 
   useEffect(() => {
     setExpandedMobileSections({
