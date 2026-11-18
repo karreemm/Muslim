@@ -1,21 +1,15 @@
 import { useState, useEffect } from "react";
-import { getPrayerTimes } from "../../app/(pages)/prayer-times/service/GetPrayerTimes";
+import { getPrayerTimes } from "@/lib/services/prayerTimes/GetPrayerTimes";
+import type { PrayerTimings } from "@/lib/services/prayerTimes/GetPrayerTimes";
 import moment from "moment-hijri";
+
+export type { PrayerTimings } from "@/lib/services/prayerTimes/GetPrayerTimes";
 
 export interface LocationData {
   city: { en: string; ar: string };
   country: { en: string; ar: string };
   latitude?: number;
   longitude?: number;
-}
-
-export interface PrayerTimings {
-  Fajr: string;
-  Sunrise: string;
-  Dhuhr: string;
-  Asr: string;
-  Maghrib: string;
-  Isha: string;
 }
 
 export interface UsePrayerTimesReturn {
@@ -37,9 +31,7 @@ export const usePrayerTimes = ({
   language,
 }: UsePrayerTimesProps): UsePrayerTimesReturn => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimings | null>(null);
-  const [rawPrayerTimes, setRawPrayerTimes] = useState<PrayerTimings | null>(
-    null
-  );
+  const [rawPrayerTimes, setRawPrayerTimes] = useState<PrayerTimings | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +48,7 @@ export const usePrayerTimes = ({
           address.country[language],
           date,
           address.latitude,
-          address.longitude
+          address.longitude,
         );
 
         setRawPrayerTimes(timings);
@@ -72,9 +64,7 @@ export const usePrayerTimes = ({
 
         setPrayerTimes(formattedPrayerTimes);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setLoading(false);
       }

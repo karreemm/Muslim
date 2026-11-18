@@ -7,11 +7,7 @@ import { AudioPlayer } from "../general/audio-player/AudioPlayer";
 import RadioPlayer from "../general/radio-player/RadioPlayer";
 import { useRadioPlayer } from "@/hooks/radio";
 
-export default function PageLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function PageLayout({ children }: { children: React.ReactNode }) {
   const currentPath = usePathname();
   const listenQuranPage = currentPath.includes("listen-quran/reciter");
   const { currentStation } = useRadioPlayer();

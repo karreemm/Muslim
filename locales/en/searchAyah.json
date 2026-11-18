@@ -24,5 +24,7 @@
   "previous": "Previous",
   "next": "Next",
   "wholeWord": "Whole Word",
-  "exactPhrase": "Exact Phrase"
+  "exactPhrase": "Exact Phrase",
+  "startHint": "Type a word or phrase to search for in the Quran",
+  "ayahWithNumber": "Ayah {{number}}"
 }

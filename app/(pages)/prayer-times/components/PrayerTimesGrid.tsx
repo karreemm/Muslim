@@ -80,9 +80,7 @@ export default function PrayerTimesGrid({
                 <p
                   dir="ltr"
                   className={`text-xl tabular-nums ${
-                    isNext
-                      ? "text-primary font-semibold"
-                      : "text-muted-foreground"
+                    isNext ? "text-primary font-semibold" : "text-muted-foreground"
                   } ${language === "ar" ? "text-right" : "text-left"}`}
                 >
                   {time}

@@ -1,6 +1,6 @@
 import { surahNames } from "@/constants/quranData";
 import type { QuranVerse } from "@/hooks/readQuran";
-import type { AyahImageData } from "@/app/(pages)/generate-ayah-image/types";
+import type { AyahImageData } from "@/types/ayahImage";
 import type { AyahSelectionState } from "@/hooks/generateAyahImage/useAyahSelection";
 
 export const MAX_AYAH_IMAGE_LINES = 15;
@@ -12,9 +12,7 @@ export function getAyahNumber(verse: QuranVerse): number {
 
 export function flattenSelectableWords(verses: QuranVerse[]) {
   return verses.flatMap((verse) =>
-    verse.words
-      .filter((word) => word.char_type_name !== "end")
-      .map((word) => word),
+    verse.words.filter((word) => word.char_type_name !== "end").map((word) => word),
   );
 }
 
@@ -29,8 +27,7 @@ export function sliceVersesByWordRange(
   return verses
     .map((verse) => {
       const lastSelectableIndexInVerse = verse.words.reduce(
-        (lastIndex, word, index) =>
-          word.char_type_name === "end" ? lastIndex : index,
+        (lastIndex, word, index) => (word.char_type_name === "end" ? lastIndex : index),
         -1,
       );
       let lastSelectableWordIncluded = false;
@@ -95,18 +92,13 @@ export function buildAyahImageData(
 
   const ayahCount = surahMeta.ayahs;
   const clampedAyah = Math.min(Math.max(selection.ayahNumber, 1), ayahCount);
-  const rangeStartAyah = Math.max(
-    1,
-    clampedAyah - Math.max(selection.beforeCount, 0),
-  );
+  const rangeStartAyah = Math.max(1, clampedAyah - Math.max(selection.beforeCount, 0));
   const rangeEndAyah = Math.min(
     ayahCount,
     clampedAyah + Math.max(selection.afterCount, 0),
   );
 
-  const targetVerse = surahVerses.find(
-    (verse) => getAyahNumber(verse) === clampedAyah,
-  );
+  const targetVerse = surahVerses.find((verse) => getAyahNumber(verse) === clampedAyah);
   const targetVerses = surahVerses.filter((verse) => {
     const ayah = getAyahNumber(verse);
     return ayah >= rangeStartAyah && ayah <= rangeEndAyah;
@@ -130,15 +122,10 @@ export function buildAyahImageData(
 
   if (selection.specificPartEnabled && totalSelectableWords > 0) {
     const fallbackEnd = totalSelectableWords - 1;
-    const rawStart =
-      selection.specificPartStartWordIndex ?? committedStart ?? 0;
-    const rawEnd =
-      selection.specificPartEndWordIndex ?? committedEnd ?? fallbackEnd;
+    const rawStart = selection.specificPartStartWordIndex ?? committedStart ?? 0;
+    const rawEnd = selection.specificPartEndWordIndex ?? committedEnd ?? fallbackEnd;
     const start = Math.max(0, Math.min(rawStart, rawEnd, fallbackEnd));
-    const end = Math.max(
-      start,
-      Math.min(Math.max(rawStart, rawEnd), fallbackEnd),
-    );
+    const end = Math.max(start, Math.min(Math.max(rawStart, rawEnd), fallbackEnd));
 
     displayVerses = sliceVersesByWordRange(
       targetVerses,
@@ -156,16 +143,10 @@ export function buildAyahImageData(
   ) {
     displayVerses = sliceVersesByWordRange(
       targetVerses,
+      Math.max(0, Math.min(committedStart, committedEnd, totalSelectableWords - 1)),
       Math.max(
         0,
-        Math.min(committedStart, committedEnd, totalSelectableWords - 1),
-      ),
-      Math.max(
-        0,
-        Math.min(
-          Math.max(committedStart, committedEnd),
-          totalSelectableWords - 1,
-        ),
+        Math.min(Math.max(committedStart, committedEnd), totalSelectableWords - 1),
       ),
       shouldIncludeAyahNumbersInSelection,
     );

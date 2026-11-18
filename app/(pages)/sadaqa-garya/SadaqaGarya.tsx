@@ -10,6 +10,7 @@ import SadaqaMessageFields from "./components/SadaqaMessageFields";
 import SadaqaSubmitSection from "./components/SadaqaSubmitSection";
 import { useSadaqaGarya } from "../../../context/features/SadaqatContext";
 import HasUpdatesCard from "@/components/general/HasUpdatesCard";
+import { PageShell } from "@/components/ui/PageShell";
 
 export default function SadaqaGaryaPage() {
   const { t } = useTranslation();
@@ -65,18 +66,22 @@ export default function SadaqaGaryaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-16 pt-8 text-foreground lg:pt-12 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-secondary/30 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        />
-      </div>
-
+    <PageShell
+      className="flex items-center justify-center pb-16 pt-8 lg:pt-12"
+      containerClassName="max-w-4xl"
+      decorations={
+        <>
+          <div className="absolute -right-1/2 -top-1/2 h-full w-full rounded-full bg-primary/5 blur-3xl animate-pulse" />
+          <div
+            className="absolute -bottom-1/2 -left-1/2 h-full w-full rounded-full bg-secondary/30 blur-3xl animate-pulse"
+            style={{ animationDelay: "1s" }}
+          />
+        </>
+      }
+    >
       <div
         className={`
-          mx-auto w-[92%] max-w-4xl relative z-10
+          relative z-10 w-full
           transition-all duration-700 ease-out
           ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}
         `}
@@ -123,6 +128,6 @@ export default function SadaqaGaryaPage() {
           </form>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

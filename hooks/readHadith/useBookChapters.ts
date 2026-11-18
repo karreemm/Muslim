@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { HadithChapter } from "@/app/(pages)/read-hadith/types";
-import { getChapters } from "@/app/(pages)/read-hadith/service/HadithApiService";
+import { HadithChapter } from "@/types/hadith";
+import { getChapters } from "@/lib/services/readHadith/HadithApiService";
 
 export function useBookChapters(bookSlug: string, itemsPerPage: number = 20) {
   const [allChapters, setAllChapters] = useState<HadithChapter[]>([]);
@@ -52,7 +52,7 @@ export function useBookChapters(bookSlug: string, itemsPerPage: number = 20) {
       (chapter) =>
         chapter.chapterArabic?.toLowerCase().includes(query) ||
         chapter.chapterEnglish?.toLowerCase().includes(query) ||
-        chapter.chapterNumber?.toString().includes(query)
+        chapter.chapterNumber?.toString().includes(query),
     );
 
     setChapters(filtered);

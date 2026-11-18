@@ -13,9 +13,9 @@ type TabOption = {
   label: string;
 };
 
-export default function ButtonGroup({ 
-  onSelectionChange, 
-  defaultSelected = "Surahs" 
+export default function ButtonGroup({
+  onSelectionChange,
+  defaultSelected = "Surahs",
 }: ButtonGroupProps) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState<string>(defaultSelected);
@@ -24,28 +24,28 @@ export default function ButtonGroup({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const options: TabOption[] = [
-    { 
-      value: "Surahs", 
+    {
+      value: "Surahs",
       label: t("common.surahs"),
     },
-    { 
-      value: "Hadiths", 
+    {
+      value: "Hadiths",
       label: t("common.hadiths"),
     },
-    { 
-      value: "Azkar", 
+    {
+      value: "Azkar",
       label: t("common.azkar"),
     },
   ];
 
   useEffect(() => {
-    const activeIndex = options.findIndex(opt => opt.value === selected);
+    const activeIndex = options.findIndex((opt) => opt.value === selected);
     const activeTab = tabsRef.current[activeIndex];
-    
+
     if (activeTab && containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const tabRect = activeTab.getBoundingClientRect();
-      
+
       setIndicatorStyle({
         left: tabRect.left - containerRect.left,
         width: tabRect.width,
@@ -60,11 +60,11 @@ export default function ButtonGroup({
 
   return (
     <div className="w-full flex justify-center mb-8">
-      <div 
+      <div
         ref={containerRef}
         className="relative inline-flex p-1.5 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm"
       >
-        <div 
+        <div
           className="absolute top-1.5 bottom-1.5 bg-primary rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 ease-out"
           style={{
             left: `${indicatorStyle.left}px`,
@@ -75,13 +75,16 @@ export default function ButtonGroup({
         {options.map((option, idx) => (
           <button
             key={option.value}
-            ref={el => { tabsRef.current[idx] = el; }}
+            ref={(el) => {
+              tabsRef.current[idx] = el;
+            }}
             onClick={() => handleSelect(option.value)}
             className={`
               relative z-10 flex items-center gap-2 px-4 md:px-6 py-3 rounded-xl font-medium text-sm transition-colors duration-200
-              ${selected === option.value 
-                ? "text-primary-foreground" 
-                : "text-muted-foreground hover:text-foreground"
+              ${
+                selected === option.value
+                  ? "text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }
             `}
           >

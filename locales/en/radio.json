@@ -24,5 +24,7 @@
     "unmute": "Unmute",
     "favorite": "Favorite",
     "removeFavorite": "Remove from favorites"
-  }
+  },
+  "favoritesOnly": "Favorites only",
+  "favorites": "Favorites"
 }

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMosque,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMosque } from "@fortawesome/free-solid-svg-icons";
 import { GeometricPattern } from "@/utils/decorations";
 import type { ArrowIcon, TranslateFn } from "../types";
 import { useLanguage } from "@/context/general/LanguageContext";
@@ -13,7 +11,6 @@ type HeroSectionProps = {
 };
 
 export default function HeroSection({ t }: HeroSectionProps) {
-
   const { language } = useLanguage();
 
   return (
@@ -27,7 +24,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
       <div className="relative flex flex-col items-center justify-center text-center px-6 py-12 sm:py-16">
         <div className="mb-6 flex items-center justify-center gap-2">
           <span className="md:hidden mt-1 text-primary text-3xl font-bold">
-            {language === "en" ? "Muslim" : "مسلم"}
+            {t("home.brandName")}
           </span>
           <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-lg shadow-primary/10">
             <FontAwesomeIcon icon={faMosque} className="text-3xl sm:text-4xl" />

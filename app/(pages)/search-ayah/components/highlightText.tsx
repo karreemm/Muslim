@@ -1,6 +1,6 @@
 import React, { type ReactNode } from "react";
 
-import type { MatchInterval } from "../types";
+import type { MatchInterval } from "@/types/searchAyah";
 
 export interface HighlightTextProps {
   text: string;
@@ -29,16 +29,19 @@ export function highlightText({
       nodes.push(
         <React.Fragment key={`text-${currentIndex}`}>
           {text.slice(currentIndex, start)}
-        </React.Fragment>
+        </React.Fragment>,
       );
     }
 
     if (start < text.length) {
       const validEnd = Math.min(end + 1, text.length);
       nodes.push(
-        <mark key={`mark-${start}`} className="bg-transparent text-primary font-bold not-italic">
+        <mark
+          key={`mark-${start}`}
+          className="bg-transparent text-primary font-bold not-italic"
+        >
           {text.slice(start, validEnd)}
-        </mark>
+        </mark>,
       );
       currentIndex = validEnd;
     }
@@ -48,7 +51,7 @@ export function highlightText({
     nodes.push(
       <React.Fragment key={`text-${currentIndex}`}>
         {text.slice(currentIndex)}
-      </React.Fragment>
+      </React.Fragment>,
     );
   }
 

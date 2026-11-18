@@ -66,15 +66,26 @@ tests/
 - `utils/helpers.ts` — Arabic/English digits, slugify, diacritics.
 - `utils/paletteEngine.ts` — presets, custom hue, light/dark CSS variables.
 - `lib/apiSecurity.ts` — client IP extraction and rate-limit windows.
-- `lib/sadaqaGarya/sadaqaDeleteCookie.ts` — token map round-trip and malformed input.
+- `lib/storage.ts` — string/number/JSON reads, fallbacks, validation, removal.
+- `lib/sadaqaGarya/sadaqaDeleteCookie.ts` and `localDeleteTokens.ts` — token maps.
+- `lib/http.ts` — JSON/array-buffer responses and `HttpError` normalization.
+- `lib/env.ts` — Supabase/Hadith env validation, defaults, and missing-value failures.
 - `GET /api/search-quran` — validation, success, no-match 404.
 - `POST /api/download-audio` — missing/invalid URL and SSRF allowlist rejection.
-- `Loading` — accessible status region.
+- Locale parity — every English key exists in Arabic and vice versa.
+- Translation key usage — every `t("…")`/`translate(…, "…")` key exists in both locales.
+- Runtime i18n — Playwright visits all main routes and fails on
+  “Translation key not found” warnings.
+- UI primitives — `Button`, `IconButton`, `Modal`, `Loading`.
 - All 14 static routes + home title (Playwright).
 - Home page critical a11y violations (axe).
 
-**Not covered yet:** hooks/contexts, most components, dynamic routes with mocked
-data, full user journeys, visual regression. These are Phase 2–4.
+Current totals: **16 test files, 82 unit/integration/component tests**, plus
+**22 Playwright tests**.
+
+**Not covered yet:** most hooks/contexts, the remaining page-level components,
+dynamic routes with mocked data, full user journeys, visual regression. These are
+Phase 4.
 
 ---
 
@@ -168,7 +179,8 @@ Coverage is generated with v8:
 5. `npm run build`
 6. Playwright smoke + a11y (`npm run test:e2e`)
 
-Playwright reports are uploaded on failure.
+Playwright reports are uploaded on failure. The current suite is 16 Vitest files
+(82 tests) plus 22 Playwright tests.
 
 ---
 
@@ -176,15 +188,14 @@ Playwright reports are uploaded on failure.
 
 - The app uses React 19.3.1 and `react-spinners` 0.17.1. React 19’s stricter ref
   types are reflected in component props (`RefObject<T | null>`).
-- `npm audit` reports high findings in **dev-only** tooling (`picomatch`,
-  `brace-expansion`). Production dependencies audit clean. Revisit when Vitest/Vite
-  publish a patched tree.
-- The 2-second hydration gate makes E2E slightly slower. Removing it is a Phase 2
-  task.
-- The legacy code has 112 lint warnings (React Compiler hook rules). They are
-  visible but do not block CI; Phase 2 fixes the hook patterns.
-- A repo-wide Prettier pass is deferred to Phase 2 so the formatting diff stays
-  reviewable.
+- `npm audit` reports **0 vulnerabilities** for both production and dev
+  dependencies after the Phase 2b `npm audit fix`.
+- The 2-second hydration gate was removed in Phase 2; E2E is faster as a result.
+- The legacy code has 109 lint warnings (React Compiler hook rules + exhaustive
+  deps). They are visible but do not block CI; the hook refactor is the next
+  consistency task.
+- Prettier now runs across the repository; new files must be formatted before
+  merging.
 
 ---
 

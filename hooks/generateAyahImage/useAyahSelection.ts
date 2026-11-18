@@ -94,22 +94,19 @@ export function useAyahSelection(
     }));
   }, []);
 
-  const selectPredefinedAyah = useCallback(
-    (surahNumber: number, ayahNumber: number) => {
-      const nextSurah = surahNames.find((s) => s.number === surahNumber);
-      if (!nextSurah) return;
-      if (ayahNumber < 1 || ayahNumber > nextSurah.ayahs) return;
-      setPendingSelection((prev) => ({
-        ...prev,
-        surahNumber,
-        ayahNumber,
-        beforeCount: 0,
-        afterCount: 0,
-        ...RESET_PART_FIELDS,
-      }));
-    },
-    [],
-  );
+  const selectPredefinedAyah = useCallback((surahNumber: number, ayahNumber: number) => {
+    const nextSurah = surahNames.find((s) => s.number === surahNumber);
+    if (!nextSurah) return;
+    if (ayahNumber < 1 || ayahNumber > nextSurah.ayahs) return;
+    setPendingSelection((prev) => ({
+      ...prev,
+      surahNumber,
+      ayahNumber,
+      beforeCount: 0,
+      afterCount: 0,
+      ...RESET_PART_FIELDS,
+    }));
+  }, []);
 
   const incrementBefore = useCallback((canIncrease: boolean) => {
     if (!canIncrease) return;
@@ -167,8 +164,7 @@ export function useAyahSelection(
           specificPartEnabled: true,
           specificPartStartWordIndex: prev.committedPartStartWordIndex ?? 0,
           specificPartEndWordIndex:
-            prev.committedPartEndWordIndex ??
-            Math.max(0, totalSelectableWords - 1),
+            prev.committedPartEndWordIndex ?? Math.max(0, totalSelectableWords - 1),
         };
       });
     },

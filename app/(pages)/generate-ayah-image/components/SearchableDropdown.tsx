@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
-import type { DropdownItem } from "../types";
+import type { DropdownItem } from "@/types/ayahImage";
 
 interface SearchableDropdownProps {
   language: string;
@@ -139,9 +139,7 @@ export default function SearchableDropdown({
             </button>
           ))
         ) : (
-          <div className="px-3 py-4 text-sm text-muted-foreground">
-            {emptyLabel}
-          </div>
+          <div className="px-3 py-4 text-sm text-muted-foreground">{emptyLabel}</div>
         )}
       </div>
     </div>

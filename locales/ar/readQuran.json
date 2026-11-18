@@ -21,5 +21,12 @@
   "sidebar": {
     "title": "ابحث عن سورة / جزء"
   },
-  "saveThisAyah": "حفظ هذه الآية؟"
+  "saveThisAyah": "حفظ هذه الآية؟",
+  "ayahWithNumber": "الآية {{number}}",
+  "juzWithNumber": "الجزء {{number}}",
+  "surahWithName": "سورة {{name}}",
+  "listen": "استماع",
+  "listenSurah": "استماع للسورة",
+  "surahAlt": "سُورَةُ {{name}}",
+  "modalAyahTitle": "{{surah}} - الآية {{number}}"
 }

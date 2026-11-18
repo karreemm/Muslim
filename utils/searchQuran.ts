@@ -1,6 +1,6 @@
 import quranIndex from "../data/searchQuran/quran-index.json";
 import { removeDiacritics } from "./helpers";
-import type { SearchResponse, SearchAyah, MatchInterval } from "@/app/(pages)/search-ayah/types";
+import type { SearchResponse, SearchAyah, MatchInterval } from "@/types/searchAyah";
 
 interface QuranIndexEntry {
   key: string;
@@ -24,7 +24,6 @@ interface QuranIndexEntry {
   };
 }
 
-
 function normalizeAlef(str: string): string {
   return str.replace(/[\u0622\u0623\u0625\u0671]/g, "\u0627");
 }
@@ -44,15 +43,20 @@ function matchesContains(text: string, phrase: string): boolean {
   return text.includes(phrase);
 }
 
-const VOWELS = "\u0622\u0623\u0624\u0625\u0626\u0627\u0648\u0649\u064A\u0670\u0671\u06E5\u06E6";
+const VOWELS =
+  "\u0622\u0623\u0624\u0625\u0626\u0627\u0648\u0649\u064A\u0670\u0671\u06E5\u06E6";
 
-function getMatchIntervals(originalText: string, searchWords: string[], wholeWord: boolean): MatchInterval[] {
+function getMatchIntervals(
+  originalText: string,
+  searchWords: string[],
+  wholeWord: boolean,
+): MatchInterval[] {
   const mapping: number[] = [];
   let stripped = "";
 
   for (let i = 0; i < originalText.length; i++) {
     const char = originalText[i];
-    
+
     if (/[\u064B-\u065F\u06D6-\u06E4\u06E7-\u06ED\u0640\uFEFF]/.test(char)) {
       continue;
     } else {
@@ -88,7 +92,7 @@ function getMatchIntervals(originalText: string, searchWords: string[], wholeWor
 
   for (const word of wordsToIterate) {
     if (!word) continue;
-    
+
     let fuzzyRegexStr = "";
     for (const char of word) {
       if (char === " ") {
@@ -106,39 +110,41 @@ function getMatchIntervals(originalText: string, searchWords: string[], wholeWor
       }
     }
 
-    const regex = wholeWord 
+    const regex = wholeWord
       ? new RegExp(`(^|\\s)(${fuzzyRegexStr})(?=\\s|$)`, "g")
       : new RegExp(`()(${fuzzyRegexStr})`, "g");
-      
+
     let match;
     while ((match = regex.exec(finalStripped)) !== null) {
       const startStripped = match.index + match[1].length;
       const endStripped = startStripped + match[2].length - 1;
-      
+
       const startOriginal = finalMapping[startStripped];
       let endOriginal = finalMapping[endStripped];
 
       while (
-        endOriginal + 1 < originalText.length && 
-        /[\u064B-\u065F\u06D6-\u06E4\u06E7-\u06ED\u0640]/.test(originalText[endOriginal + 1])
+        endOriginal + 1 < originalText.length &&
+        /[\u064B-\u065F\u06D6-\u06E4\u06E7-\u06ED\u0640]/.test(
+          originalText[endOriginal + 1],
+        )
       ) {
         endOriginal++;
       }
-      
+
       intervals.push({ start: startOriginal, end: endOriginal });
-      
+
       if (match.index === regex.lastIndex) regex.lastIndex++;
     }
   }
 
   if (intervals.length === 0) return [];
   intervals.sort((a, b) => a.start - b.start);
-  
+
   const merged: MatchInterval[] = [intervals[0]];
   for (let i = 1; i < intervals.length; i++) {
     const current = intervals[i];
     const last = merged[merged.length - 1];
-    if (current.start <= last.end + 1) { 
+    if (current.start <= last.end + 1) {
       last.end = Math.max(last.end, current.end);
     } else {
       merged.push(current);
@@ -172,8 +178,7 @@ export function searchLocalQuran(
     return { count: 0, totalPages: 0, matches: [] };
   }
 
-  const targetSurah =
-    surah === "all" ? "all" : Number.parseInt(String(surah), 10);
+  const targetSurah = surah === "all" ? "all" : Number.parseInt(String(surah), 10);
 
   const highlightKeyword = extractHighlightKeyword(keyword);
 
@@ -188,7 +193,7 @@ export function searchLocalQuran(
       : matchesContains(entry.simple, phrase);
 
     if (!isMatch) continue;
-    
+
     const matchIntervals = getMatchIntervals(entry.uthmani, searchWords, wholeWord);
 
     matches.push({

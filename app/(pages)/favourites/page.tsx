@@ -5,29 +5,25 @@ import ButtonGroup from "./components/ButtonGroup";
 import FavouriteSurahsTable from "./sections/FavouriteSurahsTable";
 import FavouriteHadithsTable from "./sections/FavouriteHadithsTable";
 import FavouriteAzkarTable from "./sections/FavouriteAzkarTable";
-import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
+import { PageShell } from "@/components/ui/PageShell";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function ParentComponent() {
   const [selectedButton, setSelectedButton] = useState<string>("Surahs");
-  const { language } = useLanguage();
+  const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden">
-      <div className="w-full max-w-7xl mx-auto pt-8 px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {language === "en" ? "Your Favourites" : "قائمتك المفضلة"}
-          </h1>
-        </div>
-        
-        <ButtonGroup onSelectionChange={setSelectedButton} />
-        
-        <div className="transition-opacity duration-300">
-          {selectedButton === "Surahs" && <FavouriteSurahsTable />}
-          {selectedButton === "Hadiths" && <FavouriteHadithsTable />}
-          {selectedButton === "Azkar" && <FavouriteAzkarTable />}
-        </div>
+    <PageShell containerClassName="px-4 pt-8">
+      <PageHeader title={t("favourites.title")} className="mb-8" />
+
+      <ButtonGroup onSelectionChange={setSelectedButton} />
+
+      <div className="transition-opacity duration-300">
+        {selectedButton === "Surahs" && <FavouriteSurahsTable />}
+        {selectedButton === "Hadiths" && <FavouriteHadithsTable />}
+        {selectedButton === "Azkar" && <FavouriteAzkarTable />}
       </div>
-    </div>
+    </PageShell>
   );
 }

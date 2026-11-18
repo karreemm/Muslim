@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Surah } from "../../app/(pages)/listen-quran/service/GetSurah";
+import { Surah } from "@/lib/services/listenQuran/GetSurah";
 
 type Progress = "idle" | "registering" | "downloading" | "error";
 

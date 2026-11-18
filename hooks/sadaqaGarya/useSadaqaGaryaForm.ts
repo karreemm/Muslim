@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSadaqaGarya } from "../../context/features/SadaqatContext";
 import { slugify } from "../../utils/helpers";
-import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
+import { DeceasedPerson } from "@/types/sadaqa";
+import {
+  readLocalDeleteTokens,
+  writeLocalDeleteTokens,
+} from "@/lib/sadaqaGarya/localDeleteTokens";
 
 export default function useSadaqaGaryaForm() {
   const router = useRouter();
@@ -58,18 +62,10 @@ export default function useSadaqaGaryaForm() {
         deleteToken?: string;
       };
 
-      if (typeof window !== "undefined" && result?.deleteToken) {
-        try {
-          const raw = localStorage.getItem("sadaqaDeleteTokens");
-          const parsed = raw ? JSON.parse(raw) : {};
-          const tokens =
-            parsed && typeof parsed === "object"
-              ? (parsed as Record<string, string>)
-              : {};
-          tokens[result.deceased.slug] = result.deleteToken;
-          localStorage.setItem("sadaqaDeleteTokens", JSON.stringify(tokens));
-        } catch {
-        }
+      if (result?.deleteToken) {
+        const tokens = readLocalDeleteTokens();
+        tokens[result.deceased.slug] = result.deleteToken;
+        writeLocalDeleteTokens(tokens);
       }
 
       addDeceasedPerson(result.deceased);

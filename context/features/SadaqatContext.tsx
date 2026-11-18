@@ -1,7 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
+import { DeceasedPerson } from "@/types/sadaqa";
+import { readLocalDeleteTokens } from "@/lib/sadaqaGarya/localDeleteTokens";
+import { removeStorage } from "@/lib/storage";
 
 interface SadaqaGaryaContextProps {
   deceasedPersons: DeceasedPerson[];
@@ -14,9 +16,7 @@ interface SadaqaGaryaContextProps {
   clearAllDeceasedPersons: () => void;
 }
 
-const SadaqaGaryaContext = createContext<SadaqaGaryaContextProps | undefined>(
-  undefined,
-);
+const SadaqaGaryaContext = createContext<SadaqaGaryaContextProps | undefined>(undefined);
 
 export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -27,15 +27,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
   const [ownedSlugs, setOwnedSlugs] = useState<string[]>([]);
 
   const getLocalOwnedSlugs = (): string[] => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("sadaqaDeleteTokens");
-      const parsed = raw ? JSON.parse(raw) : {};
-      if (!parsed || typeof parsed !== "object") return [];
-      return Object.keys(parsed as Record<string, string>);
-    } catch {
-      return [];
-    }
+    return Object.keys(readLocalDeleteTokens());
   };
 
   useEffect(() => {
@@ -56,12 +48,8 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const payload = await response.json();
         if (isActive) {
-          setDeceasedPersons(
-            Array.isArray(payload?.deceased) ? payload.deceased : [],
-          );
-          const apiOwned = Array.isArray(payload?.ownedSlugs)
-            ? payload.ownedSlugs
-            : [];
+          setDeceasedPersons(Array.isArray(payload?.deceased) ? payload.deceased : []);
+          const apiOwned = Array.isArray(payload?.ownedSlugs) ? payload.ownedSlugs : [];
           const localOwned = getLocalOwnedSlugs();
           setOwnedSlugs(Array.from(new Set([...apiOwned, ...localOwned])));
         }
@@ -82,9 +70,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
     loadRecords();
 
     // Clean up old client-side storage to prevent stale Sadaqa records.
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("sadaqaGarya");
-    }
+    removeStorage("sadaqaGarya");
 
     return () => {
       isActive = false;
@@ -106,18 +92,14 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
       return next;
     });
 
-    setOwnedSlugs((prev) =>
-      prev.includes(person.slug) ? prev : [...prev, person.slug],
-    );
+    setOwnedSlugs((prev) => (prev.includes(person.slug) ? prev : [...prev, person.slug]));
   };
 
   const removeDeceasedPerson = (id: string) => {
     setDeceasedPersons((prev) => {
       const removed = prev.find((person) => person.id === id);
       if (removed) {
-        setOwnedSlugs((current) =>
-          current.filter((slug) => slug !== removed.slug),
-        );
+        setOwnedSlugs((current) => current.filter((slug) => slug !== removed.slug));
       }
       return prev.filter((person) => person.id !== id);
     });

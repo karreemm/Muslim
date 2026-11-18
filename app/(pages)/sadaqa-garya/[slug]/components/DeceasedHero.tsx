@@ -1,6 +1,7 @@
 "use client";
 
 import ShareModal from "@/components/modals/ShareModal";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface DeceasedHeroProps {
   mounted: boolean;
@@ -66,10 +67,8 @@ export default function DeceasedHero({
       >
         <p className="text-lg lg:text-2xl text-foreground/80 italic leading-relaxed relative z-10">
           {language === "en"
-            ? messageEn ||
-              "May Allah forgive them, elevate their rank, and make this page a continuous charity."
-            : messageAr ||
-              "اللهم اغفر له وارفع درجته، واجعل هذه الصفحة صدقة جارية له."}
+            ? messageEn || translate("en", "sadaqa.deceased.dua")
+            : messageAr || translate("ar", "sadaqa.deceased.dua")}
         </p>
       </div>
 
@@ -81,9 +80,7 @@ export default function DeceasedHero({
         `}
       >
         <div className="flex items-center gap-3 bg-primary/5 rounded-full px-6 py-3 border border-primary/10">
-          <span className="text-sm text-muted-foreground font-medium">
-            {shareLabel}
-          </span>
+          <span className="text-sm text-muted-foreground font-medium">{shareLabel}</span>
           <div className="h-4 w-px bg-border" />
           <ShareModal url={shareableUrl} size="2xl" />
         </div>

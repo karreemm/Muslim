@@ -5,7 +5,7 @@ import ReadQuran from "./ReadQuran";
 export default function Home() {
   return (
     <>
-      <main className="bg-background text-primary dark:bg-background dark:text-foreground flex flex-col ">
+      <main className="flex flex-col bg-background text-foreground">
         <ReadQuran />
       </main>
     </>

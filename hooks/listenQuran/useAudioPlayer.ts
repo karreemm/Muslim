@@ -1,7 +1,33 @@
 import { useEffect, useState, useRef } from "react";
-import { Surah } from "../../app/(pages)/listen-quran/service/GetSurah";
-import audioDurationsSummary from "../../data/listenQuran/audioDurationsSummary.json";
+import { Surah } from "@/lib/services/listenQuran/GetSurah";
 import { RepeatConfig } from "@/components/general/audio-player/types";
+
+interface AyahDurationEntry {
+  ayahDurations: number[];
+}
+
+type AudioDurationsSummary = Record<string, Record<string, AyahDurationEntry>>;
+
+const AUDIO_DURATIONS_URL = "/data/listenQuran/audioDurationsSummary.json";
+let audioDurationsPromise: Promise<AudioDurationsSummary | null> | null = null;
+
+function loadAudioDurations(): Promise<AudioDurationsSummary | null> {
+  if (!audioDurationsPromise) {
+    audioDurationsPromise = fetch(AUDIO_DURATIONS_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Audio durations request failed: ${response.status}`);
+        }
+        return response.json() as Promise<AudioDurationsSummary>;
+      })
+      .catch(() => {
+        audioDurationsPromise = null;
+        return null;
+      });
+  }
+
+  return audioDurationsPromise;
+}
 
 export interface UseAudioPlayerOptions {
   stopAfterAyahIndex?: number | null;
@@ -35,12 +61,12 @@ export function useAudioPlayer(
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [ayahDurations, setAyahDurations] = useState<number[]>([]);
   const [cumulativeDurations, setCumulativeDurations] = useState<number[]>([]);
-  const [currentAyahElapsedTime, setCurrentAyahElapsedTime] =
-    useState<number>(0);
-  const [currentAyahTotalDuration, setCurrentAyahTotalDuration] =
-    useState<number>(0);
+  const [currentAyahElapsedTime, setCurrentAyahElapsedTime] = useState<number>(0);
+  const [currentAyahTotalDuration, setCurrentAyahTotalDuration] = useState<number>(0);
   const [playRequestCounter, setPlayRequestCounter] = useState<number>(0);
   const [currentRepeatCount, setCurrentRepeatCount] = useState<number>(0);
+  const [audioDurationsSummary, setAudioDurationsSummary] =
+    useState<AudioDurationsSummary | null>(null);
 
   const audioPlayer = useRef<HTMLAudioElement>(null);
   const nextAudioPlayer = useRef<HTMLAudioElement>(null);
@@ -101,8 +127,7 @@ export function useAudioPlayer(
 
   useEffect(() => {
     if (audioPlayer.current) audioPlayer.current.playbackRate = playbackRate;
-    if (nextAudioPlayer.current)
-      nextAudioPlayer.current.playbackRate = playbackRate;
+    if (nextAudioPlayer.current) nextAudioPlayer.current.playbackRate = playbackRate;
   }, [playbackRate]);
 
   const prevSurahNumberRef = useRef<number | undefined>(undefined);
@@ -166,24 +191,30 @@ export function useAudioPlayer(
   useEffect(() => {
     if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;
 
-    console.log(
-      "Loading ayah durations from JSON for:",
-      reciterId,
-      "surah:",
-      surahNumber,
-    );
+    let cancelled = false;
 
-    const reciterData = (audioDurationsSummary as any)[reciterId];
+    loadAudioDurations().then((data) => {
+      if (!cancelled) {
+        setAudioDurationsSummary(data);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [surah, reciterId, surahNumber]);
+
+  useEffect(() => {
+    if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;
+    if (!audioDurationsSummary) return;
+
+    const reciterData = audioDurationsSummary[reciterId];
     if (!reciterData) {
-      console.warn(`No duration data found for reciter: ${reciterId}`);
       return;
     }
 
     const surahData = reciterData[surahNumber.toString()];
     if (!surahData) {
-      console.warn(
-        `No duration data found for surah ${surahNumber} with reciter ${reciterId}`,
-      );
       return;
     }
 
@@ -198,15 +229,10 @@ export function useAudioPlayer(
     }
     setCumulativeDurations(cumulative);
     setDuration(sum);
-    console.log("Ayah durations loaded from JSON, total:", sum);
-  }, [surah, reciterId, surahNumber]);
+  }, [surah, reciterId, surahNumber, audioDurationsSummary]);
 
   useEffect(() => {
-    if (
-      surah &&
-      nextAudioPlayer.current &&
-      currentAyahIndex < surah.ayahs.length - 1
-    ) {
+    if (surah && nextAudioPlayer.current && currentAyahIndex < surah.ayahs.length - 1) {
       const nextAyah = surah.ayahs[currentAyahIndex + 1];
       const inactivePlayer = isUsingPrimary
         ? nextAudioPlayer.current
@@ -228,9 +254,7 @@ export function useAudioPlayer(
       currentAyahIndex < surah.ayahs.length
     ) {
       const currentAyah = surah.ayahs[currentAyahIndex];
-      const activePlayer = isUsingPrimary
-        ? audioPlayer.current
-        : nextAudioPlayer.current;
+      const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
 
       transitionTriggeredRef.current = false;
 
@@ -257,9 +281,7 @@ export function useAudioPlayer(
             })
             .catch((error) => {
               console.warn("Auto-play blocked by browser:", error.message);
-              console.log(
-                "User needs to interact with the page to start audio",
-              );
+              console.log("User needs to interact with the page to start audio");
               setIsPlaying(false);
             });
         }
@@ -287,9 +309,7 @@ export function useAudioPlayer(
         const inactivePlayer = isUsingPrimary
           ? nextAudioPlayer.current
           : audioPlayer.current;
-        const active = isUsingPrimary
-          ? audioPlayer.current
-          : nextAudioPlayer.current;
+        const active = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
 
         if (inactivePlayer && inactivePlayer.readyState >= 2) {
           inactivePlayer
@@ -321,9 +341,7 @@ export function useAudioPlayer(
       };
 
       const replayCurrentAyah = () => {
-        const active = isUsingPrimary
-          ? audioPlayer.current
-          : nextAudioPlayer.current;
+        const active = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
         if (!active) {
           transitionTriggeredRef.current = false;
           return;
@@ -351,8 +369,7 @@ export function useAudioPlayer(
         if (repeatActiveRef.current && repeatConfigRef.current) {
           const cfg = repeatConfigRef.current;
           const endIndex = cfg.endAyah - 1;
-          const repeats =
-            cfg.repeatsPerAyah === Infinity ? Infinity : cfg.repeatsPerAyah;
+          const repeats = cfg.repeatsPerAyah === Infinity ? Infinity : cfg.repeatsPerAyah;
 
           if (currentRepeatCountRef.current < repeats - 1) {
             currentRepeatCountRef.current = currentRepeatCountRef.current + 1;
@@ -386,8 +403,7 @@ export function useAudioPlayer(
         }
 
         const shouldStopAfter =
-          stopAfterAyahIndex !== null &&
-          stopAfterAyahIndex === currentAyahIndex;
+          stopAfterAyahIndex !== null && stopAfterAyahIndex === currentAyahIndex;
         if (shouldStopAfter) {
           setShouldAutoPlay(false);
           setIsPlaying(false);
@@ -403,11 +419,7 @@ export function useAudioPlayer(
       };
 
       const handleTimeUpdate = () => {
-        if (
-          !isDragging &&
-          cumulativeDurations.length > 0 &&
-          !seekingRef.current
-        ) {
+        if (!isDragging && cumulativeDurations.length > 0 && !seekingRef.current) {
           const absoluteTime =
             cumulativeDurations[currentAyahIndex] + activePlayer.currentTime;
           setCurrentTime(absoluteTime);
@@ -418,11 +430,7 @@ export function useAudioPlayer(
         }
 
         const timeLeft = activePlayer.duration - activePlayer.currentTime;
-        if (
-          timeLeft <= 0.3 &&
-          !transitionTriggeredRef.current &&
-          !seekingRef.current
-        ) {
+        if (timeLeft <= 0.3 && !transitionTriggeredRef.current && !seekingRef.current) {
           handleAyahComplete();
         }
       };
@@ -483,44 +491,23 @@ export function useAudioPlayer(
     }
     if (nextAudioPlayer.current) {
       nextAudioPlayer.current.addEventListener("waiting", handleBufferingStart);
-      nextAudioPlayer.current.addEventListener(
-        "loadstart",
-        handleBufferingStart,
-      );
+      nextAudioPlayer.current.addEventListener("loadstart", handleBufferingStart);
       nextAudioPlayer.current.addEventListener("canplay", handleBufferingEnd);
       nextAudioPlayer.current.addEventListener("playing", handleBufferingEnd);
     }
 
     return () => {
       if (audioPlayer.current) {
-        audioPlayer.current.removeEventListener(
-          "waiting",
-          handleBufferingStart,
-        );
-        audioPlayer.current.removeEventListener(
-          "loadstart",
-          handleBufferingStart,
-        );
+        audioPlayer.current.removeEventListener("waiting", handleBufferingStart);
+        audioPlayer.current.removeEventListener("loadstart", handleBufferingStart);
         audioPlayer.current.removeEventListener("canplay", handleBufferingEnd);
         audioPlayer.current.removeEventListener("playing", handleBufferingEnd);
       }
       if (nextAudioPlayer.current) {
-        nextAudioPlayer.current.removeEventListener(
-          "waiting",
-          handleBufferingStart,
-        );
-        nextAudioPlayer.current.removeEventListener(
-          "loadstart",
-          handleBufferingStart,
-        );
-        nextAudioPlayer.current.removeEventListener(
-          "canplay",
-          handleBufferingEnd,
-        );
-        nextAudioPlayer.current.removeEventListener(
-          "playing",
-          handleBufferingEnd,
-        );
+        nextAudioPlayer.current.removeEventListener("waiting", handleBufferingStart);
+        nextAudioPlayer.current.removeEventListener("loadstart", handleBufferingStart);
+        nextAudioPlayer.current.removeEventListener("canplay", handleBufferingEnd);
+        nextAudioPlayer.current.removeEventListener("playing", handleBufferingEnd);
       }
     };
   }, [audioPlayer.current, nextAudioPlayer.current]);
@@ -575,9 +562,7 @@ export function useAudioPlayer(
   playAyahRef.current = playAyah;
 
   const pause = () => {
-    const activePlayer = isUsingPrimary
-      ? audioPlayer.current
-      : nextAudioPlayer.current;
+    const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
     if (activePlayer && !activePlayer.paused) {
       isTransitioningRef.current = false;
       activePlayer.pause();
@@ -586,9 +571,7 @@ export function useAudioPlayer(
   };
 
   const play = () => {
-    const activePlayer = isUsingPrimary
-      ? audioPlayer.current
-      : nextAudioPlayer.current;
+    const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
     if (activePlayer) {
       transitionTriggeredRef.current = false;
       setUserInteracted(true);
@@ -689,10 +672,7 @@ export function useAudioPlayer(
 
     const bounds = getRepeatBounds();
     if (bounds) {
-      const clampedIndex = Math.min(
-        bounds.end,
-        Math.max(bounds.start, targetAyahIndex),
-      );
+      const clampedIndex = Math.min(bounds.end, Math.max(bounds.start, targetAyahIndex));
       if (clampedIndex !== targetAyahIndex) {
         targetAyahIndex = clampedIndex;
         clamped = cumulativeDurations[targetAyahIndex];
@@ -706,9 +686,7 @@ export function useAudioPlayer(
     setCurrentAyahElapsedTime(timeWithinAyah);
 
     if (targetAyahIndex === currentAyahIndex) {
-      const activePlayer = isUsingPrimary
-        ? audioPlayer.current
-        : nextAudioPlayer.current;
+      const activePlayer = isUsingPrimary ? audioPlayer.current : nextAudioPlayer.current;
       if (activePlayer) {
         activePlayer.currentTime = timeWithinAyah;
       }
@@ -723,9 +701,7 @@ export function useAudioPlayer(
     setIsPlaying(false);
     if (wasPlaying) setIsBuffering(true);
 
-    const targetPlayer = shouldUsePrimary
-      ? audioPlayer.current
-      : nextAudioPlayer.current;
+    const targetPlayer = shouldUsePrimary ? audioPlayer.current : nextAudioPlayer.current;
     const targetAyah = surah.ayahs[targetAyahIndex];
 
     const applySeek = () => {

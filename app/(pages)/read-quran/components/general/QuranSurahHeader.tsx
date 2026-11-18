@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useHeaderColor } from "@/hooks/general/useHeaderColor";
 import useMediaQuery from "@/hooks/general/useMediaQuery";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface QuranSurahHeaderProps {
   surahNameAr: string;
@@ -26,13 +27,12 @@ export default function QuranSurahHeader({
   fixedTypography = false,
 }: QuranSurahHeaderProps) {
   const isMobile = useMediaQuery("(max-width: 500px)");
+  const { t } = useTranslation();
   const isAtTawbah = surahNumber === 9;
   const isFatiha = surahNumber === 1;
   const headerContainerRef = useRef<HTMLDivElement>(null);
   const [headerWidth, setHeaderWidth] = useState(0);
-  const [displayColoredSrc, setDisplayColoredSrc] = useState<string | null>(
-    null,
-  );
+  const [displayColoredSrc, setDisplayColoredSrc] = useState<string | null>(null);
   const [useFallbackHeader, setUseFallbackHeader] = useState(false);
   const [isResolvingHeader, setIsResolvingHeader] = useState(true);
 
@@ -49,15 +49,8 @@ export default function QuranSurahHeader({
   const shouldUseColored = !!displayColoredSrc;
 
   useEffect(() => {
-    onReadyChange?.(
-      requireColoredReady ? !!displayColoredSrc : !isResolvingHeader,
-    );
-  }, [
-    displayColoredSrc,
-    isResolvingHeader,
-    onReadyChange,
-    requireColoredReady,
-  ]);
+    onReadyChange?.(requireColoredReady ? !!displayColoredSrc : !isResolvingHeader);
+  }, [displayColoredSrc, isResolvingHeader, onReadyChange, requireColoredReady]);
 
   useEffect(() => {
     if (!coloredSrc) return;
@@ -134,10 +127,7 @@ export default function QuranSurahHeader({
     : headerWidth > 0
       ? Math.min(
           isMobile ? 26 : 40,
-          Math.max(
-            isMobile ? 14 : 20,
-            headerWidth * (isMobile ? 0.055 : 0.045),
-          ),
+          Math.max(isMobile ? 14 : 20, headerWidth * (isMobile ? 0.055 : 0.045)),
         )
       : 22;
 
@@ -147,7 +137,7 @@ export default function QuranSurahHeader({
         {!isResolvingHeader && (
           <img
             src="/surah-header-4.png"
-            alt={`سُورَةُ ${surahNameAr}`}
+            alt={t("readQuran.surahAlt", { name: surahNameAr })}
             className={`w-full h-auto block ${
               useFallbackHeader ? "opacity-100" : "opacity-0"
             }`}
@@ -165,7 +155,7 @@ export default function QuranSurahHeader({
           <img
             key={displayColoredSrc}
             src={displayColoredSrc || undefined}
-            alt={`سُورَةُ ${surahNameAr}`}
+            alt={t("readQuran.surahAlt", { name: surahNameAr })}
             className="absolute inset-0 w-full h-auto block"
             draggable={false}
             onError={() => {
@@ -180,14 +170,12 @@ export default function QuranSurahHeader({
           <p
             className="font font-bold leading-none"
             style={{
-              color: usePrimaryText
-                ? "hsl(var(--primary))"
-                : "hsl(var(--foreground))",
+              color: usePrimaryText ? "hsl(var(--primary))" : "hsl(var(--foreground))",
               fontSize: `${titleFontSize}px`,
               transform: "translateY(0.18em)",
             }}
           >
-            سُورَةُ {surahNameAr}
+            {t("readQuran.surahAlt", { name: surahNameAr })}
           </p>
         </div>
       </div>
@@ -198,9 +186,7 @@ export default function QuranSurahHeader({
           style={{
             fontSize: `${basmalaFontSize}px`,
             fontFamily: "'Amiri Quran', serif",
-            color: usePrimaryText
-              ? "hsl(var(--primary))"
-              : "hsl(var(--foreground))",
+            color: usePrimaryText ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
           ﷽

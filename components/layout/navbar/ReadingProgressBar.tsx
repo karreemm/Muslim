@@ -27,8 +27,7 @@ export default function ReadingProgressBar({
   useEffect(() => {
     const compute = () => {
       const scrollTop = window.scrollY;
-      const rawDocHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const rawDocHeight = document.documentElement.scrollHeight - window.innerHeight;
       let docHeight = rawDocHeight;
       const total = totalPagesRef.current;
       const loaded = loadedPagesRef.current;

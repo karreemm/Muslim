@@ -4,7 +4,7 @@ export const AyahSearchCardSkeleton: React.FC = () => {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-card/50 border border-border/50 p-6 animate-pulse backdrop-blur-sm">
       <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-      
+
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/30">
           <div className="flex items-center gap-3">

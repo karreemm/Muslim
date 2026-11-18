@@ -6,6 +6,8 @@ import { useLanguage } from "../../../context/general/LanguageContext";
 import { useRouter } from "next/navigation";
 import { ExternalLink, Share2, Trash2 } from "lucide-react";
 import DataTable from "@/components/general/DataTable";
+import { PageShell } from "@/components/ui/PageShell";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import ShareModal from "@/components/modals/ShareModal";
 import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
@@ -18,9 +20,7 @@ export default function SavedAyahsTable() {
   const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
 
   const handleNavigate = (ayah: any) => {
-    router.push(
-      `/read-quran/surah/${ayah.SurahNumber}?ayah=${ayah.ayahNumberEn}`,
-    );
+    router.push(`/read-quran/surah/${ayah.SurahNumber}?ayah=${ayah.ayahNumberEn}`);
   };
 
   const getShareUrl = (ayah: any) => {
@@ -40,10 +40,8 @@ export default function SavedAyahsTable() {
           {idx === 0 && (
             <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="mt-0.5">
-                {t("common.latest")}
-              </span>            
-              </span>
+              <span className="mt-0.5">{t("common.latest")}</span>
+            </span>
           )}
           <span className="font-semibold text-foreground">
             {language === "ar" ? item.surahNameAr : item.surahNameEn}
@@ -100,10 +98,8 @@ export default function SavedAyahsTable() {
   ];
 
   return (
-    <div className="mt-8 max-w-7xl mx-auto px-4 md:px-8 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8 text-foreground">
-        {t("savedAyahs.title")}
-      </h1>
+    <PageShell containerClassName="mt-8 px-4 md:px-8">
+      <PageHeader title={t("savedAyahs.title")} className="mb-8" />
 
       <DataTable
         columns={columns}
@@ -116,12 +112,8 @@ export default function SavedAyahsTable() {
             ? {
                 label: t("savedAyahs.clearAll"),
                 onClick: clearSavedAyahs,
-                confirmationTitle:
-                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
-                confirmationDescription:
-                  language === "ar"
-                    ? "هل أنت متأكد من حذف جميع الآيات المحفوظة؟"
-                    : "Are you sure you want to clear all saved ayahs?",
+                confirmationTitle: t("common.confirmDeletion"),
+                confirmationDescription: t("savedAyahs.clearAllConfirm"),
               }
             : undefined
         }
@@ -130,14 +122,10 @@ export default function SavedAyahsTable() {
 
       <DeleteConfirmModal
         isOpen={!!deleteTarget}
-        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
-        description={
-          language === "ar"
-            ? "هل أنت متأكد من حذف هذه الآية؟"
-            : "Are you sure you want to remove this ayah?"
-        }
-        confirmText={language === "ar" ? "حذف" : "Delete"}
-        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        title={t("common.confirmDeletion")}
+        description={t("savedAyahs.removeConfirm")}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
         onConfirm={() => {
           if (deleteTarget) {
             removeAyah(deleteTarget);
@@ -146,6 +134,6 @@ export default function SavedAyahsTable() {
         }}
         onClose={() => setDeleteTarget(null)}
       />
-    </div>
+    </PageShell>
   );
 }

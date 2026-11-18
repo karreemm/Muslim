@@ -24,5 +24,7 @@
     "unmute": "إلغاء الكتم",
     "favorite": "إضافة للمفضلة",
     "removeFavorite": "إزالة من المفضلة"
-  }
+  },
+  "favoritesOnly": "المفضلة فقط",
+  "favorites": "المفضلة"
 }

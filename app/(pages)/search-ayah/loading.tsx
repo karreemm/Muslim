@@ -1,25 +1,27 @@
 import { AyahSearchCardSkeleton } from "./components/AyahSearchCardSkeleton";
+import { PageShell } from "@/components/ui/PageShell";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function LoadingSearchAyah() {
   return (
-    <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col items-center gap-10 mt-32">
-      <div className="w-[90%] mx-auto">
-        <div className="bg-card rounded-lg shadow-lg p-3 sm:p-6 border border-border animate-pulse">
+    <PageShell containerClassName="flex flex-col items-center gap-10">
+      <div className="w-full">
+        <div className="animate-pulse rounded-2xl border border-border bg-card p-3 shadow-lg sm:p-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-6 h-6 bg-muted rounded"></div>
-            <div className="flex-1 h-10 bg-muted rounded"></div>
-            <div className="w-20 h-10 bg-muted rounded-lg"></div>
+            <Skeleton className="h-6 w-6" />
+            <Skeleton className="h-10 flex-1" />
+            <Skeleton className="h-10 w-20" />
           </div>
         </div>
       </div>
 
-      <div className="w-[90%] bg-background dark:bg-background p-5 rounded-lg">
+      <div className="w-full rounded-2xl bg-background p-5">
         <div className="grid grid-cols-1 gap-5">
           <AyahSearchCardSkeleton />
           <AyahSearchCardSkeleton />
           <AyahSearchCardSkeleton />
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

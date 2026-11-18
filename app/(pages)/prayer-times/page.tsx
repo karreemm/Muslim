@@ -1,13 +1,5 @@
 import PrayerTimes from "./PrayTimes";
 
-export default function Home() {
-  return (
-    <>
-      <div className="w-full max-w-7xl mx-auto min-h-screen flex justify-center items-center bg-background">
-        <div className="w-full">
-          <PrayerTimes />
-        </div>
-      </div>
-    </>
-  );
+export default function App() {
+  return <PrayerTimes />;
 }

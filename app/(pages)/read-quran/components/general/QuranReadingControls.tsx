@@ -3,11 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-  faArrowRight,
-  faPlay,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useMainNavbarOffset } from "@/hooks/general/useMainNavbarOffset";
 import { hidePopover, showPopover } from "@/utils/helpers";
 
@@ -83,12 +79,8 @@ export default function QuranReadingControls({
               <Link
                 href={previous.href}
                 className="w-fit group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                onMouseEnter={() =>
-                  previous.popoverId && showPopover(previous.popoverId)
-                }
-                onMouseLeave={() =>
-                  previous.popoverId && hidePopover(previous.popoverId)
-                }
+                onMouseEnter={() => previous.popoverId && showPopover(previous.popoverId)}
+                onMouseLeave={() => previous.popoverId && hidePopover(previous.popoverId)}
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card transition-all group-hover:border-primary/30 group-hover:bg-primary/10">
                   <FontAwesomeIcon
@@ -125,17 +117,11 @@ export default function QuranReadingControls({
               <Link
                 href={next.href}
                 className="w-fit group flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                onMouseEnter={() =>
-                  next.popoverId && showPopover(next.popoverId)
-                }
-                onMouseLeave={() =>
-                  next.popoverId && hidePopover(next.popoverId)
-                }
+                onMouseEnter={() => next.popoverId && showPopover(next.popoverId)}
+                onMouseLeave={() => next.popoverId && hidePopover(next.popoverId)}
               >
                 <div className="hidden text-right sm:block">
-                  <span className="block text-xs text-muted-foreground">
-                    {nextLabel}
-                  </span>
+                  <span className="block text-xs text-muted-foreground">{nextLabel}</span>
                   <span className=" font-semibold">{next.title}</span>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card transition-all group-hover:border-primary/30 group-hover:bg-primary/10">

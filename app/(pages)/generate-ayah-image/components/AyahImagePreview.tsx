@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMosque } from "@fortawesome/free-solid-svg-icons";
 import { generateCSSVars } from "@/utils/paletteEngine";
 import QuranPageRenderer from "@/app/(pages)/read-quran/components/general/QuranPageRenderer";
 import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
 import { useContainerFontSize } from "@/hooks/readQuran/useContainerFontSize";
-import type { AyahImageData } from "../types";
+import type { AyahImageData } from "@/types/ayahImage";
 import {
   FIXED_AYAH_PALETTES,
   hexToHslTriplet,
@@ -43,11 +44,7 @@ function AyahImagePreviewSkeleton() {
         <div className="w-full h-14 bg-muted rounded-xl mb-2" />
         <div className="w-[48%] h-7 bg-muted rounded-lg mb-4" />
         {lineWidths.map((width, index) => (
-          <div
-            key={index}
-            className="h-7 bg-muted rounded-lg"
-            style={{ width }}
-          />
+          <div key={index} className="h-7 bg-muted rounded-lg" style={{ width }} />
         ))}
       </div>
     </div>
@@ -73,6 +70,7 @@ export default function AyahImagePreview({
   onSpecificPartStartWordIndexChange,
   onSpecificPartEndWordIndexChange,
 }: AyahImagePreviewProps) {
+  const { t } = useTranslation();
   const MIN_SKELETON_DURATION_MS = 500;
   const isArabic = language === "ar";
   const contentRef = useRef<HTMLDivElement>(null);
@@ -83,8 +81,7 @@ export default function AyahImagePreview({
   const { fontSize, lineHeight } = useContainerFontSize(contentRef);
   const { fontReady, fontLoadTried } = useQuranPageFont(ayahData?.pageNumber);
   const isMobile =
-    typeof window !== "undefined" &&
-    window.matchMedia("(max-width: 640px)").matches;
+    typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
 
   useEffect(() => {
     if (loadingHideTimerRef.current !== null) {
@@ -101,9 +98,7 @@ export default function AyahImagePreview({
     if (!showMinLoadingSkeleton) return;
 
     const startedAt = loadingStartRef.current;
-    const elapsed = startedAt
-      ? Date.now() - startedAt
-      : MIN_SKELETON_DURATION_MS;
+    const elapsed = startedAt ? Date.now() - startedAt : MIN_SKELETON_DURATION_MS;
     const remaining = Math.max(0, MIN_SKELETON_DURATION_MS - elapsed);
 
     if (remaining === 0) {
@@ -215,7 +210,7 @@ export default function AyahImagePreview({
     <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-foreground">
-          {isArabic ? "الصورة الحالية" : "Image Preview"}
+          {t("generateAyahImage.imagePreview")}
         </h3>
       </div>
 
@@ -265,8 +260,7 @@ export default function AyahImagePreview({
                         enabled: true,
                         startWordIndex: specificPartStartWordIndex,
                         endWordIndex: specificPartEndWordIndex,
-                        onStartWordIndexChange:
-                          onSpecificPartStartWordIndexChange,
+                        onStartWordIndexChange: onSpecificPartStartWordIndexChange,
                         onEndWordIndexChange: onSpecificPartEndWordIndexChange,
                       }
                     : undefined
@@ -275,9 +269,7 @@ export default function AyahImagePreview({
             </div>
           ) : (
             <div className="h-full w-full flex items-center justify-center text-center text-muted-foreground px-6">
-              {isArabic
-                ? "اختر سورة وآية لعرضها هنا"
-                : "Select a surah and ayah to preview here"}
+              {t("generateAyahImage.chooseSurahAyah")}
             </div>
           )}
 

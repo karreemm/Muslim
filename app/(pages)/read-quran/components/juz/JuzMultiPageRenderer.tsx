@@ -36,8 +36,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
 
         const matchingVerse = verses?.find(
           (verse) =>
-            parseInt(verse.verse_key?.split(":")[1] || "0") ===
-            highlightedAyahNumber,
+            parseInt(verse.verse_key?.split(":")[1] || "0") === highlightedAyahNumber,
         );
 
         if (matchingVerse) {
@@ -80,13 +79,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
           };
         }
       }
-    }, [
-      highlightedPage,
-      highlightedAyahNumber,
-      verses,
-      visiblePages,
-      sortedPageNumbers,
-    ]);
+    }, [highlightedPage, highlightedAyahNumber, verses, visiblePages, sortedPageNumbers]);
 
     const surahHeaders = useMemo(() => {
       if (!verses)
@@ -121,9 +114,7 @@ const JuzMultiPageRenderer: React.FC<JuzMultiPageRendererProps> = memo(
             const lastAyah =
               sameSurahVerses.length > 0
                 ? parseInt(
-                    sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(
-                      ":",
-                    )[1],
+                    sameSurahVerses[sameSurahVerses.length - 1].verse_key.split(":")[1],
                   )
                 : ayahNum;
 

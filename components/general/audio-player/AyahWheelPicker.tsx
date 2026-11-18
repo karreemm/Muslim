@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 interface AyahWheelPickerProps {
   min: number;
@@ -32,9 +26,7 @@ const AyahWheelPicker: React.FC<AyahWheelPickerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = useRef(false);
   const rafRef = useRef<number | null>(null);
-  const [selected, setSelected] = useState<number>(
-    Math.min(max, Math.max(min, value)),
-  );
+  const [selected, setSelected] = useState<number>(Math.min(max, Math.max(min, value)));
 
   const containerHeight = itemHeight * visibleCount;
   const pad = (containerHeight - itemHeight) / 2;
@@ -46,9 +38,12 @@ const AyahWheelPicker: React.FC<AyahWheelPickerProps> = ({
       const target = pad + (val - min) * itemHeight;
       isProgrammaticScroll.current = true;
       el.scrollTo({ top: target, behavior: animate ? "smooth" : "auto" });
-      window.setTimeout(() => {
-        isProgrammaticScroll.current = false;
-      }, animate ? 250 : 30);
+      window.setTimeout(
+        () => {
+          isProgrammaticScroll.current = false;
+        },
+        animate ? 250 : 30,
+      );
     },
     [itemHeight, min, pad],
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 
 interface FavoriteHadith {
   text: string;
@@ -19,9 +20,9 @@ interface FavoriteHadithsContextProps {
   removeAllFavoriteHadiths: () => void;
 }
 
-const FavoriteHadithsContext = createContext<
-  FavoriteHadithsContextProps | undefined
->(undefined);
+const FavoriteHadithsContext = createContext<FavoriteHadithsContextProps | undefined>(
+  undefined,
+);
 
 export const FavoriteHadithsProvider: React.FC<{
   children: React.ReactNode;
@@ -32,21 +33,14 @@ export const FavoriteHadithsProvider: React.FC<{
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    try {
-      const storedFavorites = JSON.parse(
-        localStorage.getItem("favoriteHadiths") || "[]",
-      );
-      setFavoriteHadiths(Array.isArray(storedFavorites) ? storedFavorites : []);
-    } catch {
-      setFavoriteHadiths([]);
-    } finally {
-      setIsHydrated(true);
-    }
+    const storedFavorites = readJSON<FavoriteHadith[]>(STORAGE_KEYS.favoriteHadiths, []);
+    setFavoriteHadiths(Array.isArray(storedFavorites) ? storedFavorites : []);
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !isHydrated) return;
-    localStorage.setItem("favoriteHadiths", JSON.stringify(favoriteHadiths));
+    writeJSON(STORAGE_KEYS.favoriteHadiths, favoriteHadiths);
   }, [favoriteHadiths, isHydrated]);
 
   const addFavoriteHadith = (hadith: FavoriteHadith) => {
@@ -55,9 +49,7 @@ export const FavoriteHadithsProvider: React.FC<{
 
   const removeFavoriteHadith = (numberEn: number, bookId: string | null) => {
     setFavoriteHadiths((prev) =>
-      prev.filter(
-        (hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId,
-      ),
+      prev.filter((hadith) => hadith.numberEn !== numberEn || hadith.bookId !== bookId),
     );
   };
 
@@ -82,9 +74,7 @@ export const FavoriteHadithsProvider: React.FC<{
 export const useFavoriteHadiths = () => {
   const context = useContext(FavoriteHadithsContext);
   if (!context) {
-    throw new Error(
-      "useFavoriteHadiths must be used within a FavoriteHadithsProvider",
-    );
+    throw new Error("useFavoriteHadiths must be used within a FavoriteHadithsProvider");
   }
   return context;
 };

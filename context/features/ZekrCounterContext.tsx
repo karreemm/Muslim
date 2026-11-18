@@ -9,6 +9,7 @@ import React, {
   useRef,
   ReactNode,
 } from "react";
+import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 
 interface ZekrEntry {
   current: number;
@@ -23,17 +24,13 @@ interface DailyCounts {
 interface ZekrCounterContextType {
   getCount: (categoryId: string, number?: number) => number;
   increment: (categoryId: string, number: number, totalCount: number) => void;
-  isCompleted: (
-    categoryId: string,
-    number: number,
-    totalCount: number,
-  ) => boolean;
+  isCompleted: (categoryId: string, number: number, totalCount: number) => boolean;
   getCategoryCompletedCount: (categoryId: string) => number;
   resetDay: () => void;
   resetCategory: (categoryId: string) => void;
 }
 
-const STORAGE_KEY = "azkar_daily_counts";
+const STORAGE_KEY = STORAGE_KEYS.azkarDailyCounts;
 
 const localDateKey = (date = new Date()) => {
   const y = date.getFullYear();
@@ -42,35 +39,22 @@ const localDateKey = (date = new Date()) => {
   return `${y}-${m}-${d}`;
 };
 
-const zekrKey = (categoryId: string, number: number) =>
-  `${categoryId}__${number}`;
+const zekrKey = (categoryId: string, number: number) => `${categoryId}__${number}`;
 
 const categoryPrefix = (categoryId: string) => `${categoryId}__`;
 
 const loadDailyCounts = (): DailyCounts => {
   const today = localDateKey();
-  if (typeof window === "undefined") {
-    return { date: today, counts: {} };
+  const parsed = readJSON<DailyCounts | null>(STORAGE_KEY, null);
+  if (parsed && parsed.date === today && parsed.counts) {
+    return parsed;
   }
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored) as DailyCounts;
-      if (parsed && parsed.date === today && parsed.counts) {
-        return parsed;
-      }
-    }
-  } catch {}
   return { date: today, counts: {} };
 };
 
-const ZekrCounterContext = createContext<ZekrCounterContextType | undefined>(
-  undefined,
-);
+const ZekrCounterContext = createContext<ZekrCounterContextType | undefined>(undefined);
 
-export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [daily, setDaily] = useState<DailyCounts>({
     date: localDateKey(),
     counts: {},
@@ -112,9 +96,7 @@ export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({
     if (typeof window === "undefined") return;
     const revalidate = () => {
       const today = localDateKey();
-      setDaily((prev) =>
-        prev.date === today ? prev : { date: today, counts: {} },
-      );
+      setDaily((prev) => (prev.date === today ? prev : { date: today, counts: {} }));
     };
     document.addEventListener("visibilitychange", revalidate);
     window.addEventListener("focus", revalidate);
@@ -126,7 +108,7 @@ export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     if (typeof window === "undefined" || !isHydrated) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(daily));
+    writeJSON(STORAGE_KEY, daily);
   }, [daily, isHydrated]);
 
   const getCount = useCallback(
@@ -166,8 +148,7 @@ export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({
     (categoryId: string) => {
       const prefix = categoryPrefix(categoryId);
       return Object.entries(daily.counts).filter(
-        ([key, entry]) =>
-          key.startsWith(prefix) && entry.current >= entry.total,
+        ([key, entry]) => key.startsWith(prefix) && entry.current >= entry.total,
       ).length;
     },
     [daily],
@@ -183,9 +164,7 @@ export const ZekrCounterProvider: React.FC<{ children: ReactNode }> = ({
     setDaily((prev) => ({
       ...prev,
       counts: Object.fromEntries(
-        Object.entries(prev.counts).filter(
-          ([key]) => !key.startsWith(prefix),
-        ),
+        Object.entries(prev.counts).filter(([key]) => !key.startsWith(prefix)),
       ),
     }));
   }, []);

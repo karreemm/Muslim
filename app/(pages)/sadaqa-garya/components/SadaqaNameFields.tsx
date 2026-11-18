@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "lucide-react";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface SadaqaNameFieldsProps {
   mounted: boolean;
@@ -43,7 +44,7 @@ export default function SadaqaNameFields({
             className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pl-10 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
             required
             dir="ltr"
-            placeholder="Mohamed Ahmed"
+            placeholder={translate("en", "sadaqa.form.namePlaceholder")}
           />
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold">
             EN
@@ -71,7 +72,7 @@ export default function SadaqaNameFields({
             className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pr-10 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
             required
             dir="rtl"
-            placeholder="محمد أحمد"
+            placeholder={translate("ar", "sadaqa.form.namePlaceholder")}
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold">
             ع

@@ -20,9 +20,9 @@ import {
   faChevronDown,
   faRadio,
   faGears,
-  faHandsPraying
+  faHandsPraying,
 } from "@fortawesome/free-solid-svg-icons";
-import {faUssunnah} from "@fortawesome/free-brands-svg-icons";
+import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -64,7 +64,9 @@ export default function Navbar() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
-  const [expandedMobileSections, setExpandedMobileSections] = useState<Record<string, boolean>>({
+  const [expandedMobileSections, setExpandedMobileSections] = useState<
+    Record<string, boolean>
+  >({
     read: false,
     listen: false,
     tools: false,
@@ -151,9 +153,7 @@ export default function Navbar() {
 
   const nestedLinkClass = (active: boolean) =>
     `flex items-center gap-3 rounded-xl px-4 py-2 text-base font-medium transition-colors duration-200 ${
-      active
-        ? "text-primary"
-        : "text-foreground/70 hover:text-primary"
+      active ? "text-primary" : "text-foreground/70 hover:text-primary"
     }`;
 
   const iconBoxClass = (active: boolean) =>
@@ -161,7 +161,8 @@ export default function Navbar() {
       active ? "bg-primary/20" : "bg-secondary/50"
     }`;
 
-  const nestedIconBoxClass = "flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/50";
+  const nestedIconBoxClass =
+    "flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/50";
 
   return (
     <div className="w-full flex justify-center" ref={navbarContainerRef}>
@@ -262,10 +263,7 @@ export default function Navbar() {
           >
             <div className="max-w-7xl mx-auto space-y-1">
               {/* Home */}
-              <Link
-                href="/"
-                className={mobileLinkClass(isActive("/", true))}
-              >
+              <Link href="/" className={mobileLinkClass(isActive("/", true))}>
                 <div className={iconBoxClass(isActive("/", true))}>
                   <FontAwesomeIcon icon={faHouse} className="text-sm" />
                 </div>
@@ -298,7 +296,9 @@ export default function Navbar() {
 
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    expandedMobileSections.read ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    expandedMobileSections.read
+                      ? "max-h-96 opacity-100 mt-1"
+                      : "max-h-0 opacity-0"
                   }`}
                 >
                   <div className="space-y-1 pl-4 border-l-2 border-primary/10 ml-6">
@@ -344,7 +344,9 @@ export default function Navbar() {
 
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    expandedMobileSections.listen ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    expandedMobileSections.listen
+                      ? "max-h-96 opacity-100 mt-1"
+                      : "max-h-0 opacity-0"
                   }`}
                 >
                   <div className="space-y-1 pl-4 border-l-2 border-primary/10 ml-6">
@@ -390,7 +392,9 @@ export default function Navbar() {
 
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    expandedMobileSections.tools ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    expandedMobileSections.tools
+                      ? "max-h-96 opacity-100 mt-1"
+                      : "max-h-0 opacity-0"
                   }`}
                 >
                   <div className="space-y-1 pl-4 border-l-2 border-primary/10 ml-6">
@@ -413,11 +417,7 @@ export default function Navbar() {
               <div className="h-px bg-border/50 my-2" />
 
               {utilityRoutes.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={mobileLinkClass(isActive(href))}
-                >
+                <Link key={href} href={href} className={mobileLinkClass(isActive(href))}>
                   <div className={iconBoxClass(isActive(href))}>
                     <FontAwesomeIcon icon={icon} className="text-sm" />
                   </div>

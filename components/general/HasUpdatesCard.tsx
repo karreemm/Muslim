@@ -48,9 +48,7 @@ export default function HasUpdatesCard({
             {title}
           </h1>
 
-          <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
-            {message}
-          </p>
+          <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">{message}</p>
 
           <button
             onClick={onBackToHome}

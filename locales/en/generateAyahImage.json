@@ -1,13 +1,10 @@
 {
   "title": "Turn an Ayah into an Image",
   "subtitle": "Pick an ayah, style it your way, and share it as a clean image.",
-
   "surahLabel": "Surah",
   "ayahLabel": "Ayah",
-
   "surahSearchPlaceholder": "Search surah...",
   "ayahSearchPlaceholder": "Enter ayah number...",
-
   "ayahSectionTitle": "Ayah",
   "ayahPredefinedTitle": "Selected ayahs",
   "ayahManualTitle": "Choose manually",
@@ -20,10 +17,8 @@
   "specificPart": "Get specific part",
   "submitAyahSelection": "Keep This Selection",
   "applyingAyahSelection": "Keeping selection...",
-
   "noSurahFound": "No results found",
   "noAyahFound": "No results found",
-
   "aspectRatioTitle": "Image Size",
   "paletteTitle": "Colors",
   "palettePredefined": "Predefined palettes",
@@ -31,27 +26,30 @@
   "paletteCustom": "Customize",
   "paletteThemeMode": "Theme mode",
   "paletteOr": "OR",
-
   "pageNumberTitle": "Show page number",
   "websiteAttributionTitle": "Show website name",
   "websiteAttributionHelper": "Showing the website name helps the website reach more people.",
-
   "show": "Show",
   "hide": "Hide",
-
   "lightTheme": "Light",
   "darkTheme": "Dark",
-
   "selectionSummary": "Your Selection",
   "selectedSurah": "Surah",
   "selectedAyah": "Ayah",
   "page": "Page",
   "line": "Line",
-
   "downloadPng": "Download Image",
-
   "exporting": "Creating your image...",
   "readyToExport": "Ready to download",
   "waitingPreview": "Preparing preview...",
-  "exportFailed": "Something went wrong. Try again"
+  "exportFailed": "Something went wrong. Try again",
+  "imagePreview": "Image Preview",
+  "chooseSurahAyah": "Choose a surah and ayah to preview here",
+  "surahOption": "Surah {{number}} - {{count}} ayahs",
+  "ayahOption": "Ayah {{number}}",
+  "ayahNumberShort": "No. {{number}}",
+  "surahFallback": "Surah {{number}}",
+  "filenameSurah": "Surah {{name}}",
+  "filenameAyah": "Ayah {{number}}",
+  "applySelectionError": "Could not apply the ayah selection"
 }

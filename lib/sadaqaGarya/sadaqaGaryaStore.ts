@@ -1,10 +1,6 @@
 import crypto from "crypto";
-import { DeceasedPerson } from "@/app/(pages)/sadaqa-garya/types";
-
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const SUPABASE_TABLE =
-  process.env.SUPABASE_SADAQA_TABLE || "sadaqa_garya_records";
+import { DeceasedPerson } from "@/types/sadaqa";
+import { getSupabaseEnv } from "@/lib/env";
 
 interface CreateDeceasedInput {
   nameEn: string;
@@ -46,14 +42,6 @@ export interface CreateSadaqaRecordResult {
 
 export type DeleteSadaqaRecordResult = "deleted" | "unauthorized" | "not_found";
 
-function assertSupabaseConfig() {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error(
-      "Supabase is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.",
-    );
-  }
-}
-
 function mapSupabaseToApp(record: SupabaseRecord): DeceasedPerson {
   return {
     id: record.id,
@@ -91,9 +79,10 @@ function hashDeleteToken(token: string): string {
 }
 
 function supabaseHeaders(prefer?: string): HeadersInit {
+  const { SUPABASE_SERVICE_ROLE_KEY } = getSupabaseEnv();
   const headers: HeadersInit = {
-    apikey: SUPABASE_SERVICE_ROLE_KEY || "",
-    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY || ""}`,
+    apikey: SUPABASE_SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
     "Content-Type": "application/json",
   };
 
@@ -108,9 +97,9 @@ async function supabaseRequest(
   endpoint: string,
   options: RequestInit,
 ): Promise<Response> {
-  assertSupabaseConfig();
+  const { SUPABASE_URL, SUPABASE_SADAQA_TABLE } = getSupabaseEnv();
 
-  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}${endpoint}`, options);
+  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_SADAQA_TABLE}${endpoint}`, options);
 }
 
 async function supabaseSlugExists(slug: string): Promise<boolean> {

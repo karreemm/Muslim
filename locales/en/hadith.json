@@ -6,7 +6,8 @@
     "searchPlaceholder": "Search in chapters...",
     "chapterLabel": "Chapter",
     "error": "An error occurred while fetching the chapters. Please try again.",
-    "noChaptersFound": "No chapters found."
+    "noChaptersFound": "No chapters found.",
+    "chaptersFound": "Found {{count}} chapters"
   },
   "chapter": {
     "title": "Chapter Hadiths",
@@ -21,5 +22,6 @@
     "sahih": "Sahih",
     "da`eef": "Da`eef",
     "hasan": "Hasan"
-  }
+  },
+  "viewAll": "View All Hadiths"
 }

@@ -65,12 +65,7 @@ async function recolorImage(
   config: ColorConfig,
   scopeElement?: HTMLElement | null,
 ): Promise<string> {
-  const cacheKey = makeCacheKey(
-    src,
-    config.strokeVar,
-    config.bgVar,
-    scopeElement,
-  );
+  const cacheKey = makeCacheKey(src, config.strokeVar, config.bgVar, scopeElement);
   if (cache.has(cacheKey)) return cache.get(cacheKey)!;
 
   const strokeRgb = cssVarToRgb(config.strokeVar, scopeElement);
@@ -99,19 +94,11 @@ async function recolorImage(
         if (lum < DARK_THRESHOLD) {
           const scale = (lum / DARK_THRESHOLD) * darken;
           d[i] = Math.min(255, Math.round(strokeRgb.r * (0.15 + scale * 0.85)));
-          d[i + 1] = Math.min(
-            255,
-            Math.round(strokeRgb.g * (0.15 + scale * 0.85)),
-          );
-          d[i + 2] = Math.min(
-            255,
-            Math.round(strokeRgb.b * (0.15 + scale * 0.85)),
-          );
+          d[i + 1] = Math.min(255, Math.round(strokeRgb.g * (0.15 + scale * 0.85)));
+          d[i + 2] = Math.min(255, Math.round(strokeRgb.b * (0.15 + scale * 0.85)));
         } else if (lum > LIGHT_THRESHOLD) {
           const scale = (lum - LIGHT_THRESHOLD) / (1 - LIGHT_THRESHOLD);
-          d[i] = Math.round(
-            bgRgb.r * 0.85 + bgRgb.r * 0.15 * scale + 255 * 0.05 * scale,
-          );
+          d[i] = Math.round(bgRgb.r * 0.85 + bgRgb.r * 0.15 * scale + 255 * 0.05 * scale);
           d[i + 1] = Math.round(
             bgRgb.g * 0.85 + bgRgb.g * 0.15 * scale + 255 * 0.05 * scale,
           );
@@ -149,12 +136,7 @@ export function useHeaderColor(
   const [dataUrl, setDataUrl] = useState<string | null>(() => {
     if (typeof document === "undefined") return null;
 
-    const cacheKey = makeCacheKey(
-      src,
-      config.strokeVar,
-      config.bgVar,
-      scopeElement,
-    );
+    const cacheKey = makeCacheKey(src, config.strokeVar, config.bgVar, scopeElement);
     return cache.get(cacheKey) ?? null;
   });
   const configRef = useRef(config);

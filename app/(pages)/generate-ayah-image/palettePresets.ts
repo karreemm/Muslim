@@ -129,8 +129,7 @@ export function hexToHslTriplet(hex: string): string {
   if (hue < 0) hue += 360;
 
   const lightness = (max + min) / 2;
-  const saturation =
-    delta === 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
+  const saturation = delta === 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
 
   return `${hue} ${Math.round(saturation * 100)}% ${Math.round(lightness * 100)}%`;
 }

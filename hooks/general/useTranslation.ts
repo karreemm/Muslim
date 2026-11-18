@@ -83,40 +83,52 @@ const translations: Record<string, Translations> = {
   },
 };
 
-export function useTranslation() {
-  const { language } = useLanguage();
+function lookup(
+  language: string,
+  key: TranslationKey,
+  params?: Record<string, string | number>,
+): string {
+  const keys = key.split(".");
+  let value: any = translations[language] || translations.en;
 
-  const t = (
-    key: TranslationKey,
-    params?: Record<string, string | number>,
-  ): string => {
-    const keys = key.split(".");
-    let value: any = translations[language] || translations.en;
-
-    for (const k of keys) {
-      if (value && typeof value === "object" && k in value) {
-        value = value[k];
-      } else {
-        value = translations.en;
-        for (const fallbackKey of keys) {
-          if (value && typeof value === "object" && fallbackKey in value) {
-            value = value[fallbackKey];
-          } else {
-            console.warn(`Translation key not found: ${key}`);
-            return key;
-          }
+  for (const k of keys) {
+    if (value && typeof value === "object" && k in value) {
+      value = value[k];
+    } else {
+      value = translations.en;
+      for (const fallbackKey of keys) {
+        if (value && typeof value === "object" && fallbackKey in value) {
+          value = value[fallbackKey];
+        } else {
+          console.warn(`Translation key not found: ${key}`);
+          return key;
         }
       }
     }
+  }
 
-    if (params && typeof value === "string") {
-      Object.keys(params).forEach((param) => {
-        value = value.replace(`{{${param}}}`, String(params[param]));
-      });
-    }
+  if (params && typeof value === "string") {
+    Object.keys(params).forEach((param) => {
+      value = value.split(`{{${param}}}`).join(String(params[param]));
+    });
+  }
 
-    return typeof value === "string" ? value : key;
-  };
+  return typeof value === "string" ? value : key;
+}
+
+export function translate(
+  language: string,
+  key: TranslationKey,
+  params?: Record<string, string | number>,
+): string {
+  return lookup(language, key, params);
+}
+
+export function useTranslation() {
+  const { language } = useLanguage();
+
+  const t = (key: TranslationKey, params?: Record<string, string | number>): string =>
+    lookup(language, key, params);
 
   const getNamespace = (namespace: string): Record<string, string> => {
     const namespaceData =

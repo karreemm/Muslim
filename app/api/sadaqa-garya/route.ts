@@ -20,8 +20,7 @@ export async function GET(req: Request) {
     const ownedSlugs = Object.keys(tokens);
     return NextResponse.json({ deceased, ownedSlugs }, { status: 200 });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to load records";
+    const message = error instanceof Error ? error.message : "Failed to load records";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -71,8 +70,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to create record";
+    const message = error instanceof Error ? error.message : "Failed to create record";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

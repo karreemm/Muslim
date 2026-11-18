@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -23,6 +24,13 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  /* Semantic status colors (intentionally palette-independent) */
+  --color-success: hsl(160 84% 39%);
+  --color-success-foreground: hsl(0 0% 100%);
+  --color-info: hsl(213 94% 58%);
+  --color-info-foreground: hsl(0 0% 100%);
+  --color-live: hsl(142 71% 45%);
+
   --color-player-bg: hsl(var(--player-bg));
   --color-player-foreground: hsl(var(--player-foreground));
   --color-player-control: hsl(var(--player-control));
@@ -45,9 +53,7 @@
   --color-surah-header-foreground: hsl(var(--surah-header-foreground));
   --color-prayer-times-next: hsl(var(--prayer-times-next));
   --color-prayer-times-next-bg: hsl(var(--prayer-times-next-bg));
-  --color-prayer-times-next-foreground: hsl(
-    var(--prayer-times-next-foreground)
-  );
+  --color-prayer-times-next-foreground: hsl(var(--prayer-times-next-foreground));
 
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
   --background-image-gradient-conic: conic-gradient(
@@ -57,11 +63,9 @@
 
   --animate-slide-up: slideUp 0.3s ease-out;
   --animate-pulse-ring: pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-pulse-stroke: pulse-stroke 1.8s cubic-bezier(0.4, 0, 0.6, 1)
-    infinite;
+  --animate-pulse-stroke: pulse-stroke 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-pulse-icon: pulse-icon 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-pulse-border: pulse-border 1.8s cubic-bezier(0.4, 0, 0.6, 1)
-    infinite;
+  --animate-pulse-border: pulse-border 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   @keyframes slideUp {
     from {

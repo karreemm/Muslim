@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Hadith } from "@/app/(pages)/read-hadith/types";
+import { Hadith } from "@/types/hadith";
 import {
   getChapterHadiths,
   searchHadiths,
   searchHadithByNumber,
-} from "@/app/(pages)/read-hadith/service/HadithApiService";
+} from "@/lib/services/readHadith/HadithApiService";
 import { useFavoriteHadiths } from "@/context/favourites/FavoriteHadithsContext";
 
 export function useChapterHadiths(
@@ -14,7 +14,7 @@ export function useChapterHadiths(
   itemsPerPage: number = 10,
 ) {
   const searchParams = useSearchParams();
-  
+
   const [hadiths, setHadiths] = useState<Hadith[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,14 +73,7 @@ export function useChapterHadiths(
     if (!isSearching) {
       fetchHadiths();
     }
-  }, [
-    bookSlug,
-    chapterNumber,
-    currentPage,
-    itemsPerPage,
-    isSearching,
-    hadithNumber,
-  ]);
+  }, [bookSlug, chapterNumber, currentPage, itemsPerPage, isSearching, hadithNumber]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

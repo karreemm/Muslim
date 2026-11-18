@@ -4,6 +4,7 @@
   "makeDua": "Make Dua",
   "duaTitle": "Duas for the Deceased",
   "recommendedSurahs": "Recommended Surahs for the Deceased",
+  "loadingVerses": "Loading verses...",
   "shareIt": "Share it and make it a continuous charity in your good deeds and his good deeds inshallah",
   "form": {
     "title": "Create a New Sadaqa Garya",
@@ -13,7 +14,10 @@
     "messageArLabel": "Message (in Arabic)",
     "generate": "Create",
     "processing": "Creating...",
-    "requiredHint": "Fields marked with * are required"
+    "requiredHint": "Fields marked with * are required",
+    "messagePlaceholder": "Write a message from the heart...",
+    "namePlaceholder": "Mohamed Ahmed",
+    "nameRequired": "Please fill both name fields to continue"
   },
   "update": {
     "title": "Coming Soon",
@@ -23,6 +27,18 @@
   "table": {
     "title": "Your Sadaqat",
     "noSadaqat": "You don't have any Sadaqat yet.",
-    "clearAll": "Clear All Sadaqat"
+    "clearAll": "Clear All Sadaqat",
+    "failedDelete": "Failed to delete",
+    "onlyOwn": "You can only delete pages you created from this browser.",
+    "cannotDelete": "You cannot delete this page because you are not the creator",
+    "confirmDeletePage": "Are you sure you want to delete {{name}}'s page?",
+    "unexpectedError": "Unexpected error occurred"
+  },
+  "deceased": {
+    "dua": "O Allah, forgive him and raise his rank, and make this page an ongoing charity for him.",
+    "notFoundTitle": "Person not found",
+    "notFoundDescription": "The tribute you are looking for does not exist or has been removed.",
+    "returnHome": "Return Home",
+    "surahUnavailable": "Surah content is currently unavailable."
   }
 }

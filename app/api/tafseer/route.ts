@@ -10,17 +10,15 @@ export async function GET(req: Request) {
     let url: string;
     if (!tafseerId && !surahNumber && !ayahNumber) {
       url = "http://api.quran-tafseer.com/tafseer";
-    }
-    else if (tafseerId && surahNumber && ayahNumber) {
+    } else if (tafseerId && surahNumber && ayahNumber) {
       url = `http://api.quran-tafseer.com/tafseer/${tafseerId}/${surahNumber}/${ayahNumber}`;
-    }
-    else {
+    } else {
       return NextResponse.json(
         {
           error:
             "Invalid parameters. Provide either no parameters for list, or all three (tafseerId, surahNumber, ayahNumber) for specific tafseer.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -44,7 +42,7 @@ export async function GET(req: Request) {
         error: "Failed to fetch tafseer data",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

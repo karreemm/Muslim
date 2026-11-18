@@ -42,9 +42,7 @@ export const useQuranPageLines = (
     });
 
     const pageWords = pageNumber
-      ? allWords.filter(
-          (word) => Number(word.page_number) === Number(pageNumber),
-        )
+      ? allWords.filter((word) => Number(word.page_number) === Number(pageNumber))
       : allWords;
 
     const wordsByLine = new Map<string, QuranWord[]>();

@@ -6,6 +6,7 @@ import { faPalette, faChevronDown, faCheck } from "@fortawesome/free-solid-svg-i
 import { usePalette } from "../../../context/general/PaletteContext";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import { PALETTE_PRESETS, PaletteMode } from "@/utils/paletteEngine";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 type Props = { className?: string };
 
@@ -14,13 +15,16 @@ const PRESET_KEYS = Object.keys(PALETTE_PRESETS) as Exclude<PaletteMode, "custom
 export default function PaletteDropdown({ className = "" }: Props) {
   const { palette, hue, setPalette } = usePalette();
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [sliderHue, setSliderHue] = useState(hue);
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const isArabic = language === "ar";
 
-  useEffect(() => { setSliderHue(hue); }, [hue]);
+  useEffect(() => {
+    setSliderHue(hue);
+  }, [hue]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -69,9 +73,10 @@ export default function PaletteDropdown({ className = "" }: Props) {
     move(e.nativeEvent as MouseEvent);
   };
 
-  const hueGradient = `linear-gradient(to right,${
-    Array.from({ length: 13 }, (_, i) => `hsl(${i * 30},75%,48%)`).join(",")
-  })`;
+  const hueGradient = `linear-gradient(to right,${Array.from(
+    { length: 13 },
+    (_, i) => `hsl(${i * 30},75%,48%)`,
+  ).join(",")})`;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -101,13 +106,13 @@ export default function PaletteDropdown({ className = "" }: Props) {
           <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2.5 bg-muted/30">
             <FontAwesomeIcon icon={faPalette} className="text-xs text-primary" />
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              {isArabic ? "اللون" : "Palette"}
+              {t("common.palette")}
             </span>
           </div>
 
           <div className="px-3 pt-3 pb-2">
             <p className="text-[10px] text-muted-foreground mb-2">
-              {isArabic ? "ألوان مقترحة" : "Presets"}
+              {t("common.presets")}
             </p>
             <div className="flex gap-2 flex-wrap">
               {PRESET_KEYS.map((key) => {
@@ -121,9 +126,7 @@ export default function PaletteDropdown({ className = "" }: Props) {
                     className="relative w-7 h-7 rounded-full border-2 transition-all duration-150 hover:scale-110"
                     style={{
                       background: `hsl(${preset.hue},70%,44%)`,
-                      borderColor: isActive
-                        ? "hsl(var(--foreground))"
-                        : "transparent",
+                      borderColor: isActive ? "hsl(var(--foreground))" : "transparent",
                     }}
                   >
                     {isActive && (
@@ -143,7 +146,7 @@ export default function PaletteDropdown({ className = "" }: Props) {
           <div className="px-3 py-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] text-muted-foreground">
-                {isArabic ? "لون مخصص" : "Custom Color"}
+                {t("common.customColor")}
               </p>
             </div>
 

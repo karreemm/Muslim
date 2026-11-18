@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { useTheme } from "@/context/general/ThemeContext";
 import { usePalette } from "@/context/general/PaletteContext";
 import { useLanguage } from "@/context/general/LanguageContext";
@@ -15,14 +15,7 @@ export default function AppHydrationGate({ children }: AppHydrationGateProps) {
   const { isHydrated: isPaletteHydrated } = usePalette();
   const { isHydrated: isLanguageHydrated } = useLanguage();
 
-  const [minTimePassed, setMinTimePassed] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMinTimePassed(true), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const isReady = isThemeHydrated && isPaletteHydrated && isLanguageHydrated && minTimePassed;
+  const isReady = isThemeHydrated && isPaletteHydrated && isLanguageHydrated;
 
   if (!isReady) {
     return <Loading size="lg" />;

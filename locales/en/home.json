@@ -85,5 +85,7 @@
     "description": "Start with a few verses, a short listen, or simple Zekr.",
     "primary": "Read Quran",
     "secondary": "Search for an Ayah"
-  }
+  },
+  "explore": "Explore",
+  "brandName": "Muslim"
 }

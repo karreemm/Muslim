@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ClipLoader } from "react-spinners";
 import Loading from "./Loading";
 import { Trash2, Inbox } from "lucide-react";
-import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
+import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { IconButton } from "@/components/ui/IconButton";
 
 interface Column<T> {
   key: string;
@@ -61,44 +63,30 @@ export default function DataTable<T>({
 }: DataTableProps<T>) {
   const [mounted, setMounted] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { language } = useLanguage();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const actionsHeaderLabel =
-    mounted && language === "ar" ? "الإجراءات" : "Actions";
+  const actionsHeaderLabel = t("common.actions");
 
   const displayData = [...data].reverse();
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (data.length === 0) {
     return (
-      <div
-        className={`
-          flex flex-col items-center justify-center py-20 px-4 text-center
-          transition-all duration-500
-          ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
-        `}
-      >
-        <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
-          <Inbox className="w-10 h-10 text-muted-foreground" />
-        </div>
-        <h3 className="text-xl font-semibold text-foreground mb-2">
-          {emptyTitle || "No items found"}
-        </h3>
-        <p className="text-muted-foreground max-w-sm">
-          {emptyDescription}
-        </p>
-      </div>
+      <EmptyState
+        icon={<Inbox className="h-10 w-10" />}
+        title={emptyTitle || t("common.noResults")}
+        description={emptyDescription}
+        className={`transition-all duration-500 ${
+          mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+        }`}
+      />
     );
   }
 
@@ -112,7 +100,7 @@ export default function DataTable<T>({
       `}
     >
       <div className="relative rounded-2xl border border-border/70 bg-card/50 backdrop-blur-sm shadow-lg overflow-hidden">
-        <div className={`overflow-x-auto overflow-y-auto max-h-[${maxHeight}]`}>
+        <div className="overflow-x-auto overflow-y-auto" style={{ maxHeight }}>
           <table className="w-full text-sm">
             <thead className="bg-primary text-primary-foreground sticky top-0 z-20">
               <tr>
@@ -180,23 +168,16 @@ export default function DataTable<T>({
                               {action.customRender(item)}
                             </React.Fragment>
                           ) : (
-                            <button
+                            <IconButton
                               key={actionIdx}
+                              label={action.label}
+                              variant={action.variant || "ghost"}
+                              size="sm"
                               onClick={() => action.onClick(item)}
-                              className={`
-                                transition-all duration-200
-                                ${
-                                  action.variant === "destructive"
-                                    ? "text-destructive hover:bg-destructive/10 hover:scale-110"
-                                    : action.variant === "primary"
-                                      ? "text-primary hover:bg-primary/10 hover:scale-110"
-                                      : "text-muted-foreground hover:text-foreground hover:bg-muted hover:scale-110"
-                                }
-                              `}
-                              title={action.label}
+                              className="hover:scale-110"
                             >
                               {action.icon}
-                            </button>
+                            </IconButton>
                           ),
                         )}
                       </div>
@@ -214,36 +195,26 @@ export default function DataTable<T>({
       {clearAllAction && (
         <>
           <div className="flex justify-end">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setIsDeleteModalOpen(true)}
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive hover:text-destructive-foreground transition-all duration-300 font-medium"
+              className="group border border-destructive/20 bg-destructive/10 px-6 py-3 text-destructive hover:bg-destructive hover:text-destructive-foreground"
             >
-              <Trash2 className="w-4 h-4 transition-transform group-hover:rotate-12" />
+              <Trash2 className="h-4 w-4 transition-transform group-hover:rotate-12" />
               {clearAllAction.label}
-            </button>
+            </Button>
           </div>
 
           {isDeleteModalOpen && (
             <DeleteConfirmModal
               isOpen={isDeleteModalOpen}
-              title={
-                clearAllAction.confirmationTitle ||
-                (language === "ar" ? "تأكيد الحذف" : "Confirm Deletion")
-              }
+              title={clearAllAction.confirmationTitle || t("common.confirmDeletion")}
               description={
                 clearAllAction.confirmationDescription ||
-                (language === "ar"
-                  ? "هل أنت متأكد من حذف جميع العناصر؟"
-                  : "Are you sure you want to delete all items?")
+                t("common.deleteAllItemsConfirm")
               }
-              confirmText={
-                clearAllAction.confirmText ||
-                (language === "ar" ? "حذف" : "Delete")
-              }
-              cancelText={
-                clearAllAction.cancelText ||
-                (language === "ar" ? "إلغاء" : "Cancel")
-              }
+              confirmText={clearAllAction.confirmText || t("common.delete")}
+              cancelText={clearAllAction.cancelText || t("common.cancel")}
               onConfirm={() => {
                 clearAllAction.onClick();
                 setIsDeleteModalOpen(false);

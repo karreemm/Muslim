@@ -66,7 +66,7 @@ export default function RadioPlayer() {
             >
               <FontAwesomeIcon icon={faRadio} className="text-sm" />
               {isPlaying && (
-                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-live rounded-full border-2 border-background animate-pulse" />
               )}
             </div>
             <div className="min-w-0 flex flex-col justify-center flex-1">
@@ -99,16 +99,11 @@ export default function RadioPlayer() {
             <PlayerIconButton
               onClick={togglePlayPause}
               disabled={isConnecting}
-              tooltip={
-                isPlaying ? t("radio.actions.pause") : t("radio.actions.play")
-              }
+              tooltip={isPlaying ? t("radio.actions.pause") : t("radio.actions.play")}
               className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isConnecting ? "opacity-80" : "hover:scale-105"}`}
             >
               {isConnecting ? (
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  className="animate-spin text-sm"
-                />
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin text-sm" />
               ) : (
                 <FontAwesomeIcon
                   icon={isPlaying ? faPause : faPlay}
@@ -135,7 +130,7 @@ export default function RadioPlayer() {
 
             <PlayerIconButton
               onClick={stop}
-              tooltip={language === "ar" ? "إغلاق" : "Close"}
+              tooltip={t("common.close")}
               className="w-4 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
             >
               <FontAwesomeIcon icon={faXmark} className="text-xs" />
@@ -151,7 +146,7 @@ export default function RadioPlayer() {
             >
               <FontAwesomeIcon icon={faRadio} className="text-base" />
               {isPlaying && (
-                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-live rounded-full border-2 border-background animate-pulse" />
               )}
             </div>
 
@@ -185,16 +180,11 @@ export default function RadioPlayer() {
             <PlayerIconButton
               onClick={togglePlayPause}
               disabled={isConnecting}
-              tooltip={
-                isPlaying ? t("radio.actions.pause") : t("radio.actions.play")
-              }
+              tooltip={isPlaying ? t("radio.actions.pause") : t("radio.actions.play")}
               className={`w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 transition-all duration-200 active:scale-95 ${isConnecting ? "opacity-80 cursor-wait" : "hover:scale-105 hover:shadow-primary/40"}`}
             >
               {isConnecting ? (
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  className="animate-spin text-base"
-                />
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin text-base" />
               ) : (
                 <FontAwesomeIcon
                   icon={isPlaying ? faPause : faPlay}
@@ -206,9 +196,7 @@ export default function RadioPlayer() {
           <div className="flex items-center gap-1 shrink-0">
             <PlayerIconButton
               onClick={toggleMute}
-              tooltip={
-                isMuted ? t("radio.actions.unmute") : t("radio.actions.mute")
-              }
+              tooltip={isMuted ? t("radio.actions.unmute") : t("radio.actions.mute")}
               className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isMuted ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
             >
               <FontAwesomeIcon
@@ -235,7 +223,7 @@ export default function RadioPlayer() {
 
             <PlayerIconButton
               onClick={stop}
-              tooltip={language === "ar" ? "إغلاق" : "Close"}
+              tooltip={t("common.close")}
               className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 hover:rotate-90"
             >
               <FontAwesomeIcon icon={faXmark} className="text-base" />

@@ -48,9 +48,7 @@ export default function PrayerTimesHeader({
           </div>
         </div>
 
-        <div
-          className={`flex flex-row md:flex md:flex-col gap-1`}
-        >
+        <div className={`flex flex-row md:flex md:flex-col gap-1`}>
           <div className="w-fit flex items-center gap-2 text-sm font-semibold text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
             {hijriDate}
           </div>

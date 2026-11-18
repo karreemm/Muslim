@@ -43,8 +43,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
 
         const matchingVerse = verses?.find(
           (verse) =>
-            parseInt(verse.verse_key?.split(":")[1] || "0") ===
-            highlightedAyahNumber,
+            parseInt(verse.verse_key?.split(":")[1] || "0") === highlightedAyahNumber,
         );
 
         if (matchingVerse) {
@@ -87,19 +86,10 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
           };
         }
       }
-    }, [
-      highlightedPage,
-      highlightedAyahNumber,
-      verses,
-      visiblePages,
-      sortedPageNumbers,
-    ]);
+    }, [highlightedPage, highlightedAyahNumber, verses, visiblePages, sortedPageNumbers]);
 
     return (
-      <div
-        ref={containerRef}
-        className="flex flex-col gap-8 w-full items-center"
-      >
+      <div ref={containerRef} className="flex flex-col gap-8 w-full items-center">
         {sortedPageNumbers.slice(0, visiblePages).map((pageNum) => (
           <div
             key={pageNum}
@@ -112,9 +102,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
               lineHeight={lineHeight}
               pageNumber={parseInt(pageNum)}
               highlightedAyahNumber={
-                parseInt(pageNum) === highlightedPage
-                  ? highlightedAyahNumber
-                  : 0
+                parseInt(pageNum) === highlightedPage ? highlightedAyahNumber : 0
               }
               surahHeaders={surahHeaders}
             />

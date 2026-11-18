@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
+import { DeceasedPerson } from "@/types/sadaqa";
+import { logger } from "@/lib/logger";
 
 export default function useDeceasedPage(slug: string) {
   const router = useRouter();
@@ -9,7 +10,7 @@ export default function useDeceasedPage(slug: string) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadDeceasedData = async () => {
+  const loadDeceasedData = useCallback(async () => {
     try {
       const response = await fetch(`/api/sadaqa-garya/${slug}`, {
         method: "GET",
@@ -26,19 +27,19 @@ export default function useDeceasedPage(slug: string) {
       setError("No deceased person data found");
       setDeceased(null);
     } catch (error) {
-      console.error("Error loading deceased data:", error);
+      logger.error("Error loading deceased data:", error);
       setError("Error loading deceased person data");
       setDeceased(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
 
   useEffect(() => {
     if (slug) {
       loadDeceasedData();
     }
-  }, [slug]);
+  }, [slug, loadDeceasedData]);
 
   const toggleSurahExpansion = (index: number) => {
     setExpandedSurah(expandedSurah === index ? null : index);

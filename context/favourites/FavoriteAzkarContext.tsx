@@ -1,12 +1,7 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 
 interface AzkarItem {
   category: string;
@@ -28,9 +23,9 @@ interface FavoriteAzkarContextType {
   removeAllFavoriteAzkar: () => void;
 }
 
-const FavoriteAzkarContext = createContext<
-  FavoriteAzkarContextType | undefined
->(undefined);
+const FavoriteAzkarContext = createContext<FavoriteAzkarContextType | undefined>(
+  undefined,
+);
 
 export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -41,21 +36,14 @@ export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    try {
-      const storedFavorites = JSON.parse(
-        localStorage.getItem("favoriteAzkar") || "[]",
-      );
-      setFavoriteAzkar(Array.isArray(storedFavorites) ? storedFavorites : []);
-    } catch {
-      setFavoriteAzkar([]);
-    } finally {
-      setIsHydrated(true);
-    }
+    const storedFavorites = readJSON<FavoriteAzkarItem[]>(STORAGE_KEYS.favoriteAzkar, []);
+    setFavoriteAzkar(Array.isArray(storedFavorites) ? storedFavorites : []);
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined" || !isHydrated) return;
-    localStorage.setItem("favoriteAzkar", JSON.stringify(favoriteAzkar));
+    writeJSON(STORAGE_KEYS.favoriteAzkar, favoriteAzkar);
   }, [favoriteAzkar, isHydrated]);
 
   const addFavoriteAzkar = (azkar: FavoriteAzkarItem) => {
@@ -91,9 +79,7 @@ export const FavoriteAzkarProvider: React.FC<{ children: ReactNode }> = ({
 export const useFavoriteAzkar = () => {
   const context = useContext(FavoriteAzkarContext);
   if (context === undefined) {
-    throw new Error(
-      "useFavoriteAzkar must be used within a FavoriteAzkarProvider",
-    );
+    throw new Error("useFavoriteAzkar must be used within a FavoriteAzkarProvider");
   }
   return context;
 };

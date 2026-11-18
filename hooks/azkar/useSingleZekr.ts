@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchAzkarItem,
-  AzkarItem,
-} from "../../app/(pages)/azkar/service/GetAzkar";
+import { fetchAzkarItem, AzkarItem } from "@/lib/services/azkar/GetAzkar";
 import { AzkarCategories } from "@/constants/azkarData";
 
 /**

@@ -135,6 +135,7 @@ components/
 ├── layout/                    # Navbar, footer, page shell
 ├── general/                   # DataTable, Loading, Pagination, players
 ├── modals/                    # Share, Tafseer, Translation, DeleteConfirm
+├── ui/                        # Shared primitives: Button, Card, Modal, PageShell...
 └── azkar/                     # Prayer-triggered azkar reset
 constants/                     # Static data: Quran, hadith, azkar, radios, reciters
 context/
@@ -142,13 +143,14 @@ context/
 ├── features/                  # Audio, radio, saved ayahs, sadaqa, tasbeeh, zekr
 └── favourites/                # Favorite surahs, hadiths, azkar
 data/
-├── searchQuran/               # 3.89 MB search index (+ unused raw files)
-├── listenQuran/               # 1.54 MB audio duration summary
+├── searchQuran/               # 3.89 MB search index (raw duplicates removed)
 └── sadaqaGarya/               # Supabase schema
+public/data/listenQuran/       # 1.54 MB audio durations, lazy-loaded at runtime
 hooks/                         # Feature hooks, grouped by domain
-lib/                           # Server-side helpers: Supabase store, API security
+lib/                           # Cross-cutting: storage, http, logger, env, Supabase, security
+lib/services/                  # External API services (azkar, hadith, Quran, prayer, search...)
 locales/{en,ar}/               # 17 namespaces per language
-types/                         # Global type declarations
+types/                         # Shared domain types (ayah image, hadith, radio, sadaqa, search)
 utils/                         # Helpers, palette engine, search, theme script
 docs/                          # This documentation system
 ```
@@ -158,13 +160,14 @@ docs/                          # This documentation system
 1. `app/` may import `components/`, `features/`, `lib/`, `hooks/`, `context/`, `utils/`.
 2. `features/` may import `lib/`, `components/ui/`, `utils/`; it must **not** import from `app/`.
 3. `lib/` must not import from `app/`.
-4. Shared UI primitives live in `components/ui/` (to be created in Phase 2).
-5. Cross-cutting services live in `lib/` (HTTP, storage, env, logger); feature-specific
-   services live in `features/<domain>/api/`.
+4. Shared UI primitives live in `components/ui/` (`Button`, `Card`, `Modal`,
+   `PageShell`, `PageHeader`, `EmptyState`, `ErrorState`, `Skeleton`, `IconButton`).
+5. Cross-cutting services live in `lib/` (`http`, `storage`, `logger`, `env`,
+   Supabase) and external API clients live in `lib/services/<domain>/`.
+6. Shared domain types live in `types/`; `lib/` must not import from `app/`.
 
-> **Current violation to fix:** `hooks/*` import services from `app/(pages)/...`, and
-> `lib/sadaqaGarya/sadaqaGaryaStore.ts` imports a type from
-> `app/(pages)/sadaqa-garya/types`. This inversion is scheduled for Phase 2.
+> The previous `app/(pages)/.../service` and `types` folders have been moved to
+> `lib/services/` and `types/`. No `lib` → `app` imports remain.
 
 ---
 
@@ -195,7 +198,12 @@ player. Page-local UI state stays in the page/feature.
 
 ### Current `localStorage` keys
 
-These are **contracts** until a migration exists. Do not rename them silently.
+All browser storage access goes through `lib/storage.ts` (`readString`,
+`readNumber`, `readJSON`, `writeString`, `writeNumber`, `writeJSON`,
+`removeStorage`, `onStorageChange`). The inline pre-hydration script still reads
+directly because it must run before React.
+
+These keys are **contracts** until a migration exists. Do not rename them silently.
 
 | Key | Owner | Purpose |
 |---|---|---|
@@ -210,12 +218,14 @@ These are **contracts** until a migration exists. Do not rename them silently.
 | `favoriteRadioStations` | RadioContext | favorite station URLs |
 | `audioPlaybackRate` | QuranAudioContext | `1` / `0.75` / `0.5` |
 | `audioSkipMode` | AudioPlayer | skip by ayah or 15 seconds |
+| `audioRepeatSettings` | RepeatModePanel | repeat count + range behavior |
 | `preferredReciter` | AudioPlayer / search card | last reciter |
 | `tasbeeh_count` | TasbeehContext | current count |
 | `tasbeeh_goal` | TasbeehContext | goal |
 | `tasbeeh_input_value` | TasbeehContext | goal input draft |
 | `azkar_daily_counts` | ZekrCounterContext | `{ date, counts }` daily reset |
 | `selectedGovernorate` | Prayer times | selected Egyptian governorate |
+| `postSalahResetPrayer` | PrayerAzkarReset | last prayer period that reset post-salah azkar |
 | `sadaqaDeleteTokens` | Sadaqa | browser mirror of delete tokens |
 | `sadaqaGarya` | SadaqatContext | **legacy**, only removed |
 
@@ -308,8 +318,15 @@ including modals, favourites, tasbeeh, and the players. Phase 2 migrates them to
 
 - All colors are HSL CSS variables in `app/globals.css`, mapped to Tailwind via
   `@theme` (`--color-primary`, `--color-card`, `--color-quran-surface`, etc.).
-- Palettes: **teal** (default in CSS), **gold**, **emerald**, **midnight**, plus a
+- Palettes: **gold** (brand default), **teal**, **emerald**, **midnight**, plus a
   custom hue. Light and dark variants exist.
+- Default palette/hue constants are exported from `paletteEngine.ts`
+  (`DEFAULT_PALETTE`, `DEFAULT_PALETTE_HUE`, `VALID_PALETTE_MODES`) and consumed by
+  both `PaletteContext` and the pre-hydration script. The first paint no longer
+  flashes teal → gold.
+- The CSS root remains a teal fallback for no-JS, and palette values are still
+  duplicated across `globals.css`, `themeScript`, and `paletteEngine`; full value
+  consolidation is Phase 2c.
 - `utils/paletteEngine.ts` can generate inline CSS variables for custom hues.
 - `utils/themeScript.tsx` applies theme/palette/direction before hydration.
 - `PaletteContext` applies and persists the selection.
@@ -335,6 +352,7 @@ Use semantic tokens only:
 - Player: `player-bg`, `player-foreground`, `player-control`, `player-track`
 - Quran: `quran-surface`, `quran-highlight`, `quran-highlight-soft`
 - Prayer/celebration: `prayer-times-next-*`, `celebration-*`
+- Status: `success`, `success-foreground`, `info`, `info-foreground`, `live`
 
 **Do not add raw Tailwind colors** (`green-500`, `blue-600`, `slate-800`, `white`)
 for semantic UI. Add a token instead.
@@ -352,8 +370,23 @@ for semantic UI. Add a token instead.
   text-primary`.
 - Active nav: `border-primary/30 bg-primary/10 text-primary`.
 
-These patterns are currently duplicated; Phase 2 extracts `PageShell`, `PageHeader`,
-`Card`, `Button`, `IconButton`, `Modal`, `EmptyState`, `ErrorState`, and `Skeleton`.
+Shared primitives now live in `components/ui/`:
+
+| Primitive | Use |
+|---|---|
+| `PageShell` | Page background, width container, bottom padding |
+| `PageHeader` | Page title, subtitle, optional icon |
+| `Card` | Standard surface; `interactive` adds hover motion |
+| `Button` | `primary`, `secondary`, `ghost`, `outline`, `destructive` variants |
+| `IconButton` | Icon-only action with a required accessible label |
+| `Modal` | Headless UI dialog: focus trap, Escape, ARIA, RTL close button |
+| `EmptyState` / `ErrorState` | Consistent empty and failure states |
+| `Skeleton` | Loading placeholder |
+
+Prefer these for new UI. All feature pages now use `PageShell` and `PageHeader`;
+`Card`/`Button`/`IconButton`/`EmptyState`/`ErrorState`/`Skeleton` are used across the
+shared components and migrated pages. The full-screen reciter player and the Quran
+renderer keep specialized layouts by design.
 
 ### RTL rules
 
@@ -395,16 +428,24 @@ These patterns are currently duplicated; Phase 2 extracts `PageShell`, `PageHead
 
 ### Data fetching
 
-- One HTTP wrapper (Phase 2) with timeout, error normalization, and optional retry.
-- No direct `fetch`/`axios` in components; use a feature service/hook.
+- Use `lib/http.ts` (`fetchJson`, `fetchArrayBuffer`, `fetchBlob`) for external
+  requests. It adds a 15s timeout, normalizes non-OK responses into `HttpError`, and
+  keeps error handling consistent.
+- External API clients live in `lib/services/<domain>/`; components and hooks import
+  them, never the reverse.
+- No direct `fetch`/`axios` in components; use a feature service/hook. `axios` has
+  been removed from the project.
 - Always handle loading, empty, error, and success.
 - Do not statically import large JSON into client code; fetch from `public/` or
-  precompute server-side.
+  precompute server-side. The 1.54 MB audio-duration file now lives in
+  `public/data/listenQuran/` and is fetched lazily.
 
 ### Logging
 
-- `console.*` is stripped in production by `next.config.mjs`, but it is still noise
-  in development. Use a small `lib/logger` (Phase 2) with levels.
+- Use `lib/logger.ts` instead of `console.*` in new code. `next.config.mjs` still
+  strips console output from production builds.
+- Existing `console.*` calls are being removed incrementally; the data/services
+  already migrated use the logger.
 - Never log secrets, tokens, cookies, or full Supabase responses.
 
 ### Naming
@@ -419,7 +460,7 @@ These patterns are currently duplicated; Phase 2 extracts `PageShell`, `PageHead
 ### Formatting
 
 - 2 spaces, double quotes, semicolons (match the majority style).
-- Prettier will be the authority in Phase 1.
+- Prettier is the formatting authority; the repository has been formatted.
 
 ---
 
@@ -505,8 +546,9 @@ can access the table. The service-role key must never be exposed to the browser.
 | `NEXT_PUBLIC_HADITH_API_KEY` | server fallback | no | Legacy fallback; prefer the non-public name |
 | `NEXT_PUBLIC_HADITH_API_BASE_URL` | server fallback | no | Legacy fallback |
 
-`supabaseGaryaStore` validates the Supabase config lazily and throws a clear error
-if it is missing. `lib/env.ts` with Zod validation is planned for Phase 2.
+`lib/env.ts` validates Supabase and Hadith environment variables lazily with Zod,
+so missing configuration produces a clear server-side error without breaking the
+build.
 
 ### Local commands
 
@@ -524,7 +566,7 @@ npm run test:watch
 npm run test:coverage
 npm run test:e2e       # Playwright (install browser once: npx playwright install chromium)
 npm run test:e2e:ui
-npm run format         # Prettier (not applied to the legacy code yet)
+npm run format         # Prettier
 npm run format:check
 npm run check          # typecheck + lint + tests
 ```
@@ -534,7 +576,7 @@ npm run check          # typecheck + lint + tests
 | Tool | Config | Notes |
 |---|---|---|
 | ESLint 9 | `eslint.config.mjs` | Flat config based on `eslint-config-next/core-web-vitals`. React Compiler hook rules are warnings until Phase 2. |
-| Prettier | `.prettierrc.json`, `.prettierignore` | Config is ready; a repo-wide formatting pass is deferred to Phase 2 to keep diffs reviewable. |
+| Prettier | `.prettierrc.json`, `.prettierignore` | Repo-wide formatting applied; run `npm run format` before merging. |
 | Vitest | `vitest.config.mts`, `tests/setup.ts` | jsdom, Testing Library, MSW server, v8 coverage. |
 | Playwright | `playwright.config.ts` | Chromium, local dev server, CI uses `next start` after a build. |
 | CI | `.github/workflows/ci.yml` | Typecheck, lint, unit/integration, build, then Playwright smoke + a11y. |
@@ -560,29 +602,34 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ---
 
-## 14. Quality status (as of 2026-11-17)
+## 14. Quality status (as of 2026-11-18)
 
-This is a **foundation** snapshot, not the target state.
+This is a **Phase 2 snapshot**, not the target state.
 
 | Area | Status |
 |---|---|
 | Typecheck | ✅ `npm run typecheck` passes. |
-| Lint | ✅ `npm run lint` passes with **0 errors / 112 warnings**. The new React Compiler hook rules are warnings until the Phase 2 hook refactor. |
-| Unit/integration | ✅ 7 test files, 36 tests (utils, security, cookies, search API, download allowlist, Loading). |
-| E2E/regression | ✅ 16 Playwright tests: 15 route smoke tests + 1 home-page axe scan. |
+| Lint | ✅ `npm run lint` passes with **0 errors / 109 warnings**. React Compiler hook warnings remain until the hook refactor. |
+| Unit/integration/component | ✅ 16 test files, 82 tests (utils, storage, HTTP, locales, i18n keys, env, security, cookies, API routes, UI primitives). |
+| E2E/regression | ✅ 22 Playwright tests: 20 route smoke tests (including dynamic routes) + 1 home-page axe scan + 1 missing-translation-key scan. |
 | CI | ✅ Workflow added; first GitHub run is pending. |
-| Error boundaries | ✅ `app/error.tsx` and `app/global-error.tsx` added. |
-| Metadata/SEO | ⚠️ Root metadata only; no sitemap/robots; `<html lang>` not updated. |
-| Performance | ⚠️ 2s hydration gate; 1.54 MB audio JSON in client; no `next/image`; fonts via `<link>`. |
-| Accessibility | ⚠️ Loading region labelled; modal focus trap/Escape/ARIA still pending. |
-| Security | ⚠️ Production dependency audit is clean; in-memory rate limit, raw errors, and security headers remain. |
-| React | ✅ React 19.3.1. The Next 16 React 18 deprecation warning is resolved. |
-| Dev dependencies | ⚠️ `npm audit` reports 19 high findings in dev-only tooling (`picomatch`, `brace-expansion`). No production findings. |
+| Error boundaries | ✅ `app/error.tsx` and `app/global-error.tsx`. |
+| SEO | ⚠️ Root metadata only; no sitemap/robots. `<html lang>` now updates with language. |
+| Performance | ⚠️ 2s hydration gate removed; audio durations lazy-loaded; 8.8 MB unused JSON removed. Still no `next/image`; fonts via `<link>`. |
+| Accessibility | ✅ `DeleteConfirmModal` uses Headless UI Dialog (focus trap/Escape/ARIA); data-table actions have labels; axe home scan passes. Broader scans are Phase 4. |
+| Storage | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility. |
+| Data layer | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports. |
+| i18n | ✅ All user-facing UI copy is localized. Remaining Arabic literals are data (prayer/month names, palette labels), decorative language badges, and the `global-error` bilingual fallback. A key-usage test + Playwright runtime scan prevent missing keys. |
+| Security | ✅ Production dependency audit is clean. ⚠️ In-memory rate limit, raw errors, and security headers remain (Phase 3). |
+| React | ✅ React 19.3.1. |
+| Dependencies | ✅ `npm audit` (including dev) reports **0 vulnerabilities**. |
 
 Phase records:
 
 - [Professional foundation](./changes/2026-11-17-professional-foundation.md)
 - [Tooling and test foundation](./changes/2026-11-17-tooling-and-test-foundation.md)
+- [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md)
+- [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)
 
 ---
 

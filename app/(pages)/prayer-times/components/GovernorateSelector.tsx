@@ -2,12 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faLocationDot,
-  faCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faLocationDot, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { egyptianGovernorates } from "@/constants/egyptianGovernorates";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface GovernorateSelectorProps {
   selectedGovernorate: { en: string; ar: string };
@@ -22,6 +19,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const handleSelect = (gov: { en: string; ar: string }) => {
     onGovernorateChange(gov);
@@ -38,8 +36,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
     };
 
     document.addEventListener("pointerdown", handleClickOutside);
-    return () =>
-      document.removeEventListener("pointerdown", handleClickOutside);
+    return () => document.removeEventListener("pointerdown", handleClickOutside);
   }, [isOpen]);
 
   useEffect(() => {
@@ -55,10 +52,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
   );
 
   return (
-    <div
-      className={`relative ${isOpen ? "z-[700]" : "z-10"}`}
-      ref={dropdownRef}
-    >
+    <div className={`relative ${isOpen ? "z-[700]" : "z-10"}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`group flex items-center gap-3 py-1 border-b border-border transition-all duration-200 hover:border-primary/60 ${isOpen ? "border-primary" : ""}`}
@@ -85,7 +79,7 @@ const GovernorateSelector: React.FC<GovernorateSelectorProps> = ({
         >
           <div className="px-4 py-3 bg-muted/50 border-b border-border">
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {language === "ar" ? "اختر المحافظة" : "Select Governorate"}
+              {t("common.selectGovernorate")}
             </p>
           </div>
 

@@ -28,9 +28,7 @@ export default function FavouriteSurahsTable() {
   }, [favoriteSurahs]);
 
   const handleNavigate = (surah: any) => {
-    router.push(
-      `/listen-quran/reciter/${surah.reciterId}?surah=${surah.number}`,
-    );
+    router.push(`/listen-quran/reciter/${surah.reciterId}?surah=${surah.number}`);
   };
 
   const columns = [
@@ -71,9 +69,7 @@ export default function FavouriteSurahsTable() {
       variant: "ghost" as const,
       onClick: () => {},
       customRender: (item: any) =>
-        shareUrls[item.number] ? (
-          <ShareModal url={shareUrls[item.number]} />
-        ) : null,
+        shareUrls[item.number] ? <ShareModal url={shareUrls[item.number]} /> : null,
     },
     {
       icon: <Trash2 className="w-4 h-4" />,
@@ -100,12 +96,8 @@ export default function FavouriteSurahsTable() {
                     removeFavoriteSurah(surah.number, surah.reciterId),
                   );
                 },
-                confirmationTitle:
-                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
-                confirmationDescription:
-                  language === "ar"
-                    ? "هل أنت متأكد من حذف كل السور المفضلة؟"
-                    : "Are you sure you want to clear all favourite surahs?",
+                confirmationTitle: t("common.confirmDeletion"),
+                confirmationDescription: t("favourites.surah.clearAllConfirm"),
               }
             : undefined
         }
@@ -113,14 +105,10 @@ export default function FavouriteSurahsTable() {
 
       <DeleteConfirmModal
         isOpen={!!deleteTarget}
-        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
-        description={
-          language === "ar"
-            ? "هل أنت متأكد من حذف هذه السورة من المفضلة؟"
-            : "Are you sure you want to remove this surah from favourites?"
-        }
-        confirmText={language === "ar" ? "حذف" : "Delete"}
-        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        title={t("common.confirmDeletion")}
+        description={t("favourites.surah.removeConfirm")}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
         onConfirm={() => {
           if (deleteTarget) {
             removeFavoriteSurah(deleteTarget.number, deleteTarget.reciterId);

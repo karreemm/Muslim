@@ -23,10 +23,7 @@ interface AzkarPageProps {
   categoryId: string;
 }
 
-export default function DisplayAzkar({
-  startingNumber,
-  categoryId,
-}: AzkarPageProps) {
+export default function DisplayAzkar({ startingNumber, categoryId }: AzkarPageProps) {
   const { language } = useLanguage();
   const isMdOrLarger = useMediaQuery("(min-width: 768px)");
   const isArabic = language === "ar";
@@ -66,9 +63,7 @@ export default function DisplayAzkar({
                   <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
                     <FontAwesomeIcon icon={faHashtag} className="text-xs" />
                     <span>
-                      {isArabic
-                        ? `${toArabicNumber(azkar.number!)}`
-                        : `${azkar.number}`}
+                      {isArabic ? `${toArabicNumber(azkar.number!)}` : `${azkar.number}`}
                     </span>
                   </div>
 

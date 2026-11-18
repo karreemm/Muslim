@@ -8,7 +8,6 @@ type InstallFlowSectionProps = {
 };
 
 export default function InstallFlowSection({ t }: InstallFlowSectionProps) {
-
   const { language } = useLanguage();
 
   return (
@@ -30,7 +29,9 @@ export default function InstallFlowSection({ t }: InstallFlowSectionProps) {
               key={step}
               className="relative rounded-xl border border-border bg-background/90 p-4 shadow-sm"
             >
-              <div className={`absolute -top-2 ${language === "ar" ? "-right-1" : "-left-1"}`}>
+              <div
+                className={`absolute -top-2 ${language === "ar" ? "-right-1" : "-left-1"}`}
+              >
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-md">
                   {step}
                 </div>

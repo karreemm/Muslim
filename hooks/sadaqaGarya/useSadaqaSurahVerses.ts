@@ -38,9 +38,9 @@ const uniqueSurahNumbers = Array.from(
 );
 
 export default function useSadaqaSurahVerses() {
-  const [versesByCard, setVersesByCard] = useState<
-    Record<number, SadaqaQuranVerse[]>
-  >({});
+  const [versesByCard, setVersesByCard] = useState<Record<number, SadaqaQuranVerse[]>>(
+    {},
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

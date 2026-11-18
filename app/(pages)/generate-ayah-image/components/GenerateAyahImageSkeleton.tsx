@@ -1,24 +1,27 @@
+import { PageShell } from "@/components/ui/PageShell";
+import { Skeleton } from "@/components/ui/Skeleton";
+
 export default function GenerateAyahImageSkeleton() {
   return (
-    <div className="w-full min-h-screen bg-background text-foreground pb-20">
-      <div className="w-[92%] max-w-7xl mx-auto pt-10 animate-pulse">
-        <div className="h-10 w-64 bg-muted rounded-lg mb-3" />
-        <div className="h-5 w-96 bg-muted rounded-lg mb-8" />
+    <PageShell>
+      <div className="animate-pulse">
+        <Skeleton className="mb-3 h-10 w-64" />
+        <Skeleton className="mb-8 h-5 w-96" />
 
-        <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6">
-          <div className="bg-card/70 border border-border/50 rounded-2xl p-5 space-y-4">
-            <div className="h-20 bg-muted rounded-xl" />
-            <div className="h-20 bg-muted rounded-xl" />
-            <div className="h-24 bg-muted rounded-xl" />
-            <div className="h-24 bg-muted rounded-xl" />
-            <div className="h-12 bg-muted rounded-xl" />
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[420px_1fr]">
+          <div className="space-y-4 rounded-2xl border border-border/50 bg-card/70 p-5">
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-12 rounded-xl" />
           </div>
 
-          <div className="bg-card/70 border border-border/50 rounded-2xl p-5">
-            <div className="h-[560px] w-full bg-muted rounded-xl" />
+          <div className="rounded-2xl border border-border/50 bg-card/70 p-5">
+            <Skeleton className="h-[560px] w-full rounded-xl" />
           </div>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

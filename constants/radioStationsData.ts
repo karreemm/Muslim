@@ -917,10 +917,9 @@ export const radioStations: RadioStation[] = [
   },
 ];
 
-export const categoryLabels: Record<RadioCategory, { ar: string; en: string }> =
-  {
-    main: { ar: "المحطات الرئيسية", en: "Main Stations" },
-    thematic: { ar: "القنوات المتخصصة", en: "Specialised Channels" },
-    reciters: { ar: "القرّاء", en: "Reciters" },
-    translations: { ar: "الترجمات", en: "Translations" },
-  };
+export const categoryLabels: Record<RadioCategory, { ar: string; en: string }> = {
+  main: { ar: "المحطات الرئيسية", en: "Main Stations" },
+  thematic: { ar: "القنوات المتخصصة", en: "Specialised Channels" },
+  reciters: { ar: "القرّاء", en: "Reciters" },
+  translations: { ar: "الترجمات", en: "Translations" },
+};

@@ -4,6 +4,7 @@ import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "next/link";
 import { surahNames, juzNames } from "../../../constants/quranData";
 import QuranNavbar from "./components/general/QuranNavbar";
+import { PageShell } from "@/components/ui/PageShell";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -26,14 +27,14 @@ export default function ReadQuran() {
   );
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground pb-20">
+    <>
       <QuranNavbar
         onTabChange={(tabName) => setActiveTab(tabName)}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />
 
-      <div className="relative z-10 w-[92%] max-w-7xl mx-auto mt-8">
+      <PageShell containerClassName="mt-8">
         <div className="mb-6 text-sm text-muted-foreground">
           {activeTab === "Surahs"
             ? `${filteredSurahs.length} ${t("common.surahs")}`
@@ -65,9 +66,7 @@ export default function ReadQuran() {
                         <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
                           {surah[language as keyof typeof surah]}
                         </h3>
-                        <p className="text-sm text-muted-foreground mt-0.5">
-                          {surah.en}
-                        </p>
+                        <p className="text-sm text-muted-foreground mt-0.5">{surah.en}</p>
                       </div>
                     </div>
 
@@ -120,7 +119,7 @@ export default function ReadQuran() {
             <p className="text-lg">{t("common.noResults")}</p>
           </div>
         )}
-      </div>
-    </div>
+      </PageShell>
+    </>
   );
 }

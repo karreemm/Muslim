@@ -1,6 +1,7 @@
 "use client";
 
 import { Send } from "lucide-react";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface SadaqaSubmitSectionProps {
   mounted: boolean;
@@ -71,9 +72,7 @@ export default function SadaqaSubmitSection({
           }
         `}
       >
-        {language === "en"
-          ? "Please fill in both name fields to continue"
-          : "يرجى ملء كلا حقلي الاسم لمواصلة"}
+        {translate(language, "sadaqa.form.nameRequired")}
       </div>
     </div>
   );

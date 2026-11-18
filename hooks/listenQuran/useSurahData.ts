@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchSurahByNumber,
-  Surah,
-} from "../../app/(pages)/listen-quran/service/GetSurah";
+import { fetchSurahByNumber, Surah } from "@/lib/services/listenQuran/GetSurah";
 
 export function useSurahData(surahNumber: number, reciterId: string) {
   const [surah, setSurah] = useState<Surah | null>(null);
@@ -46,10 +43,7 @@ export function useSurahData(surahNumber: number, reciterId: string) {
           try {
             setLoading(true);
             setError(null);
-            const fetchedSurah = await fetchSurahByNumber(
-              surahNumber,
-              reciterId
-            );
+            const fetchedSurah = await fetchSurahByNumber(surahNumber, reciterId);
             setSurah(fetchedSurah || null);
           } catch (error) {
             console.error("Error refetching Surah:", error);

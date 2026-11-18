@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { useLanguage } from "../../context/general/LanguageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronRight,
-  faChevronLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { toArabicNumber } from "../../utils/helpers";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -100,9 +97,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {generateDesktopPages().map((item, idx) => (
           <div key={idx}>
             {item === "..." ? (
-              <span className="px-2 text-muted-foreground text-lg font-bold">
-                •••
-              </span>
+              <span className="px-2 text-muted-foreground text-lg font-bold">•••</span>
             ) : (
               <button
                 onClick={() => handlePageClick(Number(item))}

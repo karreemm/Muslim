@@ -2,5 +2,7 @@
   "title": "You will find all the Ayahs you have saved here",
   "noSavedAyahs": "You don't have any saved Ayahs",
   "clearAll": "Clear All Saved Ayahs",
-  "ayahNumber": "Ayah Number"
+  "ayahNumber": "Ayah Number",
+  "clearAllConfirm": "Are you sure you want to clear all saved ayahs?",
+  "removeConfirm": "Are you sure you want to remove this ayah?"
 }

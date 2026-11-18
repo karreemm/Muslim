@@ -43,12 +43,12 @@ export function slugify(text: string): string {
 
 export const removeDiacritics = (text: string): string => {
   return text
-    .replace(/[\u064B-\u065F]/g, "") 
-    .replace(/\u0670/g, "") 
-    .replace(/[\u06D6-\u06ED]/g, "") 
-    .replace(/\u0640/g, "") 
-    .replace(/\u0671/g, "\u0627") 
-    .replace(/[\u0622\u0623\u0625]/g, "\u0627") 
-    .replace(/\s+/g, " ") 
+    .replace(/[\u064B-\u065F]/g, "")
+    .replace(/\u0670/g, "")
+    .replace(/[\u06D6-\u06ED]/g, "")
+    .replace(/\u0640/g, "")
+    .replace(/\u0671/g, "\u0627")
+    .replace(/[\u0622\u0623\u0625]/g, "\u0627")
+    .replace(/\s+/g, " ")
     .trim();
 };

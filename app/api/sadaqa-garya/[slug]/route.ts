@@ -13,10 +13,7 @@ import {
 
 export const runtime = "nodejs";
 
-export async function GET(
-  _req: Request,
-  context: { params: Promise<{ slug: string }> },
-) {
+export async function GET(_req: Request, context: { params: Promise<{ slug: string }> }) {
   const { slug: rawSlug } = await context.params;
   const slug = decodeURIComponent(rawSlug || "").trim();
 
@@ -59,8 +56,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
-  const headerDeleteToken =
-    req.headers.get("x-sadaqa-delete-token")?.trim() || "";
+  const headerDeleteToken = req.headers.get("x-sadaqa-delete-token")?.trim() || "";
   const cookieDeleteToken = getDeleteTokenFromRequest(req, slug);
   const deleteToken = headerDeleteToken || cookieDeleteToken;
   if (!deleteToken) {

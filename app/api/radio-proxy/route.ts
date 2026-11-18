@@ -26,10 +26,7 @@ export async function GET(request: Request) {
   }
 
   if (!isAllowedRadioUrl(rawUrl)) {
-    return NextResponse.json(
-      { error: "Radio URL not allowed" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Radio URL not allowed" }, { status: 400 });
   }
 
   try {
@@ -56,9 +53,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("GET /radio-proxy error:", error);
-    return NextResponse.json(
-      { error: "Failed to proxy radio stream" },
-      { status: 502 },
-    );
+    return NextResponse.json({ error: "Failed to proxy radio stream" }, { status: 502 });
   }
 }

@@ -9,6 +9,7 @@ import {
   useState,
   startTransition,
 } from "react";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 
 interface LanguageContextType {
   language: string;
@@ -30,11 +31,13 @@ const LanguageContextProvider = ({ children }: IProps) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedLanguage = localStorage.getItem("language");
+      const savedLanguage = readString(STORAGE_KEYS.language);
+      const nextLanguage = savedLanguage === "en" ? "en" : "ar";
       if (savedLanguage) {
-        setLanguage(savedLanguage);
-        setDir(savedLanguage === "en" ? "ltr" : "rtl");
-        document.documentElement.dir = savedLanguage === "en" ? "ltr" : "rtl";
+        setLanguage(nextLanguage);
+        setDir(nextLanguage === "en" ? "ltr" : "rtl");
+        document.documentElement.dir = nextLanguage === "en" ? "ltr" : "rtl";
+        document.documentElement.lang = nextLanguage;
       }
     }
     setIsHydrated(true);
@@ -44,8 +47,9 @@ const LanguageContextProvider = ({ children }: IProps) => {
     const newLanguage = language === "ar" ? "en" : "ar";
     const newDir = newLanguage === "ar" ? "rtl" : "ltr";
     document.documentElement.dir = newDir;
+    document.documentElement.lang = newLanguage;
     if (typeof window !== "undefined") {
-      localStorage.setItem("language", newLanguage);
+      writeString(STORAGE_KEYS.language, newLanguage);
     }
     startTransition(() => {
       setLanguage(newLanguage);
@@ -60,11 +64,7 @@ const LanguageContextProvider = ({ children }: IProps) => {
     isHydrated,
   };
 
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 };
 
 export default LanguageContextProvider;
@@ -72,9 +72,7 @@ export default LanguageContextProvider;
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === null) {
-    throw new Error(
-      "useLanguage must be used within a LanguageContextProvider",
-    );
+    throw new Error("useLanguage must be used within a LanguageContextProvider");
   }
   return context;
 };

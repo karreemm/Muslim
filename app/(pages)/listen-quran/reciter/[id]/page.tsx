@@ -4,10 +4,7 @@ import { useLanguage } from "@/context/general/LanguageContext";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "../../components/Sidebar";
-import {
-  useReciterSurahSelection,
-  useFavoriteSurahActions,
-} from "@/hooks/listenQuran";
+import { useReciterSurahSelection, useFavoriteSurahActions } from "@/hooks/listenQuran";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -23,6 +20,7 @@ import {
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import ShareModal from "@/components/modals/ShareModal";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
+import { PageShell } from "@/components/ui/PageShell";
 
 export default function ReciterPage() {
   const { language } = useLanguage();
@@ -67,13 +65,11 @@ export default function ReciterPage() {
   );
 
   const handlePreviousSurah = () => {
-    if (selectedSurah && selectedSurah > 1)
-      handleSurahChange(selectedSurah - 1);
+    if (selectedSurah && selectedSurah > 1) handleSurahChange(selectedSurah - 1);
   };
 
   const handleNextSurah = () => {
-    if (selectedSurah && selectedSurah < 114)
-      handleSurahChange(selectedSurah + 1);
+    if (selectedSurah && selectedSurah < 114) handleSurahChange(selectedSurah + 1);
   };
 
   const canGoPreviousSurah = selectedSurah ? selectedSurah > 1 : false;
@@ -81,8 +77,8 @@ export default function ReciterPage() {
   const isCurrentlyPlaying = isPlaying && surahNumber === selectedSurah;
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground relative overflow-hidden">
-      <div className="flex flex-1 relative min-h-screen z-10">
+    <PageShell className="pb-0" containerClassName="w-full max-w-none p-0 pt-0">
+      <div className="relative z-10 flex min-h-screen flex-1">
         <Sidebar
           onSurahSelect={handleSurahChange}
           selectedSurah={selectedSurah}
@@ -113,7 +109,7 @@ export default function ReciterPage() {
                         ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
                         : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
                     }`}
-                  title={isArabic ? "السورة السابقة" : "Previous Surah"}
+                  title={t("listenQuran.player.surahPrev")}
                 >
                   <FontAwesomeIcon
                     icon={isArabic ? faChevronRight : faChevronLeft}
@@ -126,9 +122,12 @@ export default function ReciterPage() {
 
                   <div className="relative z-10">
                     <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2 ">
-                      {isArabic
-                        ? `سورة ${selectedSurahNameAr}`
-                        : `Surah ${selectedSurahNameEn}`}
+                      {t("readQuran.surahWithName", {
+                        name:
+                          (language === "ar"
+                            ? selectedSurahNameAr
+                            : selectedSurahNameEn) ?? "",
+                      })}
                     </h1>
 
                     <div className="flex items-center justify-center gap-2 text-muted-foreground mt-2 sm:mt-4">
@@ -137,9 +136,9 @@ export default function ReciterPage() {
                         className="text-xs sm:text-sm"
                       />
                       <p className="text-sm sm:text-base md:text-lg">
-                        {isArabic
-                          ? `الشيخ ${reciterNameAr}`
-                          : `Sheikh ${reciterNameEn}`}
+                        {t("listenQuran.player.reciterTitle", {
+                          name: language === "ar" ? reciterNameAr : reciterNameEn,
+                        })}
                       </p>
                     </div>
                   </div>
@@ -154,7 +153,7 @@ export default function ReciterPage() {
                         ? "bg-card border-border text-primary shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
                         : "bg-muted/50 border-transparent text-muted-foreground cursor-not-allowed opacity-50"
                     }`}
-                  title={isArabic ? "السورة التالية" : "Next Surah"}
+                  title={t("listenQuran.player.surahNext")}
                 >
                   <FontAwesomeIcon
                     icon={isArabic ? faChevronLeft : faChevronRight}
@@ -194,6 +193,6 @@ export default function ReciterPage() {
           <div className="h-24 shrink-0" />
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

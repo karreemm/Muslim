@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageSquare } from "lucide-react";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface SadaqaMessageFieldsProps {
   mounted: boolean;
@@ -39,7 +40,7 @@ export default function SadaqaMessageFields({
           onChange={(e) => onMessageEnChange(e.target.value)}
           className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
           dir="ltr"
-          placeholder="Write a heartfelt message..."
+          placeholder={translate("en", "sadaqa.form.messagePlaceholder")}
         />
       </div>
 
@@ -59,7 +60,7 @@ export default function SadaqaMessageFields({
           onChange={(e) => onMessageArChange(e.target.value)}
           className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
           dir="rtl"
-          placeholder="اكتب رسالة من القلب..."
+          placeholder={translate("ar", "sadaqa.form.messagePlaceholder")}
         />
       </div>
     </div>

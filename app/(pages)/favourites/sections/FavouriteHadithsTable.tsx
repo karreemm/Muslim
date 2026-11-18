@@ -59,10 +59,8 @@ export default function FavouriteHadithsTable() {
           {idx === 0 && (
             <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="mt-0.5">
-                {t("common.latest")}
-              </span>
-              </span>
+              <span className="mt-0.5">{t("common.latest")}</span>
+            </span>
           )}
           <span className="font-mono font-medium text-foreground">
             {language === "ar" ? item.numberAr : item.numberEn}
@@ -75,9 +73,7 @@ export default function FavouriteHadithsTable() {
       title: t("common.book"),
       align: "center" as const,
       render: (item: any) => (
-        <span className="font-medium text-foreground">
-          {getBookName(item.bookId)}
-        </span>
+        <span className="font-medium text-foreground">{getBookName(item.bookId)}</span>
       ),
     },
     {
@@ -135,12 +131,8 @@ export default function FavouriteHadithsTable() {
                     removeFavoriteHadith(hadith.numberEn, hadith.bookId),
                   );
                 },
-                confirmationTitle:
-                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
-                confirmationDescription:
-                  language === "ar"
-                    ? "هل أنت متأكد من حذف كل الأحاديث المفضلة؟"
-                    : "Are you sure you want to clear all favourite hadiths?",
+                confirmationTitle: t("common.confirmDeletion"),
+                confirmationDescription: t("favourites.hadith.clearAllConfirm"),
               }
             : undefined
         }
@@ -149,14 +141,10 @@ export default function FavouriteHadithsTable() {
 
       <DeleteConfirmModal
         isOpen={!!deleteTarget}
-        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
-        description={
-          language === "ar"
-            ? "هل أنت متأكد من حذف هذا الحديث من المفضلة؟"
-            : "Are you sure you want to remove this hadith from favourites?"
-        }
-        confirmText={language === "ar" ? "حذف" : "Delete"}
-        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        title={t("common.confirmDeletion")}
+        description={t("favourites.hadith.removeConfirm")}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
         onConfirm={() => {
           if (deleteTarget) {
             removeFavoriteHadith(deleteTarget.numberEn, deleteTarget.bookId);

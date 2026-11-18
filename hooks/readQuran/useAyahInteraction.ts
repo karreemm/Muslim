@@ -63,15 +63,12 @@ export const useAyahInteraction = (verses: QuranVerse[]) => {
   const handleSaveAyah = useCallback(() => {
     if (!selectedVerseKey) return;
 
-    const { surah: surahNumber, ayah: ayahNumber } =
-      getSurahAndAyah(selectedVerseKey);
+    const { surah: surahNumber, ayah: ayahNumber } = getSurahAndAyah(selectedVerseKey);
 
     const verse = verses.find((v) => v.verse_key === selectedVerseKey);
     if (!verse) return;
 
-    const text = verse.words
-      .map((word) => word.text_uthmani || word.code_v2)
-      .join(" ");
+    const text = verse.words.map((word) => word.text_uthmani || word.code_v2).join(" ");
 
     const surahInfo = surahNames.find((s) => s.number === surahNumber);
     if (!surahInfo) return;
@@ -90,7 +87,7 @@ export const useAyahInteraction = (verses: QuranVerse[]) => {
 
   const handleOpenTafseer = useCallback(() => {
     setShowTafseerModal(true);
-    setSelectedVerseKey(null); 
+    setSelectedVerseKey(null);
   }, []);
 
   const handleOpenTranslation = useCallback(() => {

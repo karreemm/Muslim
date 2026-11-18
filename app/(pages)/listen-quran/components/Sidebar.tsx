@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faX,
-  faMagnifyingGlass,
-  faBookOpen,
-} from "@fortawesome/free-solid-svg-icons";
+import { faX, faMagnifyingGlass, faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "../../../../constants/quranData";
 import { useLanguage } from "../../../../context/general/LanguageContext";
 import { toArabicNumber } from "../../../../utils/helpers";
@@ -61,31 +57,31 @@ const Sidebar: React.FC<SidebarProps> = ({
       aria-label={t("listenQuran.sidebar.title")}
     >
       <div className="flex h-full min-h-0 flex-col pb-24 md:pb-28">
-      <div className="sticky top-0 z-10 border-b border-border/70 bg-background/90 px-3 py-3 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleSidebar}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
-            aria-label={isExpanded ? "Collapse surah list" : "Expand surah list"}
-          >
-            <FontAwesomeIcon
-              icon={isExpanded ? faX : faMagnifyingGlass}
-              className="text-lg"
-            />
-          </button>
+        <div className="sticky top-0 z-10 border-b border-border/70 bg-background/90 px-3 py-3 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleSidebar}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+              aria-label={isExpanded ? "Collapse surah list" : "Expand surah list"}
+            >
+              <FontAwesomeIcon
+                icon={isExpanded ? faX : faMagnifyingGlass}
+                className="text-lg"
+              />
+            </button>
 
-          {isExpanded && (
-            <input
-              type="search"
-              placeholder={t("listenQuran.sidebar.searchPlaceholder")}
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full rounded-xl border border-input bg-card px-3 py-2 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
-              aria-label={t("listenQuran.sidebar.searchPlaceholder")}
-            />
-          )}
+            {isExpanded && (
+              <input
+                type="search"
+                placeholder={t("listenQuran.sidebar.searchPlaceholder")}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full rounded-xl border border-input bg-card px-3 py-2 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
+                aria-label={t("listenQuran.sidebar.searchPlaceholder")}
+              />
+            )}
+          </div>
         </div>
-      </div>
 
         {isExpanded && (
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-4">
@@ -100,15 +96,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                         ? "border-primary/60 bg-primary/10"
                         : "border-border/80 bg-card/40 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-secondary"
                     }`}
-                    aria-current={
-                      selectedSurah === surah.number ? "true" : "false"
-                    }
+                    aria-current={selectedSurah === surah.number ? "true" : "false"}
                   >
                     <span className="flex items-center gap-3">
                       <span className="inline-flex h-10 min-w-12 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
-                        {language === "en"
-                          ? surah.number
-                          : toArabicNumber(surah.number)}
+                        {language === "en" ? surah.number : toArabicNumber(surah.number)}
                       </span>
                       <span className="truncate text-base md:text-lg text-foreground">
                         {language === "en" ? surah.en : surah.ar}
@@ -118,9 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 ))
               ) : (
                 <p className="rounded-xl border border-border/80 bg-card/40 px-3 py-4 text-center text-sm text-muted-foreground">
-                  {language === "ar"
-                    ? "لا توجد نتائج مطابقة"
-                    : "No matching surahs found"}
+                  {t("listenQuran.noMatchingResults")}
                 </p>
               )}
             </div>

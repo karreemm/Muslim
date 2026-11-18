@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { reciters } from "@/constants/recitersData";
 import PlayerIconButton from "@/components/general/PlayerIconButton";
+import { STORAGE_KEYS, writeString } from "@/lib/storage";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 interface AudioPlayerReciterDropdownProps {
   language: string;
@@ -33,6 +35,7 @@ export default function AudioPlayerReciterDropdown({
   align,
 }: AudioPlayerReciterDropdownProps) {
   const isArabic = language === "ar";
+  const { t } = useTranslation();
   const menuAlignClass =
     align === "start"
       ? "left-0"
@@ -63,7 +66,7 @@ export default function AudioPlayerReciterDropdown({
           disabled={isListenPage}
           buttonRef={micBtnRef}
           onClick={() => setShowReciterDropdown(!showReciterDropdown)}
-          tooltip={language === "ar" ? "تغيير القارئ" : "Change Reciter"}
+          tooltip={t("listenQuran.player.changeReciter")}
           className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${showReciterDropdown && !isListenPage ? "text-primary bg-secondary ring-2 ring-primary/20" : isListenPage ? "cursor-not-allowed text-muted-foreground/40" : "text-muted-foreground hover:text-primary hover:bg-secondary"}`}
         >
           <FontAwesomeIcon icon={faMicrophone} className="text-sm" />
@@ -77,7 +80,7 @@ export default function AudioPlayerReciterDropdown({
         >
           <div className="px-4 py-3 bg-muted/50 border-b border-border">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {language === "ar" ? "اختيار القارئ" : "Select Reciter"}
+              {t("listenQuran.player.selectReciter")}
             </span>
           </div>
           <div className="max-h-72 overflow-y-auto py-1">
@@ -86,7 +89,7 @@ export default function AudioPlayerReciterDropdown({
                 key={r.id}
                 onClick={() => {
                   onReciterChange(r.id);
-                  localStorage.setItem("preferredReciter", r.id);
+                  writeString(STORAGE_KEYS.preferredReciter, r.id);
                   setShowReciterDropdown(false);
                 }}
                 className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3 ${r.id === reciterId ? "bg-primary/10 text-primary font-semibold border-r-2 border-primary" : "text-foreground hover:bg-muted"}`}

@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { reciters } from "@/constants/recitersData";
 import { surahNames } from "@/constants/quranData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,11 +26,7 @@ import {
   faSpinner,
   faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  useSurahData,
-  useAudioPlayer,
-  useSurahDownload,
-} from "@/hooks/listenQuran";
+import { useSurahData, useAudioPlayer, useSurahDownload } from "@/hooks/listenQuran";
 import PlayerIconButton from "@/components/general/PlayerIconButton";
 import { ClipLoader } from "react-spinners";
 import AudioPlayerProgressBar from "@/components/general/audio-player/AudioPlayerProgressBar";
@@ -105,12 +103,8 @@ export const AudioPlayer = () => {
   const [showRepeatSheet, setShowRepeatSheet] = useState(false);
   const [showSpeedSheet, setShowSpeedSheet] = useState(false);
   const [showSpeedDropdown, setShowSpeedDropdown] = useState(false);
-  const [speedDropdownSide, setSpeedDropdownSide] = useState<"left" | "right">(
-    "right",
-  );
-  const [repeatDropdownSide, setRepeatDropdownSide] = useState<
-    "left" | "right"
-  >("right");
+  const [speedDropdownSide, setSpeedDropdownSide] = useState<"left" | "right">("right");
+  const [repeatDropdownSide, setRepeatDropdownSide] = useState<"left" | "right">("right");
   const [isMuted, setIsMuted] = useState(false);
   const [skipMode, setSkipMode] = useState<"verse" | "15sec">("verse");
 
@@ -119,14 +113,14 @@ export const AudioPlayer = () => {
   const [repeatInitial, setRepeatInitial] = useState<RepeatPanelInitial>({});
 
   useEffect(() => {
-    const saved = localStorage.getItem("audioSkipMode");
+    const saved = readString(STORAGE_KEYS.audioSkipMode);
     if (saved === "15sec" || saved === "verse") {
       setSkipMode(saved);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("audioSkipMode", skipMode);
+    writeString(STORAGE_KEYS.audioSkipMode, skipMode);
   }, [skipMode]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -245,11 +239,7 @@ interface InnerProps {
   setCurrentAyahTime: (v: number) => void;
   setCurrentAyahDuration: (v: number) => void;
   surahQueue: number[];
-  playSurah: (
-    surahNumber: number,
-    reciterId?: string,
-    queue?: number[],
-  ) => void;
+  playSurah: (surahNumber: number, reciterId?: string, queue?: number[]) => void;
   playTrigger: number;
   playAyahTrigger: number;
   requestedAyahIndex: number | null;
@@ -363,6 +353,9 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   skipMode,
   setSkipMode,
 }) => {
+  const { t } = useTranslation();
+  const displayNumber = (value: number) =>
+    language === "ar" ? toArabicNumber(value) : String(value);
   const { surah, loading } = useSurahData(surahNumber, reciterId);
   const {
     audioPlayer,
@@ -413,15 +406,11 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
         : surahNames[surahNumber - 1].en
       : "";
   const currentReciter = reciters.find((r) => r.id === reciterId);
-  const reciterName =
-    language === "ar" ? currentReciter?.NameAr : currentReciter?.NameEn;
+  const reciterName = language === "ar" ? currentReciter?.NameAr : currentReciter?.NameEn;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)
         return;
       switch (e.code) {
         case "Space":
@@ -453,8 +442,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
       handleClose();
     };
     window.addEventListener("radio:started", handleRadioStarted);
-    return () =>
-      window.removeEventListener("radio:started", handleRadioStarted);
+    return () => window.removeEventListener("radio:started", handleRadioStarted);
   }, []);
 
   useEffect(() => {
@@ -481,8 +469,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
   useEffect(() => {
     if (requestedAyahIndex === null || loading || !surah) return;
-    if (requestedAyahIndex < 0 || requestedAyahIndex >= surah.ayahs.length)
-      return;
+    if (requestedAyahIndex < 0 || requestedAyahIndex >= surah.ayahs.length) return;
     playAyah(requestedAyahIndex);
   }, [playAyahTrigger, requestedAyahIndex, loading, surah]);
 
@@ -539,10 +526,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (
-        mobileSheetRef.current &&
-        !mobileSheetRef.current.contains(e.target as Node)
-      ) {
+      if (mobileSheetRef.current && !mobileSheetRef.current.contains(e.target as Node)) {
         setShowMobileSheet(false);
         setShowReciterSheet(false);
       }
@@ -623,14 +607,10 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   const repeatStatus = (() => {
     if (!repeatConfig) return null;
     const reps =
-      repeatConfig.repeatsPerAyah === Infinity
-        ? Infinity
-        : repeatConfig.repeatsPerAyah;
+      repeatConfig.repeatsPerAyah === Infinity ? Infinity : repeatConfig.repeatsPerAyah;
     const repsDisplay = reps === Infinity ? "∞" : String(reps);
     const currentRep =
-      reps === Infinity
-        ? currentRepeatCount + 1
-        : Math.min(currentRepeatCount + 1, reps);
+      reps === Infinity ? currentRepeatCount + 1 : Math.min(currentRepeatCount + 1, reps);
     return { repsDisplay, currentRep };
   })();
 
@@ -641,9 +621,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
   const prevAyahDisabled = repeatRange
     ? currentAyahIndex <= repeatRange.start
     : isFirstAyah;
-  const nextAyahDisabled = repeatRange
-    ? currentAyahIndex >= repeatRange.end
-    : isLastAyah;
+  const nextAyahDisabled = repeatRange ? currentAyahIndex >= repeatRange.end : isLastAyah;
   const currentAyah = currentAyahIndex + 1;
 
   const handleClose = () => {
@@ -700,12 +678,13 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   style={{ color: "hsl(var(--primary))" }}
                 >
                   {repeatConfig.startAyah === repeatConfig.endAyah
-                    ? language === "ar"
-                      ? `تكرار الآية ${toArabicNumber(repeatConfig.startAyah)}`
-                      : `Repeating ayah ${repeatConfig.startAyah}`
-                    : language === "ar"
-                      ? `تكرار الآيات ${toArabicNumber(repeatConfig.startAyah)}–${toArabicNumber(repeatConfig.endAyah)}`
-                      : `Repeating ayahs ${repeatConfig.startAyah}–${repeatConfig.endAyah}`}
+                    ? t("listenQuran.player.repeatAyah", {
+                        number: displayNumber(repeatConfig.startAyah),
+                      })
+                    : t("listenQuran.player.repeatAyahs", {
+                        start: displayNumber(repeatConfig.startAyah),
+                        end: displayNumber(repeatConfig.endAyah),
+                      })}
                 </span>
               </div>
 
@@ -714,9 +693,9 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   className="text-[11px] font-bold"
                   style={{ color: "hsl(var(--primary))" }}
                 >
-                  {language === "ar"
-                    ? `الآية ${toArabicNumber(currentAyah)}`
-                    : `Ayah ${currentAyah}`}
+                  {t("listenQuran.player.ayahWithNumber", {
+                    number: displayNumber(currentAyah),
+                  })}
                 </span>
                 <span
                   className="text-[10px] font-medium"
@@ -730,22 +709,18 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
               <button
                 onClick={handleCancelRepeat}
-                aria-label={
-                  language === "ar" ? "إلغاء التكرار" : "Cancel repeat"
-                }
+                aria-label={t("listenQuran.player.cancelRepeat")}
                 className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 shrink-0 hover:scale-110"
                 style={{
                   background: "hsl(var(--primary) / 0.1)",
                   color: "hsl(var(--primary) / 0.6)",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background =
-                    "hsl(var(--destructive) / 0.12)";
+                  e.currentTarget.style.background = "hsl(var(--destructive) / 0.12)";
                   e.currentTarget.style.color = "hsl(var(--destructive))";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background =
-                    "hsl(var(--primary) / 0.1)";
+                  e.currentTarget.style.background = "hsl(var(--primary) / 0.1)";
                   e.currentTarget.style.color = "hsl(var(--primary) / 0.6)";
                 }}
               >
@@ -777,22 +752,17 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               >
                 {surahNumber}
                 {isPlaying && (
-                  <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+                  <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-live rounded-full border-2 border-background animate-pulse" />
                 )}
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-primary/80 rounded-xl">
-                    <ClipLoader
-                      color="hsl(var(--primary-foreground))"
-                      size={16}
-                    />
+                    <ClipLoader color="hsl(var(--primary-foreground))" size={16} />
                   </div>
                 )}
               </div>
               <div className="min-w-0 flex flex-col justify-center flex-1">
                 <h3 className="text-sm font-bold text-foreground truncate leading-tight">
-                  {language === "ar"
-                    ? `سورة ${surahName}`
-                    : `Surah ${surahName}`}
+                  {t("listenQuran.player.surahWithName", { name: surahName })}
                 </h3>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
                   <span className="truncate font-medium">{reciterName}</span>
@@ -805,7 +775,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 <>
                   <PlayerIconButton
                     onClick={handleClose}
-                    tooltip={language === "ar" ? "إغلاق" : "Close"}
+                    tooltip={t("listenQuran.player.close")}
                     className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
                   >
                     <FontAwesomeIcon icon={faXmark} className="text-xs" />
@@ -819,19 +789,14 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   <PlayerIconButton
                     onClick={previous}
                     disabled={prevAyahDisabled}
-                    tooltip={
-                      language === "ar" ? "الآية السابقة" : "Previous Verse"
-                    }
+                    tooltip={t("listenQuran.player.previousVerse")}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${prevAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
                   >
-                    <FontAwesomeIcon
-                      icon={faStepBackward}
-                      className="text-xs"
-                    />
+                    <FontAwesomeIcon icon={faStepBackward} className="text-xs" />
                   </PlayerIconButton>
 
                   <PlayerIconButton
-                    tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
+                    tooltip={t("listenQuran.player.playPause")}
                     onClick={handleTogglePlayPause}
                     disabled={isBuffering}
                     className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
@@ -850,7 +815,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   </PlayerIconButton>
 
                   <PlayerIconButton
-                    tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
+                    tooltip={t("listenQuran.player.nextVerse")}
                     onClick={next}
                     disabled={nextAyahDisabled}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${nextAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
@@ -862,16 +827,14 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 <>
                   <PlayerIconButton
                     onClick={skipBackward15}
-                    tooltip={
-                      language === "ar" ? "تراجع 15 ثانية" : "Back 15 seconds"
-                    }
+                    tooltip={t("listenQuran.player.back15")}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
                   >
                     <SkipIcon direction="backward" className="w-5 h-5" />
                   </PlayerIconButton>
 
                   <PlayerIconButton
-                    tooltip={language === "ar" ? "تشغيل/إيقاف" : "Play/Pause"}
+                    tooltip={t("listenQuran.player.playPause")}
                     onClick={handleTogglePlayPause}
                     disabled={isBuffering}
                     className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 transition-all active:scale-95 ${isBuffering ? "opacity-80" : "hover:scale-105"}`}
@@ -891,11 +854,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
                   <PlayerIconButton
                     onClick={skipForward15}
-                    tooltip={
-                      language === "ar"
-                        ? "تقديم 15 ثانية"
-                        : "Forward 15 seconds"
-                    }
+                    tooltip={t("listenQuran.player.forward15")}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
                   >
                     <SkipIcon direction="forward" className="w-5 h-5" />
@@ -906,14 +865,11 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <div className="w-px h-5 bg-border mx-1" />
 
               <PlayerIconButton
-                tooltip={language === "ar" ? "خيارات" : "Options"}
+                tooltip={t("listenQuran.player.options")}
                 onClick={() => setShowMobileSheet(true)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
               >
-                <FontAwesomeIcon
-                  icon={faEllipsisVertical}
-                  className="text-xs"
-                />
+                <FontAwesomeIcon icon={faEllipsisVertical} className="text-xs" />
               </PlayerIconButton>
             </div>
           </div>
@@ -925,23 +881,18 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               >
                 {surahNumber}
                 {isPlaying && (
-                  <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+                  <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-live rounded-full border-2 border-background animate-pulse" />
                 )}
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-primary/80 rounded-xl">
-                    <ClipLoader
-                      color="hsl(var(--primary-foreground))"
-                      size={18}
-                    />
+                    <ClipLoader color="hsl(var(--primary-foreground))" size={18} />
                   </div>
                 )}
               </div>
 
               <div className="min-w-0 flex flex-col justify-center">
                 <h3 className="text-base font-bold text-foreground truncate leading-tight">
-                  {language === "ar"
-                    ? `سورة ${surahName}`
-                    : `Surah ${surahName}`}
+                  {t("listenQuran.player.surahWithName", { name: surahName })}
                 </h3>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                   <span className="truncate font-medium">{reciterName}</span>
@@ -960,7 +911,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={previous}
                 disabled={prevAyahDisabled}
-                tooltip={language === "ar" ? "الآية السابقة" : "Previous Verse"}
+                tooltip={t("listenQuran.player.previousVerse")}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${prevAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepBackward} className="text-sm" />
@@ -969,9 +920,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={skipBackward15}
                 disabled={isRepeatModeActive}
-                tooltip={
-                  language === "ar" ? "تراجع 15 ثانية" : "Back 15 seconds"
-                }
+                tooltip={t("listenQuran.player.back15")}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="backward" className="w-6 h-6" />
@@ -981,21 +930,12 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 onClick={handleTogglePlayPause}
                 disabled={isBuffering}
                 tooltip={
-                  isPlaying
-                    ? language === "ar"
-                      ? "إيقاف"
-                      : "Pause"
-                    : language === "ar"
-                      ? "تشغيل"
-                      : "Play"
+                  isPlaying ? t("listenQuran.player.pause") : t("listenQuran.player.play")
                 }
                 className={`w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 transition-all duration-200 active:scale-95 ${isBuffering ? "opacity-80 cursor-wait" : "hover:scale-105 hover:shadow-primary/40"}`}
               >
                 {isBuffering ? (
-                  <FontAwesomeIcon
-                    icon={faSpinner}
-                    className="animate-spin text-base"
-                  />
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin text-base" />
                 ) : (
                   <FontAwesomeIcon
                     icon={isPlaying ? faPause : faPlay}
@@ -1007,9 +947,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={skipForward15}
                 disabled={isRepeatModeActive}
-                tooltip={
-                  language === "ar" ? "تقديم 15 ثانية" : "Forward 15 seconds"
-                }
+                tooltip={t("listenQuran.player.forward15")}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="forward" className="w-6 h-6" />
@@ -1018,7 +956,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={next}
                 disabled={nextAyahDisabled}
-                tooltip={language === "ar" ? "الآية التالية" : "Next Verse"}
+                tooltip={t("listenQuran.player.nextVerse")}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${nextAyahDisabled ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary hover:scale-110 active:scale-95"}`}
               >
                 <FontAwesomeIcon icon={faStepForward} className="text-sm" />
@@ -1032,13 +970,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   if (audioPlayer.current) audioPlayer.current.muted = !isMuted;
                 }}
                 tooltip={
-                  isMuted
-                    ? language === "ar"
-                      ? "إلغاء الكتم"
-                      : "Unmute"
-                    : language === "ar"
-                      ? "كتم الصوت"
-                      : "Mute"
+                  isMuted ? t("listenQuran.player.unmute") : t("listenQuran.player.mute")
                 }
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isMuted ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
               >
@@ -1054,14 +986,9 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   onClick={() => {
                     const next = !showSpeedDropdown;
                     setShowSpeedDropdown(next);
-                    if (next)
-                      setSpeedDropdownSide(
-                        computeDropdownSide(speedBtnRef, 160),
-                      );
+                    if (next) setSpeedDropdownSide(computeDropdownSide(speedBtnRef, 160));
                   }}
-                  tooltip={
-                    language === "ar" ? "سرعة التشغيل" : "Playback Speed"
-                  }
+                  tooltip={t("listenQuran.player.playbackSpeed")}
                   className={`h-9 px-2.5 mt-1 min-w-[2.5rem] rounded-full flex items-center justify-center text-base font-bold tabular-nums transition-all duration-200 ${showSpeedDropdown ? "text-primary bg-secondary ring-2 ring-primary/20" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
                 >
                   {playbackRate}×
@@ -1074,7 +1001,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   >
                     <div className="px-4 py-3 bg-muted/50 border-b border-border">
                       <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                        {language === "ar" ? "سرعة التشغيل" : "Playback Speed"}
+                        {t("listenQuran.player.playbackSpeed")}
                       </span>
                     </div>
                     <div className="py-1">
@@ -1102,11 +1029,10 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={handleDownload}
                 disabled={
-                  downloadStatus === "downloading" ||
-                  downloadStatus === "success"
+                  downloadStatus === "downloading" || downloadStatus === "success"
                 }
-                tooltip={language === "ar" ? "تنزيل السورة" : "Download Surah"}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${downloadStatus === "success" ? "text-green-500 bg-green-500/10" : downloadStatus === "error" ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
+                tooltip={t("listenQuran.player.downloadSurah")}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${downloadStatus === "success" ? "text-success bg-success/10" : downloadStatus === "error" ? "text-destructive bg-destructive/10" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
               >
                 <FontAwesomeIcon
                   icon={
@@ -1125,7 +1051,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               {isReadQuranPage && (
                 <PlayerIconButton
                   onClick={triggerScrollToAyah}
-                  tooltip={language === "ar" ? "انتقال للآية" : "Jump to Ayah"}
+                  tooltip={t("listenQuran.player.jumpToAyah")}
                   className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary transition-all duration-200 hover:scale-110"
                 >
                   <FontAwesomeIcon icon={faArrowUp} className="text-sm" />
@@ -1147,7 +1073,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 <PlayerIconButton
                   buttonRef={repeatBtnRef}
                   onClick={() => openRepeatPanel()}
-                  tooltip={language === "ar" ? "وضع التكرار" : "Repeat Mode"}
+                  tooltip={t("listenQuran.player.repeatMode")}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${isRepeatModeActive ? "text-primary bg-primary/10 ring-2 ring-primary/20" : "text-muted-foreground hover:text-primary hover:bg-secondary hover:scale-110"}`}
                 >
                   <FontAwesomeIcon icon={faRepeat} className="text-sm" />
@@ -1162,9 +1088,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                       language={language}
                       totalAyahs={totalAyahs}
                       currentAyahIndex={currentAyahIndex}
-                      initialStartAyah={
-                        repeatInitial.startAyah ?? currentAyahIndex + 1
-                      }
+                      initialStartAyah={repeatInitial.startAyah ?? currentAyahIndex + 1}
                       initialMode={repeatInitial.mode}
                       openEndPicker={repeatInitial.openEndPicker}
                       onStart={handleStartRepeat}
@@ -1181,7 +1105,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                   <div className="w-px h-5 bg-border mx-1" />
                   <PlayerIconButton
                     onClick={handleClose}
-                    tooltip={language === "ar" ? "إغلاق" : "Close"}
+                    tooltip={t("listenQuran.player.close")}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 hover:rotate-90 ml-1"
                   >
                     <FontAwesomeIcon icon={faXmark} className="text-base" />

@@ -10,15 +10,12 @@ export async function GET(request: Request) {
   const wholeWord = (searchParams.get("wholeWord") || "true").toLowerCase() !== "false";
 
   if (!query) {
-    return NextResponse.json(
-      { error: "Search query is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Search query is required" }, { status: 400 });
   }
 
   if (query.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g, "").trim().length < 2) {
     return NextResponse.json(
-      { error: "كلمة البحث قصيرة جدًا. يرجى استخدام حرفين على الأقل." },
+      { error: "Search query is too short. Use at least two characters." },
       { status: 400 },
     );
   }
@@ -33,9 +30,6 @@ export async function GET(request: Request) {
     return NextResponse.json(results);
   } catch (error) {
     console.error("Search error:", error);
-    return NextResponse.json(
-      { error: "Failed to search Quran" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to search Quran" }, { status: 500 });
   }
 }

@@ -2,5 +2,8 @@
   "title": "Prayer Times in",
   "error": "These Times Might have an Error of ± Minute",
   "nextPrayer": "Next Prayer",
-  "remaining": "Starting in"
+  "remaining": "Starting in",
+  "selectGovernorate": "Select Governorate",
+  "timeToPray": "Time to pray",
+  "today": "Today's Prayer Times"
 }

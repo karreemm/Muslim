@@ -19,8 +19,14 @@ export const useQuranNavigation = (type: NavigationType) => {
 
   const config: NavigationConfig = {
     type,
-    maxNumber: type === "surah" ? surahNames.length : (type === "juz" ? juzNames.length : 604),
-    basePath: type === "surah" ? "/read-quran/surah" : (type === "juz" ? "/read-quran/juz" : "/read-quran/page"),
+    maxNumber:
+      type === "surah" ? surahNames.length : type === "juz" ? juzNames.length : 604,
+    basePath:
+      type === "surah"
+        ? "/read-quran/surah"
+        : type === "juz"
+          ? "/read-quran/juz"
+          : "/read-quran/page",
   };
 
   const currentNumber = number ? parseInt(number) : 0;
@@ -51,9 +57,7 @@ export const useQuranNavigation = (type: NavigationType) => {
 
   const getNavigationData = () => {
     if (type === "surah") {
-      const currentSurah = surahNames.find(
-        (s) => s.number.toString() === number
-      );
+      const currentSurah = surahNames.find((s) => s.number.toString() === number);
       const nextSurah = hasNext ? surahNames[currentNumber] : null;
       const prevSurah = hasPrev ? surahNames[currentNumber - 2] : null;
 
@@ -77,7 +81,7 @@ export const useQuranNavigation = (type: NavigationType) => {
         current: { number: currentNumber, label: `Page ${currentNumber}` },
         next: hasNext ? { number: currentNumber + 1 } : null,
         prev: hasPrev ? { number: currentNumber - 1 } : null,
-      }
+      };
     }
   };
 

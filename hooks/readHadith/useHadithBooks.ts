@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { HadithBook } from "@/app/(pages)/read-hadith/types";
-import { getBooks } from "@/app/(pages)/read-hadith/service/HadithApiService";
+import { HadithBook } from "@/types/hadith";
+import { getBooks } from "@/lib/services/readHadith/HadithApiService";
 
 export function useHadithBooks() {
   const [books, setBooks] = useState<HadithBook[]>([]);

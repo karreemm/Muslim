@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
@@ -9,10 +10,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { surahNames } from "@/constants/quranData";
 import type { QuranVerse } from "@/hooks/readQuran";
-import GetSurah from "@/app/(pages)/read-quran/service/GetSurah";
+import GetSurah from "@/lib/services/readQuran/GetSurah";
 import SearchableDropdown from "./SearchableDropdown";
 import { PREDEFINED_AYAHS } from "../predefinedAyahs";
-import type { DropdownItem } from "../types";
+import type { DropdownItem } from "@/types/ayahImage";
 
 interface AyahSelectorSectionProps {
   language: string;
@@ -149,11 +150,11 @@ export default function AyahSelectorSection({
   onShowSurahDropdownChange,
   onShowAyahDropdownChange,
 }: AyahSelectorSectionProps) {
+  const { t } = useTranslation();
   const isArabic = language === "ar";
 
   const defaultCollapsed =
-    typeof window !== "undefined" &&
-    window.matchMedia("(max-width: 1023px)").matches;
+    typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
 
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [snippets, setSnippets] = useState<Record<string, string>>({});
@@ -176,9 +177,7 @@ export default function AyahSelectorSection({
       if (missingSurahs.length > 0) {
         const loaded = await Promise.all(
           missingSurahs.map(async (surahNumber) => {
-            const verses = (await GetSurah(
-              String(surahNumber),
-            )) as QuranVerse[];
+            const verses = (await GetSurah(String(surahNumber))) as QuranVerse[];
             return { surahNumber, verses };
           }),
         );
@@ -225,9 +224,7 @@ export default function AyahSelectorSection({
 
   const cards = useMemo(() => {
     return [...PREDEFINED_AYAHS]
-      .sort(
-        (a, b) => a.surahNumber - b.surahNumber || a.ayahNumber - b.ayahNumber,
-      )
+      .sort((a, b) => a.surahNumber - b.surahNumber || a.ayahNumber - b.ayahNumber)
       .map(({ surahNumber, ayahNumber }) => {
         const surah = surahNames.find((item) => item.number === surahNumber);
         const key = itemKey(surahNumber, ayahNumber);
@@ -236,19 +233,20 @@ export default function AyahSelectorSection({
           key,
           surahNumber,
           ayahNumber,
-          isActive:
-            selectedSurah === surahNumber && selectedAyah === ayahNumber,
+          isActive: selectedSurah === surahNumber && selectedAyah === ayahNumber,
           surahName: isArabic
-            ? surah?.ar || `سورة ${surahNumber}`
-            : surah?.en || `Surah ${surahNumber}`,
-          ayahLabel: isArabic ? `الآية ${ayahNumber}` : `Ayah ${ayahNumber}`,
+            ? surah?.ar || t("generateAyahImage.surahFallback", { number: surahNumber })
+            : surah?.en || t("generateAyahImage.surahFallback", { number: surahNumber }),
+          ayahLabel: t("generateAyahImage.ayahOption", { number: ayahNumber }),
           snippet: snippets[key] || "",
         };
       });
   }, [isArabic, selectedAyah, selectedSurah, snippets]);
 
   return (
-    <div className={`bg-card/70 rounded-2xl border border-border/50 ${isCollapsed ? "px-4 sm:px-5 py-2" : "p-4 sm:p-5"}`}>
+    <div
+      className={`bg-card/70 rounded-2xl border border-border/50 ${isCollapsed ? "px-4 sm:px-5 py-2" : "p-4 sm:p-5"}`}
+    >
       <button
         type="button"
         onClick={() => setIsCollapsed((prev) => !prev)}
@@ -274,9 +272,7 @@ export default function AyahSelectorSection({
                 <button
                   key={card.key}
                   type="button"
-                  onClick={() =>
-                    onSelectPresetAyah(card.surahNumber, card.ayahNumber)
-                  }
+                  onClick={() => onSelectPresetAyah(card.surahNumber, card.ayahNumber)}
                   className={`w-full rounded-xl border p-3 text-start transition-all duration-200 ${
                     card.isActive
                       ? "border-primary bg-primary/10"
@@ -352,9 +348,7 @@ export default function AyahSelectorSection({
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-xl border border-border/50 bg-background/40 p-2">
-                  <p className="text-[11px] text-muted-foreground mb-2">
-                    {beforeLabel}
-                  </p>
+                  <p className="text-[11px] text-muted-foreground mb-2">{beforeLabel}</p>
                   <div className="flex items-center justify-between gap-2">
                     <button
                       type="button"
@@ -379,9 +373,7 @@ export default function AyahSelectorSection({
                 </div>
 
                 <div className="rounded-xl border border-border/50 bg-background/40 p-2">
-                  <p className="text-[11px] text-muted-foreground mb-2">
-                    {afterLabel}
-                  </p>
+                  <p className="text-[11px] text-muted-foreground mb-2">{afterLabel}</p>
                   <div className="flex items-center justify-between gap-2">
                     <button
                       type="button"
@@ -409,27 +401,22 @@ export default function AyahSelectorSection({
               <p className="text-xs text-muted-foreground">
                 {lineLimitLabel}:{" "}
                 <span className="font-semibold tabular-nums">
-                  <span className={`${currentLineCount > 10 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                  <span
+                    className={`${currentLineCount > 10 ? "text-destructive" : "text-muted-foreground"}`}
+                  >
                     {currentLineCount}
                   </span>
-                  / 
-                  <span className="text-muted-foreground">
-                    {maxLines}
-                  </span>
+                  /<span className="text-muted-foreground">{maxLines}</span>
                 </span>
               </p>
 
               {showAyahNumberToggle && (
                 <label className="flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/40 px-3 py-2">
-                  <span className="text-xs text-foreground">
-                    {showAyahNumberLabel}
-                  </span>
+                  <span className="text-xs text-foreground">{showAyahNumberLabel}</span>
                   <input
                     type="checkbox"
                     checked={showAyahNumber}
-                    onChange={(event) =>
-                      onShowAyahNumberChange(event.target.checked)
-                    }
+                    onChange={(event) => onShowAyahNumberChange(event.target.checked)}
                     className="h-4 w-4 accent-primary"
                   />
                 </label>
@@ -443,9 +430,7 @@ export default function AyahSelectorSection({
                 <input
                   type="checkbox"
                   checked={specificPartEnabled}
-                  onChange={(event) =>
-                    onSpecificPartChange(event.target.checked)
-                  }
+                  onChange={(event) => onSpecificPartChange(event.target.checked)}
                   className="h-4 w-4 accent-primary"
                 />
               </label>

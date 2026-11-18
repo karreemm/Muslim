@@ -4,37 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Home, ArrowLeft, ArrowRight, AlertCircle } from "lucide-react";
 import { useLanguage } from "../context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 export default function NotFound() {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const content: Record<string, { en: string; ar: string }> = {
-    title: {
-      en: "Page Not Found",
-      ar: "الصفحة غير موجودة",
-    },
-    subtitle: {
-      en: "404",
-      ar: "٤٠٤",
-    },
-    description: {
-      en: "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
-      ar: "قد تمت إزالة الصفحة التي تبحث عنها أو تغيير اسمها أو أنها غير متاحة مؤقتًا.",
-    },
-    button: {
-      en: "Back to Home",
-      ar: "العودة للرئيسية",
-    },
-    suggestion: {
-      en: "Check the URL or try searching",
-      ar: "تحقق من الرابط أو حاول البحث",
-    },
-  };
 
   return (
     <div className="min-h-screen w-full bg-background flex flex-col items-center justify-center relative overflow-hidden px-4">
@@ -67,7 +46,7 @@ export default function NotFound() {
             `}
           >
             <div className="text-[8rem] md:text-[10rem] font-black leading-none bg-gradient-to-b from-primary/20 to-primary/5 bg-clip-text text-transparent select-none">
-              {language === "en" ? content.subtitle.en : content.subtitle.ar}
+              {t("common.notFoundCode")}
             </div>
           </div>
 
@@ -78,7 +57,7 @@ export default function NotFound() {
               ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
             `}
           >
-            {language === "en" ? content.title.en : content.title.ar}
+            {t("common.notFoundTitle")}
           </h1>
 
           <p
@@ -88,7 +67,7 @@ export default function NotFound() {
               ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
             `}
           >
-            {language === "en" ? content.description.en : content.description.ar}
+            {t("common.notFoundDescription")}
           </p>
 
           <div
@@ -99,9 +78,7 @@ export default function NotFound() {
             `}
           >
             <AlertCircle className="w-4 h-4" />
-            <span>
-              {language === "en" ? content.suggestion.en : content.suggestion.ar}
-            </span>
+            <span>{t("common.notFoundSuggestion")}</span>
           </div>
 
           <div
@@ -117,7 +94,7 @@ export default function NotFound() {
             >
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <Home className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
-              <span>{language === "en" ? content.button.en : content.button.ar}</span>
+              <span>{t("common.backHome")}</span>
             </Link>
 
             <button
@@ -129,7 +106,7 @@ export default function NotFound() {
               ) : (
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               )}
-              <span>{language === "en" ? "Go Back" : "العودة للخلف"}</span>
+              <span>{t("common.goBack")}</span>
             </button>
           </div>
         </div>

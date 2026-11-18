@@ -12,6 +12,12 @@ import { useLanguage } from "../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import DeleteConfirmModal from "@/components/modals/DeleteConfirmModal";
 import HasUpdatesCard from "@/components/general/HasUpdatesCard";
+import { PageShell } from "@/components/ui/PageShell";
+import { PageHeader } from "@/components/ui/PageHeader";
+import {
+  readLocalDeleteTokens,
+  writeLocalDeleteTokens,
+} from "@/lib/sadaqaGarya/localDeleteTokens";
 
 export default function DeceasedPersonsTable() {
   const {
@@ -21,9 +27,7 @@ export default function DeceasedPersonsTable() {
     canDeleteDeceased,
     hasDatabaseError,
   } = useSadaqaGarya();
-  const [shareableUrls, setShareableUrls] = useState<Record<string, string>>(
-    {},
-  );
+  const [shareableUrls, setShareableUrls] = useState<Record<string, string>>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
@@ -45,11 +49,9 @@ export default function DeceasedPersonsTable() {
     const urls: Record<string, string> = {};
     deceasedPersons.forEach((person) => {
       if (typeof window !== "undefined") {
-        urls[person.slug] =
-          `${window.location.origin}/sadaqa-garya/${person.slug}`;
+        urls[person.slug] = `${window.location.origin}/sadaqa-garya/${person.slug}`;
       } else {
-        urls[person.slug] =
-          `https://muslim-one.vercel.app/sadaqa-garya/${person.slug}`;
+        urls[person.slug] = `https://muslim-one.vercel.app/sadaqa-garya/${person.slug}`;
       }
     });
     setShareableUrls(urls);
@@ -65,43 +67,23 @@ export default function DeceasedPersonsTable() {
     setIsDeleting(true);
     setDeleteError("");
     try {
-      let deleteToken = "";
-      if (typeof window !== "undefined") {
-        try {
-          const raw = localStorage.getItem("sadaqaDeleteTokens");
-          const parsed = raw ? JSON.parse(raw) : {};
-          const tokens =
-            parsed && typeof parsed === "object"
-              ? (parsed as Record<string, string>)
-              : {};
-          deleteToken = tokens[deleteTarget.slug] || "";
-        } catch {
-          deleteToken = "";
-        }
-      }
+      const deleteToken = readLocalDeleteTokens()[deleteTarget.slug] || "";
 
       const response = await fetch(
         `/api/sadaqa-garya/${encodeURIComponent(deleteTarget.slug)}`,
         {
           method: "DELETE",
           credentials: "include",
-          headers: deleteToken
-            ? { "x-sadaqa-delete-token": deleteToken }
-            : undefined,
+          headers: deleteToken ? { "x-sadaqa-delete-token": deleteToken } : undefined,
         },
       );
 
       if (!response.ok) {
-        let message = language === "ar" ? "فشل الحذف" : "Failed to delete";
+        let message = t("sadaqa.table.failedDelete");
         try {
           const payload = await response.json();
           if (payload?.error) {
-            message =
-              response.status === 401
-                ? language === "ar"
-                  ? "يمكن حذف الصفحات التي أنشأتها فقط ومن نفس المتصفح."
-                  : "You can only delete pages you created from this browser."
-                : payload.error;
+            message = response.status === 401 ? t("sadaqa.table.onlyOwn") : payload.error;
           }
         } catch {}
         setDeleteError(message);
@@ -110,27 +92,15 @@ export default function DeceasedPersonsTable() {
 
       removeDeceasedPerson(deleteTarget.id);
 
-      if (typeof window !== "undefined") {
-        try {
-          const raw = localStorage.getItem("sadaqaDeleteTokens");
-          const parsed = raw ? JSON.parse(raw) : {};
-          const tokens =
-            parsed && typeof parsed === "object"
-              ? (parsed as Record<string, string>)
-              : {};
-          delete tokens[deleteTarget.slug];
-          localStorage.setItem("sadaqaDeleteTokens", JSON.stringify(tokens));
-        } catch {
-        }
-      }
+      const tokens = readLocalDeleteTokens();
+      delete tokens[deleteTarget.slug];
+      writeLocalDeleteTokens(tokens);
 
       setIsDeleteModalOpen(false);
       setDeleteTarget(null);
     } catch (error) {
       console.error("Error deleting:", error);
-      setDeleteError(
-        language === "ar" ? "حدث خطأ غير متوقع" : "Unexpected error occurred",
-      );
+      setDeleteError(t("sadaqa.table.unexpectedError"));
     } finally {
       setIsDeleting(false);
     }
@@ -180,9 +150,7 @@ export default function DeceasedPersonsTable() {
       variant: "ghost" as const,
       onClick: () => {},
       customRender: (item: any) =>
-        shareableUrls[item.slug] ? (
-          <ShareModal url={shareableUrls[item.slug]} />
-        ) : null,
+        shareableUrls[item.slug] ? <ShareModal url={shareableUrls[item.slug]} /> : null,
     },
     {
       icon: <Trash2 className="w-4 h-4" />,
@@ -202,11 +170,7 @@ export default function DeceasedPersonsTable() {
           <button
             disabled
             className="text-muted-foreground/50 cursor-not-allowed"
-            title={
-              language === "ar"
-                ? "لا يمكنك حذف هذه الصفحة لأنها ليست من إنشائك"
-                : "You cannot delete this page because you are not the creator"
-            }
+            title={t("sadaqa.table.cannotDelete")}
           >
             <Lock className="w-4 h-4" />
           </button>
@@ -235,12 +199,8 @@ export default function DeceasedPersonsTable() {
   }
 
   return (
-    <div className="mt-8 w-[90%] max-w-7xl mx-auto min-h-screen px-4 md:px-8">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          {t("sadaqa.table.title")}
-        </h1>
-      </div>
+    <PageShell containerClassName="mt-8 px-4 md:px-8">
+      <PageHeader title={t("sadaqa.table.title")} className="mb-10" />
 
       <DataTable
         columns={columns}
@@ -254,17 +214,15 @@ export default function DeceasedPersonsTable() {
 
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
-        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
+        title={t("common.confirmDeletion")}
         description={
           deleteError ||
           (deleteTarget
-            ? language === "ar"
-              ? `هل أنت متأكد من حذف صفحة ${deleteTarget.name}؟`
-              : `Are you sure you want to delete ${deleteTarget.name}'s page?`
+            ? t("sadaqa.table.confirmDeletePage", { name: deleteTarget.name })
             : "")
         }
-        confirmText={language === "ar" ? "حذف" : "Delete"}
-        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
         isProcessing={isDeleting}
         onConfirm={handleDelete}
         onClose={() => {
@@ -275,6 +233,6 @@ export default function DeceasedPersonsTable() {
           }
         }}
       />
-    </div>
+    </PageShell>
   );
 }

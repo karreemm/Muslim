@@ -14,12 +14,8 @@ interface PaletteDefaults {
 export function useAyahPalette(defaults: PaletteDefaults) {
   const [paletteMode, setPaletteMode] =
     useState<AyahImagePaletteMode>("softContemplation");
-  const [paletteHue, setPaletteHue] = useState(
-    defaults.customHue ?? DEFAULT_CUSTOM_HUE,
-  );
-  const [imageTheme, setImageTheme] = useState<"light" | "dark">(
-    defaults.theme,
-  );
+  const [paletteHue, setPaletteHue] = useState(defaults.customHue ?? DEFAULT_CUSTOM_HUE);
+  const [imageTheme, setImageTheme] = useState<"light" | "dark">(defaults.theme);
   const [showPageNumber, setShowPageNumber] = useState(false);
   const [showWebsiteAttribution, setShowWebsiteAttribution] = useState(true);
 

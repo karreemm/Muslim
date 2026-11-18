@@ -12,13 +12,14 @@ import { useLanguage } from "@/context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { TafseerModal } from "@/components/modals/TafseerModal";
 import { TranslationModal } from "@/components/modals/TranslationModal";
-import type { SearchAyah } from "../types";
+import type { SearchAyah } from "@/types/searchAyah";
 import { reciters } from "@/constants/recitersData";
 import { useTheme } from "@/context/general/ThemeContext";
 import { highlightText } from "./highlightText";
 import { useQuranAudio } from "@/context/features/QuranAudioContext";
 import AudioPlayerReciterDropdown from "@/components/general/audio-player/AudioPlayerReciterDropdown";
 import { useNavigateToAyahImage } from "@/hooks/generateAyahImage";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 
 interface AyahSearchCardProps {
   ayah: SearchAyah;
@@ -41,8 +42,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
       isPlayerVisible,
     } = useQuranAudio();
 
-    const [selectedReciter, setSelectedReciter] =
-      useState<string>("ar.alafasy");
+    const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
     const [showReciterMenu, setShowReciterMenu] = useState(false);
     const [showTafseerModal, setShowTafseerModal] = useState(false);
     const [showTranslationModal, setShowTranslationModal] = useState(false);
@@ -57,14 +57,8 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
     const handleListenClick = useCallback(() => {
       setReciterId(selectedReciter);
-      localStorage.setItem("preferredReciter", selectedReciter);
-      playSurahAyah(
-        ayah.surah.number,
-        ayah.numberInSurah - 1,
-        selectedReciter,
-        [],
-        true,
-      );
+      writeString(STORAGE_KEYS.preferredReciter, selectedReciter);
+      playSurahAyah(ayah.surah.number, ayah.numberInSurah - 1, selectedReciter, [], true);
     }, [
       ayah.numberInSurah,
       ayah.surah.number,
@@ -82,13 +76,13 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
         setSelectedReciter(reciterId);
         setShowReciterMenu(false);
         setReciterId(reciterId);
-        localStorage.setItem("preferredReciter", reciterId);
+        writeString(STORAGE_KEYS.preferredReciter, reciterId);
       },
       [setReciterId],
     );
 
     React.useEffect(() => {
-      const saved = localStorage.getItem("preferredReciter");
+      const saved = readString(STORAGE_KEYS.preferredReciter);
       if (saved) setSelectedReciter(saved);
     }, []);
 
@@ -135,9 +129,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                     {isArabic ? ayah.surah.name : ayah.surah.englishName}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {isArabic
-                      ? `الآية ${ayah.numberInSurah}`
-                      : `Ayah ${ayah.numberInSurah}`}
+                    {t("searchAyah.ayahWithNumber", { number: ayah.numberInSurah })}
                   </p>
                 </div>
               </div>
@@ -215,9 +207,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
                 <span>{t("searchAyah.convertToImage")}</span>
               </button>
 
-              <div
-                className={`relative ${isArabic ? "lg:mr-auto" : "lg:ml-auto"}`}
-              >
+              <div className={`relative ${isArabic ? "lg:mr-auto" : "lg:ml-auto"}`}>
                 <AudioPlayerReciterDropdown
                   language={language}
                   reciterId={selectedReciter}

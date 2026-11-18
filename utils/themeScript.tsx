@@ -1,3 +1,10 @@
+import { STORAGE_KEYS } from "@/lib/storage";
+import {
+  DEFAULT_PALETTE,
+  DEFAULT_PALETTE_HUE,
+  VALID_PALETTE_MODES,
+} from "@/utils/paletteEngine";
+
 export const ThemeScript = () => {
   return (
     <script
@@ -8,19 +15,20 @@ export const ThemeScript = () => {
     var root = document.documentElement;
 
     // ── Dark / Light ──────────────────────────────
-    var stored = localStorage.getItem('theme');
+    var stored = localStorage.getItem('${STORAGE_KEYS.theme}');
     var isDark = stored === 'dark' ||
       (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if (isDark) root.classList.add('dark');
     else root.classList.remove('dark');
 
     // ── Palette ───────────────────────────────────
-    var storedPalette = localStorage.getItem('palette') || 'teal';
-    var storedHue     = parseInt(localStorage.getItem('paletteHue') || '174', 10);
+    // Defaults come from paletteEngine; keep this aligned with PaletteContext.
+    var storedPalette = localStorage.getItem('${STORAGE_KEYS.palette}') || '${DEFAULT_PALETTE}';
+    var storedHue     = parseInt(localStorage.getItem('${STORAGE_KEYS.paletteHue}') || '${DEFAULT_PALETTE_HUE}', 10);
     var presets       = { teal:174, gold:38, emerald:148, midnight:228 };
-    var validModes    = ['teal','gold','emerald','midnight','custom'];
+    var validModes    = ${JSON.stringify(VALID_PALETTE_MODES)};
 
-    if (validModes.indexOf(storedPalette) === -1) storedPalette = 'teal';
+    if (validModes.indexOf(storedPalette) === -1) storedPalette = '${DEFAULT_PALETTE}';
 
     // For named presets: apply CSS class (globals.css handles the vars)
     root.classList.remove('teal','gold','emerald','midnight');
@@ -109,8 +117,9 @@ export const ThemeScript = () => {
     }
 
     // ── Language / Dir ────────────────────────────
-    var storedLanguage = localStorage.getItem('language');
+    var storedLanguage = localStorage.getItem('${STORAGE_KEYS.language}') === 'en' ? 'en' : 'ar';
     root.dir = storedLanguage === 'en' ? 'ltr' : 'rtl';
+    root.lang = storedLanguage;
 
   } catch(e) {}
 })();

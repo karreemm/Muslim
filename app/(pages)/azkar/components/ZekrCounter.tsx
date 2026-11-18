@@ -3,6 +3,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { useZekrCounter } from "@/context/features/ZekrCounterContext";
 import { toArabicNumber } from "@/utils/helpers";
 import { useCallback, useState } from "react";
@@ -19,6 +20,7 @@ export default function ZekrCounter({
   totalCount,
 }: ZekrCounterProps) {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const isArabic = language === "ar";
 
   const { getCount, increment, isCompleted } = useZekrCounter();
@@ -28,8 +30,7 @@ export default function ZekrCounter({
   const completed = isCompleted(categoryId, number, totalCount);
   const progress = Math.min((current / totalCount) * 100, 100);
 
-  const display = (value: number) =>
-    isArabic ? toArabicNumber(value) : `${value}`;
+  const display = (value: number) => (isArabic ? toArabicNumber(value) : `${value}`);
 
   const handleClick = useCallback(() => {
     if (completed) return;
@@ -50,7 +51,7 @@ export default function ZekrCounter({
           ? "bg-primary/15 text-primary"
           : "bg-primary/10 text-primary hover:bg-primary/20 active:scale-95"
       }`}
-      aria-label={isArabic ? "زيادة العداد" : "Increase count"}
+      aria-label={t("common.increaseCount")}
     >
       {!completed && (
         <span className="pointer-events-none absolute inset-0 rounded-xl border-2 border-primary/0 animate-pulse-border" />
@@ -104,15 +105,13 @@ export default function ZekrCounter({
       <span className="flex items-baseline gap-1 tabular-nums">
         <span
           className={
-            completed
-              ? "text-primary font-bold"
-              : "text-muted-foreground font-normal"
+            completed ? "text-primary font-bold" : "text-muted-foreground font-normal"
           }
         >
           {display(current)}
         </span>
         <span className="text-muted-foreground/60 text-[10px] font-normal">
-          {isArabic ? "من" : "of"}
+          {t("common.of")}
         </span>
         <span className="text-primary font-bold">{display(totalCount)}</span>
       </span>

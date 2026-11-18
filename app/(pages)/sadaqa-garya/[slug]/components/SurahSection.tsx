@@ -7,6 +7,7 @@ import { DiedSurahs } from "@/constants/sadaqaData";
 import type { SadaqaQuranVerse } from "@/hooks/sadaqaGarya/useSadaqaSurahVerses";
 import { SADAQA_SURAH_CONFIG } from "@/hooks/sadaqaGarya";
 import ConcatenatedQuranPages from "./ConcatenatedQuranPages";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface SurahSectionProps {
   mounted: boolean;
@@ -40,9 +41,7 @@ export default function SurahSection({
           ${mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}
         `}
       >
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
-          {title}
-        </h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{title}</h2>
       </div>
 
       <div className="grid gap-4">
@@ -131,9 +130,7 @@ export default function SurahSection({
                           <div className="text-center py-8 text-muted-foreground bg-muted/50 rounded-xl">
                             <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
                             <p>
-                              {language === "en"
-                                ? "Surah content is unavailable right now."
-                                : "محتوى السورة غير متاح حاليا."}
+                              {translate(language, "sadaqa.deceased.surahUnavailable")}
                             </p>
                           </div>
                         )}

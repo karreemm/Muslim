@@ -17,9 +17,7 @@ export default function DuaSection({ mounted, title }: DuaSectionProps) {
           ${mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}
         `}
       >
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
-          {title}
-        </h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{title}</h2>
       </div>
 
       <div dir="rtl" className="grid gap-4">

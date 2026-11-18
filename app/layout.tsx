@@ -34,11 +34,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="dark light" />
         <ThemeScript />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@200..1000&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap"
           rel="stylesheet"
@@ -51,22 +47,22 @@ export default function RootLayout({
               <AppHydrationGate>
                 <QuranAudioProvider>
                   <RadioProvider>
-                  <SavedAyahsProvider>
-                    <FavoriteSurahsProvider>
-                      <FavoriteHadithsProvider>
-                        <FavoriteAzkarProvider>
-                           <ZekrCounterProvider>
-                            <PrayerAzkarReset />
-                            <SadaqaGaryaProvider>
-                            <TasbeehContextProvider>
-                              <PageLayout>{children}</PageLayout>
-                            </TasbeehContextProvider>
-                            </SadaqaGaryaProvider>
-                          </ZekrCounterProvider>
-                        </FavoriteAzkarProvider>
-                      </FavoriteHadithsProvider>
-                    </FavoriteSurahsProvider>
-                  </SavedAyahsProvider>
+                    <SavedAyahsProvider>
+                      <FavoriteSurahsProvider>
+                        <FavoriteHadithsProvider>
+                          <FavoriteAzkarProvider>
+                            <ZekrCounterProvider>
+                              <PrayerAzkarReset />
+                              <SadaqaGaryaProvider>
+                                <TasbeehContextProvider>
+                                  <PageLayout>{children}</PageLayout>
+                                </TasbeehContextProvider>
+                              </SadaqaGaryaProvider>
+                            </ZekrCounterProvider>
+                          </FavoriteAzkarProvider>
+                        </FavoriteHadithsProvider>
+                      </FavoriteSurahsProvider>
+                    </SavedAyahsProvider>
                   </RadioProvider>
                 </QuranAudioProvider>
               </AppHydrationGate>

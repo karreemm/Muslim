@@ -51,9 +51,7 @@ export default function FavouriteAzkarTable() {
           {idx === 0 && (
             <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-medium border border-primary/20">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="mt-0.5">
-                {t("common.latest")}
-              </span>
+              <span className="mt-0.5">{t("common.latest")}</span>
             </span>
           )}
           <span className="font-mono font-medium text-foreground">
@@ -130,12 +128,8 @@ export default function FavouriteAzkarTable() {
                     removeFavoriteAzkar(zekr.number || 0, zekr.category),
                   );
                 },
-                confirmationTitle:
-                  language === "ar" ? "تأكيد الحذف" : "Confirm Deletion",
-                confirmationDescription:
-                  language === "ar"
-                    ? "هل أنت متأكد من حذف كل الأذكار المفضلة؟"
-                    : "Are you sure you want to clear all favourite azkar?",
+                confirmationTitle: t("common.confirmDeletion"),
+                confirmationDescription: t("favourites.azkar.clearAllConfirm"),
               }
             : undefined
         }
@@ -143,14 +137,10 @@ export default function FavouriteAzkarTable() {
 
       <DeleteConfirmModal
         isOpen={!!deleteTarget}
-        title={language === "ar" ? "تأكيد الحذف" : "Confirm Deletion"}
-        description={
-          language === "ar"
-            ? "هل أنت متأكد من حذف هذا الذكر من المفضلة؟"
-            : "Are you sure you want to remove this zikr from favourites?"
-        }
-        confirmText={language === "ar" ? "حذف" : "Delete"}
-        cancelText={language === "ar" ? "إلغاء" : "Cancel"}
+        title={t("common.confirmDeletion")}
+        description={t("favourites.azkar.removeConfirm")}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
         onConfirm={() => {
           if (deleteTarget) {
             removeFavoriteAzkar(deleteTarget.number, deleteTarget.category);

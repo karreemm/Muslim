@@ -2,10 +2,7 @@ const DELETE_COOKIE_NAME = "sadaqa_delete_tokens";
 
 type DeleteTokenMap = Record<string, string>;
 
-function parseCookieValue(
-  cookieHeader: string,
-  cookieName: string,
-): string | undefined {
+function parseCookieValue(cookieHeader: string, cookieName: string): string | undefined {
   const match = cookieHeader
     .split(";")
     .map((part) => part.trim())

@@ -13,8 +13,8 @@ describe("resolveHue", () => {
     expect(resolveHue("custom", 210)).toBe(210);
   });
 
-  it("falls back to teal for an unknown mode", () => {
-    expect(resolveHue("unknown" as never)).toBe(PALETTE_PRESETS.teal.hue);
+  it("falls back to the default palette for an unknown mode", () => {
+    expect(resolveHue("unknown" as never)).toBe(PALETTE_PRESETS.gold.hue);
   });
 });
 

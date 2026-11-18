@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as notLoved } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -22,11 +23,9 @@ interface SingleZekrProps {
   categoryId: string;
 }
 
-export default function DisplayZekr({
-  zekrNumber,
-  categoryId,
-}: SingleZekrProps) {
+export default function DisplayZekr({ zekrNumber, categoryId }: SingleZekrProps) {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const isArabic = language === "ar";
 
   const { zekr, zekrData, loading } = useSingleZekr(categoryId, zekrNumber);
@@ -53,9 +52,7 @@ export default function DisplayZekr({
           icon={isArabic ? faArrowRight : faArrowLeft}
           className="text-sm transition-transform group-hover:-translate-x-1"
         />
-        <span className="font-medium">
-          {isArabic ? "العودة للقائمة" : "Back to List"}
-        </span>
+        <span className="font-medium">{t("common.backToList")}</span>
       </Link>
 
       <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm">
@@ -66,9 +63,7 @@ export default function DisplayZekr({
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
               <FontAwesomeIcon icon={faHashtag} className="text-xs" />
               <span>
-                {isArabic
-                  ? `${toArabicNumber(zekr.number!)}`
-                  : `${zekr.number}`}
+                {isArabic ? `${toArabicNumber(zekr.number!)}` : `${zekr.number}`}
               </span>
             </div>
 
@@ -86,10 +81,7 @@ export default function DisplayZekr({
                     : "bg-secondary/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                 }`}
               >
-                <FontAwesomeIcon
-                  icon={isFav ? loved : notLoved}
-                  className="text-lg"
-                />
+                <FontAwesomeIcon icon={isFav ? loved : notLoved} className="text-lg" />
               </button>
 
               <ZekrCounter

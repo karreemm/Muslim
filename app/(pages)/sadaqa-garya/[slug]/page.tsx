@@ -10,6 +10,7 @@ import {
   useSadaqaSurahVerses,
 } from "../../../../hooks/sadaqaGarya";
 import { useTranslation } from "@/hooks/general/useTranslation";
+import { PageShell } from "@/components/ui/PageShell";
 import DeceasedNotFound from "./components/DeceasedNotFound";
 import DeceasedHero from "./components/DeceasedHero";
 import SurahSection from "./components/SurahSection";
@@ -46,52 +47,48 @@ export default function DeceasedPage() {
   }
 
   if (!deceased) {
-    return (
-      <DeceasedNotFound
-        mounted={mounted}
-        language={language}
-        onGoHome={goHome}
-      />
-    );
+    return <DeceasedNotFound mounted={mounted} language={language} onGoHome={goHome} />;
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12 relative">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        />
-      </div>
+    <PageShell
+      className="pb-12"
+      containerClassName="mt-8 max-w-7xl space-y-8"
+      decorations={
+        <>
+          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl animate-pulse" />
+          <div
+            className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-secondary/20 blur-3xl animate-pulse"
+            style={{ animationDelay: "2s" }}
+          />
+        </>
+      }
+    >
+      <DeceasedHero
+        mounted={mounted}
+        language={language}
+        title={t("sadaqa.title")}
+        shareLabel={t("sadaqa.shareIt")}
+        nameEn={deceased.nameEn}
+        nameAr={deceased.nameAr}
+        messageEn={deceased.messageEn}
+        messageAr={deceased.messageAr}
+        shareableUrl={shareableUrl}
+      />
 
-      <div className="mx-auto mt-8 w-[92%] max-w-7xl space-y-8 relative z-10">
-        <DeceasedHero
-          mounted={mounted}
-          language={language}
-          title={t("sadaqa.title")}
-          shareLabel={t("sadaqa.shareIt")}
-          nameEn={deceased.nameEn}
-          nameAr={deceased.nameAr}
-          messageEn={deceased.messageEn}
-          messageAr={deceased.messageAr}
-          shareableUrl={shareableUrl}
-        />
+      <SurahSection
+        mounted={mounted}
+        language={language}
+        title={t("sadaqa.recommendedSurahs")}
+        expandedSurah={expandedSurah}
+        versesByCard={versesByCard}
+        versesLoading={versesLoading}
+        versesError={versesError}
+        onToggleSurah={toggleSurahExpansion}
+        loadingVersesText={t("sadaqa.loadingVerses") || "Loading verses..."}
+      />
 
-        <SurahSection
-          mounted={mounted}
-          language={language}
-          title={t("sadaqa.recommendedSurahs")}
-          expandedSurah={expandedSurah}
-          versesByCard={versesByCard}
-          versesLoading={versesLoading}
-          versesError={versesError}
-          onToggleSurah={toggleSurahExpansion}
-          loadingVersesText={t("sadaqa.loadingVerses") || "Loading verses..."}
-        />
-
-        <DuaSection mounted={mounted} title={t("sadaqa.duaTitle")} />
-      </div>
-    </div>
+      <DuaSection mounted={mounted} title={t("sadaqa.duaTitle")} />
+    </PageShell>
   );
 }

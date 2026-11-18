@@ -39,7 +39,10 @@ export default function FeaturesSection({
 
             <div className="relative z-10">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md group-hover:shadow-primary/25">
-                <FontAwesomeIcon icon={feature.icon} className={`${feature.href === "/read-hadith" ? "text-2xl" : "text-lg"}`} />
+                <FontAwesomeIcon
+                  icon={feature.icon}
+                  className={`${feature.href === "/read-hadith" ? "text-2xl" : "text-lg"}`}
+                />
               </div>
 
               <h3 className="mb-2 text-lg font-bold text-foreground group-hover:text-primary transition-colors">
@@ -51,7 +54,7 @@ export default function FeaturesSection({
               </p>
 
               <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0">
-                <span>{isEnglish ? "Explore" : "استكشف"}</span>
+                <span>{t("home.explore")}</span>
                 <FontAwesomeIcon icon={arrowIcon} className="text-xs" />
               </div>
             </div>

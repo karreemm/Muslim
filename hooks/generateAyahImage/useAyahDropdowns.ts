@@ -1,12 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import { surahNames } from "@/constants/quranData";
-import type { DropdownItem } from "@/app/(pages)/generate-ayah-image/types";
+import type { DropdownItem } from "@/types/ayahImage";
 
 export function useAyahDropdowns(
   language: string,
   surahNumber: number,
   ayahNumber: number,
 ) {
+  const { t } = useTranslation();
   const [surahQuery, setSurahQuery] = useState("");
   const [ayahQuery, setAyahQuery] = useState("");
   const [showSurahDropdown, setShowSurahDropdown] = useState(false);
@@ -33,10 +35,10 @@ export function useAyahDropdowns(
       filteredSurahs.map((surah) => ({
         value: surah.number,
         label: language === "ar" ? surah.ar : surah.en,
-        meta:
-          language === "ar"
-            ? `سورة رقم ${surah.number} - ${surah.ayahs} آية`
-            : `Surah ${surah.number} - ${surah.ayahs} ayahs`,
+        meta: t("generateAyahImage.surahOption", {
+          number: surah.number,
+          count: surah.ayahs,
+        }),
       })),
     [filteredSurahs, language],
   );
@@ -56,8 +58,8 @@ export function useAyahDropdowns(
     () =>
       filteredAyahs.map((ayah) => ({
         value: ayah,
-        label: language === "ar" ? `الآية ${ayah}` : `Ayah ${ayah}`,
-        meta: language === "ar" ? `رقم ${ayah}` : `No. ${ayah}`,
+        label: t("generateAyahImage.ayahOption", { number: ayah }),
+        meta: t("generateAyahImage.ayahNumberShort", { number: ayah }),
       })),
     [filteredAyahs, language],
   );
@@ -67,8 +69,7 @@ export function useAyahDropdowns(
       ? `${selectedSurahMeta.ar} (${selectedSurahMeta.number})`
       : `${selectedSurahMeta.en} (${selectedSurahMeta.number})`;
 
-  const selectedAyahLabel =
-    language === "ar" ? `الآية ${ayahNumber}` : `Ayah ${ayahNumber}`;
+  const selectedAyahLabel = t("generateAyahImage.ayahOption", { number: ayahNumber });
 
   const clearSurahQuery = useCallback(() => setSurahQuery(""), []);
   const clearAyahQuery = useCallback(() => setAyahQuery(""), []);

@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faChevronUp,
-  faGlobe,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import {
   FIXED_AYAH_PALETTES,
   type AyahImagePaletteMode,
@@ -52,20 +48,16 @@ export default function ImagePaletteSelector({
   onSelectPreset,
 }: ImagePaletteSelectorProps) {
   const defaultCollapsed =
-    typeof window !== "undefined" &&
-    window.matchMedia("(max-width: 1023px)").matches;
+    typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
 
-  const [isPaletteCollapsed, setIsPaletteCollapsed] =
-    useState(defaultCollapsed);
-  const [isDetailsCollapsed, setIsDetailsCollapsed] =
-    useState(defaultCollapsed);
+  const [isPaletteCollapsed, setIsPaletteCollapsed] = useState(defaultCollapsed);
+  const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(defaultCollapsed);
 
   const selectedFixedPalette =
     selectedMode === "custom"
       ? null
       : FIXED_AYAH_PALETTES.find((palette) => palette.id === selectedMode);
-  const mainImageColor =
-    selectedFixedPalette?.decorationHex ?? "hsl(var(--primary))";
+  const mainImageColor = selectedFixedPalette?.decorationHex ?? "hsl(var(--primary))";
 
   return (
     <div className="space-y-3">
@@ -96,9 +88,7 @@ export default function ImagePaletteSelector({
                     <button
                       key={palette.id}
                       type="button"
-                      title={
-                        language === "ar" ? palette.labelAr : palette.label
-                      }
+                      title={language === "ar" ? palette.labelAr : palette.label}
                       onClick={() => onSelectPreset(palette.id)}
                       className={`group relative flex  h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                         isActive
@@ -142,9 +132,7 @@ export default function ImagePaletteSelector({
               <input
                 type="checkbox"
                 checked={showPageNumber}
-                onChange={(event) =>
-                  onShowPageNumberChange(event.target.checked)
-                }
+                onChange={(event) => onShowPageNumberChange(event.target.checked)}
                 className="h-4 w-4 accent-primary"
               />
             </label>
@@ -156,9 +144,7 @@ export default function ImagePaletteSelector({
               <input
                 type="checkbox"
                 checked={showWebsiteAttribution}
-                onChange={(event) =>
-                  onShowWebsiteAttributionChange(event.target.checked)
-                }
+                onChange={(event) => onShowWebsiteAttributionChange(event.target.checked)}
                 className="h-4 w-4 accent-primary"
               />
             </label>

@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle, Home } from "lucide-react";
+import { translate } from "@/hooks/general/useTranslation";
 
 interface DeceasedNotFoundProps {
   mounted: boolean;
@@ -26,19 +27,17 @@ export default function DeceasedNotFound({
           <AlertCircle className="w-8 h-8 text-destructive" />
         </div>
         <h1 className="mb-4 text-2xl font-bold">
-          {language === "en" ? "Person not found" : "لم يتم العثور على الشخص"}
+          {translate(language, "sadaqa.deceased.notFoundTitle")}
         </h1>
         <p className="text-muted-foreground mb-6">
-          {language === "en"
-            ? "The tribute you are looking for does not exist or has been removed."
-            : "التكريم الذي تبحث عنه غير موجود أو تمت إزالته."}
+          {translate(language, "sadaqa.deceased.notFoundDescription")}
         </p>
         <button
           onClick={onGoHome}
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-primary-foreground font-semibold transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25"
         >
           <Home className="w-4 h-4" />
-          {language === "en" ? "Return Home" : "العودة للرئيسية"}
+          {translate(language, "sadaqa.deceased.returnHome")}
         </button>
       </div>
     </div>

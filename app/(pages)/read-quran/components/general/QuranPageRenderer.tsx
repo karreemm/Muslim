@@ -107,9 +107,7 @@ const QuranPageSkeleton = ({
       ).map((width, i) => (
         <div
           key={i}
-          className={`bg-muted rounded-lg ${
-            variant === "ayah-image" ? "h-7" : "h-8"
-          }`}
+          className={`bg-muted rounded-lg ${variant === "ayah-image" ? "h-7" : "h-8"}`}
           style={{ width }}
         />
       ))}
@@ -140,16 +138,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const { fontReady, fontLoadTried, pageFontName, isSpecialPage } =
       useQuranPageFont(pageNumber);
     const { lineOrder, lines } = useQuranPageLines(verses, pageNumber);
-    const {
-      surahNumber,
-      activeAyahIndex,
-      isPlayerVisible,
-      requestHifzFromAyah,
-    } = useQuranAudio();
+    const { surahNumber, activeAyahIndex, isPlayerVisible, requestHifzFromAyah } =
+      useQuranAudio();
 
-    const playingSurahStr = isPlayerVisible
-      ? surahNumber?.toString()
-      : undefined;
+    const playingSurahStr = isPlayerVisible ? surahNumber?.toString() : undefined;
     const highlightedAyah = activeAyahIndex + 1;
 
     const {
@@ -195,8 +187,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
       () =>
         verses.reduce(
           (count, verse) =>
-            count +
-            verse.words.filter((word) => word.char_type_name !== "end").length,
+            count + verse.words.filter((word) => word.char_type_name !== "end").length,
           0,
         ),
       [verses],
@@ -268,9 +259,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           }`}
           style={{
             fontFamily:
-              pageFontName && fontReady
-                ? `'${pageFontName}'`
-                : "'Amiri', serif",
+              pageFontName && fontReady ? `'${pageFontName}'` : "'Amiri', serif",
             fontSize: `${fontSize}px`,
             lineHeight: lineHeight,
             color: forcePrimaryText
@@ -278,26 +267,18 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
               : imageMode
                 ? "hsl(var(--quran-surface-foreground))"
                 : undefined,
-            userSelect:
-              isWordRangeSelectionEnabled && imageMode ? "none" : undefined,
+            userSelect: isWordRangeSelectionEnabled && imageMode ? "none" : undefined,
             WebkitUserSelect:
               isWordRangeSelectionEnabled && imageMode ? "none" : undefined,
           }}
           onPointerMove={
             isWordRangeSelectionEnabled ? handleSelectionPointerMove : undefined
           }
-          onPointerUp={
-            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
-          }
-          onPointerCancel={
-            isWordRangeSelectionEnabled ? endSelectionDrag : undefined
-          }
+          onPointerUp={isWordRangeSelectionEnabled ? endSelectionDrag : undefined}
+          onPointerCancel={isWordRangeSelectionEnabled ? endSelectionDrag : undefined}
         >
           {forcedTopHeaderInfo && (
-            <div
-              className="w-full mb-12"
-              style={{ fontFamily: "'Amiri Quran', serif" }}
-            >
+            <div className="w-full mb-12" style={{ fontFamily: "'Amiri Quran', serif" }}>
               <QuranSurahHeader
                 surahNameAr={forcedTopHeaderInfo.arTashkeel}
                 surahNumber={forcedTopHeaderInfo.number}
@@ -423,9 +404,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                           handleWordClick(e, chunk.verseKey);
                         }}
                       >
-                        {pageFontName &&
-                        fontReady &&
-                        !isWordRangeSelectionEnabled
+                        {pageFontName && fontReady && !isWordRangeSelectionEnabled
                           ? applySpaceFix
                             ? chunk.words
                                 .map((word) => word.code_v2 || "")
@@ -434,12 +413,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                     idx === 1 ? acc + " " + curr : acc + curr,
                                   "",
                                 )
-                            : chunk.words
-                                .map((word) => word.code_v2 || "")
-                                .join("")
+                            : chunk.words.map((word) => word.code_v2 || "").join("")
                           : chunk.words.map((word, wordIndex) => {
-                              const isAyahNumber =
-                                word.char_type_name === "end";
+                              const isAyahNumber = word.char_type_name === "end";
 
                               if (!isAyahNumber) {
                                 globalSelectableWordIndex += 1;
@@ -464,8 +440,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                 isWordRangeSelectionEnabled &&
                                 wordRangeIndex === normalizedSelectionEnd;
                               const isCollapsedSelection =
-                                normalizedSelectionStart ===
-                                normalizedSelectionEnd;
+                                normalizedSelectionStart === normalizedSelectionEnd;
                               const isSelectedAyahNumber =
                                 isAyahNumber &&
                                 isWordRangeSelectionEnabled &&
@@ -476,15 +451,13 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                 !isAyahNumber &&
                                 isWordRangeSelectionEnabled &&
                                 wordRangeIndex > 0 &&
-                                wordRangeIndex - 1 >=
-                                  normalizedSelectionStart &&
+                                wordRangeIndex - 1 >= normalizedSelectionStart &&
                                 wordRangeIndex - 1 <= normalizedSelectionEnd;
                               const isNextInSelection =
                                 !isAyahNumber &&
                                 isWordRangeSelectionEnabled &&
                                 wordRangeIndex < maxSelectableWordIndex &&
-                                wordRangeIndex + 1 >=
-                                  normalizedSelectionStart &&
+                                wordRangeIndex + 1 >= normalizedSelectionStart &&
                                 wordRangeIndex + 1 <= normalizedSelectionEnd;
 
                               return (
@@ -499,16 +472,13 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         style={
                                           isWordRangeSelectionEnabled
                                             ? {
-                                                opacity: isSelectedAyahNumber
-                                                  ? 1
-                                                  : 0.45,
+                                                opacity: isSelectedAyahNumber ? 1 : 0.45,
                                                 fontFamily: "inherit",
                                               }
                                             : { fontFamily: "inherit" }
                                         }
                                         dangerouslySetInnerHTML={{
-                                          __html:
-                                            word.code_v2 || word.text_uthmani,
+                                          __html: word.code_v2 || word.text_uthmani,
                                         }}
                                       />
                                     ) : (
@@ -559,8 +529,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                     <span
                                       ref={(element) => {
                                         if (isWordRangeSelectionEnabled) {
-                                          wordRefs.current[wordRangeIndex] =
-                                            element;
+                                          wordRefs.current[wordRangeIndex] = element;
                                         }
                                       }}
                                       data-word-range-index={
@@ -597,9 +566,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                               boxShadow: isSelectedWord
                                                 ? "inset 0 -2px 0 0 hsl(var(--primary) / 0.55)"
                                                 : "none",
-                                              opacity: isUnselectedWord
-                                                ? 0.45
-                                                : 1,
+                                              opacity: isUnselectedWord ? 0.45 : 1,
                                               cursor: "pointer",
                                               fontFamily: "inherit",
                                               transition:
@@ -625,17 +592,13 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                           isWordRangeSelectionEnabled &&
                                           !isSelectedWord
                                         ) {
-                                          e.currentTarget.style.backgroundImage =
-                                            "none";
-                                          e.currentTarget.style.boxShadow =
-                                            "none";
+                                          e.currentTarget.style.backgroundImage = "none";
+                                          e.currentTarget.style.boxShadow = "none";
                                         }
                                       }}
                                       onClick={() =>
                                         isWordRangeSelectionEnabled &&
-                                        handleSelectableWordClick(
-                                          wordRangeIndex,
-                                        )
+                                        handleSelectableWordClick(wordRangeIndex)
                                       }
                                       dangerouslySetInnerHTML={{
                                         __html:
@@ -652,9 +615,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       aria-label="Selection start"
                                       aria-valuemin={1}
                                       aria-valuemax={totalSelectableWords}
-                                      aria-valuenow={
-                                        normalizedSelectionStart + 1
-                                      }
+                                      aria-valuenow={normalizedSelectionStart + 1}
                                       className={`
                                         absolute right-0 bottom-0 z-30 translate-x-1/2
                                         flex flex-col items-center justify-between
@@ -678,8 +639,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
-                                          borderColor:
-                                            "hsl(var(--quran-surface) / 0.95)",
+                                          borderColor: "hsl(var(--quran-surface) / 0.95)",
                                         }}
                                       />
                                       <span
@@ -694,8 +654,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
-                                          borderColor:
-                                            "hsl(var(--quran-surface) / 0.95)",
+                                          borderColor: "hsl(var(--quran-surface) / 0.95)",
                                         }}
                                       />
                                     </span>
@@ -709,9 +668,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         aria-label="Selection end"
                                         aria-valuemin={1}
                                         aria-valuemax={totalSelectableWords}
-                                        aria-valuenow={
-                                          normalizedSelectionEnd + 1
-                                        }
+                                        aria-valuenow={normalizedSelectionEnd + 1}
                                         className={`
                                           absolute left-0 bottom-0 z-30 -translate-x-1/2
                                           flex flex-col items-center justify-between
