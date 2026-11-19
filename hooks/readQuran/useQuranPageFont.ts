@@ -27,7 +27,7 @@ export const useQuranPageFont = (pageNumber: number | undefined) => {
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
       style.id = styleId;
-      style.innerHTML = `@font-face { font-family: '${fontName}'; src: url('${fontUrl}') format('woff2'); }`;
+      style.innerHTML = `@font-face { font-family: '${fontName}'; src: url('${fontUrl}') format('woff2'); font-display: swap; }`;
       document.head.appendChild(style);
     }
 
@@ -54,4 +54,39 @@ export const useQuranPageFont = (pageNumber: number | undefined) => {
   }, [pageNumber]);
 
   return { fontReady, fontLoadTried, pageFontName, isSpecialPage };
+};
+
+export const useQuranFontPrefetch = (pageNumber: number | undefined) => {
+  useEffect(() => {
+    if (!pageNumber || typeof window === "undefined") return;
+
+    const attribute = `data-quran-font-prefetch-${pageNumber}`;
+    if (document.head.querySelector(`link[${attribute}]`)) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let link: HTMLLinkElement | null = null;
+
+    const addPrefetch = () => {
+      link = document.createElement("link");
+      link.rel = "prefetch";
+      link.as = "font";
+      link.type = "font/woff2";
+      link.href = `/quran-fonts/p${pageNumber}.woff2`;
+      link.crossOrigin = "anonymous";
+      link.setAttribute(attribute, "");
+      document.head.appendChild(link);
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(addPrefetch, { timeout: 1500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    timeoutId = setTimeout(addPrefetch, 250);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      link?.remove();
+    };
+  }, [pageNumber]);
 };

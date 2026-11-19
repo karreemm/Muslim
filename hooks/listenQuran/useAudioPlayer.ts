@@ -6,27 +6,30 @@ interface AyahDurationEntry {
   ayahDurations: number[];
 }
 
-type AudioDurationsSummary = Record<string, Record<string, AyahDurationEntry>>;
+type AudioDurationsSummary = Record<string, AyahDurationEntry>;
 
-const AUDIO_DURATIONS_URL = "/data/listenQuran/audioDurationsSummary.json";
-let audioDurationsPromise: Promise<AudioDurationsSummary | null> | null = null;
+const audioDurationsPromises = new Map<string, Promise<AudioDurationsSummary | null>>();
 
-function loadAudioDurations(): Promise<AudioDurationsSummary | null> {
-  if (!audioDurationsPromise) {
-    audioDurationsPromise = fetch(AUDIO_DURATIONS_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Audio durations request failed: ${response.status}`);
-        }
-        return response.json() as Promise<AudioDurationsSummary>;
-      })
-      .catch(() => {
-        audioDurationsPromise = null;
-        return null;
-      });
-  }
+function loadAudioDurations(reciterId: string): Promise<AudioDurationsSummary | null> {
+  const cached = audioDurationsPromises.get(reciterId);
+  if (cached) return cached;
 
-  return audioDurationsPromise;
+  const request = fetch(
+    `/data/listenQuran/durations/${encodeURIComponent(reciterId)}.json`,
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Audio durations request failed: ${response.status}`);
+      }
+      return response.json() as Promise<AudioDurationsSummary>;
+    })
+    .catch(() => {
+      audioDurationsPromises.delete(reciterId);
+      return null;
+    });
+
+  audioDurationsPromises.set(reciterId, request);
+  return request;
 }
 
 export interface UseAudioPlayerOptions {
@@ -189,11 +192,12 @@ export function useAudioPlayer(
   }, [surah, surahNumber, reciterId]);
 
   useEffect(() => {
-    if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;
+    if (!reciterId) return;
 
     let cancelled = false;
+    setAudioDurationsSummary(null);
 
-    loadAudioDurations().then((data) => {
+    loadAudioDurations(reciterId).then((data) => {
       if (!cancelled) {
         setAudioDurationsSummary(data);
       }
@@ -202,19 +206,23 @@ export function useAudioPlayer(
     return () => {
       cancelled = true;
     };
-  }, [surah, reciterId, surahNumber]);
+  }, [reciterId]);
 
   useEffect(() => {
     if (!surah || !surah.ayahs || !reciterId || !surahNumber) return;
-    if (!audioDurationsSummary) return;
 
-    const reciterData = audioDurationsSummary[reciterId];
-    if (!reciterData) {
+    if (!audioDurationsSummary) {
+      setAyahDurations([]);
+      setCumulativeDurations([]);
+      setDuration(0);
       return;
     }
 
-    const surahData = reciterData[surahNumber.toString()];
+    const surahData = audioDurationsSummary[surahNumber.toString()];
     if (!surahData) {
+      setAyahDurations([]);
+      setCumulativeDurations([]);
+      setDuration(0);
       return;
     }
 

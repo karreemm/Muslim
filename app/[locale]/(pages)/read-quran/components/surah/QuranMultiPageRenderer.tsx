@@ -3,6 +3,7 @@
 import { memo, useRef, useEffect } from "react";
 import QuranPageRenderer from "../general/QuranPageRenderer";
 import { useQuranPages } from "@/hooks/readQuran/useQuranPages";
+import { useQuranFontPrefetch } from "@/hooks/readQuran/useQuranPageFont";
 
 interface SurahHeaderInfo {
   surahNumber: number;
@@ -29,6 +30,11 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
       highlightedAyahNumber,
       highlightedPage,
     } = useQuranPages(verses, onLoadedPagesChange);
+
+    const nextPageNumber = sortedPageNumbers[visiblePages]
+      ? parseInt(sortedPageNumbers[visiblePages])
+      : undefined;
+    useQuranFontPrefetch(nextPageNumber);
 
     useEffect(() => {
       lastScrolledTargetRef.current = null;

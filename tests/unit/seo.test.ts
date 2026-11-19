@@ -57,7 +57,7 @@ describe("createMetadata", () => {
     const child = createMetadata({ locale: "en", title: "Read Quran" });
 
     expect(root.title).toEqual({
-      default: "Muslim — Quran, Hadith, Azkar & Prayer Times",
+      default: "Muslim - Quran, Hadith, Azkar & Prayer Times",
       template: "%s | Muslim",
     });
     expect(root.metadataBase?.toString()).toBe(`${SITE_URL}/`);

@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function LanguageDropdown({ className = "" }: Props) {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, isHydrated } = useLanguage();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,8 @@ export default function LanguageDropdown({ className = "" }: Props) {
     <div ref={containerRef} className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="group flex h-10 w-auto min-w-10 px-3 items-center justify-center gap-2 rounded-xl border border-border/50 bg-card/80 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-card hover:shadow-md hover:shadow-primary/5"
+        disabled={!isHydrated}
+        className="group flex h-10 w-auto min-w-10 px-3 items-center justify-center gap-2 rounded-xl border border-border/50 bg-card/80 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-card hover:shadow-md hover:shadow-primary/5 disabled:cursor-wait disabled:opacity-70"
         aria-label={t("common.language")}
       >
         <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">

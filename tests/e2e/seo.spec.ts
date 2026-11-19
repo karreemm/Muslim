@@ -3,13 +3,13 @@ import { expect, test } from "@playwright/test";
 const cases = [
   {
     path: "/en",
-    title: /Muslim — Quran, Hadith, Azkar & Prayer Times/,
+    title: /Muslim - Quran, Hadith, Azkar & Prayer Times/,
     lang: "en",
     dir: "ltr",
   },
   {
     path: "/ar",
-    title: /مسلم — القرآن والحديث والأذكار ومواقيت الصلاة/,
+    title: /مسلم - القرآن والحديث والأذكار ومواقيت الصلاة/,
     lang: "ar",
     dir: "rtl",
   },
@@ -58,13 +58,13 @@ const cases = [
   },
   {
     path: "/en/read-hadith/book/sahih-bukhari/chapter/1",
-    title: /Sahih Bukhari — Chapter 1 \| Muslim/,
+    title: /Sahih Bukhari - Chapter 1 \| Muslim/,
     lang: "en",
     dir: "ltr",
   },
   {
     path: "/ar/read-hadith/book/sahih-bukhari/chapter/1",
-    title: /صحيح البخاري — الباب 1 \| مسلم/,
+    title: /صحيح البخاري - الباب 1 \| مسلم/,
     lang: "ar",
     dir: "rtl",
   },

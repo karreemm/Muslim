@@ -607,7 +607,7 @@
 
 /* Font Family */
 .font {
-  font-family: "Kufam", sans-serif;
+  font-family: var(--font-kufam), sans-serif;
 }
 
 /* ═══════════════════════════════════════════════

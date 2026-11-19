@@ -73,7 +73,7 @@
     "description": "Explore {{name}} with chapter navigation, search, pagination, and favourite hadiths."
   },
   "hadithChapter": {
-    "title": "{{book}} — Chapter {{number}}",
+    "title": "{{book}} - Chapter {{number}}",
     "description": "Read chapter {{number}} of {{book}} with search, pagination, and favourite hadiths."
   },
   "reciter": {

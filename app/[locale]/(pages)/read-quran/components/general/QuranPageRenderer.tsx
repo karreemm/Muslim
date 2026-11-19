@@ -259,7 +259,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           }`}
           style={{
             fontFamily:
-              pageFontName && fontReady ? `'${pageFontName}'` : "'Amiri', serif",
+              pageFontName && fontReady ? `'${pageFontName}'` : "var(--font-amiri-quran), 'Amiri', serif",
             fontSize: `${fontSize}px`,
             lineHeight: lineHeight,
             color: forcePrimaryText
@@ -278,7 +278,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           onPointerCancel={isWordRangeSelectionEnabled ? endSelectionDrag : undefined}
         >
           {forcedTopHeaderInfo && (
-            <div className="w-full mb-12" style={{ fontFamily: "'Amiri Quran', serif" }}>
+            <div className="w-full mb-12" style={{ fontFamily: "var(--font-amiri-quran), 'Amiri Quran', serif" }}>
               <QuranSurahHeader
                 surahNameAr={forcedTopHeaderInfo.arTashkeel}
                 surahNumber={forcedTopHeaderInfo.number}
@@ -305,7 +305,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                   <div
                     key={`header-${lineNumber}`}
                     className={`w-full mb-12 ${isHeaderAtTop ? "" : "mt-8"}`}
-                    style={{ fontFamily: "'Amiri', serif" }}
+                    style={{ fontFamily: "var(--font-amiri-quran), 'Amiri', serif" }}
                   >
                     <QuranSurahHeader
                       surahNameAr={surahHeaderInfo.arTashkeel}

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { toPng } from "html-to-image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "@/context/general/LanguageContext";
@@ -135,6 +134,7 @@ export default function GenerateAyahImage() {
         await new Promise((resolve) => window.setTimeout(resolve, 50));
       }
 
+      const { toPng } = await import("html-to-image");
       const dataUrl = await toPng(exportPreviewRef.current, {
         cacheBust: true,
         pixelRatio: 3,

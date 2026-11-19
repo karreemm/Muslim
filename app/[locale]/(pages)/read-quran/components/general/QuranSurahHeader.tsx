@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextImage from "next/image";
 import { useHeaderColor } from "@/hooks/general/useHeaderColor";
 import useMediaQuery from "@/hooks/general/useMediaQuery";
 import { useTranslation } from "@/hooks/general/useTranslation";
@@ -37,7 +38,7 @@ export default function QuranSurahHeader({
   const [isResolvingHeader, setIsResolvingHeader] = useState(true);
 
   const coloredSrc = useHeaderColor(
-    "/surah-header-4.png",
+    "/surah-header-4.webp",
     {
       strokeVar: "--primary",
       bgVar: "--quran-highlight-soft",
@@ -135,9 +136,12 @@ export default function QuranSurahHeader({
     <div className="w-full flex flex-col items-center" dir="rtl">
       <div ref={headerContainerRef} className="relative w-full">
         {!isResolvingHeader && (
-          <img
-            src="/surah-header-4.png"
+          <NextImage
+            src="/surah-header-4.webp"
             alt={t("readQuran.surahAlt", { name: surahNameAr })}
+            width={2012}
+            height={291}
+            sizes="(max-width: 768px) 100vw, 900px"
             className={`w-full h-auto block ${
               useFallbackHeader ? "opacity-100" : "opacity-0"
             }`}
@@ -152,16 +156,13 @@ export default function QuranSurahHeader({
         )}
 
         {shouldUseColored && (
-          <img
+          <div
             key={displayColoredSrc}
-            src={displayColoredSrc || undefined}
-            alt={t("readQuran.surahAlt", { name: surahNameAr })}
-            className="absolute inset-0 w-full h-auto block"
-            draggable={false}
-            onError={() => {
-              setUseFallbackHeader(true);
-              setDisplayColoredSrc(null);
-              setIsResolvingHeader(false);
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full bg-no-repeat"
+            style={{
+              backgroundImage: `url(${displayColoredSrc})`,
+              backgroundSize: "100% 100%",
             }}
           />
         )}
@@ -185,7 +186,7 @@ export default function QuranSurahHeader({
           className="mt-2 text-center"
           style={{
             fontSize: `${basmalaFontSize}px`,
-            fontFamily: "'Amiri Quran', serif",
+            fontFamily: "var(--font-amiri-quran), 'Amiri Quran', serif",
             color: usePrimaryText ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >

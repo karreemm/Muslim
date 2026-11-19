@@ -2,7 +2,7 @@
 doc_type: living
 title: "Muslim — Project Overview"
 version: "1.0.0"
-last_updated: "2026-11-17"
+last_updated: "2026-11-19"
 status: active
 audience: ["agents", "contributors", "maintainers"]
 ---
@@ -89,22 +89,21 @@ app/[locale]/layout.tsx
 └── LanguageProvider                ← locale comes from the URL
     └── ThemeProvider
         └── PaletteProvider
-            └── AppHydrationGate          ← waits for client providers
-                └── QuranAudioProvider
-                    └── RadioProvider
-                        └── SavedAyahsProvider
-                            └── FavoriteSurahsProvider
-                                └── FavoriteHadithsProvider
-                                    └── FavoriteAzkarProvider
-                                        └── ZekrCounterProvider
-                                            ├── PrayerAzkarReset
-                                            └── SadaqaGaryaProvider
-                                                └── TasbeehProvider
-                                                    └── PageLayout
-                                                        ├── Navbar
-                                                        ├── <main>{children}</main>
-                                                        ├── AudioPlayer | RadioPlayer
-                                                        └── Footer
+            └── QuranAudioProvider
+                └── RadioProvider
+                    └── SavedAyahsProvider
+                        └── FavoriteSurahsProvider
+                            └── FavoriteHadithsProvider
+                                └── FavoriteAzkarProvider
+                                    └── ZekrCounterProvider
+                                        ├── PrayerAzkarReset
+                                        └── SadaqaGaryaProvider
+                                            └── TasbeehProvider
+                                                └── PageLayout
+                                                    ├── Navbar
+                                                    ├── <main>{children}</main>
+                                                    ├── AudioPlayer | RadioPlayer (lazy)
+                                                    └── Footer
 ```
 
 Key points:
@@ -157,11 +156,13 @@ context/
 data/
 ├── searchQuran/               # 3.89 MB search index (raw duplicates removed)
 └── sadaqaGarya/               # Supabase schema
-public/data/listenQuran/       # 1.54 MB audio durations, lazy-loaded at runtime
+public/data/listenQuran/durations/ # Per-reciter duration files (~42 KB each)
 public/icons/                  # Square app icons (192/512/maskable/Apple)
+public/surah-header-4.webp     # Recolored Quran header source
+public/bismillah.png           # README header calligraphy
 public/logo.png                # Wide wordmark used by the README
 hooks/                         # Feature hooks, grouped by domain
-lib/                           # Cross-cutting: i18n, SEO, storage, http, logger, env, security
+lib/                           # Cross-cutting: i18n, SEO, fonts, date formatting, storage, http, logger, env, security
 lib/services/                  # External API services (azkar, hadith, Quran, prayer, search...)
 locales/{en,ar}/               # 18 namespaces per language (includes `seo`)
 types/                         # Shared domain types (ayah image, hadith, radio, sadaqa, search)
@@ -494,8 +495,10 @@ renderer keep specialized layouts by design.
   `RadioContext` and streams via `/api/radio-proxy`.
 - `PageLayout` shows **either** player; starting Quran audio dispatches
   `quran:started`, and `RadioContext` stops the radio when it hears it.
-- `AppHydrationGate` currently blocks the app for 2 seconds. Removing that gate is a
-  Phase 2 priority; the pre-hydration theme script is the correct flash fix.
+- The full-screen `AppHydrationGate` was removed in Phase 3B. The inline theme
+  script handles first-paint theme/palette, and the page shell renders immediately.
+- `AudioPlayer` and `RadioPlayer` are dynamically imported so they do not block
+  initial rendering.
 
 **Invariant:** Quran audio and radio must never play at the same time.
 
@@ -644,18 +647,18 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ## 14. Quality status (as of 2026-11-18)
 
-This is a snapshot after Phase 3A, not the final target state.
+This is a snapshot after Phase 3B, not the final target state.
 
 | Area                       | Status                                                                                                                                                                                                                                                    |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Typecheck                  | ✅ `npm run typecheck` passes.                                                                                                                                                                                                                            |
-| Lint                       | ✅ `npm run lint` passes with **0 errors / 109 warnings**. React Compiler hook warnings remain until the hook refactor.                                                                                                                                   |
-| Unit/integration/component | ✅ 18 test files, 104 tests (utils, storage, HTTP, locales, i18n helpers and keys, env, SEO, security, cookies, API routes, UI primitives).                                                                                                               |
+| Lint                       | ✅ `npm run lint` passes with **0 errors / 107 warnings**. React Compiler hook warnings remain until the hook refactor.                                                                                                                                   |
+| Unit/integration/component | ✅ 19 test files, 109 tests (utils, storage, HTTP, locales, i18n helpers/keys, env, SEO, date formatting, security, cookies, API routes, UI primitives).                                                                                                 |
 | E2E/regression             | ✅ 64 Playwright tests: 27 localized route smoke tests, 6 root-redirect checks, 2 localized 404 checks, 20 locale-aware metadata checks, 1 icon-assets check, 1 robots/sitemap check, 4 i18n checks (language switch, query preservation, script warning, missing keys), 2 link-integrity checks, 1 axe scan.                                             |
 | CI                         | ✅ Workflow added; first GitHub run is pending.                                                                                                                                                                                                           |
 | Error boundaries           | ✅ Localized `app/[locale]/error.tsx` and `app/global-error.tsx`.                                                                                                                                                                                         |
 | SEO                        | ✅ Locale-aware titles, descriptions, canonical URLs, hreflang, OpenGraph/Twitter, JSON-LD, bilingual sitemap, robots, and PWA manifest.                                                                                                                  |
-| Performance                | ⚠️ 2s hydration gate removed; audio durations lazy-loaded; 8.8 MB unused JSON removed. Still no `next/image`; fonts via `<link>`.                                                                                                                         |
+| Performance                | ✅ Self-hosted `next/font`; WebP Quran header; per-page Quran font prefetch; audio durations split per reciter; lazy players/export; cache headers; hydration gate removed. Route JS reduced by 7–9%.                                                   |
 | Accessibility              | ✅ `DeleteConfirmModal` uses Headless UI Dialog (focus trap/Escape/ARIA); data-table actions have labels; axe home scan passes. Broader scans are Phase 4.                                                                                                |
 | Storage                    | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility.                                                                                                                                                                            |
 | Data layer                 | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports.                                                                                                                                               |
@@ -671,6 +674,7 @@ Phase records:
 - [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md)
 - [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)
 - [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)
+- [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)
 
 ---
 

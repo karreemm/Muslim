@@ -1,5 +1,5 @@
 export { useQuranNavigation } from "./useQuranNavigation";
-export { useQuranPageFont } from "./useQuranPageFont";
+export { useQuranPageFont, useQuranFontPrefetch } from "./useQuranPageFont";
 export { useQuranPageLines } from "./useQuranPageLines";
 export { useAyahInteraction } from "./useAyahInteraction";
 export { useAyahAudio } from "./useAyahAudio";

@@ -73,7 +73,7 @@
     "description": "تصفح {{name}} مع التنقل بين الأبواب والبحث وتقسيم الصفحات والأحاديث المفضلة."
   },
   "hadithChapter": {
-    "title": "{{book}} — الباب {{number}}",
+    "title": "{{book}} - الباب {{number}}",
     "description": "اقرأ الباب {{number}} من {{book}} مع البحث وتقسيم الصفحات والأحاديث المفضلة."
   },
   "reciter": {

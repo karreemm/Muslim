@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { ThemeScript } from "@/utils/themeScript";
+import { amiriQuran, kufam } from "@/lib/fonts";
 import { localeDirection, normalizeLocale, translate } from "@/lib/i18n";
 import "./globals.css";
 
@@ -29,7 +30,12 @@ export default async function GlobalNotFound() {
   const homeHref = `/${locale}`;
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={dir}
+      className={`${kufam.variable} ${amiriQuran.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <meta name="color-scheme" content="dark light" />
         <ThemeScript />

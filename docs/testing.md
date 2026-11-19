@@ -2,7 +2,7 @@
 doc_type: living
 title: "Testing Guide"
 version: "1.0.0"
-last_updated: "2026-11-17"
+last_updated: "2026-11-19"
 status: active
 audience: ["agents", "contributors", "maintainers"]
 ---
@@ -69,7 +69,8 @@ tests/
 - `lib/storage.ts` — string/number/JSON reads, fallbacks, validation, removal.
 - `lib/sadaqaGarya/sadaqaDeleteCookie.ts` and `localDeleteTokens.ts` — token maps.
 - `lib/http.ts` — JSON/array-buffer responses and `HttpError` normalization.
-- `lib/env.ts` — Supabase/Hadith env validation, defaults, and missing-value failures.
+- `lib/env.ts` - Supabase/Hadith env validation, defaults, and missing-value failures.
+- `lib/dateFormatting.ts` - Gregorian, Hijri, and 12-hour prayer-time formatting.
 - `lib/i18n.ts` — locale resolution, path prefixing/swapping, stripping, and
   language-specific SEO translation.
 - SEO — locale-aware metadata, hreflang, sitemap, robots, and manifest unit tests;
@@ -91,7 +92,7 @@ tests/
 - Internal links stay inside `/ar` or `/en` and resolve without HTTP errors.
 - Home page critical a11y violations (axe).
 
-Current totals: **18 test files, 104 unit/integration/component tests**, plus
+Current totals: **19 test files, 109 unit/integration/component tests**, plus
 **64 Playwright tests**.
 
 **Not covered yet:** most hooks/contexts, the remaining page-level components,
@@ -191,7 +192,7 @@ Coverage is generated with v8:
 6. Playwright smoke + a11y (`npm run test:e2e`)
 
 Playwright reports are uploaded on failure. The current suite is 18 Vitest files
-(104 tests) plus 64 Playwright tests.
+(109 tests) plus 64 Playwright tests.
 
 ---
 
@@ -202,7 +203,7 @@ Playwright reports are uploaded on failure. The current suite is 18 Vitest files
 - `npm audit` reports **0 vulnerabilities** for both production and dev
   dependencies after the Phase 2b `npm audit fix`.
 - The 2-second hydration gate was removed in Phase 2; E2E is faster as a result.
-- The legacy code has 109 lint warnings (React Compiler hook rules + exhaustive
+- The legacy code has 107 lint warnings (React Compiler hook rules + exhaustive
   deps). They are visible but do not block CI; the hook refactor is the next
   consistency task.
 - Prettier now runs across the repository; new files must be formatted before

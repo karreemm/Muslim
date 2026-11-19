@@ -1,11 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Navbar from "./navbar/Navbar";
 import Footer from "./footer/Footer";
 import { usePathname } from "next/navigation";
-import { AudioPlayer } from "../general/audio-player/AudioPlayer";
-import RadioPlayer from "../general/radio-player/RadioPlayer";
 import { useRadioPlayer } from "@/hooks/radio";
+
+const AudioPlayer = dynamic(
+  () =>
+    import("../general/audio-player/AudioPlayer").then((module) => module.AudioPlayer),
+  { ssr: false },
+);
+
+const RadioPlayer = dynamic(() => import("../general/radio-player/RadioPlayer"), {
+  ssr: false,
+});
 
 export default function PageLayout({ children }: { children: React.ReactNode }) {
   const currentPath = usePathname();
