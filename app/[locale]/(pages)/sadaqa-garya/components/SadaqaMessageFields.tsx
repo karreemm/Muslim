@@ -38,7 +38,8 @@ export default function SadaqaMessageFields({
         <textarea
           value={messageEn}
           onChange={(e) => onMessageEnChange(e.target.value)}
-          className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
+          aria-label={messageEnLabel}
+          className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground placeholder:text-muted-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
           dir="ltr"
           placeholder={translate("en", "sadaqa.form.messagePlaceholder")}
         />
@@ -58,7 +59,8 @@ export default function SadaqaMessageFields({
         <textarea
           value={messageAr}
           onChange={(e) => onMessageArChange(e.target.value)}
-          className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
+          aria-label={messageArLabel}
+          className="min-h-[140px] w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground placeholder:text-muted-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30 resize-none"
           dir="rtl"
           placeholder={translate("ar", "sadaqa.form.messagePlaceholder")}
         />

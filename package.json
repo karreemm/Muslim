@@ -21,6 +21,9 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:visual": "playwright test -c playwright.visual.config.ts",
+    "test:visual:update": "playwright test -c playwright.visual.config.ts --update-snapshots",
+    "test:perf": "playwright test -c playwright.performance.config.ts",
     "check": "npm run typecheck && npm run lint && npm run test",
     "keepalive": "node scripts/supabase-keepalive.mjs"
   },

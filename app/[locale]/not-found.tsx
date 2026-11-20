@@ -45,7 +45,10 @@ export default function NotFound() {
               ${mounted ? "opacity-100 scale-100" : "opacity-0 scale-90"}
             `}
           >
-            <div className="text-[8rem] md:text-[10rem] font-black leading-none bg-gradient-to-b from-primary/20 to-primary/5 bg-clip-text text-transparent select-none">
+            <div
+              aria-hidden="true"
+              className="text-[8rem] md:text-[10rem] font-black leading-none bg-gradient-to-b from-primary/20 to-primary/5 bg-clip-text text-transparent select-none"
+            >
               {t("common.notFoundCode")}
             </div>
           </div>
@@ -90,7 +93,7 @@ export default function NotFound() {
           >
             <Link
               href={`/${language}`}
-              className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+              className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-background rounded-xl font-semibold overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
             >
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <Home className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />

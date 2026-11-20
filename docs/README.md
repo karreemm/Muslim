@@ -80,6 +80,7 @@ Update this table whenever a change record moves status.
 | 2026-11-18 | `chore/professional-foundation` | SEO metadata, sitemap, robots, manifest                  | `done`   | [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)                      |
 | 2026-11-19 | `chore/professional-foundation` | Fonts, WebP, bundle splitting, audio data, Intl dates    | `done`   | [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)               |
 | 2026-11-19 | `chore/professional-foundation` | security headers, CSP report-only, API hardening         | `done`   | [Phase 3C security](./changes/2026-11-19-phase-3c-security.md)                     |
+| 2026-11-20 | `chore/professional-foundation` | accessibility matrix, journeys, visual regression        | `review` | [Phase 4 quality](./changes/2026-11-20-phase-4-quality.md)                        |
 
 ---
 

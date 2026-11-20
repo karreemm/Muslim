@@ -41,3 +41,8 @@ next-env.d.ts
 
 # test folders
 /EnhanceReading
+
+# visual regression baselines are platform-specific; only Linux baselines are
+# committed (CI runs Ubuntu). Regenerate local ones with `npm run test:visual:update`.
+/tests/e2e/visual.spec.ts-snapshots/*-win32.png
+/tests/e2e/visual.spec.ts-snapshots/*-darwin.png

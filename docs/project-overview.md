@@ -425,7 +425,7 @@ renderer keep specialized layouts by design.
 - Modals need `role="dialog"`, `aria-modal`, focus trap, Escape-to-close, and
   focus restoration.
 - Icon-only buttons need `aria-label` or `title` + `aria-label`.
-- New UI will be scanned with axe in the E2E suite (Phase 4).
+- New UI is scanned with axe across the key-route E2E matrix.
 
 ---
 
@@ -656,19 +656,19 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ## 14. Quality status (as of 2026-11-18)
 
-This is a snapshot after Phase 3C, not the final target state.
+This is a snapshot during Phase 4, not the final target state.
 
 | Area                       | Status                                                                                                                                                                                                                                                    |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Typecheck                  | ✅ `npm run typecheck` passes.                                                                                                                                                                                                                            |
 | Lint                       | ✅ `npm run lint` passes with **0 errors / 107 warnings**. React Compiler hook warnings remain until the hook refactor.                                                                                                                                   |
 | Unit/integration/component | ✅ 19 test files, 109 tests (utils, storage, HTTP, locales, i18n helpers/keys, env, SEO, date formatting, security, cookies, API routes, UI primitives).                                                                                                 |
-| E2E/regression             | ✅ 71 Playwright tests: 27 localized route smoke tests, 6 root-redirect checks, 2 localized 404 checks, 20 locale-aware metadata checks, 1 icon-assets check, 1 robots/sitemap check, 4 i18n checks, 2 link-integrity checks, 4 security checks, 3 Sadaqa UX checks, 1 axe scan. |
+| E2E/regression             | ✅ 105 default Playwright tests (Chromium/Firefox/WebKit) + 10 local visual snapshots + 4 Web Vitals budgets: locale, metadata, links, security, Sadaqa, 16-route axe matrix, keyboard/modal flows, and user journeys. Visual CI is dormant until Linux baselines are committed. |
 | CI                         | ✅ Workflow added; first GitHub run is pending.                                                                                                                                                                                                           |
 | Error boundaries           | ✅ Localized `app/[locale]/error.tsx` and `app/global-error.tsx`.                                                                                                                                                                                         |
 | SEO                        | ✅ Locale-aware titles, descriptions, canonical URLs, hreflang, OpenGraph/Twitter, JSON-LD, bilingual sitemap, robots, and PWA manifest.                                                                                                                  |
 | Performance                | ✅ Self-hosted `next/font`; WebP Quran header; per-page Quran font prefetch; audio durations split per reciter; lazy players/export; cache headers; hydration gate removed. Route JS reduced by 7–9%.                                                   |
-| Accessibility              | ✅ `DeleteConfirmModal` uses Headless UI Dialog (focus trap/Escape/ARIA); data-table actions have labels; axe home scan passes. Broader scans are Phase 4.                                                                                                |
+| Accessibility              | ✅ Axe scans 16 routes for critical/serious WCAG A/AA issues; keyboard language switch, modal focus trap/Escape, and mobile-menu Escape covered.                                                                                                          |
 | Storage                    | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility.                                                                                                                                                                            |
 | Data layer                 | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports.                                                                                                                                               |
 | i18n                       | ✅ All user-facing UI copy is localized. Remaining Arabic literals are data (prayer/month names, palette labels), decorative language badges, and the `global-error` bilingual fallback. A key-usage test + Playwright runtime scan prevent missing keys. |
@@ -685,6 +685,7 @@ Phase records:
 - [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)
 - [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)
 - [Phase 3C security](./changes/2026-11-19-phase-3c-security.md)
+- [Phase 4 quality](./changes/2026-11-20-phase-4-quality.md)
 
 ---
 

@@ -71,6 +71,7 @@ export default function SearchAyah() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyPress={handleKeyPress}
+                aria-label={t("common.search")}
                 placeholder={t("searchAyah.placeholder")}
                 className="w-full h-12 px-4 text-lg bg-transparent text-foreground placeholder:text-muted-foreground/60
                     outline-none border-none "
@@ -79,6 +80,7 @@ export default function SearchAyah() {
               {keyword && (
                 <button
                   onClick={handleClearSearch}
+                  aria-label={t("common.close")}
                   className={`absolute inset-y-0 ${isArabic ? "left-0" : "right-0"} px-4 text-muted-foreground hover:text-foreground transition-colors`}
                 >
                   <FontAwesomeIcon icon={faTimes} />

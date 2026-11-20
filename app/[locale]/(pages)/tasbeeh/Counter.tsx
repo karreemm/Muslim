@@ -129,6 +129,7 @@ const Counter = () => {
                   onClick={resetAll}
                   className="shrink-0 px-5 py-4 font-semibold bg-muted hover:bg-muted/80 text-foreground rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 border border-border"
                   title={t("common.reset")}
+                  aria-label={t("common.reset")}
                 >
                   <FontAwesomeIcon icon={faRotateRight} className="text-lg" />
                 </button>
@@ -203,6 +204,7 @@ const Counter = () => {
                 <button
                   onClick={handleDown}
                   disabled={count === 0}
+                  aria-label={t("tasbeeh.decrement")}
                   className={`group w-16 h-16 lg:w-20 lg:h-20 rounded-full flex justify-center items-center bg-muted border-2 border-border shadow-lg transition-all duration-200 active:scale-95 ${count === 0 ? "opacity-50 cursor-not-allowed" : "hover:border-primary/50 hover:shadow-xl hover:-translate-y-1"} ${isButtonDownClicked ? "scale-95 border-accent" : ""}`}
                 >
                   <FontAwesomeIcon
@@ -213,6 +215,7 @@ const Counter = () => {
 
                 <button
                   onClick={handleUp}
+                  aria-label={t("tasbeeh.increment")}
                   className={`group relative w-40 h-40 lg:w-48 lg:h-48 rounded-full flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-2xl shadow-primary/30 transition-all duration-200 active:scale-95 ${isButtonUpClicked ? "scale-95 shadow-primary/50" : "hover:scale-105 hover:shadow-primary/40"}`}
                 >
                   <div

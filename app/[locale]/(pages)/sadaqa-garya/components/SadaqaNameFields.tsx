@@ -41,12 +41,13 @@ export default function SadaqaNameFields({
             type="text"
             value={nameEn}
             onChange={(e) => onNameEnChange(e.target.value)}
-            className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pl-10 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
+            aria-label={nameEnLabel}
+            className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pl-10 text-foreground placeholder:text-muted-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
             required
             dir="ltr"
             placeholder={translate("en", "sadaqa.form.namePlaceholder")}
           />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/80 text-xs font-bold">
             EN
           </span>
         </div>
@@ -69,12 +70,13 @@ export default function SadaqaNameFields({
             type="text"
             value={nameAr}
             onChange={(e) => onNameArChange(e.target.value)}
-            className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pr-10 text-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
+            aria-label={nameArLabel}
+            className="h-12 w-full rounded-xl border border-input bg-background/50 px-4 pr-10 text-foreground placeholder:text-muted-foreground outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-background hover:border-primary/30"
             required
             dir="rtl"
             placeholder={translate("ar", "sadaqa.form.namePlaceholder")}
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-bold">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/80 text-xs font-bold">
             ع
           </span>
         </div>

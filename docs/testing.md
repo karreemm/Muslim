@@ -28,8 +28,11 @@ This project uses a layered test strategy:
 npm test               # run unit + integration + component tests
 npm run test:watch     # watch mode
 npm run test:coverage  # v8 coverage report in ./coverage
-npm run test:e2e       # Playwright (browser must be installed)
+npm run test:e2e       # Playwright default suite
 npm run test:e2e:ui    # Playwright UI mode
+npm run test:visual    # Opt-in visual regression snapshots
+npm run test:visual:update # Regenerate local visual baselines
+npm run test:perf      # Web Vitals budgets
 npm run check          # typecheck + lint + unit/integration/component
 ```
 
@@ -93,14 +96,21 @@ tests/
 - Sadaqat error/retry state, successful empty state, and local-token recovery.
 - Language switching preserves the current path and query string.
 - Internal links stay inside `/ar` or `/en` and resolve without HTTP errors.
-- Home page critical a11y violations (axe).
+- Accessibility: axe scans 16 key routes for critical/serious WCAG A/AA issues,
+  plus keyboard language switch, modal focus trap/Escape, and mobile-menu Escape.
+- Cross-browser smoke: Chromium, Firefox, and WebKit.
+- User journeys: Quran/Azkar navigation, Tasbeeh persistence, Quran search,
+  saved-ayah navigation, and Sadaqa create/delete with mocked storage.
+- Visual regression: 10 opt-in snapshots covering EN/AR, home, Quran, Tasbeeh,
+  Sadaqa form, and 404. Only Linux baselines are committed (see below).
+- Performance: LCP, CLS, and transfer-size budgets on four routes.
 
 Current totals: **19 test files, 109 unit/integration/component tests**, plus
-**71 Playwright tests**.
+**105 default Playwright tests**, **10 visual snapshots**, and **4 Web Vitals budgets**.
 
-**Not covered yet:** most hooks/contexts, the remaining page-level components,
-dynamic routes with mocked data, full user journeys, visual regression. These are
-Phase 4.
+**Not covered yet:** Linux visual baselines (visual CI is dormant), manual
+screen-reader passes, broader SEO structured-data validation, and Lighthouse CI
+thresholds.
 
 ---
 
@@ -166,8 +176,38 @@ test("critical flow", async ({ page }) => {
 });
 ```
 
-Playwright starts `npm run dev` locally and `npm run start` in CI. Use
-`page.route()` for third-party APIs and avoid writing to the real database.
+Playwright starts `npm run dev` locally and `npm run start` in CI. The default
+suite uses 2 workers for stability. Use `page.route()` for third-party APIs and
+avoid writing to the real database.
+
+Visual regression uses a separate config:
+
+```bash
+npm run test:visual        # compare against baselines
+npm run test:visual:update # rewrite baselines (only after an intended UI change)
+```
+
+### Visual baselines
+
+Playwright stores one image per test and appends the platform to the filename,
+so a Windows run and a Linux run never share images.
+
+| File | Committed | Purpose |
+|---|---|---|
+| `*-linux.png` | yes | CI baseline (Ubuntu runner) |
+| `*-win32.png` | no | local baseline, gitignored |
+| `*-darwin.png` | no | local baseline, gitignored |
+
+- Baselines are **not regenerated per commit**. Every run compares against the
+  stored image. Run `npm run test:visual:update` only when a UI change is
+  intentional, then commit the changed PNGs with that change.
+- On a fresh clone, run `npm run test:visual:update` once to create baselines
+  for your OS.
+- `visual CI` is dormant until Linux baselines are committed. Generate them by
+  running the **Visual Baselines** workflow and committing the uploaded
+  `visual-linux-baselines` artifact.
+- Locally the suite runs against `npm run dev`; CI runs the production build.
+  That is why Linux baselines must come from CI rather than a local machine.
 
 ---
 
@@ -192,10 +232,12 @@ Coverage is generated with v8:
 3. `npm run lint`
 4. `npm test`
 5. `npm run build`
-6. Playwright smoke + a11y (`npm run test:e2e`)
+6. Playwright smoke + a11y + journeys + cross-browser (`npm run test:e2e`)
+7. Visual regression when Linux baselines are present (`npm run test:visual`)
 
-Playwright reports are uploaded on failure. The current suite is 18 Vitest files
-(109 tests) plus 71 Playwright tests.
+Playwright reports are uploaded on failure. The current suite is 19 Vitest files
+(109 tests) plus 105 default Playwright tests, 10 visual snapshots, and 4 Web
+Vitals budgets.
 
 ---
 
@@ -211,6 +253,8 @@ Playwright reports are uploaded on failure. The current suite is 18 Vitest files
   consistency task.
 - Prettier now runs across the repository; new files must be formatted before
   merging.
+- Visual regression compares platform-specific images. Only Linux baselines are
+  committed, and the visual CI job stays skipped until they exist.
 
 ---
 

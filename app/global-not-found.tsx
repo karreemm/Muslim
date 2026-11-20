@@ -48,7 +48,10 @@ export default async function GlobalNotFound() {
           </div>
 
           <div className="relative z-10 w-full max-w-2xl rounded-3xl border border-border/50 bg-card/80 p-8 text-center shadow-2xl backdrop-blur-xl md:p-12">
-            <div className="mb-6 bg-gradient-to-b from-primary/20 to-primary/5 bg-clip-text text-[8rem] font-black leading-none text-transparent md:text-[10rem]">
+            <div
+              aria-hidden="true"
+              className="mb-6 bg-gradient-to-b from-primary/20 to-primary/5 bg-clip-text text-[8rem] font-black leading-none text-transparent md:text-[10rem]"
+            >
               {translate(locale, "common.notFoundCode")}
             </div>
             <h1 className="mb-4 text-2xl font-bold text-foreground md:text-4xl">
@@ -59,7 +62,7 @@ export default async function GlobalNotFound() {
             </p>
             <Link
               href={homeHref}
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 font-semibold text-primary-foreground transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
+              className="inline-flex items-center justify-center rounded-xl bg-foreground px-8 py-4 font-semibold text-background transition-all duration-300 hover:shadow-lg"
             >
               {translate(locale, "common.backHome")}
             </Link>
