@@ -1,5 +1,10 @@
+import { SadaqaGaryaProvider } from "@/context/features/SadaqatContext";
 import SadaqaGaryaPage from "./SadaqaGarya";
 
 export default function App() {
-  return <SadaqaGaryaPage />;
+  return (
+    <SadaqaGaryaProvider>
+      <SadaqaGaryaPage />
+    </SadaqaGaryaProvider>
+  );
 }

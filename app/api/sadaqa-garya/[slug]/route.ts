@@ -4,6 +4,7 @@ import {
   getSadaqaRecordBySlug,
 } from "@/lib/sadaqaGarya/sadaqaGaryaStore";
 import { getClientIp, isRateLimited } from "@/lib/apiSecurity";
+import { logger } from "@/lib/logger";
 import {
   buildDeleteTokenCookieValue,
   deleteTokenCookieName,
@@ -13,21 +14,40 @@ import {
 
 export const runtime = "nodejs";
 
+function safeDecodeSlug(raw: string): string {
+  try {
+    return decodeURIComponent(raw || "").trim();
+  } catch {
+    return "";
+  }
+}
+
 export async function GET(_req: Request, context: { params: Promise<{ slug: string }> }) {
   const { slug: rawSlug } = await context.params;
-  const slug = decodeURIComponent(rawSlug || "").trim();
+  const slug = safeDecodeSlug(rawSlug);
 
   if (!slug) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
-  const deceased = await getSadaqaRecordBySlug(slug);
+  try {
+    const deceased = await getSadaqaRecordBySlug(slug);
 
-  if (!deceased) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!deceased) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { deceased },
+      { status: 200, headers: { "Cache-Control": "no-store" } },
+    );
+  } catch (error) {
+    logger.error("GET /api/sadaqa-garya/[slug] failed:", error);
+    return NextResponse.json(
+      { error: "Failed to load record" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
   }
-
-  return NextResponse.json({ deceased }, { status: 200 });
 }
 
 export async function DELETE(
@@ -50,7 +70,7 @@ export async function DELETE(
   }
 
   const { slug: rawSlug } = await context.params;
-  const slug = decodeURIComponent(rawSlug || "").trim();
+  const slug = safeDecodeSlug(rawSlug);
 
   if (!slug) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
@@ -63,7 +83,16 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const deleted = await deleteSadaqaRecordBySlug(slug, deleteToken);
+  let deleted: Awaited<ReturnType<typeof deleteSadaqaRecordBySlug>>;
+  try {
+    deleted = await deleteSadaqaRecordBySlug(slug, deleteToken);
+  } catch (error) {
+    logger.error("DELETE /api/sadaqa-garya/[slug] failed:", error);
+    return NextResponse.json(
+      { error: "Failed to delete record" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
+  }
 
   if (deleted === "not_found") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

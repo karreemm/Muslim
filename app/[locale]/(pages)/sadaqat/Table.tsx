@@ -27,6 +27,7 @@ export default function DeceasedPersonsTable() {
     isLoading,
     canDeleteDeceased,
     hasDatabaseError,
+    retryLoading,
   } = useSadaqaGarya();
   const [shareableUrls, setShareableUrls] = useState<Record<string, string>>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -191,10 +192,12 @@ export default function DeceasedPersonsTable() {
     return (
       <HasUpdatesCard
         mounted={mounted}
-        title={t("sadaqa.update.title")}
-        message={t("sadaqa.update.message")}
-        backToHomeLabel={t("sadaqa.update.backToHome")}
+        title={t("sadaqa.errors.loadTitle")}
+        message={t("sadaqa.errors.loadMessage")}
+        backToHomeLabel={t("common.backHome")}
         onBackToHome={() => router.push(localizePath(language, "/"))}
+        retryLabel={t("common.tryAgain")}
+        onRetry={retryLoading}
       />
     );
   }

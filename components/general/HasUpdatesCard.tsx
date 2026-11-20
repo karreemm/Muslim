@@ -8,6 +8,8 @@ interface HasUpdatesCardProps {
   message: string;
   backToHomeLabel: string;
   onBackToHome: () => void;
+  retryLabel?: string;
+  onRetry?: () => void;
 }
 
 export default function HasUpdatesCard({
@@ -16,6 +18,8 @@ export default function HasUpdatesCard({
   message,
   backToHomeLabel,
   onBackToHome,
+  retryLabel,
+  onRetry,
 }: HasUpdatesCardProps) {
   return (
     <div className="min-h-screen bg-background pb-16 pt-8 text-foreground lg:pt-12 flex items-center justify-center relative overflow-hidden">
@@ -50,13 +54,25 @@ export default function HasUpdatesCard({
 
           <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">{message}</p>
 
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-primary-foreground font-semibold transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25"
-          >
-            <Home className="w-5 h-5" />
-            {backToHomeLabel}
-          </button>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            {onRetry && retryLabel ? (
+              <button
+                onClick={onRetry}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-primary-foreground font-semibold transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25"
+              >
+                <RefreshCw className="w-5 h-5" />
+                {retryLabel}
+              </button>
+            ) : null}
+
+            <button
+              onClick={onBackToHome}
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-foreground font-semibold transition-all duration-300 hover:border-primary/30 hover:bg-secondary/50"
+            >
+              <Home className="w-5 h-5" />
+              {backToHomeLabel}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ export default function SadaqaGaryaPage() {
   const { language } = useLanguage();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { hasDatabaseError } = useSadaqaGarya();
+  const { hasDatabaseError, retryLoading } = useSadaqaGarya();
 
   const {
     nameEn,
@@ -58,10 +58,12 @@ export default function SadaqaGaryaPage() {
     return (
       <HasUpdatesCard
         mounted={mounted}
-        title={t("sadaqa.update.title")}
-        message={t("sadaqa.update.message")}
-        backToHomeLabel={t("sadaqa.update.backToHome")}
+        title={t("sadaqa.errors.saveTitle")}
+        message={t("sadaqa.errors.saveMessage")}
+        backToHomeLabel={t("common.backHome")}
         onBackToHome={handleGoHome}
+        retryLabel={t("common.tryAgain")}
+        onRetry={retryLoading}
       />
     );
   }

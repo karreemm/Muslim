@@ -99,7 +99,10 @@ async function supabaseRequest(
 ): Promise<Response> {
   const { SUPABASE_URL, SUPABASE_SADAQA_TABLE } = getSupabaseEnv();
 
-  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_SADAQA_TABLE}${endpoint}`, options);
+  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_SADAQA_TABLE}${endpoint}`, {
+    ...options,
+    signal: options.signal ?? AbortSignal.timeout(8_000),
+  });
 }
 
 async function supabaseSlugExists(slug: string): Promise<boolean> {

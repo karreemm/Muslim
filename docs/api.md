@@ -30,12 +30,13 @@ noted otherwise.
 |---|---|---|---|
 | `/api/hadith` | `GET` | Requires `HADITH_API_KEY` | Proxy for `hadithapi.com`. `mode=books\|chapters\|hadiths`. |
 | `/api/search-quran` | `GET` | Query ≥ 2 letters after diacritic removal | Searches the local Quran index. Returns 404 when no matches. |
-| `/api/tafseer` | `GET` | None | Proxies `api.quran-tafseer.com`; caches for 1 day. |
-| `/api/proxy` | `GET` | Fixed CDN host | Converts surah/ayah to an absolute ayah number and proxies audio from `cdn.islamic.network`. |
+| `/api/tafseer` | `GET` | Numeric bounds | Proxies `api.quran-tafseer.com`; caches for 1 day. |
+| `/api/proxy` | `GET` | Reciter allowlist + ayah bounds | Converts surah/ayah to an absolute ayah number and proxies audio from `cdn.islamic.network`. |
 | `/api/radio-proxy` | `GET` | Host allowlist | Proxies radio streams from `live.mp3quran.net` / `qurango.net`; supports `Range`. |
-| `/api/download-audio` | `POST` | Host allowlist | Streams a surah download; sanitizes file names. |
-| `/api/sadaqa-garya` | `GET`, `POST` | POST: 8 req/min/IP | Lists public memorials / creates one. |
+| `/api/download-audio` | `POST` | Host allowlist + 300 URL cap | Streams a surah download; sanitizes file names. |
+| `/api/sadaqa-garya` | `GET`, `POST` | POST: 8 req/min/IP | Lists memorials owned by this browser / creates one. |
 | `/api/sadaqa-garya/[slug]` | `GET`, `DELETE` | DELETE: 10 req/min/IP + delete token | Public memorial page / owner delete. |
+| `/api/csp-report` | `POST` | 120 req/min/IP; 16 KB body | Receives CSP reports and writes sanitized entries to Vercel logs. |
 
 ### Security notes
 
@@ -46,6 +47,12 @@ noted otherwise.
   the SSRF boundary.
 - `sadaqaGaryaStore` uses the Supabase **service-role** key. It must never be
   imported into client code or exposed with a `NEXT_PUBLIC_` prefix.
+- `HADITH_API_KEY` is server-only; legacy `NEXT_PUBLIC_` fallbacks were removed.
+- API errors are generic. Upstream details stay in server logs.
+- Security headers and the report-only CSP are configured in `next.config.mjs`.
+  See [`security.md`](./security.md).
+- `/api/radio-proxy` forwards only media-related upstream headers; cookies and
+  hop-by-hop headers are dropped.
 
 ---
 

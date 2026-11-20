@@ -6,7 +6,7 @@ date: "2026-11-18"
 branch: "chore/professional-foundation"
 commit: ""
 author: "OpenCode agent"
-status: review
+status: done
 scope: [seo, metadata, i18n, routing, discoverability]
 related_files:
   - proxy.ts
@@ -228,4 +228,4 @@ the client-only `LanguageContext`, and revert the SEO helpers.
 - [x] `npm run check` passes.
 - [x] `npm run build` passes.
 - [x] `npm run test:e2e` passes.
-- [ ] Committed after user confirmation.
+- [x] Committed after user confirmation.

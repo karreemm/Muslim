@@ -6,7 +6,7 @@ date: "2026-11-19"
 branch: "chore/professional-foundation"
 commit: ""
 author: "OpenCode agent"
-status: review
+status: done
 scope: [performance, fonts, images, bundle, caching]
 related_files:
   - lib/fonts.ts
@@ -188,4 +188,4 @@ unused Quran header images.
 - [x] `npm run check` passes.
 - [x] `npm run build` passes.
 - [x] `npm run test:e2e` passes against production.
-- [ ] Committed after user confirmation.
+- [x] Committed after user confirmation.

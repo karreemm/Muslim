@@ -88,12 +88,15 @@ tests/
 - Unsupported locale prefixes are re-homed under a supported locale.
 - Unknown URLs return a localized HTTP 404 with `noindex`.
 - Square PWA/Apple icons are served and declared in the manifest.
+- Security headers, CSP report-only, CSP report collection, and API input
+  validation.
+- Sadaqat error/retry state, successful empty state, and local-token recovery.
 - Language switching preserves the current path and query string.
 - Internal links stay inside `/ar` or `/en` and resolve without HTTP errors.
 - Home page critical a11y violations (axe).
 
 Current totals: **19 test files, 109 unit/integration/component tests**, plus
-**64 Playwright tests**.
+**71 Playwright tests**.
 
 **Not covered yet:** most hooks/contexts, the remaining page-level components,
 dynamic routes with mocked data, full user journeys, visual regression. These are
@@ -192,7 +195,7 @@ Coverage is generated with v8:
 6. Playwright smoke + a11y (`npm run test:e2e`)
 
 Playwright reports are uploaded on failure. The current suite is 18 Vitest files
-(109 tests) plus 64 Playwright tests.
+(109 tests) plus 71 Playwright tests.
 
 ---
 

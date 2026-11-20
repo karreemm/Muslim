@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -87,11 +88,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No URLs provided" }, { status: 400 });
     }
 
-    const urls = (JSON.parse(rawUrls) as string[]).filter(Boolean);
-    const fileName = sanitizeFileName(typeof rawName === "string" ? rawName : "surah");
+    const parsedUrls: unknown = JSON.parse(rawUrls);
+    const urls = Array.isArray(parsedUrls)
+      ? parsedUrls.filter((value): value is string => typeof value === "string")
+      : [];
+    const fileName = sanitizeFileName(
+      typeof rawName === "string" ? rawName.slice(0, 120) : "surah",
+    );
 
     if (urls.length === 0) {
       return NextResponse.json({ error: "No URLs provided" }, { status: 400 });
+    }
+    if (urls.length > 300) {
+      return NextResponse.json({ error: "Too many URLs provided" }, { status: 400 });
     }
     if (urls.some((u) => !isAllowedAudioUrl(u))) {
       return NextResponse.json(
@@ -102,7 +111,7 @@ export async function POST(request: Request) {
 
     return makeDownloadResponse(buildStream(urls), fileName);
   } catch (error) {
-    console.error("POST /download-audio error:", error);
+    logger.error("POST /download-audio error:", error);
     return NextResponse.json({ error: "Failed to start download" }, { status: 500 });
   }
 }

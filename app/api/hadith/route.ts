@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getHadithEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -29,6 +30,13 @@ export async function GET(req: Request) {
       endpoint = `/${encodeURIComponent(bookSlug)}/chapters`;
       const paginate = searchParams.get("paginate");
       const page = searchParams.get("page");
+
+      if (paginate && !/^\d+$/.test(paginate)) {
+        return NextResponse.json({ error: "Invalid pagination value" }, { status: 400 });
+      }
+      if (page && !/^\d+$/.test(page)) {
+        return NextResponse.json({ error: "Invalid page value" }, { status: 400 });
+      }
 
       if (paginate) upstreamParams.set("paginate", paginate);
       if (page) upstreamParams.set("page", page);
@@ -73,25 +81,17 @@ export async function GET(req: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 401) {
-        return NextResponse.json(
-          {
-            error:
-              "Hadith API rejected the key (401). Verify HADITH_API_KEY in .env.local and restart the server.",
-          },
-          { status: 401 },
-        );
-      }
+      logger.error("Hadith upstream request failed:", {
+        status: response.status,
+        body: data,
+      });
 
-      return NextResponse.json(
-        { error: data?.message || "Failed to fetch hadith data" },
-        { status: response.status },
-      );
+      return NextResponse.json({ error: "Failed to fetch hadith data" }, { status: 502 });
     }
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    logger.error("GET /api/hadith failed:", error);
+    return NextResponse.json({ error: "Failed to fetch hadith data" }, { status: 500 });
   }
 }

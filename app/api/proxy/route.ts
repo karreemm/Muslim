@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { reciters } from "@/constants/recitersData";
 import { logger } from "@/lib/logger";
 
 const cumulativeAyahCounts = [
@@ -12,50 +13,79 @@ const cumulativeAyahCounts = [
   6138, 6146, 6157, 6168, 6176, 6185, 6193, 6197, 6204, 6211, 6216, 6220, 6225, 6230,
 ];
 
+const allowedReciters = new Set(reciters.map((reciter) => reciter.id));
+
+function invalidRequest(message: string) {
+  return NextResponse.json({ error: message }, { status: 400 });
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const reciterId = searchParams.get("reciterId");
-  const surahNumber = searchParams.get("surahNumber");
-  const ayahNumber = searchParams.get("ayahNumber");
+  const reciterId = (searchParams.get("reciterId") || "").trim();
+  const rawSurahNumber = searchParams.get("surahNumber");
+  const rawAyahNumber = searchParams.get("ayahNumber");
 
-  try {
-    let absoluteAyahNumber;
+  if (!allowedReciters.has(reciterId)) {
+    return invalidRequest("Invalid reciter");
+  }
 
-    if (surahNumber && ayahNumber) {
-      const surahIndex = parseInt(surahNumber) - 1;
-      const relativeAyahNumber = parseInt(ayahNumber);
+  const ayahNumber = rawAyahNumber ? Number.parseInt(rawAyahNumber, 10) : NaN;
+  if (!Number.isInteger(ayahNumber) || ayahNumber < 1) {
+    return invalidRequest("Invalid ayah number");
+  }
 
-      if (surahIndex < 0 || surahIndex >= cumulativeAyahCounts.length) {
-        throw new Error(`Invalid surah number: ${surahNumber}`);
-      }
+  let absoluteAyahNumber: number;
 
-      absoluteAyahNumber = cumulativeAyahCounts[surahIndex] + relativeAyahNumber;
-    } else if (ayahNumber && !surahNumber) {
-      absoluteAyahNumber = parseInt(ayahNumber);
-    } else {
-      const errorMsg =
-        "Either provide both surahNumber and ayahNumber, or just ayahNumber (absolute)";
-      throw new Error(errorMsg);
+  if (rawSurahNumber) {
+    const surahNumber = Number.parseInt(rawSurahNumber, 10);
+    if (!Number.isInteger(surahNumber) || surahNumber < 1 || surahNumber > 114) {
+      return invalidRequest("Invalid surah number");
     }
 
-    const url = `https://cdn.islamic.network/quran/audio/192/${reciterId}/${absoluteAyahNumber}.mp3`;
+    const surahIndex = surahNumber - 1;
+    const ayahCount =
+      cumulativeAyahCounts[surahIndex + 1] - cumulativeAyahCounts[surahIndex];
+
+    if (ayahNumber > ayahCount) {
+      return invalidRequest("Invalid ayah number for this surah");
+    }
+
+    absoluteAyahNumber = cumulativeAyahCounts[surahIndex] + ayahNumber;
+  } else {
+    absoluteAyahNumber = ayahNumber;
+  }
+
+  if (absoluteAyahNumber < 1 || absoluteAyahNumber > 6236) {
+    return invalidRequest("Invalid ayah number");
+  }
+
+  try {
+    const url = `https://cdn.islamic.network/quran/audio/192/${encodeURIComponent(
+      reciterId,
+    )}/${absoluteAyahNumber}.mp3`;
 
     const response = await fetch(url, { cache: "no-store" });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch audio: ${response.statusText}`);
+      logger.error("Audio upstream request failed:", response.status);
+      return NextResponse.json(
+        { error: "Audio is temporarily unavailable" },
+        { status: 502 },
+      );
     }
 
     const audio = await response.arrayBuffer();
 
     return new NextResponse(audio, {
       status: 200,
-      headers: { "Content-Type": "audio/mpeg" },
+      headers: {
+        "Content-Type": "audio/mpeg",
+        "Cache-Control": "public, max-age=86400",
+        "X-Content-Type-Options": "nosniff",
+      },
     });
   } catch (error) {
     logger.error("Error fetching audio:", error);
-    return new NextResponse("Error fetching the audio", {
-      status: 500,
-    });
+    return NextResponse.json({ error: "Failed to fetch audio" }, { status: 500 });
   }
 }

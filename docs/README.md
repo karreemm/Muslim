@@ -14,10 +14,11 @@ lives here.
 | ----- | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
 | 1     | [`project-overview.md`](./project-overview.md) | Always. It explains the product, routes, architecture, patterns, state, and invariants. |
 | 2     | [`testing.md`](./testing.md)                   | Before adding tests or changing CI.                                                     |
-| 3     | `ui-ux-guidelines.md` _(planned, Phase 2)_     | Before changing UI, copy, layout, tokens, or accessibility.                             |
-| 4     | `operations.md` _(planned, Phase 5)_           | Before changing env vars, Supabase, deployment, or keep-alive.                          |
-| 5     | [`api.md`](./api.md)                           | Before changing an API route or external integration.                                   |
-| 6     | The active file in [`changes/`](./changes/)    | Before continuing in-progress work.                                                     |
+| 3     | [`security.md`](./security.md)                 | Before changing headers, CSP, auth, secrets, or API validation.                         |
+| 4     | `ui-ux-guidelines.md` _(planned)_              | Before changing UI, copy, layout, tokens, or accessibility.                             |
+| 5     | `operations.md` _(planned, Phase 5)_           | Before changing env vars, Supabase, deployment, or keep-alive.                          |
+| 6     | [`api.md`](./api.md)                           | Before changing an API route or external integration.                                   |
+| 7     | The active file in [`changes/`](./changes/)    | Before continuing in-progress work.                                                     |
 
 ---
 
@@ -30,6 +31,7 @@ Stable guides that describe how the project works **today**:
 - `project-overview.md`
 - `ui-ux-guidelines.md`
 - `testing.md`
+- `security.md`
 - `operations.md`
 - `api.md`
 
@@ -76,7 +78,8 @@ Update this table whenever a change record moves status.
 | 2026-11-17 | `chore/professional-foundation` | React 19 + type migration                                | `done`   | [React 19 upgrade](./changes/2026-11-17-react-19-upgrade.md)                       |
 | 2026-11-18 | `chore/professional-foundation` | consistency, UI primitives, storage, i18n, services, env | `done`   | [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)                 |
 | 2026-11-18 | `chore/professional-foundation` | SEO metadata, sitemap, robots, manifest                  | `done`   | [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)                      |
-| 2026-11-19 | `chore/professional-foundation` | Fonts, WebP, bundle splitting, audio data, Intl dates    | `review` | [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)               |
+| 2026-11-19 | `chore/professional-foundation` | Fonts, WebP, bundle splitting, audio data, Intl dates    | `done`   | [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)               |
+| 2026-11-19 | `chore/professional-foundation` | security headers, CSP report-only, API hardening         | `done`   | [Phase 3C security](./changes/2026-11-19-phase-3c-security.md)                     |
 
 ---
 

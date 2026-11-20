@@ -24,6 +24,12 @@
     "message": "Sadaqa Garya is currently under update and will be available again soon.",
     "backToHome": "Return to Home"
   },
+  "errors": {
+    "loadTitle": "Could not load your Sadaqat",
+    "loadMessage": "We could not reach the Sadaqa service. Check your connection and try again.",
+    "saveTitle": "Could not open Sadaqa Jariyah",
+    "saveMessage": "We could not reach the Sadaqa service. Please try again in a moment."
+  },
   "table": {
     "title": "Your Sadaqat",
     "noSadaqat": "You don't have any Sadaqat yet.",

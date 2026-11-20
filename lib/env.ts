@@ -33,10 +33,7 @@ export function getSupabaseEnv(): SupabaseEnv {
 
 export function getHadithEnv(): HadithEnv {
   return hadithEnvSchema.parse({
-    HADITH_API_KEY: process.env.HADITH_API_KEY || process.env.NEXT_PUBLIC_HADITH_API_KEY,
-    HADITH_API_BASE_URL:
-      process.env.HADITH_API_BASE_URL ||
-      process.env.NEXT_PUBLIC_HADITH_API_BASE_URL ||
-      "https://hadithapi.com/api",
+    HADITH_API_KEY: process.env.HADITH_API_KEY,
+    HADITH_API_BASE_URL: process.env.HADITH_API_BASE_URL || "https://hadithapi.com/api",
   });
 }

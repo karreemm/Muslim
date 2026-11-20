@@ -636,6 +636,15 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
   `public/logo.png` is reserved for the README wordmark.
 - Set `NEXT_PUBLIC_SITE_URL` in Vercel if the production domain changes.
 
+### Security
+
+- `next.config.mjs` applies HSTS, `nosniff`, referrer policy, frame denial,
+  permissions policy, COOP, and `Content-Security-Policy-Report-Only`.
+- CSP reports go to `/api/csp-report` and are logged in Vercel.
+- API routes validate inputs, return generic errors, and keep secrets server-only.
+- `/api/sadaqa-garya` returns only memorials owned by the requester's cookie.
+- See [`security.md`](./security.md) for the full control list and limitations.
+
 ### Deployment
 
 - Hosted on Vercel (`https://muslim-one.vercel.app`).
@@ -647,14 +656,14 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ## 14. Quality status (as of 2026-11-18)
 
-This is a snapshot after Phase 3B, not the final target state.
+This is a snapshot after Phase 3C, not the final target state.
 
 | Area                       | Status                                                                                                                                                                                                                                                    |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Typecheck                  | ✅ `npm run typecheck` passes.                                                                                                                                                                                                                            |
 | Lint                       | ✅ `npm run lint` passes with **0 errors / 107 warnings**. React Compiler hook warnings remain until the hook refactor.                                                                                                                                   |
 | Unit/integration/component | ✅ 19 test files, 109 tests (utils, storage, HTTP, locales, i18n helpers/keys, env, SEO, date formatting, security, cookies, API routes, UI primitives).                                                                                                 |
-| E2E/regression             | ✅ 64 Playwright tests: 27 localized route smoke tests, 6 root-redirect checks, 2 localized 404 checks, 20 locale-aware metadata checks, 1 icon-assets check, 1 robots/sitemap check, 4 i18n checks (language switch, query preservation, script warning, missing keys), 2 link-integrity checks, 1 axe scan.                                             |
+| E2E/regression             | ✅ 71 Playwright tests: 27 localized route smoke tests, 6 root-redirect checks, 2 localized 404 checks, 20 locale-aware metadata checks, 1 icon-assets check, 1 robots/sitemap check, 4 i18n checks, 2 link-integrity checks, 4 security checks, 3 Sadaqa UX checks, 1 axe scan. |
 | CI                         | ✅ Workflow added; first GitHub run is pending.                                                                                                                                                                                                           |
 | Error boundaries           | ✅ Localized `app/[locale]/error.tsx` and `app/global-error.tsx`.                                                                                                                                                                                         |
 | SEO                        | ✅ Locale-aware titles, descriptions, canonical URLs, hreflang, OpenGraph/Twitter, JSON-LD, bilingual sitemap, robots, and PWA manifest.                                                                                                                  |
@@ -663,7 +672,7 @@ This is a snapshot after Phase 3B, not the final target state.
 | Storage                    | ✅ Centralized in `lib/storage.ts`; keys unchanged for backward compatibility.                                                                                                                                                                            |
 | Data layer                 | ✅ `lib/http.ts`, `lib/logger.ts`, `lib/env.ts`, `lib/services/*`; axios removed; no `lib` → `app` imports.                                                                                                                                               |
 | i18n                       | ✅ All user-facing UI copy is localized. Remaining Arabic literals are data (prayer/month names, palette labels), decorative language badges, and the `global-error` bilingual fallback. A key-usage test + Playwright runtime scan prevent missing keys. |
-| Security                   | ✅ Production dependency audit is clean. ⚠️ In-memory rate limit, raw errors, and security headers remain (Phase 3).                                                                                                                                      |
+| Security                   | ✅ Global security headers, CSP report-only + collector, generic API errors, input validation, radio-proxy header filtering, and owned-only Sadaqa listing. In-memory rate limits remain per-instance.                                                   |
 | React                      | ✅ React 19.3.1.                                                                                                                                                                                                                                          |
 | Dependencies               | ✅ `npm audit` (including dev) reports **0 vulnerabilities**.                                                                                                                                                                                             |
 
@@ -675,6 +684,7 @@ Phase records:
 - [Phase 2 consistency](./changes/2026-11-18-phase-2-consistency.md)
 - [Phase 3A SEO](./changes/2026-11-18-phase-3a-seo-metadata.md)
 - [Phase 3B performance](./changes/2026-11-19-phase-3b-performance.md)
+- [Phase 3C security](./changes/2026-11-19-phase-3c-security.md)
 
 ---
 

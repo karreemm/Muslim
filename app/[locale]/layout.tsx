@@ -9,7 +9,6 @@ import { FavoriteHadithsProvider } from "@/context/favourites/FavoriteHadithsCon
 import { FavoriteAzkarProvider } from "@/context/favourites/FavoriteAzkarContext";
 import { ZekrCounterProvider } from "@/context/features/ZekrCounterContext";
 import PrayerAzkarReset from "@/components/azkar/PrayerAzkarReset";
-import { SadaqaGaryaProvider } from "@/context/features/SadaqatContext";
 import TasbeehContextProvider from "@/context/features/TasbeehContext";
 import { ThemeScript } from "@/utils/themeScript";
 import PageLayout from "@/components/layout/pageLayout";
@@ -73,11 +72,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                         <FavoriteAzkarProvider>
                           <ZekrCounterProvider>
                             <PrayerAzkarReset />
-                            <SadaqaGaryaProvider>
-                              <TasbeehContextProvider>
-                                <PageLayout>{children}</PageLayout>
-                              </TasbeehContextProvider>
-                            </SadaqaGaryaProvider>
+                            <TasbeehContextProvider>
+                              <PageLayout>{children}</PageLayout>
+                            </TasbeehContextProvider>
                           </ZekrCounterProvider>
                         </FavoriteAzkarProvider>
                       </FavoriteHadithsProvider>
