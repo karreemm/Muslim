@@ -6,7 +6,8 @@
     "searchPlaceholder": "ابحث في الأبواب...",
     "chapterLabel": "الباب",
     "error": "حدث خطأ أثناء جلب الأبواب. حاول مرة أخرى.",
-    "noChaptersFound": "لم يتم العثور على أبواب."
+    "noChaptersFound": "لم يتم العثور على أبواب.",
+    "chaptersFound": "تم العثور على {{count}} باب"
   },
   "chapter": {
     "title": "أحاديث الباب",
@@ -21,5 +22,6 @@
     "sahih": "صحيح",
     "da`eef": "ضعيف",
     "hasan": "حسن"
-  }
+  },
+  "viewAll": "عرض جميع الأحاديث"
 }

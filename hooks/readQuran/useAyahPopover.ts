@@ -8,20 +8,13 @@ interface UseAyahPopoverOptions {
   onSave: () => void;
 }
 
-export const useAyahPopover = ({
-  isOpen,
-  onClose,
-  onSave,
-}: UseAyahPopoverOptions) => {
+export const useAyahPopover = ({ isOpen, onClose, onSave }: UseAyahPopoverOptions) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node)
-      ) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
         onClose();
       }
     };

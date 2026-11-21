@@ -1,16 +1,23 @@
 {
+  "title": "قائمتك المفضلة",
   "azkar": {
     "zekrNo": "ذكر رقم",
     "clearAllAzkar": "مسح كل الأذكار",
-    "noFavourites": "لا توجد أذكار مفضلة بعد"
+    "noFavourites": "لا توجد أذكار مفضلة بعد",
+    "clearAllConfirm": "هل أنت متأكد من حذف كل الأذكار المفضلة؟",
+    "removeConfirm": "هل أنت متأكد من حذف هذا الذكر من المفضلة؟"
   },
   "hadith": {
     "hadithNo": "رقم الحديث",
     "clearAllHadith": "مسح كل الأحاديث",
-    "noFavourites": "لا توجد أحاديث مفضلة بعد"
+    "noFavourites": "لا توجد أحاديث مفضلة بعد",
+    "clearAllConfirm": "هل أنت متأكد من حذف كل الأحاديث المفضلة؟",
+    "removeConfirm": "هل أنت متأكد من حذف هذا الحديث من المفضلة؟"
   },
   "surah": {
     "noFavourites": "لا توجد سور مفضلة بعد",
-    "clearAllSurahs": "مسح كل السور"
+    "clearAllSurahs": "مسح كل السور",
+    "clearAllConfirm": "هل أنت متأكد من حذف كل السور المفضلة؟",
+    "removeConfirm": "هل أنت متأكد من حذف هذه السورة من المفضلة؟"
   }
 }

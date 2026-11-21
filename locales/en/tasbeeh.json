@@ -2,5 +2,12 @@
   "title": "Start Tasbeeh now using the counter",
   "placeholder": "Enter the number of Tasabeeh",
   "reset": "Reset Counter",
-  "sucess": "Congratulations! You have reached your tasbeeh goal"
+  "sucess": "Congratulations! You have reached your tasbeeh goal",
+  "rememberAllah": "Remember Allah to find peace in your heart",
+  "progress": "Progress",
+  "keyboardShortcuts": "Keyboard Shortcuts",
+  "increment": "Increment",
+  "decrement": "Decrement",
+  "tap": "Tap",
+  "tapToContinue": "Tap anywhere to continue"
 }

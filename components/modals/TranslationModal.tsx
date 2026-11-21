@@ -16,7 +16,7 @@ import {
   getAyahTranslation,
   popularTranslations,
   type AyahTranslation,
-} from "../../app/(pages)/read-quran/service/GetTranslation";
+} from "@/lib/services/readQuran/GetTranslation";
 
 interface TranslationModalProps {
   isOpen: boolean;
@@ -32,10 +32,10 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
     const { language } = useLanguage();
     const { t } = useTranslation();
 
-    const [selectedEditionId, setSelectedEditionId] =
-      useState<string>("en.sahih");
-    const [currentTranslation, setCurrentTranslation] =
-      useState<AyahTranslation | null>(null);
+    const [selectedEditionId, setSelectedEditionId] = useState<string>("en.sahih");
+    const [currentTranslation, setCurrentTranslation] = useState<AyahTranslation | null>(
+      null,
+    );
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -123,14 +123,12 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                         {t("readQuran.translation.title")}
                       </Dialog.Title>
                       <div className="flex items-center gap-2 text-primary-foreground/90 text-sm sm:text-base bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm">
-                        <FontAwesomeIcon
-                          icon={faBookOpen}
-                          className="text-xs"
-                        />
+                        <FontAwesomeIcon icon={faBookOpen} className="text-xs" />
                         <span>
-                          {language === "ar"
-                            ? `${surahNameAr} - الآية ${ayahNumber}`
-                            : `${surahNameEn} - Ayah ${ayahNumber}`}
+                          {t("readQuran.modalAyahTitle", {
+                            surah: (language === "ar" ? surahNameAr : surahNameEn) ?? "",
+                            number: ayahNumber,
+                          })}
                         </span>
                       </div>
                     </div>
@@ -141,9 +139,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                     className="px-6 py-5 border-b border-border bg-muted/30"
                   >
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
-                      {language === "ar"
-                        ? "اختيار الترجمة"
-                        : "Select Translation"}
+                      {t("readQuran.translation.selectTranslation")}
                     </p>
                     <div className="flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
                       {popularTranslations.map((edition) => (
@@ -175,7 +171,7 @@ export const TranslationModal: React.FC<TranslationModalProps> = memo(
                           <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin" />
                         </div>
                         <p className="text-sm text-muted-foreground animate-pulse">
-                          {language === "ar" ? "جاري التحميل..." : "Loading..."}
+                          {t("common.loading")}
                         </p>
                       </div>
                     ) : error ? (

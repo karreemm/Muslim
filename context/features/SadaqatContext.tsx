@@ -1,12 +1,21 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { DeceasedPerson } from "../../app/(pages)/sadaqa-garya/types";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
+import { DeceasedPerson } from "@/types/sadaqa";
+import { readLocalDeleteTokens } from "@/lib/sadaqaGarya/localDeleteTokens";
+import { removeStorage } from "@/lib/storage";
 
 interface SadaqaGaryaContextProps {
   deceasedPersons: DeceasedPerson[];
   isLoading: boolean;
   hasDatabaseError: boolean;
+  retryLoading: () => void;
   addDeceasedPerson: (person: DeceasedPerson) => void;
   removeDeceasedPerson: (id: string) => void;
   getDeceasedPerson: (slug: string) => DeceasedPerson | undefined;
@@ -14,9 +23,7 @@ interface SadaqaGaryaContextProps {
   clearAllDeceasedPersons: () => void;
 }
 
-const SadaqaGaryaContext = createContext<SadaqaGaryaContextProps | undefined>(
-  undefined,
-);
+const SadaqaGaryaContext = createContext<SadaqaGaryaContextProps | undefined>(undefined);
 
 export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -25,20 +32,16 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasDatabaseError, setHasDatabaseError] = useState(false);
   const [ownedSlugs, setOwnedSlugs] = useState<string[]>([]);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const getLocalOwnedSlugs = (): string[] => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem("sadaqaDeleteTokens");
-      const parsed = raw ? JSON.parse(raw) : {};
-      if (!parsed || typeof parsed !== "object") return [];
-      return Object.keys(parsed as Record<string, string>);
-    } catch {
-      return [];
-    }
+    return Object.keys(readLocalDeleteTokens());
   };
 
   useEffect(() => {
+    // Clean up old client-side storage once, regardless of the current page.
+    removeStorage("sadaqaGarya");
+
     let isActive = true;
 
     const loadRecords = async () => {
@@ -48,6 +51,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
           method: "GET",
           cache: "no-store",
           credentials: "include",
+          signal: AbortSignal.timeout(15_000),
         });
 
         if (!response.ok) {
@@ -55,18 +59,49 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
         }
 
         const payload = await response.json();
+        const serverDeceased: DeceasedPerson[] = Array.isArray(payload?.deceased)
+          ? payload.deceased
+          : [];
+        const apiOwned: string[] = Array.isArray(payload?.ownedSlugs)
+          ? payload.ownedSlugs
+          : [];
+        const localOwned = getLocalOwnedSlugs();
+
+        // Recover records created before the delete-token cookie existed, or
+        // after the cookie was cleared, using locally stored ownership tokens.
+        const knownSlugs = new Set(serverDeceased.map((person) => person.slug));
+        const missingSlugs = localOwned
+          .filter((slug) => !knownSlugs.has(slug))
+          .slice(0, 20);
+
+        const recovered = await Promise.all(
+          missingSlugs.map(async (slug) => {
+            try {
+              const recordResponse = await fetch(
+                `/api/sadaqa-garya/${encodeURIComponent(slug)}`,
+                { cache: "no-store", signal: AbortSignal.timeout(5_000) },
+              );
+              if (!recordResponse.ok) return null;
+              const record = await recordResponse.json();
+              return (record?.deceased as DeceasedPerson | undefined) ?? null;
+            } catch {
+              return null;
+            }
+          }),
+        );
+
         if (isActive) {
-          setDeceasedPersons(
-            Array.isArray(payload?.deceased) ? payload.deceased : [],
-          );
-          const apiOwned = Array.isArray(payload?.ownedSlugs)
-            ? payload.ownedSlugs
-            : [];
-          const localOwned = getLocalOwnedSlugs();
+          setDeceasedPersons([
+            ...serverDeceased,
+            ...recovered.filter((person): person is DeceasedPerson => person !== null),
+          ]);
           setOwnedSlugs(Array.from(new Set([...apiOwned, ...localOwned])));
         }
       } catch (error) {
-        console.error("Error loading Sadaqa records:", error);
+        const isTimeout = error instanceof Error && error.name === "TimeoutError";
+        if (!isTimeout) {
+          console.error("Error loading Sadaqa records:", error);
+        }
         if (isActive) {
           setHasDatabaseError(true);
           setDeceasedPersons([]);
@@ -81,14 +116,15 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
 
     loadRecords();
 
-    // Clean up old client-side storage to prevent stale Sadaqa records.
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("sadaqaGarya");
-    }
-
     return () => {
       isActive = false;
     };
+  }, [reloadKey]);
+
+  const retryLoading = useCallback(() => {
+    setHasDatabaseError(false);
+    setIsLoading(true);
+    setReloadKey((key) => key + 1);
   }, []);
 
   const addDeceasedPerson = (person: DeceasedPerson) => {
@@ -106,18 +142,14 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
       return next;
     });
 
-    setOwnedSlugs((prev) =>
-      prev.includes(person.slug) ? prev : [...prev, person.slug],
-    );
+    setOwnedSlugs((prev) => (prev.includes(person.slug) ? prev : [...prev, person.slug]));
   };
 
   const removeDeceasedPerson = (id: string) => {
     setDeceasedPersons((prev) => {
       const removed = prev.find((person) => person.id === id);
       if (removed) {
-        setOwnedSlugs((current) =>
-          current.filter((slug) => slug !== removed.slug),
-        );
+        setOwnedSlugs((current) => current.filter((slug) => slug !== removed.slug));
       }
       return prev.filter((person) => person.id !== id);
     });
@@ -139,6 +171,7 @@ export const SadaqaGaryaProvider: React.FC<{ children: React.ReactNode }> = ({
         deceasedPersons,
         isLoading,
         hasDatabaseError,
+        retryLoading,
         addDeceasedPerson,
         removeDeceasedPerson,
         getDeceasedPerson,

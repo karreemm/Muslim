@@ -7,7 +7,4 @@ export type {
   UsePrayerTimesReturn,
   UsePrayerTimesProps,
 } from "./usePrayerTimes";
-export type {
-  FormattedDates,
-  UseDateFormattingReturn,
-} from "./useDateFormatting";
+export type { FormattedDates, UseDateFormattingReturn } from "./useDateFormatting";

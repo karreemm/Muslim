@@ -9,7 +9,8 @@ import React, {
   useRef,
 } from "react";
 import { RadioStation } from "@/constants/radioStationsData";
-import { RadioPlayerContextType } from "@/app/(pages)/radios/types";
+import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
+import { RadioPlayerContextType } from "@/types/radios";
 
 const RadioContext = createContext<RadioPlayerContextType | null>(null);
 
@@ -22,13 +23,9 @@ function getRadioStreamUrl(rawUrl: string): string {
   return `/api/radio-proxy?url=${encodeURIComponent(rawUrl)}`;
 }
 
-export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentStation, setCurrentStation] = useState<RadioStation | null>(
-    null,
-  );
+  const [currentStation, setCurrentStation] = useState<RadioStation | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -49,24 +46,15 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("favoriteRadioStations");
-      if (saved) {
-        try {
-          setFavoriteStations(JSON.parse(saved));
-        } catch {
-          setFavoriteStations([]);
-        }
-      }
+      const saved = readJSON<string[]>(STORAGE_KEYS.favoriteRadioStations, []);
+      setFavoriteStations(Array.isArray(saved) ? saved : []);
       setIsHydrated(true);
     }
   }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && isHydrated) {
-      localStorage.setItem(
-        "favoriteRadioStations",
-        JSON.stringify(favoriteStations),
-      );
+      writeJSON(STORAGE_KEYS.favoriteRadioStations, favoriteStations);
     }
   }, [favoriteStations, isHydrated]);
 
@@ -111,8 +99,7 @@ export const RadioProvider: React.FC<{ children: React.ReactNode }> = ({
       setCurrentStation(null);
     };
     window.addEventListener("quran:started", handleQuranStarted);
-    return () =>
-      window.removeEventListener("quran:started", handleQuranStarted);
+    return () => window.removeEventListener("quran:started", handleQuranStarted);
   }, [internalStop]);
 
   const beginStreamRef = useRef<(station: RadioStation) => void>(() => {});

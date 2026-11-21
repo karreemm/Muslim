@@ -64,13 +64,7 @@ export const useQuranPages = (
     }
 
     return null;
-  }, [
-    isPlayerVisible,
-    audioSurahNumber,
-    activeAyahIndex,
-    highlightedAyahNumber,
-    verses,
-  ]);
+  }, [isPlayerVisible, audioSurahNumber, activeAyahIndex, highlightedAyahNumber, verses]);
 
   useEffect(() => {
     if (highlightedPage && sortedPageNumbers.length > 0) {
@@ -92,15 +86,12 @@ export const useQuranPages = (
       if (loadingMoreRef.current) return;
 
       const scrollPercentage =
-        (window.scrollY + window.innerHeight) /
-        document.documentElement.scrollHeight;
+        (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
 
       if (scrollPercentage > 0.7 && visiblePages < sortedPageNumbers.length) {
         loadingMoreRef.current = true;
         requestAnimationFrame(() => {
-          setVisiblePages((prev) =>
-            Math.min(prev + 2, sortedPageNumbers.length),
-          );
+          setVisiblePages((prev) => Math.min(prev + 2, sortedPageNumbers.length));
           loadingMoreRef.current = false;
         });
       }
@@ -129,9 +120,7 @@ export const useQuranPages = (
       const targetSurah = audioSurahNumber;
 
       const tryScroll = () => {
-        const element = document.getElementById(
-          `ayah-${targetAyah}-${targetSurah}`,
-        );
+        const element = document.getElementById(`ayah-${targetAyah}-${targetSurah}`);
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "center" });
         } else if (retries < 10) {

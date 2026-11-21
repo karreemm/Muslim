@@ -24,5 +24,7 @@
   "previous": "السابق",
   "next": "التالي",
   "wholeWord": "كلمة كاملة",
-  "exactPhrase": "بحث دقيق"
+  "exactPhrase": "بحث دقيق",
+  "startHint": "اكتب كلمة أو عبارة للبحث عنها في القرآن الكريم",
+  "ayahWithNumber": "الآية {{number}}"
 }

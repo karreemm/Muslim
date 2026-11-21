@@ -51,7 +51,7 @@ export const featuredFeatures: HomeFeature[] = [
     gradient: "from-primary/20 to-primary/5",
   },
   {
-    href: "/ayah-to-image",
+    href: "/generate-ayah-image",
     icon: faImage,
     title: "features.ayahToImage.title",
     desc: "features.ayahToImage.desc",

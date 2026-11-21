@@ -8,7 +8,7 @@ interface Position {
 }
 
 interface PopoverPositionResult {
-  contentRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
   left: number;
   top: number;
   isMobile: boolean;
@@ -75,9 +75,7 @@ export const useAyahPopoverPosition = (
     } else if (spaceAbove >= actualHeight + VERTICAL_OFFSET) {
       top = position.y - actualHeight - VERTICAL_OFFSET;
     } else {
-      top = spaceBelow > spaceAbove
-        ? viewport.height - actualHeight - MARGIN
-        : MARGIN;
+      top = spaceBelow > spaceAbove ? viewport.height - actualHeight - MARGIN : MARGIN;
     }
 
     return { left, top };

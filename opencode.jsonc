@@ -1,0 +1,25 @@
+// Project-scoped GitHub MCP server.
+//
+// The token is read from the GITHUB_PERSONAL_ACCESS_TOKEN environment variable,
+// never stored here. Create a fine-grained PAT limited to karreemm/Muslim and set
+// it in your shell before starting OpenCode:
+//
+//   setx GITHUB_PERSONAL_ACCESS_TOKEN "github_pat_..."
+//
+// Toolsets are limited to keep the tool list (and context cost) manageable.
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp/",
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}",
+          "X-MCP-Toolsets": "context,repos,issues,pull_requests,actions,governance,secret_protection,dependabot",
+        },
+      },
+    },
+  },
+}

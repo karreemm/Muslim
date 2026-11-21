@@ -4,6 +4,7 @@ import {
   readSadaqaRecords,
 } from "@/lib/sadaqaGarya/sadaqaGaryaStore";
 import { getClientIp, isRateLimited } from "@/lib/apiSecurity";
+import { logger } from "@/lib/logger";
 import {
   buildDeleteTokenCookieValue,
   deleteTokenCookieName,
@@ -15,14 +16,25 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
-    const deceased = await readSadaqaRecords();
     const tokens = readDeleteTokenMapFromRequest(req);
     const ownedSlugs = Object.keys(tokens);
-    return NextResponse.json({ deceased, ownedSlugs }, { status: 200 });
+    const ownedSet = new Set(ownedSlugs);
+
+    // Only return memorials owned by this browser. Public memorial pages are
+    // still available through `/api/sadaqa-garya/[slug]`.
+    const allRecords = await readSadaqaRecords();
+    const deceased = allRecords.filter((record) => ownedSet.has(record.slug));
+
+    return NextResponse.json(
+      { deceased, ownedSlugs },
+      { status: 200, headers: { "Cache-Control": "no-store" } },
+    );
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to load records";
-    return NextResponse.json({ error: message }, { status: 500 });
+    logger.error("GET /api/sadaqa-garya failed:", error);
+    return NextResponse.json(
+      { error: "Failed to load records" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
   }
 }
 
@@ -57,7 +69,7 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json(
       { deceased: result.deceased, deleteToken: result.deleteToken },
-      { status: 201 },
+      { status: 201, headers: { "Cache-Control": "no-store" } },
     );
     response.cookies.set({
       name: deleteTokenCookieName(),
@@ -71,9 +83,11 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to create record";
-    return NextResponse.json({ error: message }, { status: 400 });
+    logger.error("POST /api/sadaqa-garya failed:", error);
+    return NextResponse.json(
+      { error: "Failed to create record" },
+      { status: 400, headers: { "Cache-Control": "no-store" } },
+    );
   }
 }
 

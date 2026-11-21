@@ -13,6 +13,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { reciters } from "@/constants/recitersData";
 import RepeatModePanel from "@/components/general/audio-player/RepeatModePanel";
+import { useTranslation } from "@/hooks/general/useTranslation";
+import { STORAGE_KEYS, writeString } from "@/lib/storage";
 import {
   RepeatConfig,
   RepeatRangeMode,
@@ -35,7 +37,7 @@ interface AudioPlayerMobileSheetProps {
   playbackRate: number;
   setPlaybackRate: (value: number) => void;
   setReciterId: (value: string) => void;
-  mobileSheetRef: React.RefObject<HTMLDivElement>;
+  mobileSheetRef: React.RefObject<HTMLDivElement | null>;
   surahNumber: number;
   surahName: string;
   reciterName?: string;
@@ -84,9 +86,10 @@ export default function AudioPlayerMobileSheet({
   onStartRepeat,
   repeatInitial,
 }: AudioPlayerMobileSheetProps) {
-  if (!showMobileSheet) return null;
-
+  const { t } = useTranslation();
   const isArabic = language === "ar";
+
+  if (!showMobileSheet) return null;
 
   return (
     <div
@@ -97,7 +100,7 @@ export default function AudioPlayerMobileSheet({
         <div className="flex flex-col max-h-[80vh]">
           <div className="sticky top-0 bg-popover/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between z-10">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {isArabic ? "وضع التكرار" : "Repeat Mode"}
+              {t("listenQuran.player.repeatMode")}
             </span>
             <button
               onClick={() => setShowRepeatSheet(false)}
@@ -107,7 +110,7 @@ export default function AudioPlayerMobileSheet({
                 icon={isArabic ? faChevronRight : faChevronLeft}
                 className="text-xs"
               />
-              {isArabic ? "رجوع" : "Back"}
+              {t("listenQuran.player.back")}
             </button>
           </div>
           <div className="overflow-y-auto">
@@ -129,7 +132,7 @@ export default function AudioPlayerMobileSheet({
         <div className="flex flex-col max-h-[80vh]">
           <div className="sticky top-0 bg-popover/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between z-10">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {isArabic ? "سرعة التشغيل" : "Playback Speed"}
+              {t("listenQuran.player.playbackSpeed")}
             </span>
             <button
               onClick={() => setShowSpeedSheet(false)}
@@ -139,7 +142,7 @@ export default function AudioPlayerMobileSheet({
                 icon={isArabic ? faChevronRight : faChevronLeft}
                 className="text-xs"
               />
-              {isArabic ? "رجوع" : "Back"}
+              {t("listenQuran.player.back")}
             </button>
           </div>
           <div className="overflow-y-auto p-2">
@@ -173,11 +176,9 @@ export default function AudioPlayerMobileSheet({
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-bold text-foreground truncate">
-                {language === "ar" ? `سورة ${surahName}` : `Surah ${surahName}`}
+                {t("listenQuran.player.surahWithName", { name: surahName })}
               </h4>
-              <p className="text-sm text-muted-foreground truncate">
-                {reciterName}
-              </p>
+              <p className="text-sm text-muted-foreground truncate">{reciterName}</p>
             </div>
             <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full shrink-0">
               {currentAyahIndex + 1}/{totalAyahs}
@@ -197,7 +198,7 @@ export default function AudioPlayerMobileSheet({
                   <FontAwesomeIcon icon={faArrowUp} className="text-xs" />
                 </div>
                 <span className="text-xs font-medium text-foreground">
-                  {language === "ar" ? "انتقال للآية" : "Jump to Ayah"}
+                  {t("listenQuran.player.jumpToAyah")}
                 </span>
               </button>
             )}
@@ -210,7 +211,7 @@ export default function AudioPlayerMobileSheet({
                 <FontAwesomeIcon icon={faRepeat} className="text-xs" />
               </div>
               <span className="text-xs font-medium text-foreground">
-                {language === "ar" ? "وضع التكرار" : "Repeat Mode"}
+                {t("listenQuran.player.repeatMode")}
               </span>
             </button>
 
@@ -222,7 +223,7 @@ export default function AudioPlayerMobileSheet({
                 {playbackRate}×
               </div>
               <span className="text-xs font-medium text-foreground">
-                {language === "ar" ? "سرعة التشغيل" : "Playback Speed"}
+                {t("listenQuran.player.playbackSpeed")}
               </span>
             </button>
 
@@ -247,7 +248,7 @@ export default function AudioPlayerMobileSheet({
                 />
               </div>
               <span className="text-xs font-medium text-foreground">
-                {language === "ar" ? "تنزيل السورة" : "Download"}
+                {t("listenQuran.player.download")}
               </span>
             </button>
 
@@ -260,7 +261,7 @@ export default function AudioPlayerMobileSheet({
                 <FontAwesomeIcon icon={faMicrophone} className="text-xs" />
               </div>
               <span className="text-xs font-medium text-foreground">
-                {language === "ar" ? "تغيير القارئ" : "Change Reciter"}
+                {t("listenQuran.player.changeReciter")}
               </span>
             </button>
           </div>
@@ -269,7 +270,7 @@ export default function AudioPlayerMobileSheet({
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
-                  {language === "ar" ? "التخطي ب" : "Skip By"}
+                  {t("listenQuran.player.skipBy")}
                 </p>
               </div>
               <div className="flex-1 flex gap-2">
@@ -288,7 +289,7 @@ export default function AudioPlayerMobileSheet({
                       className={`text-[10px] ${skipMode === "verse" ? "text-primary-foreground opacity-100" : "opacity-0"}`}
                     />
                   </div>
-                  {language === "ar" ? "الآية" : "Verse"}
+                  {t("listenQuran.player.verse")}
                 </button>
                 <button
                   onClick={() => {
@@ -305,9 +306,8 @@ export default function AudioPlayerMobileSheet({
                       className={`text-[10px] ${skipMode === "15sec" ? "text-primary-foreground opacity-100" : "opacity-0"}`}
                     />
                   </div>
-                  {language === "ar" ? "الثواني" : "Seconds"}
+                  {t("listenQuran.player.seconds")}
                 </button>
-
               </div>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function AudioPlayerMobileSheet({
         <div className="flex flex-col max-h-[60vh]">
           <div className="sticky top-0 bg-popover/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between z-10">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              {language === "ar" ? "القراء" : "Reciters"}
+              {t("listenQuran.player.reciters")}
             </span>
             <button
               onClick={() => setShowReciterSheet(false)}
@@ -326,7 +326,7 @@ export default function AudioPlayerMobileSheet({
                 icon={language === "ar" ? faChevronRight : faChevronLeft}
                 className="text-xs"
               />
-              {language === "ar" ? "رجوع" : "Back"}
+              {t("listenQuran.player.back")}
             </button>
           </div>
           <div className="overflow-y-auto p-2">
@@ -335,7 +335,7 @@ export default function AudioPlayerMobileSheet({
                 key={r.id}
                 onClick={() => {
                   setReciterId(r.id);
-                  localStorage.setItem("preferredReciter", r.id);
+                  writeString(STORAGE_KEYS.preferredReciter, r.id);
                   setShowReciterSheet(false);
                   setShowMobileSheet(false);
                 }}

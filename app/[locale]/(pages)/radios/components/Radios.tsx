@@ -1,0 +1,272 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
+import { useRadioPlayer } from "@/hooks/radio";
+import { PageShell } from "@/components/ui/PageShell";
+import { PageHeader } from "@/components/ui/PageHeader";
+import {
+  radioStations,
+  radioCategories,
+  RadioStation,
+  RadioCategory,
+} from "@/constants/radioStationsData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faRadio,
+  faStar,
+  faMagnifyingGlass,
+  faXmark,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
+
+export default function Radios() {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const isArabic = language === "ar";
+  const {
+    currentStation,
+    isPlaying,
+    isConnecting,
+    playStation,
+    toggleFavorite,
+    favoriteStations,
+  } = useRadioPlayer();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  const toggleCategoryCollapse = (cat: RadioCategory) => {
+    setCollapsedCategories((prev) => ({
+      ...prev,
+      [cat]: !prev[cat],
+    }));
+  };
+
+  const favoriteUrls = useMemo(() => new Set(favoriteStations), [favoriteStations]);
+
+  const filteredStations = useMemo(() => {
+    let stations = radioStations;
+
+    if (showFavoritesOnly) {
+      stations = stations.filter((s) => favoriteUrls.has(s.url));
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      stations = stations.filter(
+        (s) => s.nameAr.toLowerCase().includes(q) || s.nameEn.toLowerCase().includes(q),
+      );
+    }
+
+    return stations;
+  }, [searchQuery, showFavoritesOnly, favoriteUrls]);
+
+  const groupedStations = useMemo(() => {
+    const groups: Record<string, RadioStation[]> = {};
+    for (const cat of radioCategories) {
+      const catStations = filteredStations.filter((s) => s.category === cat);
+      if (catStations.length > 0) {
+        groups[cat] = catStations;
+      }
+    }
+    return groups;
+  }, [filteredStations]);
+
+  const getStationName = (station: RadioStation) =>
+    isArabic ? station.nameAr : station.nameEn;
+
+  const isStationActive = (station: RadioStation) => currentStation?.url === station.url;
+
+  return (
+    <PageShell className="pb-32">
+      <PageHeader
+        title={t("radio.title")}
+        subtitle={t("radio.subtitle")}
+        className="mb-8"
+      />
+
+      <div className="flex items-center gap-3 mb-6 max-w-xl mx-auto">
+        <div className="relative flex-1">
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 ${
+              isArabic ? "right-3" : "left-3"
+            } text-muted-foreground`}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-sm" />
+          </div>
+          <input
+            type="text"
+            placeholder={t("radio.searchPlaceholder")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={`w-full rounded-xl border border-border bg-card px-4 py-3 pl-10 pr-10 text-foreground outline-none transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-primary/50`}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className={`absolute top-1/2 -translate-y-1/2 ${
+                isArabic ? "left-3" : "right-3"
+              } text-muted-foreground hover:text-foreground transition-colors`}
+            >
+              <FontAwesomeIcon icon={faXmark} className="text-sm" />
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+          className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all duration-200 ${
+            showFavoritesOnly
+              ? "border-primary/50 bg-primary/10 text-primary"
+              : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-primary"
+          }`}
+          title={t("radio.favoritesOnly")}
+        >
+          <FontAwesomeIcon icon={faStar} className="text-sm" />
+          <span className="hidden sm:inline text-sm font-medium">
+            {t("radio.favorites")}
+          </span>
+        </button>
+      </div>
+
+      {Object.keys(groupedStations).length === 0 ? (
+        <div className="text-center py-16">
+          <FontAwesomeIcon
+            icon={faRadio}
+            className="text-4xl text-muted-foreground/30 mb-4"
+          />
+          <p className="text-muted-foreground text-lg">{t("radio.noResults")}</p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {radioCategories.map((cat) => {
+            const catStations = groupedStations[cat];
+            if (!catStations) return null;
+
+            const isCollapsed = collapsedCategories[cat] ?? false;
+
+            return (
+              <div key={cat}>
+                <button
+                  onClick={() => toggleCategoryCollapse(cat)}
+                  className="w-full flex items-center justify-between px-1 py-2 group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-bold text-muted-foreground uppercase tracking-wider">
+                      {t(`radio.categories.${cat}`)}
+                    </h2>
+                    <span className="text-sm text-muted-foreground/60 font-medium">
+                      ({catStations.length})
+                    </span>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`text-base text-muted-foreground/50 transition-transform duration-200 ${
+                      isCollapsed ? "" : "rotate-180"
+                    }`}
+                  />
+                </button>
+
+                <div
+                  className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all duration-300 ${
+                    isCollapsed ? "max-h-0 opacity-0 pointer-events-none" : "opacity-100"
+                  }`}
+                >
+                  {catStations.map((station) => {
+                    const active = isStationActive(station);
+                    const fav = favoriteUrls.has(station.url);
+
+                    return (
+                      <div
+                        key={station.url}
+                        onClick={() => playStation(station)}
+                        className={`group relative rounded-2xl border p-5 cursor-pointer backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
+                                    ${
+                                      active
+                                        ? "border-primary/50 bg-primary/5 shadow-lg shadow-primary/10"
+                                        : "border-border bg-card/70 hover:border-primary/30"
+                                    }`}
+                      >
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                        <div className="relative z-10 flex items-center gap-4">
+                          <div
+                            className={`relative flex h-16 w-16 items-center justify-center rounded-xl shrink-0 transition-all duration-300 group-hover:scale-110 shadow-lg ${
+                              active
+                                ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground"
+                                : "bg-secondary/50 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                            }`}
+                          >
+                            <FontAwesomeIcon
+                              icon={station.icon}
+                              className={`text-2xl transition-opacity duration-200 ${
+                                active && (isPlaying || isConnecting)
+                                  ? "opacity-0"
+                                  : "opacity-100"
+                              }`}
+                            />
+
+                            {active && isPlaying && !isConnecting && (
+                              <span className="absolute inset-0 flex items-center justify-center gap-[3px]">
+                                {[0, 150, 300, 450].map((delay) => (
+                                  <span
+                                    key={delay}
+                                    className="w-0.5 h-7 bg-primary-foreground rounded-full animate-[equalizer_1s_ease-in-out_infinite]"
+                                    style={{ animationDelay: `${delay}ms` }}
+                                  />
+                                ))}
+                              </span>
+                            )}
+
+                            {active && isConnecting && (
+                              <span className="absolute inset-0 flex items-center justify-center">
+                                <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <h2
+                              className={`text-xl font-bold transition-colors ${
+                                active
+                                  ? "text-primary"
+                                  : "text-foreground group-hover:text-primary"
+                              }`}
+                            >
+                              {getStationName(station)}
+                            </h2>
+                          </div>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(station);
+                            }}
+                            className={`shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300 z-20 ${
+                              fav
+                                ? "text-yellow-500 bg-yellow-500/10"
+                                : "text-muted-foreground/30 hover:text-yellow-500 hover:bg-yellow-500/10"
+                            }`}
+                          >
+                            <FontAwesomeIcon
+                              icon={faStar}
+                              className="text-xs md:text-sm"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </PageShell>
+  );
+}

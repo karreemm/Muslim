@@ -9,6 +9,7 @@ import {
   useEffect,
   startTransition,
 } from "react";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 
 type Theme = "light" | "dark";
 
@@ -27,7 +28,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    const stored = localStorage.getItem("theme") as Theme | null;
+    const stored = readString(STORAGE_KEYS.theme) as Theme | "";
 
     if (stored === "dark" || stored === "light") {
       setThemeState(stored);
@@ -44,7 +45,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     const root = document.documentElement;
 
     root.classList.toggle("dark", newTheme === "dark");
-    localStorage.setItem("theme", newTheme);
+    writeString(STORAGE_KEYS.theme, newTheme);
 
     startTransition(() => setThemeState(newTheme));
   }, []);
@@ -69,9 +70,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <ThemeContext.Provider
-      value={{ theme, setTheme, toggleTheme, isHydrated: true }}
-    >
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, isHydrated: true }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -81,7 +80,6 @@ export default ThemeContextProvider;
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context)
-    throw new Error("useTheme must be used within ThemeContextProvider");
+  if (!context) throw new Error("useTheme must be used within ThemeContextProvider");
   return context;
 };

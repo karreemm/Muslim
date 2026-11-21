@@ -12,7 +12,7 @@ const LINE_HEIGHT_BASE = 1.75;
 const LINE_HEIGHT_RATIO = 0.0002;
 
 export function useContainerFontSize(
-  containerRef: RefObject<HTMLElement>,
+  containerRef: RefObject<HTMLElement | null>,
   manualOffset: number = 0,
   sizeMode: "width" | "min" = "width",
 ): DisplaySettings & {

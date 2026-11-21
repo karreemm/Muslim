@@ -17,10 +17,7 @@ export const AzkarCategories = [
     en: "Post-Salah Azkar",
     number: 9,
   },
-  { id: "tasbeeh", 
-    ar: "تسابيح", 
-    en: "Tasbeeh", 
-    number: 16 },
+  { id: "tasbeeh", ar: "تسابيح", en: "Tasbeeh", number: 16 },
   {
     id: "sleep_azkar",
     ar: "أذكار النوم",

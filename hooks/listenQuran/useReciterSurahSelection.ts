@@ -18,18 +18,12 @@ export function useReciterSurahSelection() {
     return Number.isFinite(parsedSurahNumber) ? parsedSurahNumber : 1;
   };
 
-  const [reciterId, setReciterId] = useState<string | null>(
-    getRouteReciterId(),
-  );
+  const [reciterId, setReciterId] = useState<string | null>(getRouteReciterId());
   const [selectedSurah, setSelectedSurah] = useState<number | null>(
     getRouteSurahNumber(),
   );
-  const [selectedSurahNameEn, setSelectedSurahNameEn] = useState<string | null>(
-    null,
-  );
-  const [selectedSurahNameAr, setSelectedSurahNameAr] = useState<string | null>(
-    null,
-  );
+  const [selectedSurahNameEn, setSelectedSurahNameEn] = useState<string | null>(null);
+  const [selectedSurahNameAr, setSelectedSurahNameAr] = useState<string | null>(null);
   const [reciterNameEn, setReciterNameEn] = useState<string>("");
   const [reciterNameAr, setReciterNameAr] = useState<string>("");
 
@@ -50,22 +44,12 @@ export function useReciterSurahSelection() {
   }, [reciterId]);
 
   useEffect(() => {
-    if (
-      selectedSurah &&
-      selectedSurah >= 1 &&
-      selectedSurah <= surahNames.length
-    ) {
+    if (selectedSurah && selectedSurah >= 1 && selectedSurah <= surahNames.length) {
       setSelectedSurahNameEn(surahNames[selectedSurah - 1].en);
       setSelectedSurahNameAr(surahNames[selectedSurah - 1].ar);
       console.log("Selected Surah:", selectedSurah);
-      console.log(
-        "Selected Surah Name (EN):",
-        surahNames[selectedSurah - 1].en,
-      );
-      console.log(
-        "Selected Surah Name (AR):",
-        surahNames[selectedSurah - 1].ar,
-      );
+      console.log("Selected Surah Name (EN):", surahNames[selectedSurah - 1].en);
+      console.log("Selected Surah Name (AR):", surahNames[selectedSurah - 1].ar);
     }
   }, [selectedSurah]);
 

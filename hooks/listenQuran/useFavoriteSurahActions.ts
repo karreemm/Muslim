@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useFavoriteSurahs } from "../../context/favourites/FavoriteSurahsContext";
 
 export interface FavoriteSurah {
@@ -18,27 +17,15 @@ export function useFavoriteSurahActions(
   reciterNameEn: string,
   reciterNameAr: string,
 ) {
-  const { favoriteSurahs, addFavoriteSurah, removeFavoriteSurah } =
-    useFavoriteSurahs();
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const { favoriteSurahs, addFavoriteSurah, removeFavoriteSurah } = useFavoriteSurahs();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedFavorites = JSON.parse(
-        localStorage.getItem("favoriteSurahs") || "[]",
-      );
-      const isFav = storedFavorites.some(
-        (surah: FavoriteSurah) =>
-          surah.number === surahNumber && surah.reciterId === reciterId,
-      );
-      setIsFavorite(isFav);
-    }
-  }, [surahNumber, reciterId]);
+  const isFavorite = favoriteSurahs.some(
+    (surah) => surah.number === surahNumber && surah.reciterId === reciterId,
+  );
 
   const toggleFavorite = () => {
     if (isFavorite) {
       removeFavoriteSurah(surahNumber, reciterId);
-      console.log("Removing favorite:", surahNumber);
     } else {
       const newFavorite: FavoriteSurah = {
         number: surahNumber,
@@ -48,10 +35,8 @@ export function useFavoriteSurahActions(
         reciterNameEn: reciterNameEn,
         reciterNameAr: reciterNameAr,
       };
-      console.log("Adding favorite:", newFavorite);
       addFavoriteSurah(newFavorite);
     }
-    setIsFavorite(!isFavorite);
 
     const button = document.getElementById(`love-button-${surahNumber}`);
     if (button) {

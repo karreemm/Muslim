@@ -7,7 +7,7 @@ import {
   faCheck,
   faLink,
   faEnvelope,
-  faX
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faFacebook,
@@ -49,31 +49,51 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
       name: "WhatsApp",
       icon: faWhatsapp,
       color: "bg-green-500 hover:bg-green-600",
-      action: () => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title ? `${title}\n${url}` : url)}`, "_blank"),
+      action: () =>
+        window.open(
+          `https://api.whatsapp.com/send?text=${encodeURIComponent(title ? `${title}\n${url}` : url)}`,
+          "_blank",
+        ),
     },
     {
       name: "Telegram",
       icon: faTelegram,
       color: "bg-sky-500 hover:bg-sky-600",
-      action: () => window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`, "_blank"),
+      action: () =>
+        window.open(
+          `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`,
+          "_blank",
+        ),
     },
     {
       name: "Facebook",
       icon: faFacebook,
       color: "bg-blue-600 hover:bg-blue-700",
-      action: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank"),
+      action: () =>
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          "_blank",
+        ),
     },
     {
       name: "LinkedIn",
       icon: faLinkedin,
       color: "bg-blue-700 hover:bg-blue-800",
-      action: () => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`, "_blank"),
+      action: () =>
+        window.open(
+          `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`,
+          "_blank",
+        ),
     },
     {
       name: "X (Twitter)",
       icon: faXTwitter,
       color: "bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600",
-      action: () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`, "_blank"),
+      action: () =>
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`,
+          "_blank",
+        ),
     },
   ];
 
@@ -116,12 +136,11 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
                 leaveTo="opacity-0 scale-95 translate-y-8"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-3xl bg-card/95 backdrop-blur-2xl text-card-foreground shadow-2xl border border-border/50 transition-all">
-                  
                   <div className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/80 px-6 pt-8 pb-10 overflow-hidden">
                     <div className="absolute inset-0 opacity-10">
                       <div className="absolute top-0 left-1/2 w-32 h-32 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-16" />
                     </div>
-                    
+
                     <button
                       onClick={() => setIsShareOpen(false)}
                       type="button"
@@ -147,13 +166,15 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
                       onClick={handleCopy}
                       className={`w-full group relative overflow-hidden flex items-center gap-4 px-5 py-4 rounded-2xl border-2 transition-all duration-300 ${
                         copied
-                          ? "bg-green-500/10 border-green-500/50 text-green-600 dark:text-green-400"
+                          ? "bg-success/10 border-success/50 text-success"
                           : "bg-muted/50 border-border hover:border-primary/50 hover:bg-muted text-foreground"
                       }`}
                     >
                       <div
                         className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                          copied ? "bg-green-500 scale-110" : "bg-primary group-hover:scale-105"
+                          copied
+                            ? "bg-success scale-110"
+                            : "bg-primary group-hover:scale-105"
                         }`}
                       >
                         <FontAwesomeIcon
@@ -161,25 +182,32 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
                           className="text-primary-foreground text-xl"
                         />
                       </div>
-                      <div className={`flex-1 min-w-0 ${language === "ar" ? "pr-2" : "pl-2"}`}>
-                        <span className={`font-bold block text-base ${language === "ar" ? "text-right" : "text-left"}`}>
-                          {copied ? (language === "ar" ? "تم النسخ!" : "Copied!") : (language === "ar" ? "نسخ الرابط" : "Copy Link")}
+                      <div
+                        className={`flex-1 min-w-0 ${language === "ar" ? "pr-2" : "pl-2"}`}
+                      >
+                        <span
+                          className={`font-bold block text-base ${language === "ar" ? "text-right" : "text-left"}`}
+                        >
+                          {copied ? t("common.copiedExclamation") : t("common.copyLink")}
                         </span>
-                        <span className={`text-xs text-muted-foreground mt-1 block truncate [direction:ltr] [unicode-bidi:embed] ${language === "ar" ? "text-right" : "text-left"}`}>                          {copied 
-                            ? (language === "ar" ? "تم نسخ الرابط إلى الحافظة" : "Link copied to clipboard")
-                            : url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-                          }
+                        <span
+                          className={`text-xs text-muted-foreground mt-1 block truncate [direction:ltr] [unicode-bidi:embed] ${language === "ar" ? "text-right" : "text-left"}`}
+                        >
+                          {" "}
+                          {copied
+                            ? t("common.linkCopied")
+                            : url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                         </span>
                       </div>
                       {copied && (
-                        <div className="absolute inset-0 bg-green-500/5 animate-pulse rounded-2xl" />
+                        <div className="absolute inset-0 bg-success/5 animate-pulse rounded-2xl" />
                       )}
                     </button>
 
                     <div className="relative flex items-center gap-4">
                       <div className="flex-1 h-px bg-border" />
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        {language === "ar" ? "أو المشاركة عبر" : "Or share via"}
+                        {t("common.shareVia")}
                       </span>
                       <div className="flex-1 h-px bg-border" />
                     </div>
@@ -191,7 +219,9 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
                           onClick={option.action}
                           className="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-muted/50 hover:bg-muted transition-all duration-200 hover:scale-105 active:scale-95"
                         >
-                          <div className={`w-12 h-12 rounded-xl ${option.color} flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-110`}>
+                          <div
+                            className={`w-12 h-12 rounded-xl ${option.color} flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-110`}
+                          >
                             <FontAwesomeIcon
                               icon={option.icon}
                               className="text-white text-xl"
@@ -207,7 +237,7 @@ export default function ShareModal({ url, size, title }: ShareModalProps) {
 
                   <div className="px-6 pb-6 pt-2 text-center">
                     <p className="text-xs text-muted-foreground">
-                      {language === "ar" ? "اختر التطبيق المفضل لمشاركة هذا المحتوى" : "Choose your preferred app to share this content"}
+                      {t("common.chooseShareApp")}
                     </p>
                   </div>
                 </Dialog.Panel>

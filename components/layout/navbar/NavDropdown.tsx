@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  type IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, type IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import type { IconDefinition as IconType } from "@fortawesome/fontawesome-svg-core";
 
@@ -61,10 +58,7 @@ export default function NavDropdown({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -132,7 +126,10 @@ export default function NavDropdown({
                       : "bg-secondary/50 group-hover:bg-primary/10"
                   }`}
                 >
-                  <FontAwesomeIcon icon={routeIcon} className={`${href === "/read-hadith" ? "text-sm" : "text-xs"}`} />
+                  <FontAwesomeIcon
+                    icon={routeIcon}
+                    className={`${href === "/read-hadith" ? "text-sm" : "text-xs"}`}
+                  />
                 </div>
                 <span className="">{routeLabel}</span>
                 {isActive(href) && (

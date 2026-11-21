@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -26,10 +27,7 @@ export async function GET(request: Request) {
   }
 
   if (!isAllowedRadioUrl(rawUrl)) {
-    return NextResponse.json(
-      { error: "Radio URL not allowed" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Radio URL not allowed" }, { status: 400 });
   }
 
   try {
@@ -47,18 +45,29 @@ export async function GET(request: Request) {
       cache: "no-store",
     });
 
-    const headers = new Headers(upstream.headers);
+    const headers = new Headers();
+    const allowedHeaders = [
+      "content-type",
+      "accept-ranges",
+      "content-range",
+      "last-modified",
+      "etag",
+    ];
+
+    for (const name of allowedHeaders) {
+      const value = upstream.headers.get(name);
+      if (value) headers.set(name, value);
+    }
+
     headers.set("Cache-Control", "no-store");
+    headers.set("X-Content-Type-Options", "nosniff");
 
     return new Response(upstream.body, {
       status: upstream.status,
       headers,
     });
   } catch (error) {
-    console.error("GET /radio-proxy error:", error);
-    return NextResponse.json(
-      { error: "Failed to proxy radio stream" },
-      { status: 502 },
-    );
+    logger.error("GET /radio-proxy error:", error);
+    return NextResponse.json({ error: "Failed to proxy radio stream" }, { status: 502 });
   }
 }

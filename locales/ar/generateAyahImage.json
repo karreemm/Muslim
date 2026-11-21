@@ -1,13 +1,10 @@
 {
   "title": "حوّل الآية إلى صورة",
   "subtitle": "اختر الآية، خصّص الشكل، وشاركها بسهولة كصورة أنيقة.",
-
   "surahLabel": "السورة",
   "ayahLabel": "الآية",
-
   "surahSearchPlaceholder": "ابحث عن السورة...",
   "ayahSearchPlaceholder": "اكتب رقم الآية...",
-
   "ayahSectionTitle": "الآية",
   "ayahPredefinedTitle": "آيات مختارة",
   "ayahManualTitle": "اختيار يدوي",
@@ -20,10 +17,8 @@
   "specificPart": "اختيار جزء محدد",
   "submitAyahSelection": "احتفظ بهذا الجزء",
   "applyingAyahSelection": "جارٍ الاحتفاظ بالجزء...",
-
   "noSurahFound": "لا توجد نتائج",
   "noAyahFound": "لا توجد نتائج",
-
   "aspectRatioTitle": "حجم الصورة",
   "paletteTitle": "الألوان",
   "palettePredefined": "ألوان جاهزة",
@@ -31,27 +26,30 @@
   "paletteCustom": "تخصيص",
   "paletteThemeMode": "وضع المظهر",
   "paletteOr": "أو",
-
   "pageNumberTitle": "إظهار رقم الصفحة",
   "websiteAttributionTitle": "إظهار اسم الموقع",
   "websiteAttributionHelper": "إظهار اسم الموقع يساعد الموقع على الوصول إلى عدد أكبر من الناس.",
-
   "show": "إظهار",
   "hide": "إخفاء",
-
   "lightTheme": "فاتح",
   "darkTheme": "داكن",
-
   "selectionSummary": "اختيارك",
   "selectedSurah": "السورة",
   "selectedAyah": "الآية",
   "page": "صفحة",
   "line": "سطر",
-
   "downloadPng": "تحميل الصورة",
-
   "exporting": "جاري تجهيز الصورة...",
   "readyToExport": "جاهزة للتحميل",
   "waitingPreview": "لحظة... جاري التحضير",
-  "exportFailed": "حصل خطأ، حاول مرة أخرى"
+  "exportFailed": "حصل خطأ، حاول مرة أخرى",
+  "imagePreview": "الصورة الحالية",
+  "chooseSurahAyah": "اختر سورة وآية لعرضها هنا",
+  "surahOption": "سورة رقم {{number}} - {{count}} آية",
+  "ayahOption": "الآية {{number}}",
+  "ayahNumberShort": "رقم {{number}}",
+  "surahFallback": "سورة {{number}}",
+  "filenameSurah": "سورة {{name}}",
+  "filenameAyah": "آية {{number}}",
+  "applySelectionError": "تعذر تطبيق اختيار الآيات"
 }

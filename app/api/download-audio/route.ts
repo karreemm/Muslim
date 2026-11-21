@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -8,7 +9,11 @@ function sanitizeFileName(name: string): string {
 
 function toAsciiFileName(name: string): string {
   return (
-    name.normalize("NFKD").replace(/[^\x20-\x7E]/g, "").replace(/\s+/g, " ").trim() || "surah"
+    name
+      .normalize("NFKD")
+      .replace(/[^\x20-\x7E]/g, "")
+      .replace(/\s+/g, " ")
+      .trim() || "surah"
   );
 }
 
@@ -31,7 +36,10 @@ function isAllowedAudioUrl(rawUrl: string): boolean {
   }
 }
 
-function makeDownloadResponse(stream: ReadableStream<Uint8Array>, fileName: string): Response {
+function makeDownloadResponse(
+  stream: ReadableStream<Uint8Array>,
+  fileName: string,
+): Response {
   const ascii = toAsciiFileName(fileName);
   const encoded = encodeRfc5987Value(fileName);
   return new Response(stream, {
@@ -56,8 +64,8 @@ function buildStream(urls: string[]): ReadableStream<Uint8Array> {
             fetch(url, { cache: "no-store" }).then((r) => {
               if (!r.ok) throw new Error(`Upstream ${r.status}`);
               return r.arrayBuffer();
-            })
-          )
+            }),
+          ),
         );
         for (const r of results) {
           if (r.status === "fulfilled") {
@@ -80,19 +88,30 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No URLs provided" }, { status: 400 });
     }
 
-    const urls = (JSON.parse(rawUrls) as string[]).filter(Boolean);
-    const fileName = sanitizeFileName(typeof rawName === "string" ? rawName : "surah");
+    const parsedUrls: unknown = JSON.parse(rawUrls);
+    const urls = Array.isArray(parsedUrls)
+      ? parsedUrls.filter((value): value is string => typeof value === "string")
+      : [];
+    const fileName = sanitizeFileName(
+      typeof rawName === "string" ? rawName.slice(0, 120) : "surah",
+    );
 
     if (urls.length === 0) {
       return NextResponse.json({ error: "No URLs provided" }, { status: 400 });
     }
+    if (urls.length > 300) {
+      return NextResponse.json({ error: "Too many URLs provided" }, { status: 400 });
+    }
     if (urls.some((u) => !isAllowedAudioUrl(u))) {
-      return NextResponse.json({ error: "One or more URLs not allowed" }, { status: 400 });
+      return NextResponse.json(
+        { error: "One or more URLs not allowed" },
+        { status: 400 },
+      );
     }
 
     return makeDownloadResponse(buildStream(urls), fileName);
   } catch (error) {
-    console.error("POST /download-audio error:", error);
+    logger.error("POST /download-audio error:", error);
     return NextResponse.json({ error: "Failed to start download" }, { status: 500 });
   }
 }

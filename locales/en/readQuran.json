@@ -21,6 +21,12 @@
   "sidebar": {
     "title": "Search for a Surah / Juz"
   },
-  "saveThisAyah": "Save this Ayah?"
+  "saveThisAyah": "Save this Ayah?",
+  "modalAyahTitle": "{{surah}} - Ayah {{number}}",
+  "ayahWithNumber": "Ayah {{number}}",
+  "juzWithNumber": "Juz {{number}}",
+  "surahWithName": "Surah {{name}}",
+  "listen": "Listen",
+  "listenSurah": "Listen to Surah",
+  "surahAlt": "Surah {{name}}"
 }
-

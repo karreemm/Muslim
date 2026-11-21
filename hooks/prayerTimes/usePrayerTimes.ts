@@ -1,21 +1,15 @@
 import { useState, useEffect } from "react";
-import { getPrayerTimes } from "../../app/(pages)/prayer-times/service/GetPrayerTimes";
-import moment from "moment-hijri";
+import { getPrayerTimes } from "@/lib/services/prayerTimes/GetPrayerTimes";
+import type { PrayerTimings } from "@/lib/services/prayerTimes/GetPrayerTimes";
+import { formatTime12h } from "@/lib/dateFormatting";
+
+export type { PrayerTimings } from "@/lib/services/prayerTimes/GetPrayerTimes";
 
 export interface LocationData {
   city: { en: string; ar: string };
   country: { en: string; ar: string };
   latitude?: number;
   longitude?: number;
-}
-
-export interface PrayerTimings {
-  Fajr: string;
-  Sunrise: string;
-  Dhuhr: string;
-  Asr: string;
-  Maghrib: string;
-  Isha: string;
 }
 
 export interface UsePrayerTimesReturn {
@@ -37,9 +31,7 @@ export const usePrayerTimes = ({
   language,
 }: UsePrayerTimesProps): UsePrayerTimesReturn => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimings | null>(null);
-  const [rawPrayerTimes, setRawPrayerTimes] = useState<PrayerTimings | null>(
-    null
-  );
+  const [rawPrayerTimes, setRawPrayerTimes] = useState<PrayerTimings | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,25 +48,23 @@ export const usePrayerTimes = ({
           address.country[language],
           date,
           address.latitude,
-          address.longitude
+          address.longitude,
         );
 
         setRawPrayerTimes(timings);
 
         const formattedPrayerTimes: PrayerTimings = {
-          Fajr: moment(timings.Fajr, "HH:mm").format("h:mm A"),
-          Sunrise: moment(timings.Sunrise, "HH:mm").format("h:mm A"),
-          Dhuhr: moment(timings.Dhuhr, "HH:mm").format("h:mm A"),
-          Asr: moment(timings.Asr, "HH:mm").format("h:mm A"),
-          Maghrib: moment(timings.Maghrib, "HH:mm").format("h:mm A"),
-          Isha: moment(timings.Isha, "HH:mm").format("h:mm A"),
+          Fajr: formatTime12h(timings.Fajr),
+          Sunrise: formatTime12h(timings.Sunrise),
+          Dhuhr: formatTime12h(timings.Dhuhr),
+          Asr: formatTime12h(timings.Asr),
+          Maghrib: formatTime12h(timings.Maghrib),
+          Isha: formatTime12h(timings.Isha),
         };
 
         setPrayerTimes(formattedPrayerTimes);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setLoading(false);
       }

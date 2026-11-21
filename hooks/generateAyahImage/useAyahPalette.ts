@@ -4,7 +4,7 @@ import {
   FIXED_AYAH_PALETTES,
   type AyahImagePaletteMode,
   type FixedAyahPaletteId,
-} from "@/app/(pages)/generate-ayah-image/palettePresets";
+} from "@/app/[locale]/(pages)/generate-ayah-image/palettePresets";
 
 interface PaletteDefaults {
   customHue: number;
@@ -14,12 +14,8 @@ interface PaletteDefaults {
 export function useAyahPalette(defaults: PaletteDefaults) {
   const [paletteMode, setPaletteMode] =
     useState<AyahImagePaletteMode>("softContemplation");
-  const [paletteHue, setPaletteHue] = useState(
-    defaults.customHue ?? DEFAULT_CUSTOM_HUE,
-  );
-  const [imageTheme, setImageTheme] = useState<"light" | "dark">(
-    defaults.theme,
-  );
+  const [paletteHue, setPaletteHue] = useState(defaults.customHue ?? DEFAULT_CUSTOM_HUE);
+  const [imageTheme, setImageTheme] = useState<"light" | "dark">(defaults.theme);
   const [showPageNumber, setShowPageNumber] = useState(false);
   const [showWebsiteAttribution, setShowWebsiteAttribution] = useState(true);
 

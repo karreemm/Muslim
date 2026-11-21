@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 
 interface SavedAyah {
   surahNameEn: string | undefined;
@@ -18,9 +19,7 @@ interface SavedAyahsContextProps {
   removeAyah: (ayah: SavedAyah) => void;
 }
 
-const SavedAyahsContext = createContext<SavedAyahsContextProps | undefined>(
-  undefined,
-);
+const SavedAyahsContext = createContext<SavedAyahsContextProps | undefined>(undefined);
 
 export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -31,14 +30,9 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    try {
-      const saved = localStorage.getItem("savedAyahs");
-      setSavedAyahs(saved ? JSON.parse(saved) : []);
-    } catch {
-      setSavedAyahs([]);
-    } finally {
-      setIsHydrated(true);
-    }
+    const saved = readJSON<SavedAyah[]>(STORAGE_KEYS.savedAyahs, []);
+    setSavedAyahs(Array.isArray(saved) ? saved : []);
+    setIsHydrated(true);
   }, []);
 
   const saveAyah = (ayah: SavedAyah) => {
@@ -61,7 +55,7 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (typeof window === "undefined" || !isHydrated) return;
-    localStorage.setItem("savedAyahs", JSON.stringify(savedAyahs));
+    writeJSON(STORAGE_KEYS.savedAyahs, savedAyahs);
   }, [savedAyahs, isHydrated]);
 
   return (

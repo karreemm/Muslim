@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getAyahImageData } from "@/app/(pages)/generate-ayah-image/service/GetAyahImageData";
+import { getAyahImageData } from "@/lib/services/generateAyahImage/GetAyahImageData";
 import type { QuranVerse } from "@/hooks/readQuran";
 
 export function useAyahData(surahNumber: number, ayahNumber: number) {
@@ -33,18 +33,17 @@ export function useAyahData(surahNumber: number, ayahNumber: number) {
     }
 
     load();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [loadedSurahNumber, surahNumber, ayahNumber, surahVerses.length]);
 
-  const forceLoad = useCallback(
-    async (targetSurah: number, targetAyah: number) => {
-      const data = await getAyahImageData(targetSurah, targetAyah);
-      setSurahVerses(data.surahVerses);
-      setLoadedSurahNumber(targetSurah);
-      return data.surahVerses;
-    },
-    [],
-  );
+  const forceLoad = useCallback(async (targetSurah: number, targetAyah: number) => {
+    const data = await getAyahImageData(targetSurah, targetAyah);
+    setSurahVerses(data.surahVerses);
+    setLoadedSurahNumber(targetSurah);
+    return data.surahVerses;
+  }, []);
 
   return {
     surahVerses,

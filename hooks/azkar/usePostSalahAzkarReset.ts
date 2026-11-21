@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 import { usePrayerTimes, type PrayerTimings } from "@/hooks/prayerTimes";
 import { useZekrCounter } from "@/context/features/ZekrCounterContext";
 import { useLanguage } from "@/context/general/LanguageContext";
+import { STORAGE_KEYS, readJSON, readString, writeString } from "@/lib/storage";
 
 const POST_SALAH_CATEGORY = "أذكار بعد السلام من الصلاة المفروضة";
-const RESET_MARKER_KEY = "postSalahResetPrayer";
 
 const PRAYER_ORDER = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
 type PrayerName = (typeof PRAYER_ORDER)[number];
 
-const getCurrentPrayerPeriod = (
-  times: PrayerTimings | null,
-): PrayerName | null => {
+const getCurrentPrayerPeriod = (times: PrayerTimings | null): PrayerName | null => {
   if (!times) return null;
 
   const now = new Date();
@@ -43,33 +41,29 @@ export function usePostSalahAzkarReset() {
   } | null>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saved = localStorage.getItem("selectedGovernorate");
+    const saved = readJSON<{ en: string; ar: string } | null>(
+      STORAGE_KEYS.selectedGovernorate,
+      null,
+    );
     if (saved) {
-      try {
-        const gov = JSON.parse(saved);
-        setAddress({
-          city: gov,
-          country: { en: "Egypt", ar: "مصر" },
-        });
-      } catch {
-      }
+      setAddress({
+        city: saved,
+        country: { en: "Egypt", ar: "مصر" },
+      });
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     const interval = setInterval(() => {
-      const saved = localStorage.getItem("selectedGovernorate");
+      const saved = readJSON<{ en: string; ar: string } | null>(
+        STORAGE_KEYS.selectedGovernorate,
+        null,
+      );
       if (saved) {
-        try {
-          const gov = JSON.parse(saved);
-          setAddress({
-            city: gov,
-            country: { en: "Egypt", ar: "مصر" },
-          });
-        } catch {
-        }
+        setAddress({
+          city: saved,
+          country: { en: "Egypt", ar: "مصر" },
+        });
       }
     }, 60000);
     return () => clearInterval(interval);
@@ -90,10 +84,10 @@ export function usePostSalahAzkarReset() {
       const period = getCurrentPrayerPeriod(rawPrayerTimes);
       if (!period) return;
 
-      const lastReset = localStorage.getItem(RESET_MARKER_KEY);
+      const lastReset = readString(STORAGE_KEYS.postSalahResetMarker);
       if (lastReset !== period) {
         resetCategory(POST_SALAH_CATEGORY);
-        localStorage.setItem(RESET_MARKER_KEY, period);
+        writeString(STORAGE_KEYS.postSalahResetMarker, period);
       }
     };
 

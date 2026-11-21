@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFavoriteAzkar } from "@/context/favourites/FavoriteAzkarContext";
-import { AzkarItem } from "../../app/(pages)/azkar/service/GetAzkar";
+import { AzkarItem } from "@/lib/services/azkar/GetAzkar";
 
 /**
  * Custom hook to manage favorite azkar/zekr actions
@@ -8,8 +8,7 @@ import { AzkarItem } from "../../app/(pages)/azkar/service/GetAzkar";
  * @returns Object containing favorite management functions and state
  */
 export function useFavoriteZekrActions(categoryId: string) {
-  const { favoriteAzkar, addFavoriteAzkar, removeFavoriteAzkar } =
-    useFavoriteAzkar();
+  const { favoriteAzkar, addFavoriteAzkar, removeFavoriteAzkar } = useFavoriteAzkar();
 
   /**
    * Handle adding/removing azkar from favorites

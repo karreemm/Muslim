@@ -17,9 +17,7 @@ export interface UseWordRangeSelectionReturn {
 
   activeHandle: "start" | "end" | null;
 
-  handleSelectionPointerMove: (
-    event: React.PointerEvent<HTMLDivElement>,
-  ) => void;
+  handleSelectionPointerMove: (event: React.PointerEvent<HTMLDivElement>) => void;
   endSelectionDrag: () => void;
   startSelectionDrag: (
     event: React.PointerEvent<HTMLSpanElement>,
@@ -36,9 +34,7 @@ export function useWordRangeSelection(
   const dragHandleRef = useRef<"start" | "end" | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const pendingPointRef = useRef<{ x: number; y: number } | null>(null);
-  const [activeHandle, setActiveHandle] = useState<"start" | "end" | null>(
-    null,
-  );
+  const [activeHandle, setActiveHandle] = useState<"start" | "end" | null>(null);
 
   const maxSelectableWordIndex = Math.max(0, totalSelectableWords - 1);
 
@@ -46,10 +42,7 @@ export function useWordRangeSelection(
     ? Math.max(
         0,
         Math.min(
-          Math.min(
-            wordRangeSelection.startWordIndex,
-            wordRangeSelection.endWordIndex,
-          ),
+          Math.min(wordRangeSelection.startWordIndex, wordRangeSelection.endWordIndex),
           maxSelectableWordIndex,
         ),
       )
@@ -59,10 +52,7 @@ export function useWordRangeSelection(
     ? Math.max(
         normalizedSelectionStart,
         Math.min(
-          Math.max(
-            wordRangeSelection.startWordIndex,
-            wordRangeSelection.endWordIndex,
-          ),
+          Math.max(wordRangeSelection.startWordIndex, wordRangeSelection.endWordIndex),
           maxSelectableWordIndex,
         ),
       )
@@ -94,16 +84,10 @@ export function useWordRangeSelection(
     };
   }, [activeHandle]);
 
-  const updateSelectedWordIndex = (
-    handle: "start" | "end" | null,
-    nextIndex: number,
-  ) => {
+  const updateSelectedWordIndex = (handle: "start" | "end" | null, nextIndex: number) => {
     if (!wordRangeSelection || !handle || totalSelectableWords === 0) return;
 
-    const clampedIndex = Math.max(
-      0,
-      Math.min(nextIndex, maxSelectableWordIndex),
-    );
+    const clampedIndex = Math.max(0, Math.min(nextIndex, maxSelectableWordIndex));
 
     if (handle === "start") {
       wordRangeSelection.onStartWordIndexChange(
@@ -183,9 +167,7 @@ export function useWordRangeSelection(
     animationFrameRef.current = requestAnimationFrame(flushPendingPointer);
   };
 
-  const handleSelectionPointerMove = (
-    event: React.PointerEvent<HTMLDivElement>,
-  ) => {
+  const handleSelectionPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!dragHandleRef.current) return;
     queuePointerUpdate(event.clientX, event.clientY);
   };

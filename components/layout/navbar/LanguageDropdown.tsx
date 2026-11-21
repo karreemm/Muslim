@@ -2,43 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEarthAfrica,
-  faCheck,
-  faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEarthAfrica, faCheck, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useLanguage } from "../../../context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
 type Props = {
   className?: string;
 };
 
-const labels = {
-  ar: {
-    title: "اللغة",
-    ar: "العربية",
-    en: "English",
-  },
-  en: {
-    title: "Language",
-    ar: "العربية",
-    en: "English",
-  },
-};
-
 export default function LanguageDropdown({ className = "" }: Props) {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, setLanguage, isHydrated } = useLanguage();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isArabic = language === "ar";
-  const copy = isArabic ? labels.ar : labels.en;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -49,7 +30,7 @@ export default function LanguageDropdown({ className = "" }: Props) {
 
   const changeLanguage = (targetLanguage: "ar" | "en") => {
     if (targetLanguage !== language) {
-      toggleLanguage();
+      setLanguage(targetLanguage);
     }
     setIsOpen(false);
   };
@@ -58,8 +39,9 @@ export default function LanguageDropdown({ className = "" }: Props) {
     <div ref={containerRef} className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="group flex h-10 w-auto min-w-10 px-3 items-center justify-center gap-2 rounded-xl border border-border/50 bg-card/80 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-card hover:shadow-md hover:shadow-primary/5"
-        aria-label={copy.title}
+        disabled={!isHydrated}
+        className="group flex h-10 w-auto min-w-10 px-3 items-center justify-center gap-2 rounded-xl border border-border/50 bg-card/80 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-card hover:shadow-md hover:shadow-primary/5 disabled:cursor-wait disabled:opacity-70"
+        aria-label={t("common.language")}
       >
         <span className="text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
           {language === "ar" ? "ع" : "EN"}
@@ -79,12 +61,9 @@ export default function LanguageDropdown({ className = "" }: Props) {
           }`}
         >
           <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2.5 bg-muted/30">
-            <FontAwesomeIcon
-              icon={faEarthAfrica}
-              className="text-xs text-primary"
-            />
+            <FontAwesomeIcon icon={faEarthAfrica} className="text-xs text-primary" />
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              {copy.title}
+              {t("common.language")}
             </span>
           </div>
 
@@ -101,13 +80,10 @@ export default function LanguageDropdown({ className = "" }: Props) {
                 <span className="flex items-center justify-center w-6 h-6 rounded-md bg-secondary/50 text-xs">
                   ع
                 </span>
-                {copy.ar}
+                {t("common.arabic")}
               </span>
               {language === "ar" && (
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className="text-xs text-primary"
-                />
+                <FontAwesomeIcon icon={faCheck} className="text-xs text-primary" />
               )}
             </button>
 
@@ -123,13 +99,10 @@ export default function LanguageDropdown({ className = "" }: Props) {
                 <span className="flex items-center justify-center w-6 h-6 rounded-md bg-secondary/50 text-xs">
                   EN
                 </span>
-                {copy.en}
+                {t("common.english")}
               </span>
               {language === "en" && (
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className="text-xs text-primary"
-                />
+                <FontAwesomeIcon icon={faCheck} className="text-xs text-primary" />
               )}
             </button>
           </div>

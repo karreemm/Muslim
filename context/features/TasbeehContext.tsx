@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { STORAGE_KEYS, readString, removeStorage, writeString } from "@/lib/storage";
 
 interface TasbeehContextType {
   count: number;
@@ -36,9 +37,9 @@ const TasbeehContextProvider = ({ children }: IProps) => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && !isInitialized) {
-      const savedCount = localStorage.getItem("tasbeeh_count");
-      const savedGoal = localStorage.getItem("tasbeeh_goal");
-      const savedInputValue = localStorage.getItem("tasbeeh_input_value");
+      const savedCount = readString(STORAGE_KEYS.tasbeehCount);
+      const savedGoal = readString(STORAGE_KEYS.tasbeehGoal);
+      const savedInputValue = readString(STORAGE_KEYS.tasbeehInputValue);
 
       let parsedCount = 0;
       let parsedGoal = 0;
@@ -69,19 +70,19 @@ const TasbeehContextProvider = ({ children }: IProps) => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && isInitialized) {
-      localStorage.setItem("tasbeeh_count", count.toString());
+      writeString(STORAGE_KEYS.tasbeehCount, count.toString());
     }
   }, [count, isInitialized]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && isInitialized) {
-      localStorage.setItem("tasbeeh_goal", goal.toString());
+      writeString(STORAGE_KEYS.tasbeehGoal, goal.toString());
     }
   }, [goal, isInitialized]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && isInitialized) {
-      localStorage.setItem("tasbeeh_input_value", inputValue);
+      writeString(STORAGE_KEYS.tasbeehInputValue, inputValue);
     }
   }, [inputValue, isInitialized]);
 
@@ -109,7 +110,7 @@ const TasbeehContextProvider = ({ children }: IProps) => {
   const resetCounter = useCallback(() => {
     setCount(0);
     if (typeof window !== "undefined") {
-      localStorage.setItem("tasbeeh_count", "0");
+      writeString(STORAGE_KEYS.tasbeehCount, "0");
     }
   }, []);
 
@@ -118,9 +119,9 @@ const TasbeehContextProvider = ({ children }: IProps) => {
     setGoal(0);
     setInputValue("");
     if (typeof window !== "undefined") {
-      localStorage.removeItem("tasbeeh_count");
-      localStorage.removeItem("tasbeeh_goal");
-      localStorage.removeItem("tasbeeh_input_value");
+      removeStorage(STORAGE_KEYS.tasbeehCount);
+      removeStorage(STORAGE_KEYS.tasbeehGoal);
+      removeStorage(STORAGE_KEYS.tasbeehInputValue);
     }
   }, []);
 
@@ -137,9 +138,7 @@ const TasbeehContextProvider = ({ children }: IProps) => {
     resetAll,
   };
 
-  return (
-    <TasbeehContext.Provider value={value}>{children}</TasbeehContext.Provider>
-  );
+  return <TasbeehContext.Provider value={value}>{children}</TasbeehContext.Provider>;
 };
 
 export const useTasbeeh = () => {

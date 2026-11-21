@@ -1,0 +1,99 @@
+{
+  "site": {
+    "name": "Muslim",
+    "title": "Muslim - Quran, Hadith, Azkar & Prayer Times",
+    "description": "Muslim is an open-source Islamic platform for reading and listening to the Quran, exploring authentic Hadith, daily Azkar, prayer times, live radio, and more."
+  },
+  "home": {
+    "title": "Muslim - Quran, Hadith, Azkar & Prayer Times",
+    "description": "Read and listen to the Holy Quran, explore authentic Hadith collections, follow daily Azkar, check prayer times, and listen to live Islamic radio - all in one place."
+  },
+  "readQuran": {
+    "title": "Read Quran",
+    "description": "Read the Holy Quran by Surah or Juz in the Uthmani script with tafseer, translation, saved ayahs, and audio."
+  },
+  "readHadith": {
+    "title": "Read Hadith",
+    "description": "Browse authentic Hadith collections, search by text or number, and save your favourite hadiths."
+  },
+  "listenQuran": {
+    "title": "Listen to Quran",
+    "description": "Listen to the Holy Quran with renowned reciters, ayah-level controls, Hifz repeat mode, and downloads."
+  },
+  "radios": {
+    "title": "Live Islamic Radio",
+    "description": "Listen to 125+ live Islamic radio stations, including Quran, Ruqyah, Fatawa, and translated recitations."
+  },
+  "azkar": {
+    "title": "Azkar & Duas",
+    "description": "Daily morning and evening Azkar, duas, and tasbeeh counters with progress tracking."
+  },
+  "prayerTimes": {
+    "title": "Prayer Times",
+    "description": "Accurate prayer times, next-prayer countdown, and Hijri and Gregorian dates for Egyptian governorates."
+  },
+  "tasbeeh": {
+    "title": "Tasbeeh Counter",
+    "description": "A simple digital tasbeeh counter with goals, keyboard shortcuts, and locally saved progress."
+  },
+  "searchAyah": {
+    "title": "Search the Quran",
+    "description": "Search the Holy Quran by word or phrase and jump straight to any ayah."
+  },
+  "generateAyahImage": {
+    "title": "Ayah to Image",
+    "description": "Turn any Quran ayah into a beautifully styled image for sharing."
+  },
+  "sadaqaGarya": {
+    "title": "Sadaqa Jariyah",
+    "description": "Create a Sadaqa Jariyah memorial page for a loved one with Quran recitation and duas."
+  },
+  "sadaqat": {
+    "title": "My Sadaqat",
+    "description": "The Sadaqa Jariyah memorial pages you created in this browser."
+  },
+  "favourites": {
+    "title": "Favourites",
+    "description": "Your saved Surahs, Hadith, and Azkar."
+  },
+  "savedAyahs": {
+    "title": "Saved Ayahs",
+    "description": "Your saved Quran ayahs."
+  },
+  "surah": {
+    "title": "Surah {{name}}",
+    "description": "Read Surah {{name}} of the Holy Quran in the Uthmani script with tafseer, translation, and audio."
+  },
+  "juz": {
+    "title": "Juz {{number}}",
+    "description": "Read Juz {{number}} of the Holy Quran in the Uthmani script with tafseer, translation, and audio."
+  },
+  "hadithBook": {
+    "title": "{{name}}",
+    "description": "Explore {{name}} with chapter navigation, search, pagination, and favourite hadiths."
+  },
+  "hadithChapter": {
+    "title": "{{book}} - Chapter {{number}}",
+    "description": "Read chapter {{number}} of {{book}} with search, pagination, and favourite hadiths."
+  },
+  "reciter": {
+    "title": "Listen to {{name}}",
+    "description": "Listen to the Holy Quran recited by {{name}} with ayah-level controls, repeat mode, and downloads."
+  },
+  "azkarCategory": {
+    "title": "{{name}}",
+    "description": "Read and track {{name}} with per-zekr counters and daily progress."
+  },
+  "sadaqaMemorial": {
+    "title": "Sadaqa Jariyah for {{name}}",
+    "description": "A Sadaqa Jariyah memorial page for {{name}} with Quran recitation and duas."
+  },
+  "sadaqaMemorialFallback": {
+    "title": "Sadaqa Jariyah Memorial",
+    "description": "A Sadaqa Jariyah memorial page with Quran recitation and duas for a loved one."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for could not be found."
+  }
+}

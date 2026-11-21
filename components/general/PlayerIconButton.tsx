@@ -6,7 +6,7 @@ interface PlayerIconButtonProps {
   className: string;
   tooltip: string;
   children: React.ReactNode;
-  buttonRef?: React.RefObject<HTMLButtonElement>;
+  buttonRef?: React.RefObject<HTMLButtonElement | null>;
   tooltipClassName?: string;
   ariaLabel?: string;
 }

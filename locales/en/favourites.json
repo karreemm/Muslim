@@ -1,16 +1,23 @@
 {
+  "title": "Your Favourites",
   "azkar": {
     "noFavourites": "No Favourite Azkar Yet",
     "zekrNo": "Zekr No",
-    "clearAllAzkar": "Clear All Azkar"
+    "clearAllAzkar": "Clear All Azkar",
+    "clearAllConfirm": "Are you sure you want to clear all favourite azkar?",
+    "removeConfirm": "Are you sure you want to remove this zikr from favourites?"
   },
   "hadith": {
     "noFavourites": "No Favourite Hadith Yet",
     "hadithNo": "Hadith No",
-    "clearAllHadith": "Clear All Hadith"
+    "clearAllHadith": "Clear All Hadith",
+    "clearAllConfirm": "Are you sure you want to clear all favourite hadiths?",
+    "removeConfirm": "Are you sure you want to remove this hadith from favourites?"
   },
   "surah": {
     "noFavourites": "No Favourite Surahs Yet",
-    "clearAllSurahs": "Clear All Surahs"
+    "clearAllSurahs": "Clear All Surahs",
+    "clearAllConfirm": "Are you sure you want to clear all favourite surahs?",
+    "removeConfirm": "Are you sure you want to remove this surah from favourites?"
   }
 }

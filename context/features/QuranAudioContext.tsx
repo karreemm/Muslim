@@ -7,7 +7,18 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { RepeatConfig, HifzRequest, PlaybackSpeed } from "@/components/general/audio-player/types";
+import {
+  RepeatConfig,
+  HifzRequest,
+  PlaybackSpeed,
+} from "@/components/general/audio-player/types";
+import {
+  STORAGE_KEYS,
+  readNumber,
+  readString,
+  writeNumber,
+  writeString,
+} from "@/lib/storage";
 
 interface QuranAudioContextType {
   surahNumber: number | null;
@@ -20,11 +31,7 @@ interface QuranAudioContextType {
   currentAyahDuration: number;
   showProgressBar: boolean;
   showDetails: boolean;
-  playSurah: (
-    surahNumber: number,
-    reciterId?: string,
-    queue?: number[],
-  ) => void;
+  playSurah: (surahNumber: number, reciterId?: string, queue?: number[]) => void;
   playSurahAyah: (
     surahNumber: number,
     ayahIndex: number,
@@ -76,12 +83,8 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const [playTrigger, setPlayTrigger] = useState<number>(0);
   const [playAyahTrigger, setPlayAyahTrigger] = useState<number>(0);
-  const [requestedAyahIndex, setRequestedAyahIndex] = useState<number | null>(
-    null,
-  );
-  const [stopAfterAyahIndex, setStopAfterAyahIndex] = useState<number | null>(
-    null,
-  );
+  const [requestedAyahIndex, setRequestedAyahIndex] = useState<number | null>(null);
+  const [stopAfterAyahIndex, setStopAfterAyahIndex] = useState<number | null>(null);
   const [scrollToAyahTrigger, setScrollToAyahTrigger] = useState<number>(0);
 
   const [repeatConfig, setRepeatConfig] = useState<RepeatConfig | null>(null);
@@ -89,26 +92,18 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hifzRequest, setHifzRequest] = useState<HifzRequest | null>(null);
 
   const [playbackRate, setPlaybackRateState] = useState<PlaybackSpeed>(1);
-  const setPlaybackRate = (rate: number) =>
-    setPlaybackRateState(rate as PlaybackSpeed);
+  const setPlaybackRate = (rate: number) => setPlaybackRateState(rate as PlaybackSpeed);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const saved = localStorage.getItem("audioPlaybackRate");
-      if (saved) {
-        const parsed = parseFloat(saved);
-        if (parsed === 1 || parsed === 0.75 || parsed === 0.5) {
-          setPlaybackRate(parsed as PlaybackSpeed);
-        }
-      }
-    } catch {
+    const saved = readNumber(STORAGE_KEYS.audioPlaybackRate, 1);
+    if (saved === 1 || saved === 0.75 || saved === 0.5) {
+      setPlaybackRate(saved as PlaybackSpeed);
     }
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    localStorage.setItem("audioPlaybackRate", String(playbackRate));
+    writeNumber(STORAGE_KEYS.audioPlaybackRate, playbackRate);
   }, [playbackRate]);
 
   const triggerScrollToAyah = useCallback(() => {
@@ -166,38 +161,33 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedReciter = localStorage.getItem("preferredReciter");
-      if (savedReciter) {
-        setReciterId(savedReciter);
-      }
+    const savedReciter = readString(STORAGE_KEYS.preferredReciter);
+    if (savedReciter) {
+      setReciterId(savedReciter);
     }
   }, []);
 
-  const playSurah = useCallback(
-    (sNumber: number, rId?: string, queue: number[] = []) => {
-      setSurahNumber(sNumber);
-      setSurahQueue(queue);
-      if (rId) {
-        setReciterId(rId);
-        localStorage.setItem("preferredReciter", rId);
-      }
-      setActiveAyahIndex(0);
-      setRequestedAyahIndex(null);
-      setStopAfterAyahIndex(null);
-      setIsRepeatModeActive(false);
-      setRepeatConfig(null);
-      setHifzRequest(null);
-      setIsPlayerVisible(true);
-      setIsPlaying(true);
-      setPlayTrigger((t) => t + 1);
-      setScrollToAyahTrigger((t) => t + 1);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("quran:started"));
-      }
-    },
-    [],
-  );
+  const playSurah = useCallback((sNumber: number, rId?: string, queue: number[] = []) => {
+    setSurahNumber(sNumber);
+    setSurahQueue(queue);
+    if (rId) {
+      setReciterId(rId);
+      writeString(STORAGE_KEYS.preferredReciter, rId);
+    }
+    setActiveAyahIndex(0);
+    setRequestedAyahIndex(null);
+    setStopAfterAyahIndex(null);
+    setIsRepeatModeActive(false);
+    setRepeatConfig(null);
+    setHifzRequest(null);
+    setIsPlayerVisible(true);
+    setIsPlaying(true);
+    setPlayTrigger((t) => t + 1);
+    setScrollToAyahTrigger((t) => t + 1);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("quran:started"));
+    }
+  }, []);
 
   const playSurahAyah = useCallback(
     (
@@ -211,7 +201,7 @@ export const QuranAudioProvider: React.FC<{ children: React.ReactNode }> = ({
       setSurahQueue(queue);
       if (rId) {
         setReciterId(rId);
-        localStorage.setItem("preferredReciter", rId);
+        writeString(STORAGE_KEYS.preferredReciter, rId);
       }
       setActiveAyahIndex(ayahIndex);
       setRequestedAyahIndex(ayahIndex);

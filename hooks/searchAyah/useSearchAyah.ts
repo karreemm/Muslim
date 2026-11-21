@@ -1,12 +1,12 @@
 import { useState, useCallback, useMemo } from "react";
-import { useLanguage } from "@/context/general/LanguageContext";
+import { useTranslation } from "@/hooks/general/useTranslation";
 
-import type { SearchAyah, SearchResponse } from "@/app/(pages)/search-ayah/types";
+import type { SearchAyah, SearchResponse } from "@/types/searchAyah";
 
 const ITEMS_PER_PAGE = 20;
 
 export function useSearchAyah() {
-  const { language } = useLanguage();
+  const { t } = useTranslation();
 
   const [keyword, setKeyword] = useState("");
   const [searchedKeyword, setSearchedKeyword] = useState("");
@@ -16,12 +16,6 @@ export function useSearchAyah() {
   const [hasSearched, setHasSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [wholeWord, setWholeWord] = useState(false);
-
-  const isAr = language !== "en";
-
-  function t(ar: string, en: string) {
-    return isAr ? ar : en;
-  }
 
   const performSearch = useCallback(
     async (page: number = 1) => {
@@ -58,11 +52,14 @@ export function useSearchAyah() {
           return;
         }
 
+        if (res.status === 400) {
+          throw new Error("SHORT_QUERY");
+        }
+
         if (!res.ok) {
           const payload = await res.json().catch(() => null);
           throw new Error(
-            payload?.error ??
-              t(`فشل البحث: ${res.statusText}`, `Search failed: ${res.statusText}`),
+            payload?.error ?? t("common.searchFailed", { status: res.statusText }),
           );
         }
 
@@ -70,32 +67,22 @@ export function useSearchAyah() {
         setResults(data);
         setError("");
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : t("حدث خطأ أثناء البحث", "Search error");
+        const message = err instanceof Error ? err.message : t("common.searchError");
 
-        if (message.includes("short") || message.includes("قصيرة")) {
-          setError(
-            t(
-              "كلمة البحث قصيرة جدًا. يرجى استخدام 3 أحرف على الأقل.",
-              "Search term is too short. Please use at least 3 characters.",
-            ),
-          );
-        } else if (message.includes("timeout") || err instanceof DOMException) {
-          setError(
-            t(
-              "البحث يستغرق وقتًا طويلاً. حاول مجددًا.",
-              "Search timed out. Please try again.",
-            ),
-          );
-        } else if (message.includes("Failed to fetch") || message.includes("NetworkError")) {
-          setError(
-            t(
-              "خطأ في الشبكة. تحقق من اتصالك بالإنترنت.",
-              "Network error. Check your connection.",
-            ),
-          );
+        if (message === "SHORT_QUERY" || message.includes("short")) {
+          setError(t("common.searchShort"));
+        } else if (
+          message.toLowerCase().includes("timeout") ||
+          err instanceof DOMException
+        ) {
+          setError(t("common.searchTimeout"));
+        } else if (
+          message.includes("Failed to fetch") ||
+          message.includes("NetworkError")
+        ) {
+          setError(t("common.networkError"));
         } else {
-          setError(message);
+          setError(t("common.searchError"));
         }
 
         setResults(null);
@@ -103,7 +90,7 @@ export function useSearchAyah() {
         setIsLoading(false);
       }
     },
-    [keyword, wholeWord, language],
+    [keyword, wholeWord, t],
   );
 
   const changePage = useCallback(

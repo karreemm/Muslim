@@ -8,6 +8,10 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/blob-report
+/.playwright
 
 # next.js
 /.next/
@@ -26,7 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+# Only the template is tracked; every real env file stays local.
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel

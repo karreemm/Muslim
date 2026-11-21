@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchAzkarItems,
-  AzkarItem,
-} from "../../app/(pages)/azkar/service/GetAzkar";
+import { fetchAzkarItems, AzkarItem } from "@/lib/services/azkar/GetAzkar";
 
 export function useAzkarData(categoryId: string, startingNumber: number) {
   const [azkarItems, setAzkarItems] = useState<AzkarItem[] | null>(null);

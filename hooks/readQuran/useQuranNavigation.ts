@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/general/LanguageContext";
+import { localizePath } from "@/lib/i18n";
 import { surahNames, juzNames } from "../../constants/quranData";
 
 type NavigationType = "surah" | "juz" | "page";
@@ -15,12 +17,19 @@ interface NavigationConfig {
 export const useQuranNavigation = (type: NavigationType) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { language } = useLanguage();
   const [number, setNumber] = useState<string | null>(null);
 
   const config: NavigationConfig = {
     type,
-    maxNumber: type === "surah" ? surahNames.length : (type === "juz" ? juzNames.length : 604),
-    basePath: type === "surah" ? "/read-quran/surah" : (type === "juz" ? "/read-quran/juz" : "/read-quran/page"),
+    maxNumber:
+      type === "surah" ? surahNames.length : type === "juz" ? juzNames.length : 604,
+    basePath:
+      type === "surah"
+        ? "/read-quran/surah"
+        : type === "juz"
+          ? "/read-quran/juz"
+          : "/read-quran/page",
   };
 
   const currentNumber = number ? parseInt(number) : 0;
@@ -36,24 +45,22 @@ export const useQuranNavigation = (type: NavigationType) => {
       !isNaN(parseInt(pageNumber)) &&
       (parseInt(pageNumber) > config.maxNumber || parseInt(pageNumber) < 1)
     ) {
-      router.push(`${config.basePath}/1`);
+      router.push(localizePath(language, `${config.basePath}/1`));
       return;
     }
 
     setNumber(pageNumber ?? null);
-  }, [pathname, router, config.basePath, config.maxNumber]);
+  }, [pathname, router, language, config.basePath, config.maxNumber]);
 
   const handleNavigation = (direction: "next" | "prev") => {
     const currentNum = number ? parseInt(number) : 1;
     const newNumber = direction === "next" ? currentNum + 1 : currentNum - 1;
-    router.push(`${config.basePath}/${newNumber}`);
+    router.push(localizePath(language, `${config.basePath}/${newNumber}`));
   };
 
   const getNavigationData = () => {
     if (type === "surah") {
-      const currentSurah = surahNames.find(
-        (s) => s.number.toString() === number
-      );
+      const currentSurah = surahNames.find((s) => s.number.toString() === number);
       const nextSurah = hasNext ? surahNames[currentNumber] : null;
       const prevSurah = hasPrev ? surahNames[currentNumber - 2] : null;
 
@@ -77,7 +84,7 @@ export const useQuranNavigation = (type: NavigationType) => {
         current: { number: currentNumber, label: `Page ${currentNumber}` },
         next: hasNext ? { number: currentNumber + 1 } : null,
         prev: hasPrev ? { number: currentNumber - 1 } : null,
-      }
+      };
     }
   };
 

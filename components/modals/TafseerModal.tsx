@@ -16,7 +16,7 @@ import {
   getAyahTafseer,
   TafseerBook,
   AyahTafseer,
-} from "../../app/(pages)/read-quran/service/GetTafseer";
+} from "@/lib/services/readQuran/GetTafseer";
 
 interface TafseerModalProps {
   isOpen: boolean;
@@ -34,9 +34,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
 
     const [tafseerBooks, setTafseerBooks] = useState<TafseerBook[]>([]);
     const [selectedBookId, setSelectedBookId] = useState<number>(1);
-    const [currentTafseer, setCurrentTafseer] = useState<AyahTafseer | null>(
-      null,
-    );
+    const [currentTafseer, setCurrentTafseer] = useState<AyahTafseer | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -68,11 +66,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
 
         setIsLoading(true);
         setError("");
-        const tafseer = await getAyahTafseer(
-          selectedBookId,
-          surahNumber,
-          ayahNumber,
-        );
+        const tafseer = await getAyahTafseer(selectedBookId, surahNumber, ayahNumber);
 
         if (tafseer) {
           setCurrentTafseer(tafseer);
@@ -91,9 +85,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
       setSelectedBookId(bookId);
     };
 
-    const filteredBooks = tafseerBooks.filter(
-      (book) => book.language === language,
-    );
+    const filteredBooks = tafseerBooks.filter((book) => book.language === language);
 
     return (
       <Transition appear show={isOpen} as={Fragment}>
@@ -147,14 +139,12 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                         {t("readQuran.tafseer.title")}
                       </Dialog.Title>
                       <div className="flex items-center gap-2 text-primary-foreground/90 text-sm sm:text-base bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm">
-                        <FontAwesomeIcon
-                          icon={faBookmark}
-                          className="text-xs"
-                        />
+                        <FontAwesomeIcon icon={faBookmark} className="text-xs" />
                         <span>
-                          {language === "ar"
-                            ? `${surahNameAr} - الآية ${ayahNumber}`
-                            : `${surahNameEn} - Ayah ${ayahNumber}`}
+                          {t("readQuran.modalAyahTitle", {
+                            surah: (language === "ar" ? surahNameAr : surahNameEn) ?? "",
+                            number: ayahNumber,
+                          })}
                         </span>
                       </div>
                     </div>
@@ -165,7 +155,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                     className="px-6 py-5 border-b border-border bg-muted/30"
                   >
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
-                      {language === "ar" ? "اختيار الكتاب" : "Select Book"}
+                      {t("readQuran.tafseer.selectBook")}
                     </p>
                     <div className="flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
                       {filteredBooks.map((book) => (
@@ -197,7 +187,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                           <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin" />
                         </div>
                         <p className="text-sm text-muted-foreground animate-pulse">
-                          {language === "ar" ? "جاري التحميل..." : "Loading..."}
+                          {t("common.loading")}
                         </p>
                       </div>
                     ) : error ? (
@@ -224,8 +214,7 @@ const TafseerModalComponent: React.FC<TafseerModalProps> = memo(
                             className="text-lg sm:text-xl leading-[1.8] text-foreground text-justify font-medium"
                             style={{
                               textAlign: language === "ar" ? "justify" : "left",
-                              wordSpacing:
-                                language === "ar" ? "0.05em" : "normal",
+                              wordSpacing: language === "ar" ? "0.05em" : "normal",
                             }}
                           >
                             {currentTafseer.text}

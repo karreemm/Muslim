@@ -9,6 +9,7 @@ import {
   faMinus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import AyahWheelPicker from "./AyahWheelPicker";
 import {
   RepeatConfig,
@@ -47,14 +48,14 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
   onChangePlaybackRate,
 }) => {
   const isArabic = language === "ar";
-  const txt = (ar: string, en: string) => (isArabic ? ar : en);
+  const { t } = useTranslation();
 
   const canCustom = totalAyahs >= 2;
 
   const persisted = useMemo(() => loadRepeatSettings(), []);
 
   const [rangeMode, setRangeMode] = useState<RepeatRangeMode>(
-    !canCustom ? "this" : initialMode ?? "custom",
+    !canCustom ? "this" : (initialMode ?? "custom"),
   );
   const [startAyah, setStartAyah] = useState<number>(
     Math.min(totalAyahs, Math.max(1, initialStartAyah ?? currentAyahIndex + 1)),
@@ -62,13 +63,13 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
   const [endAyah, setEndAyah] = useState<number>(
     Math.min(totalAyahs, (initialStartAyah ?? currentAyahIndex + 1) + 1),
   );
-  const [repeatsPerAyah, setRepeatsPerAyah] =
-    useState<RepeatsPerAyah>(persisted.repeatsPerAyah);
-  const [onRangeComplete, setOnRangeComplete] =
-    useState<OnRangeComplete>(persisted.onRangeComplete);
-  const [showEndPicker, setShowEndPicker] = useState<boolean>(
-    openEndPicker ?? false,
+  const [repeatsPerAyah, setRepeatsPerAyah] = useState<RepeatsPerAyah>(
+    persisted.repeatsPerAyah,
   );
+  const [onRangeComplete, setOnRangeComplete] = useState<OnRangeComplete>(
+    persisted.onRangeComplete,
+  );
+  const [showEndPicker, setShowEndPicker] = useState<boolean>(openEndPicker ?? false);
 
   useEffect(() => {
     saveRepeatSettings({ repeatsPerAyah, onRangeComplete });
@@ -120,12 +121,12 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
             <FontAwesomeIcon icon={faRepeat} className="text-xs" />
           </div>
           <span className="text-sm font-bold text-foreground">
-            {txt("وضع التكرار (الحفظ)", "Repeat Mode")}
+            {t("listenQuran.player.repeatModeHifz")}
           </span>
         </div>
         <button
           onClick={onClose}
-          aria-label={txt("إغلاق", "Close")}
+          aria-label={t("listenQuran.player.close")}
           className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
         >
           <FontAwesomeIcon icon={faXmark} className="text-xs" />
@@ -146,24 +147,21 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
               } ${mode === "custom" && !canCustom ? "opacity-40 cursor-not-allowed" : ""}`}
             >
               {mode === "this"
-                ? txt("هذه الآية", "This Ayah")
-                : txt("آيات", "Ayahs")}
+                ? t("listenQuran.player.repeatThisAyah")
+                : t("listenQuran.player.ayahs")}
             </button>
           ))}
         </div>
 
         {rangeMode === "this" ? (
           <p className="text-xs text-muted-foreground text-center px-2">
-            {txt(
-              `سيتم تكرار الآية ${startAyah} وحدها.`,
-              `Ayah ${startAyah} will be repeated on its own.`,
-            )}
+            {t("listenQuran.player.repeatHint", { number: startAyah })}
           </p>
         ) : (
           <div className="flex flex-col gap-3">
             <div>
               <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-1">
-                {txt("من الآية", "Start Ayah")}
+                {t("listenQuran.player.startAyah")}
               </p>
               <div className="flex items-center gap-2">
                 <button
@@ -189,13 +187,13 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
             <div>
               <div className="flex items-center justify-between mb-1.5 px-1">
                 <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                  {txt("إلى الآية", "End Ayah")}
+                  {t("listenQuran.player.endAyah")}
                 </p>
                 <button
                   onClick={applyWholeSurah}
                   className="text-[11px] font-semibold text-primary hover:underline"
                 >
-                  {txt("السورة كاملة", "Whole Surah")}
+                  {t("listenQuran.player.wholeSurah")}
                 </button>
               </div>
               {!showEndPicker ? (
@@ -203,11 +201,9 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
                   onClick={() => setShowEndPicker(true)}
                   className="w-full h-12 rounded-xl bg-muted/60 hover:bg-muted transition-colors flex items-center justify-center gap-2 text-sm font-medium text-foreground"
                 >
-                  <span className="tabular-nums font-bold text-primary">
-                    {endAyah}
-                  </span>
+                  <span className="tabular-nums font-bold text-primary">{endAyah}</span>
                   <span className="text-muted-foreground">
-                    {txt("اختر الآية", "Tap to pick")}
+                    {t("listenQuran.player.tapToPick")}
                   </span>
                 </button>
               ) : (
@@ -217,7 +213,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
                     max={totalAyahs}
                     value={endAyah}
                     onChange={setEndAyah}
-                    ariaLabel={txt("اختر الآية الأخيرة", "Pick end ayah")}
+                    ariaLabel={t("listenQuran.player.pickEndAyah")}
                   />
                 </div>
               )}
@@ -227,7 +223,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
 
         <div>
           <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-1">
-            {txt("تكرار لكل آية", "Repeats per Ayah")}
+            {t("listenQuran.player.repeatsPerAyah")}
           </p>
           <div className="flex gap-1.5">
             {REPEAT_REPEATS_OPTIONS.map((r) => (
@@ -252,7 +248,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
 
         <div>
           <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-1">
-            {txt("عند انتهاء النطاق", "When Range Finishes")}
+            {t("listenQuran.player.whenRangeFinishes")}
           </p>
           <div className="grid grid-cols-2 gap-1 p-1 bg-muted rounded-xl">
             {(["stop", "loop"] as OnRangeComplete[]).map((opt) => (
@@ -266,8 +262,8 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
                 }`}
               >
                 {opt === "stop"
-                  ? txt("إيقاف", "Stop")
-                  : txt("تكرار النطاق", "Loop Range")}
+                  ? t("listenQuran.player.stop")
+                  : t("listenQuran.player.loopRange")}
               </button>
             ))}
           </div>
@@ -275,7 +271,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
 
         <div>
           <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 px-1">
-            {txt("سرعة التشغيل", "Playback Speed")}
+            {t("listenQuran.player.playbackSpeed")}
           </p>
           <div className="flex gap-1.5">
             {PLAYBACK_SPEED_OPTIONS.map((s) => (
@@ -298,7 +294,7 @@ const RepeatModePanel: React.FC<RepeatModePanelProps> = ({
           onClick={startRepeat}
           className="mt-1 w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold text-sm shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-all"
         >
-          {txt("ابدأ التكرار", "Start Repeat")}
+          {t("listenQuran.player.startRepeat")}
         </button>
       </div>
     </div>

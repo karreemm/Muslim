@@ -29,7 +29,12 @@ export default function Loading({ size = "md" }: LoadingProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background dark:bg-background bg-opacity-95 dark:bg-opacity-95 backdrop-blur-sm">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Loading"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-background backdrop-blur-sm"
+    >
       <div
         className={`flex flex-col items-center ${containerSizeClasses[size]} text-primary`}
       >

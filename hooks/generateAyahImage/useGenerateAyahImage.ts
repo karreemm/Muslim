@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "@/hooks/general/useTranslation";
 import {
   areVersesWithinPage,
   buildAyahImageData,
@@ -10,7 +11,7 @@ import { useAyahSelection } from "./useAyahSelection";
 import { useAyahDropdowns } from "./useAyahDropdowns";
 import { useAyahPalette } from "./useAyahPalette";
 import { useAyahData } from "./useAyahData";
-import type { AyahImageData } from "@/app/(pages)/generate-ayah-image/types";
+import type { AyahImageData } from "@/types/ayahImage";
 
 interface GenerateAyahImageDefaults {
   customHue: number;
@@ -23,12 +24,9 @@ export function useGenerateAyahImage(
   language: string,
   defaults: GenerateAyahImageDefaults,
 ) {
-  const [pendingAyahData, setPendingAyahData] = useState<AyahImageData | null>(
-    null,
-  );
-  const [appliedAyahData, setAppliedAyahData] = useState<AyahImageData | null>(
-    null,
-  );
+  const { t } = useTranslation();
+  const [pendingAyahData, setPendingAyahData] = useState<AyahImageData | null>(null);
+  const [appliedAyahData, setAppliedAyahData] = useState<AyahImageData | null>(null);
   const [isApplyingAyahSelection, setIsApplyingAyahSelection] = useState(false);
 
   const {
@@ -121,10 +119,7 @@ export function useGenerateAyahImage(
   );
 
   useEffect(() => {
-    if (
-      loadedSurahNumber !== pendingSelection.surahNumber ||
-      surahVerses.length === 0
-    )
+    if (loadedSurahNumber !== pendingSelection.surahNumber || surahVerses.length === 0)
       return;
     const data = buildAyahImageData(pendingSelection, surahVerses);
     setPendingAyahData(data);
@@ -259,11 +254,7 @@ export function useGenerateAyahImage(
       setAppliedAyahData(committedData);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : language === "ar"
-            ? "تعذر تطبيق اختيار الآيات"
-            : "Failed to apply ayah selection",
+        err instanceof Error ? err.message : t("generateAyahImage.applySelectionError"),
       );
     } finally {
       setIsApplyingAyahSelection(false);
@@ -293,8 +284,7 @@ export function useGenerateAyahImage(
     isSingleAyahSelection: pendingAyahData?.isSingleAyahSelection ?? true,
     showAyahNumberForSingle: pendingSelection.showAyahNumber,
     specificPartEnabled: pendingSelection.specificPartEnabled,
-    specificPartStartWordIndex:
-      pendingSelection.specificPartStartWordIndex ?? 0,
+    specificPartStartWordIndex: pendingSelection.specificPartStartWordIndex ?? 0,
     specificPartEndWordIndex:
       pendingSelection.specificPartEndWordIndex ??
       Math.max(0, (pendingAyahData?.totalSelectableWords ?? 1) - 1),
