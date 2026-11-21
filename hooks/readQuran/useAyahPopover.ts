@@ -6,10 +6,17 @@ interface UseAyahPopoverOptions {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
+  isAlreadySaved?: boolean;
 }
 
-export const useAyahPopover = ({ isOpen, onClose, onSave }: UseAyahPopoverOptions) => {
+export const useAyahPopover = ({
+  isOpen,
+  onClose,
+  onSave,
+  isAlreadySaved = false,
+}: UseAyahPopoverOptions) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
@@ -29,17 +36,32 @@ export const useAyahPopover = ({ isOpen, onClose, onSave }: UseAyahPopoverOption
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      setIsSaved(isAlreadySaved);
+    } else {
       setIsSaved(false);
     }
-  }, [isOpen]);
+  }, [isOpen, isAlreadySaved]);
+
+  useEffect(
+    () => () => {
+      if (closeTimer.current) {
+        clearTimeout(closeTimer.current);
+      }
+    },
+    [],
+  );
 
   const handleSaveClick = useCallback(() => {
     onSave();
     setIsSaved(true);
-    setTimeout(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+    }
+    // Keep the success state visible long enough to be noticed.
+    closeTimer.current = setTimeout(() => {
       onClose();
-    }, 1000);
+    }, 2000);
   }, [onSave, onClose]);
 
   return {

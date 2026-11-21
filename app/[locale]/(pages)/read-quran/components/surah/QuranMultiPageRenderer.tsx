@@ -23,6 +23,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
   ({ verses, fontSize, lineHeight, surahHeaders, onLoadedPagesChange }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastScrolledTargetRef = useRef<string | null>(null);
+    const lastScrolledPageRef = useRef<string | null>(null);
     const {
       pages,
       sortedPageNumbers,
@@ -38,6 +39,7 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
 
     useEffect(() => {
       lastScrolledTargetRef.current = null;
+      lastScrolledPageRef.current = null;
     }, [highlightedAyahNumber, highlightedPage]);
 
     useEffect(() => {
@@ -45,6 +47,16 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
         const pageIndex = sortedPageNumbers.indexOf(highlightedPage.toString());
         if (pageIndex === -1 || visiblePages < pageIndex + 1) {
           return;
+        }
+
+        // Jump to the page as soon as it is mounted. Page fonts load lazily, so
+        // waiting for the exact ayah can take several seconds on a long surah.
+        if (lastScrolledPageRef.current !== highlightedPage.toString()) {
+          const pageElement = document.getElementById(`page-${highlightedPage}`);
+          if (pageElement) {
+            lastScrolledPageRef.current = highlightedPage.toString();
+            pageElement.scrollIntoView({ behavior: "auto", block: "start" });
+          }
         }
 
         const matchingVerse = verses?.find(
@@ -62,7 +74,11 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
           }
 
           let retries = 0;
-          const maxRetries = 20;
+          // Deep links can land on a page whose font loads after the first
+          // render, and the reader mounts pages progressively. Keep trying long
+          // enough to cover that instead of giving up and leaving the user at
+          // the top of the surah.
+          const maxRetries = 80;
           let cancelled = false;
 
           const tryScroll = () => {
@@ -71,8 +87,11 @@ const QuranMultiPageRenderer: React.FC<QuranMultiPageRendererProps> = memo(
             const ayahElement = document.getElementById(ayahId);
             if (ayahElement) {
               lastScrolledTargetRef.current = targetKey;
+              // Jump instead of smooth-scrolling: a deep link can be tens of
+              // thousands of pixels down, and smooth scrolling there looks like
+              // nothing happened.
               ayahElement.scrollIntoView({
-                behavior: "smooth",
+                behavior: "auto",
                 block: "center",
               });
               return;

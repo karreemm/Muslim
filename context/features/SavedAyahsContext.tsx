@@ -31,12 +31,34 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (typeof window === "undefined") return;
 
     const saved = readJSON<SavedAyah[]>(STORAGE_KEYS.savedAyahs, []);
-    setSavedAyahs(Array.isArray(saved) ? saved : []);
+    if (!Array.isArray(saved)) {
+      setIsHydrated(true);
+      return;
+    }
+
+    // Older builds appended duplicates; keep only the newest copy of each ayah.
+    const unique = new Map<string, SavedAyah>();
+    for (const item of saved) {
+      const key = `${item.SurahNumber}:${item.ayahNumberEn}`;
+      unique.delete(key);
+      unique.set(key, item);
+    }
+
+    setSavedAyahs([...unique.values()]);
     setIsHydrated(true);
   }, []);
 
   const saveAyah = (ayah: SavedAyah) => {
-    setSavedAyahs((prev) => [...prev, ayah]);
+    setSavedAyahs((prev) => {
+      const next = prev.filter(
+        (item) =>
+          !(
+            String(item.SurahNumber) === String(ayah.SurahNumber) &&
+            item.ayahNumberEn === ayah.ayahNumberEn
+          ),
+      );
+      return [...next, ayah];
+    });
   };
 
   const clearSavedAyahs = () => {
@@ -47,7 +69,7 @@ export const SavedAyahsProvider: React.FC<{ children: React.ReactNode }> = ({
     setSavedAyahs((prev) => {
       return prev.filter(
         (item) =>
-          item.surahNameEn !== ayah.surahNameEn ||
+          String(item.SurahNumber) !== String(ayah.SurahNumber) ||
           item.ayahNumberEn !== ayah.ayahNumberEn,
       );
     });

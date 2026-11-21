@@ -152,27 +152,29 @@ test("Sadaqa can be created and deleted with mocked storage", async ({ page }) =
   await expect(page.getByText("Test Person", { exact: true })).toBeHidden();
 });
 
-test("a saved ayah opens the correct surah and ayah", async ({ page }) => {
+test("a saved ayah opens the surah at that ayah", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(
       "savedAyahs",
       JSON.stringify([
         {
-          surahNameEn: "Al-Fatiha",
-          surahNameAr: "الفاتحة",
-          ayahNumberEn: 1,
-          ayahNumberAr: "١",
-          text: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-          SurahNumber: 1,
+          surahNameEn: "Al-Baqara",
+          surahNameAr: "البقرة",
+          ayahNumberEn: 255,
+          ayahNumberAr: "٢٥٥",
+          text: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+          SurahNumber: 2,
         },
       ]),
     );
   });
 
   await page.goto("/en/saved-ayahs", { waitUntil: "domcontentloaded" });
-
-  await expect(page.getByText("Al-Fatiha")).toBeVisible();
+  await expect(page.getByText("Al-Baqara")).toBeVisible();
   await page.getByRole("button", { name: "Go to" }).first().click();
 
-  await expect(page).toHaveURL(/\/en\/read-quran\/surah\/1\?ayah=1$/);
+  await expect(page).toHaveURL(/\/en\/read-quran\/surah\/2\?ayah=255$/);
+  // The reader renders pages progressively and loads page fonts lazily; the
+  // saved ayah must still end up in view, not just load the surah at the top.
+  await expect(page.locator("#ayah-255-2")).toBeInViewport({ timeout: 20_000 });
 });

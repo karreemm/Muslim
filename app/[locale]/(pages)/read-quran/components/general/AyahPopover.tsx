@@ -7,7 +7,7 @@ import {
   faBookmark,
   faHeadphones,
   faTimes,
-  faCheck,
+  faCircleCheck,
   faSpinner,
   faBook,
   faLanguage,
@@ -19,6 +19,7 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { useAyahAudio } from "@/hooks/readQuran/useAyahAudio";
 import { useAyahPopover } from "@/hooks/readQuran/useAyahPopover";
 import { useAyahPopoverPosition } from "@/hooks/readQuran/Useayahpopoverposition";
+import { useSavedAyahs } from "@/context/features/SavedAyahsContext";
 
 interface AyahPopoverProps {
   isOpen: boolean;
@@ -50,11 +51,19 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
   }) => {
     const { language } = useLanguage();
     const { t } = useTranslation();
+    const { savedAyahs } = useSavedAyahs();
+
+    const isAlreadySaved = savedAyahs.some(
+      (item) =>
+        String(item.SurahNumber) === String(surahNumber) &&
+        item.ayahNumberEn === ayahNumber,
+    );
 
     const { popoverRef, isSaved, handleSaveClick } = useAyahPopover({
       isOpen,
       onClose,
       onSave,
+      isAlreadySaved,
     });
 
     const { isPlaying, isLoadingAudio, handleListenClick } = useAyahAudio(
@@ -107,14 +116,19 @@ export const AyahPopover: React.FC<AyahPopoverProps> = memo(
             <button
               onClick={handleSaveClick}
               disabled={isSaved}
-              className={`w-full px-2 py-2 sm:px-4 sm:py-2.5 flex items-center gap-2 rounded-lg sm:rounded-xl transition-all duration-200
-              ${isSaved ? "bg-accent/10 text-accent cursor-not-allowed" : "hover:bg-secondary text-foreground hover:text-primary"}`}
+              aria-live="polite"
+              className={`w-full px-2 py-2 sm:px-4 sm:py-2.5 flex items-center gap-2 rounded-lg sm:rounded-xl transition-all duration-300
+              ${
+                isSaved
+                  ? "bg-success/10 text-success cursor-not-allowed ring-1 ring-success/30"
+                  : "hover:bg-secondary text-foreground hover:text-primary"
+              }`}
             >
               <div
-                className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg ${isSaved ? "bg-accent/20" : "bg-secondary/50"}`}
+                className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md sm:rounded-lg transition-colors duration-300 ${isSaved ? "bg-success/20" : "bg-secondary/50"}`}
               >
                 <FontAwesomeIcon
-                  icon={isSaved ? faCheck : faBookmark}
+                  icon={isSaved ? faCircleCheck : faBookmark}
                   className="text-xs sm:text-sm"
                 />
               </div>

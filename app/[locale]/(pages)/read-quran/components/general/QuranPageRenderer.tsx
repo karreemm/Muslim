@@ -35,6 +35,7 @@ interface QuranPageRendererProps {
   paletteHueToken?: number;
   imageMode?: boolean;
   forcePrimaryText?: boolean;
+  readOnly?: boolean;
   onHeaderReadyChange?: (ready: boolean) => void;
   requireColoredHeaderForReady?: boolean;
   fixedHeaderTypography?: boolean;
@@ -129,6 +130,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     headerColorScopeElement,
     imageMode = false,
     forcePrimaryText = false,
+    readOnly = false,
     onHeaderReadyChange,
     requireColoredHeaderForReady = false,
     fixedHeaderTypography = false,
@@ -168,7 +170,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
     const navigateToAyahImage = useNavigateToAyahImage();
 
     const isWordRangeSelectionEnabled = !!wordRangeSelection?.enabled;
-    const allowAyahInteraction = !imageMode && !isWordRangeSelectionEnabled;
+    const allowAyahInteraction = !imageMode && !isWordRangeSelectionEnabled && !readOnly;
 
     const handleConvertToImage = useMemo(() => {
       if (imageMode || !allowAyahInteraction) return undefined;
@@ -259,7 +261,9 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           }`}
           style={{
             fontFamily:
-              pageFontName && fontReady ? `'${pageFontName}'` : "var(--font-amiri-quran), 'Amiri', serif",
+              pageFontName && fontReady
+                ? `'${pageFontName}'`
+                : "var(--font-amiri-quran), 'Amiri', serif",
             fontSize: `${fontSize}px`,
             lineHeight: lineHeight,
             color: forcePrimaryText
@@ -278,7 +282,10 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
           onPointerCancel={isWordRangeSelectionEnabled ? endSelectionDrag : undefined}
         >
           {forcedTopHeaderInfo && (
-            <div className="w-full mb-12" style={{ fontFamily: "var(--font-amiri-quran), 'Amiri Quran', serif" }}>
+            <div
+              className="w-full mb-12"
+              style={{ fontFamily: "var(--font-amiri-quran), 'Amiri Quran', serif" }}
+            >
               <QuranSurahHeader
                 surahNameAr={forcedTopHeaderInfo.arTashkeel}
                 surahNumber={forcedTopHeaderInfo.number}
@@ -377,13 +384,14 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                         }
                         className={`rounded transition-all duration-200 px-0.5
                           ${isHighlighted ? "text-primary" : ""}
+                          ${allowAyahInteraction ? "cursor-pointer" : ""}
                           ${
                             allowAyahInteraction &&
                             (hoveredVerseKey === chunk.verseKey ||
                               selectedVerseKey === chunk.verseKey)
                               ? "text-primary"
                               : allowAyahInteraction
-                                ? "cursor-pointer hover:text-primary"
+                                ? "hover:text-primary"
                                 : ""
                           }`}
                         style={

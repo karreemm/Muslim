@@ -45,6 +45,7 @@ page is [`../README.md`](../README.md).
 | 2026-11-19 | headers, CSP, API hardening | `done` | [Phase 3C](./changes/2026-11-19-phase-3c-security.md) |
 | 2026-11-20 | accessibility, journeys, cross-browser | `review` | [Phase 4](./changes/2026-11-20-phase-4-quality.md) |
 | 2026-11-21 | minimal docs, contributor files, license, visual suite removal | `review` | [Phase 5](./changes/2026-11-21-phase-5-docs.md) |
+| 2026-11-21 | read-only memorial verses, saved-ayah landing, save feedback | `review` | [Reader fixes](./changes/2026-11-21-reader-fixes.md) |
 
 ## Workflow
 

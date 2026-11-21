@@ -82,8 +82,8 @@ export const useAyahInteraction = (verses: QuranVerse[]) => {
       SurahNumber: surahNumber,
     });
 
-    handleClosePopover();
-  }, [selectedVerseKey, verses, saveAyah, handleClosePopover]);
+    // The popover shows a success state and closes itself after a short delay.
+  }, [selectedVerseKey, verses, saveAyah]);
 
   const handleOpenTafseer = useCallback(() => {
     setShowTafseerModal(true);
