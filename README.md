@@ -1,49 +1,60 @@
 <div align="center">
 
-<img src="./public/bismillah.png" alt="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" width="460" />
+<img src="./public/bismillah.png" alt="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" width="400" />
 
-<img src="./public/logo.png" alt="Muslim Logo" height="52" />
+<br />
+<br />
 
-**An open-source Islamic platform for Quran, Hadith, Azkar, prayer times, and more - built as a Sadaqah Jariyah.**
+<img src="./public/logo.png" alt="Muslim" height="56" />
+
+<br />
+<br />
+
+**An open-source Islamic platform for Quran, Hadith, Azkar, prayer times, and more — built as a Sadaqah Jariyah.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-CF9D40?style=for-the-badge&logo=google-chrome&logoColor=white)](https://muslim-one.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-CF9D40?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-CF9D40?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-CF9D40?style=for-the-badge)](./LICENSE)
 
-<img width="78%" src="./public/screenshot.png" alt="Muslim App - Quran, Hadith, Azkar & Prayer Times" />
+<br />
+
+<img width="78%" src="./public/screenshot.png" alt="Muslim app — Quran, Hadith, Azkar and prayer times" />
 
 </div>
 
 ## About
 
 **Muslim** is a bilingual (Arabic/English, RTL-first) web app that brings the daily
-essentials of worship into one calm interface. It is free, open source under the
-MIT license, and has no accounts, ads, or tracking.
+essentials of worship into one calm interface. It is free and open source under the
+MIT license, with no accounts and no ads. The only telemetry is Vercel's cookie-free
+aggregate analytics.
 
 ## Features
 
-- **Quran** — all 114 surahs and 30 juz in Uthmani script, with tafseer, saved
-  ayahs, favourites, copy/share, and 14 reciters with full playback, repeat
-  (hifz) mode, and audio download.
-- **Ayah to image** — pick verses, choose a palette, download or share.
-- **Hadith** — 8 major collections and 20,000+ hadiths, browsable by book and
-  chapter, searchable in both languages.
-- **Azkar & duas** — 127+ supplications across 8 categories with per-zikr
-  counters, daily progress, and favourites.
-- **Prayer times** — location-based times, live countdown, Hijri and Gregorian
-  dates.
-- **Live radio** — 125+ stations across four categories, with favourites.
-- **Sadaqah Jariyah** — create a memorial page with a name and message, share its
-  link, and delete it later with the owner token.
-- **Personalisation** — four palettes plus a custom hue, light/dark themes, and a
-  language switcher that keeps your place.
+- **Quran** — all 114 surahs and 30 juz in the Uthmani script, with tafseer, saved
+  ayahs, favourites, copy/share, and 14 reciters with playback, repeat (hifz) mode,
+  and audio download.
+- **Ayah to image** — pick verses, choose one of 11 palettes, then download or
+  share the result.
+- **Hadith** — 7 collections, browsable by book and chapter and searchable in both
+  languages.
+- **Azkar & duas** — 127 supplications across 8 categories, with per-zikr counters,
+  daily progress, and favourites.
+- **Prayer times** — location-based times, a live countdown to the next prayer, and
+  Hijri and Gregorian dates.
+- **Live radio** — 126 stations across four categories, with favourites.
+- **Sadaqah Jariyah** — create a memorial with a name and message. Each page
+  includes Al-Fatihah, selected verses from Al-Baqarah, Al-Ikhlas, Ya-Sin, and
+  duas; share the link, and delete it later with the owner token.
+- **Personalisation** — four palettes plus a custom hue, light and dark themes, and
+  a language switcher that keeps your place.
 
 ## At a Glance
 
-| Reciters | Hadiths | Collections | Azkar | Radio stations |
+| Quran | Reciters | Hadith collections | Azkar | Radio stations |
 |---|---|---|---|---|
-| 14 | 20,000+ | 8 | 127+ | 125+ |
+| 114 surahs | 14 | 7 | 127 | 126 |
 
 ## Tech Stack
 
@@ -52,7 +63,7 @@ MIT license, and has no accounts, ads, or tracking.
 | Framework | Next.js 16 (App Router) |
 | UI | React 19, Tailwind CSS v4 |
 | Language | TypeScript 5 (strict) |
-| Data | Supabase (Sadaqa Jariyah), Quran/hadith/prayer APIs |
+| Data | Supabase (Sadaqa Jariyah), Quran, hadith, prayer, and radio APIs |
 | Hosting | Vercel |
 
 ## Quick Start
@@ -75,7 +86,7 @@ in the Supabase SQL editor.
 | Command | Purpose |
 |---|---|
 | `npm run check` | Typecheck + lint + unit/integration tests |
-| `npm run test:e2e` | Playwright across Chromium, Firefox, WebKit |
+| `npm run test:e2e` | Playwright across Chromium, Firefox, and WebKit |
 | `npm run test:perf` | Web Vitals budgets |
 | `npm run keepalive` | Supabase read-only ping |
 
@@ -91,8 +102,8 @@ in the Supabase SQL editor.
 
 ## Contributing
 
-Read [`CONTRIBUTING.md`](CONTRIBUTING.md). In short: fork, branch from `main`,
-keep the change focused, add tests, update the affected docs, and open a PR.
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md). In short: fork, branch from `main`, keep
+the change focused, add tests, update the affected docs, and open a PR.
 
 ## License
 
