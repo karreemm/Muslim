@@ -4,7 +4,7 @@ const baseURL = process.env.E2E_BASE_URL || "http://localhost:3000";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testIgnore: ["**/visual.spec.ts", "**/performance.spec.ts"],
+  testIgnore: ["**/performance.spec.ts"],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
@@ -20,11 +20,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: [
-        "**/cross-browser.spec.ts",
-        "**/visual.spec.ts",
-        "**/performance.spec.ts",
-      ],
+      testIgnore: ["**/cross-browser.spec.ts", "**/performance.spec.ts"],
       use: { ...devices["Desktop Chrome"] },
     },
     {

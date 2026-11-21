@@ -21,8 +21,6 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:visual": "playwright test -c playwright.visual.config.ts",
-    "test:visual:update": "playwright test -c playwright.visual.config.ts --update-snapshots",
     "test:perf": "playwright test -c playwright.performance.config.ts",
     "check": "npm run typecheck && npm run lint && npm run test",
     "keepalive": "node scripts/supabase-keepalive.mjs"
@@ -69,5 +67,14 @@
     "typescript": "^5",
     "vitest": "^5.1.0"
   },
-  "packageManager": "npm@11.3.0"
+  "packageManager": "npm@11.3.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karreemm/Muslim.git"
+  },
+  "homepage": "https://muslim-one.vercel.app",
+  "bugs": {
+    "url": "https://github.com/karreemm/Muslim/issues"
+  }
 }

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/karreemm/Muslim/tree/main/docs
+    about: Architecture, UI, testing, API, security, and operations guides.
+  - name: Live app
+    url: https://muslim-one.vercel.app
+    about: Check whether the issue also happens in production.
+  - name: Security report
+    url: https://github.com/karreemm/Muslim/security/advisories/new
+    about: Report vulnerabilities privately. Do not open a public issue.

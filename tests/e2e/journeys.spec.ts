@@ -32,21 +32,37 @@ test("tasbeeh increments and persists the count", async ({ page }) => {
   const increment = page.getByRole("button", { name: "Increment" });
   await expect(increment).toBeEnabled();
 
-  await increment.click();
-  await increment.click();
+  const readCount = () => page.evaluate(() => localStorage.getItem("tasbeeh_count"));
 
+  // Clicks before hydration are silently ignored, so drive the counter until it
+  // reaches two instead of assuming the first two clicks land.
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("tasbeeh_count")))
-    .toBe("2");
+    .poll(
+      async () => {
+        const count = Number((await readCount()) ?? "0");
+        if (count >= 2) return count;
+        await increment.click();
+        return Number((await readCount()) ?? "0");
+      },
+      { timeout: 15_000 },
+    )
+    .toBe(2);
 });
 
 test("Quran search returns results", async ({ page }) => {
   await page.goto("/en/search-ayah", { waitUntil: "domcontentloaded" });
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(800);
 
-  await page.getByRole("textbox", { name: "Search" }).fill("الله");
-  await page.getByRole("button", { name: "Search" }).click();
+  const searchInput = page.getByRole("textbox", { name: "Search" });
+  const searchButton = page.getByRole("button", { name: "Search" });
+
+  // Hydration can reset a controlled input filled too early in dev.
+  await expect(async () => {
+    await searchInput.fill("الله");
+    await expect(searchButton).toBeEnabled({ timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+
+  await searchButton.click();
 
   await expect(page.getByText(/Al-Faatiha|Al-Baqara/i).first()).toBeVisible({
     timeout: 15_000,
@@ -100,15 +116,29 @@ test("Sadaqa can be created and deleted with mocked storage", async ({ page }) =
 
   await page.goto("/en/sadaqa-garya", { waitUntil: "domcontentloaded" });
 
-  await page
-    .getByRole("textbox", { name: "Deceased's Name (in English)" })
-    .fill("Test Person");
-  await page
-    .getByRole("textbox", { name: "Deceased's Name (in Arabic)" })
-    .fill("شخص تجريبي");
-  await page.getByRole("button", { name: "Create" }).click();
+  const nameEn = page.getByRole("textbox", {
+    name: "Deceased's Name (in English)",
+  });
+  const nameAr = page.getByRole("textbox", {
+    name: "Deceased's Name (in Arabic)",
+  });
+  const createButton = page.getByRole("button", { name: "Create" });
 
-  await expect(page).toHaveURL(/\/en\/sadaqa-garya\/test-person$/);
+  // In dev, hydration can happen after the first fill and reset the controlled
+  // inputs. Re-fill until the form actually accepts both names.
+  await expect(async () => {
+    await nameEn.fill("Test Person");
+    await nameAr.fill("شخص تجريبي");
+    await expect(createButton).toBeEnabled({ timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+
+  await createButton.click();
+
+  // The first navigation to the dynamic memorial route compiles it in dev, which
+  // can take longer than the default assertion timeout.
+  await expect(page).toHaveURL(/\/en\/sadaqa-garya\/test-person$/, {
+    timeout: 15_000,
+  });
   await expect(page.getByText("Test Person")).toBeVisible();
 
   await page.goto("/en/sadaqat", { waitUntil: "domcontentloaded" });

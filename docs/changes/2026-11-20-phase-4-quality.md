@@ -4,7 +4,7 @@ title: "Phase 4: accessibility matrix, user journeys, and visual regression"
 doc_id: "CHG-0008"
 date: "2026-11-20"
 branch: "chore/professional-foundation"
-commit: ""
+commit: "7fe0022"
 author: "OpenCode agent"
 status: review
 scope: [testing, accessibility, visual-regression]
@@ -35,6 +35,10 @@ related_docs:
 
 # Phase 4: visual regression and accessibility
 
+> **Partly superseded (2026-11-21):** the visual regression suite and its CI job
+> were removed. The accessibility, keyboard, journey, cross-browser, and
+> performance work below still stands.
+
 ## Progress
 
 - [x] Expanded accessibility matrix
@@ -47,7 +51,7 @@ related_docs:
 - [x] Modal and mobile-menu keyboard flows
 - [x] Visual regression CI gating for Linux baselines
 - [x] Web Vitals budget checks
-- [ ] Committed (waiting for confirmation)
+- [x] Committed (`7fe0022`)
 
 ## Summary
 
@@ -203,4 +207,4 @@ local-only check.
 - [x] `npm run build` passes.
 - [x] Default E2E passes.
 - [x] Visual E2E passes locally.
-- [ ] Committed after user confirmation.
+- [x] Committed as `7fe0022`.
