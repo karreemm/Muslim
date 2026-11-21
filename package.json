@@ -29,7 +29,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@fortawesome/react-fontawesome": "^3.5.0",
     "@headlessui/react": "^2.2.9",
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
