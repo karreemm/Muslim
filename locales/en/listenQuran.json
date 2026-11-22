@@ -4,7 +4,7 @@
     "searchPlaceholder": "Search for a Surah"
   },
   "reciter": "His Eminence Reciter",
-  "title": "Listen to the Holy Quran with your favorite reciters",
+  "title": "Listening to the Quran",
   "surahPlayer": {
     "loveIt": "Save it to your favourites!",
     "shareIt": "Share it with your loved ones",
@@ -32,8 +32,8 @@
     "play": "Play",
     "pause": "Pause",
     "ayahWithNumber": "Ayah {{number}}",
-    "back15": "Back 15 seconds",
-    "forward15": "Forward 15 seconds",
+    "back15": "Back {{seconds}} seconds",
+    "forward15": "Forward {{seconds}} seconds",
     "options": "Options",
     "mute": "Mute",
     "unmute": "Unmute",
@@ -57,5 +57,6 @@
     "surahPrev": "Previous Surah",
     "surahNext": "Next Surah",
     "reciterTitle": "Sheikh {{name}}"
-  }
+  },
+  "subtitle": "Listen with your favourite reciters"
 }

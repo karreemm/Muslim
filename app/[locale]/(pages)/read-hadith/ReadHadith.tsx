@@ -36,6 +36,7 @@ export default function ReadHadithPage() {
     <PageShell>
       <PageHeader
         title={t("hadith.title")}
+        subtitle={t("hadith.subtitle")}
         quote={<PageQuote quote={ROUTE_QUOTES.hadith} />}
       />
 

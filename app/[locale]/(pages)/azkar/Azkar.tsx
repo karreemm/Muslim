@@ -86,6 +86,7 @@ export default function AzkarCategoriesPage() {
     <PageShell>
       <PageHeader
         title={t("azkar.title")}
+        subtitle={t("azkar.subtitle")}
         quote={<PageQuote quote={ROUTE_QUOTES.azkar} />}
       />
 

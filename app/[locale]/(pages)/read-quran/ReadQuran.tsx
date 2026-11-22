@@ -39,7 +39,8 @@ export default function ReadQuran() {
 
       <PageShell>
         <PageHeader
-          title={t("navbar.readQuran")}
+          title={t("readQuran.title")}
+          subtitle={t("readQuran.subtitle")}
           size="compact"
           quote={<PageQuote quote={ROUTE_QUOTES.quran} />}
         />

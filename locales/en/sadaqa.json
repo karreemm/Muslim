@@ -7,7 +7,7 @@
   "loadingVerses": "Loading verses...",
   "shareIt": "Share it and make it a continuous charity in your good deeds and his good deeds inshallah",
   "form": {
-    "title": "Create a New Sadaqa Garya",
+    "title": "Sadaqa Jariyah",
     "nameEnLabel": "Deceased's Name (in English)",
     "nameArLabel": "Deceased's Name (in Arabic)",
     "messageEnLabel": "Message (in English)",
@@ -17,7 +17,8 @@
     "requiredHint": "Fields marked with * are required",
     "messagePlaceholder": "Write a message from the heart...",
     "namePlaceholder": "Mohamed Ahmed",
-    "nameRequired": "Please fill both name fields to continue"
+    "nameRequired": "Please fill both name fields to continue",
+    "subtitle": "Create a memorial page"
   },
   "update": {
     "title": "Coming Soon",
@@ -38,7 +39,8 @@
     "onlyOwn": "You can only delete pages you created from this browser.",
     "cannotDelete": "You cannot delete this page because you are not the creator",
     "confirmDeletePage": "Are you sure you want to delete {{name}}'s page?",
-    "unexpectedError": "Unexpected error occurred"
+    "unexpectedError": "Unexpected error occurred",
+    "subtitle": "Pages you created from this browser"
   },
   "deceased": {
     "dua": "O Allah, forgive him and raise his rank, and make this page an ongoing charity for him.",

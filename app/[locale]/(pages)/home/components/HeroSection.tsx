@@ -37,7 +37,17 @@ export default function HeroSection({ t }: HeroSectionProps) {
           className="type-display leading-[1.15] text-foreground max-w-4xl"
           style={{ textWrap: "balance" }}
         >
-          {t("home.hero.title")}
+          {t("home.hero.title")
+            .split(/(مسلم|Muslim)/g)
+            .map((part, index) =>
+              part === "مسلم" || part === "Muslim" ? (
+                <span key={index} className="text-primary">
+                  {part}
+                </span>
+              ) : (
+                part
+              ),
+            )}
         </h1>
 
         <p className="mt-4 sm:mt-5 text-base sm:text-lg text-muted-foreground font-light max-w-2xl leading-relaxed px-4">

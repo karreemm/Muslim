@@ -54,7 +54,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-sm text-muted-foreground  order-2 md:order-1">
-            {t("footer.copyright")}
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </p>
 
           <div className="flex items-center gap-2 order-1 md:order-2">

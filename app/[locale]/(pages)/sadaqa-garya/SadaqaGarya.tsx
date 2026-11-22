@@ -98,6 +98,7 @@ export default function SadaqaGaryaPage() {
             <h1 className="type-page bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {t("sadaqa.form.title")}
             </h1>
+            <p className="type-meta">{t("sadaqa.form.subtitle")}</p>
           </div>
 
           <PageQuote quote={ROUTE_QUOTES.sadaqa} className="mb-6" />

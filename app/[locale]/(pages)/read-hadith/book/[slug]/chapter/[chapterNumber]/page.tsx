@@ -75,7 +75,7 @@ export default function ChapterHadithsPage() {
         title={language === "en" ? book?.name_en : book?.name_ar}
         subtitle={
           <>
-            {t("hadith.book.chapterLabel")} {chapterNumber}
+            {t("hadith.book.chapterNumber", { number: Number(chapterNumber) })}
             {!loading && totalHadiths > 0 ? (
               <span className="mt-2 block text-sm">
                 {t("hadith.chapter.totalResults")}:{" "}

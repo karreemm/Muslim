@@ -99,7 +99,7 @@ const Counter = () => {
 
       <PageHeader
         title={t("tasbeeh.title")}
-        subtitle={t("tasbeeh.rememberAllah")}
+        subtitle={t("tasbeeh.subtitle")}
         quote={<PageQuote quote={ROUTE_QUOTES.tasbeeh} />}
       />
 

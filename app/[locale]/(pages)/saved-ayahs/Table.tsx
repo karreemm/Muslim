@@ -107,7 +107,10 @@ export default function SavedAyahsTable() {
 
   return (
     <PageShell>
-      <PageHeader title={t("savedAyahs.title")} />
+      <PageHeader
+        title={t("savedAyahs.title")}
+        subtitle={t("savedAyahs.subtitle")}
+      />
 
       <DataTable
         columns={columns}

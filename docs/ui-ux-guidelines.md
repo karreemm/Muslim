@@ -116,6 +116,21 @@ route at 1440 px, plus 320/768 px on the layout-critical routes.
 6. Add loading, empty, and error states.
 7. Run `npm run check:ui` and `npm run test:e2e`.
 
+### Titles, quotes, and numbers
+
+- H1: 2–5 words, at most 60 characters, centered. Move long sentences to the
+  subtitle.
+- Subtitles: one short line. Dynamic values (location, book, name) belong in the
+  subtitle, not the title.
+- Page quotes come from `constants/routeQuotes.ts`, generated from
+  `data/searchQuran/quran-index.json`. Never type Quran text by hand.
+- Any ayah rendered outside `QuranPageRenderer` uses `.quran-text`; list previews
+  add `.quran-clamp` (three lines).
+- Pass numbers to `t()` as numbers so Arabic renders Arabic-Indic digits. Pass
+  status codes and SEO values as strings when Latin digits are required.
+- Do not create `_plural` keys; use count labels such as “Results: {{count}}”.
+- `npm run check:copy` enforces whitespace, placeholders, and digit rules.
+
 ## Components
 
 Use `components/ui/`: `PageShell`, `PageHeader`, `Card` (`interactive` when fully

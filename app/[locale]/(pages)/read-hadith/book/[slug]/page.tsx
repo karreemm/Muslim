@@ -48,7 +48,9 @@ export default function BookChaptersPage() {
     >
       <PageHeader
         title={language === "en" ? book?.name_en : book?.name_ar}
-        subtitle={t("hadith.book.title")}
+        subtitle={t("hadith.book.chaptersOf", {
+          book: (language === "en" ? book?.name_en : book?.name_ar) ?? "",
+        })}
         quote={<PageQuote quote={ROUTE_QUOTES.hadithBook} />}
       />
 

@@ -827,7 +827,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
                 <>
                   <PlayerIconButton
                     onClick={skipBackward15}
-                    tooltip={t("listenQuran.player.back15")}
+                    tooltip={t("listenQuran.player.back15", { seconds: 15 })}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
                   >
                     <SkipIcon direction="backward" className="w-5 h-5" />
@@ -854,7 +854,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
 
                   <PlayerIconButton
                     onClick={skipForward15}
-                    tooltip={t("listenQuran.player.forward15")}
+                    tooltip={t("listenQuran.player.forward15", { seconds: 15 })}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-foreground hover:text-primary hover:bg-secondary transition-all"
                   >
                     <SkipIcon direction="forward" className="w-5 h-5" />
@@ -920,7 +920,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={skipBackward15}
                 disabled={isRepeatModeActive}
-                tooltip={t("listenQuran.player.back15")}
+                tooltip={t("listenQuran.player.back15", { seconds: 15 })}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="backward" className="w-6 h-6" />
@@ -947,7 +947,7 @@ const AudioPlayerInner: React.FC<InnerProps> = ({
               <PlayerIconButton
                 onClick={skipForward15}
                 disabled={isRepeatModeActive}
-                tooltip={t("listenQuran.player.forward15")}
+                tooltip={t("listenQuran.player.forward15", { seconds: 15 })}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${isRepeatModeActive ? "text-muted-foreground/30 cursor-not-allowed" : "text-foreground hover:text-primary hover:bg-secondary"}`}
               >
                 <SkipIcon direction="forward" className="w-6 h-6" />

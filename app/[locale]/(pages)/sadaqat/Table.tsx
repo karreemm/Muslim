@@ -204,7 +204,10 @@ export default function DeceasedPersonsTable() {
 
   return (
     <PageShell>
-      <PageHeader title={t("sadaqa.table.title")} />
+      <PageHeader
+        title={t("sadaqa.table.title")}
+        subtitle={t("sadaqa.table.subtitle")}
+      />
 
       <DataTable
         columns={columns}

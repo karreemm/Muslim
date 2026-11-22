@@ -188,7 +188,7 @@ export default function GenerateAyahImage() {
             selectedAyah={selectedAyah}
             beforeLabel={t("generateAyahImage.beforeAyahs")}
             afterLabel={t("generateAyahImage.afterAyahs")}
-            lineLimitLabel={t("generateAyahImage.lineLimit")}
+            lineLimitLabel={t("generateAyahImage.lineLimit", { max: maxAyahImageLines })}
             showAyahNumberLabel={t("generateAyahImage.showAyahNumber")}
             specificPartLabel={t("generateAyahImage.specificPart")}
             submitLabel={t("generateAyahImage.submitAyahSelection")}

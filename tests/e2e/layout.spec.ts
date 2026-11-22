@@ -32,6 +32,34 @@ const narrowRoutes = [
   "/saved-ayahs",
 ];
 
+const centeredIndexRoutes = [
+  "",
+  "/read-quran",
+  "/read-hadith",
+  "/azkar",
+  "/listen-quran",
+  "/tasbeeh",
+  "/saved-ayahs",
+  "/favourites",
+  "/sadaqat",
+  "/search-ayah",
+  "/generate-ayah-image",
+  "/radios",
+  "/sadaqa-garya",
+];
+
+const quoteRoutes = [
+  "",
+  "/read-quran",
+  "/listen-quran",
+  "/read-hadith",
+  "/azkar",
+  "/tasbeeh",
+  "/prayer-times",
+  "/radios",
+  "/sadaqa-garya",
+];
+
 for (const locale of ["en", "ar"]) {
   test.describe(`${locale} route contract`, () => {
     for (const route of routes) {
@@ -47,6 +75,24 @@ for (const locale of ["en", "ar"]) {
 
         const className = (await heading.getAttribute("class")) ?? "";
         expect(className, "h1 must use a type-* role").toMatch(/\btype-/);
+
+        const headingText = (await heading.innerText()).trim();
+        expect(headingText.length, "h1 must stay short").toBeLessThanOrEqual(60);
+
+        if (centeredIndexRoutes.includes(route)) {
+          const align = await heading.evaluate(
+            (element) => getComputedStyle(element).textAlign,
+          );
+          expect(align, "index title must be centered").toBe("center");
+        }
+
+        if (quoteRoutes.includes(route)) {
+          const quoteFont = await page
+            .locator("figure blockquote")
+            .first()
+            .evaluate((element) => getComputedStyle(element).fontFamily);
+          expect(quoteFont, "quote must use the Amiri font").toContain("Amiri");
+        }
 
         const overflow = await page.evaluate(
           () =>

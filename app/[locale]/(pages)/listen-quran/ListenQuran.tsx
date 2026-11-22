@@ -26,6 +26,7 @@ export default function ListenQuranPage() {
     <PageShell>
       <PageHeader
         title={t("listenQuran.title")}
+        subtitle={t("listenQuran.subtitle")}
         quote={<PageQuote quote={ROUTE_QUOTES.listen} />}
       />
 

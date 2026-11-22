@@ -15,7 +15,10 @@ export default function ParentComponent() {
 
   return (
     <PageShell>
-      <PageHeader title={t("favourites.title")} />
+      <PageHeader
+        title={t("favourites.title")}
+        subtitle={t("favourites.subtitle")}
+      />
 
       <ButtonGroup onSelectionChange={setSelectedButton} />
 

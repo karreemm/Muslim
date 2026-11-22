@@ -1,5 +1,5 @@
 {
-  "title": "Your Favourites",
+  "title": "Favourites",
   "azkar": {
     "noFavourites": "No Favourite Azkar Yet",
     "zekrNo": "Zekr No",
@@ -19,5 +19,6 @@
     "clearAllSurahs": "Clear All Surahs",
     "clearAllConfirm": "Are you sure you want to clear all favourite surahs?",
     "removeConfirm": "Are you sure you want to remove this surah from favourites?"
-  }
+  },
+  "subtitle": "Your saved surahs, hadith, and azkar"
 }

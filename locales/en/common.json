@@ -80,7 +80,7 @@
   "rememberAllah": "Remember Allah to find peace in your heart",
   "searchFailed": "Search failed: {{status}}",
   "searchError": "An error occurred while searching",
-  "searchShort": "Search term is too short. Please use at least 3 characters.",
+  "searchShort": "Search term is too short. Please use at least {{min}} characters.",
   "searchTimeout": "Search timed out. Please try again.",
   "networkError": "Network error. Check your connection.",
   "failedToDelete": "Failed to delete",
