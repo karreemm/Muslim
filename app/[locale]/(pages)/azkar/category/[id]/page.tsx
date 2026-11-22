@@ -77,7 +77,7 @@ export default function CategoryPage() {
         <div className="absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
       }
     >
-      <PageHeader title={isArabic ? categoryNameAr : categoryNameEn} className="mb-10" />
+      <PageHeader title={isArabic ? categoryNameAr : categoryNameEn} />
 
       <div className="mx-auto max-w-4xl">
         {loading ? (

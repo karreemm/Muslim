@@ -14,8 +14,8 @@ export default function ParentComponent() {
   const { t } = useTranslation();
 
   return (
-    <PageShell containerClassName="px-4 pt-8">
-      <PageHeader title={t("favourites.title")} className="mb-8" />
+    <PageShell>
+      <PageHeader title={t("favourites.title")} />
 
       <ButtonGroup onSelectionChange={setSelectedButton} />
 

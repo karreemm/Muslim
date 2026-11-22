@@ -56,7 +56,7 @@ export default function DisplayZekr({ zekrNumber, categoryId }: SingleZekrProps)
         <span className="font-medium">{t("common.backToList")}</span>
       </Link>
 
-      <div className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm">
+      <div className="group relative overflow-hidden surface-card transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <div className="relative z-10 p-6">

@@ -203,8 +203,8 @@ export default function DeceasedPersonsTable() {
   }
 
   return (
-    <PageShell containerClassName="mt-8 px-4 md:px-8">
-      <PageHeader title={t("sadaqa.table.title")} className="mb-10" />
+    <PageShell>
+      <PageHeader title={t("sadaqa.table.title")} />
 
       <DataTable
         columns={columns}
@@ -213,7 +213,6 @@ export default function DeceasedPersonsTable() {
         actions={actions}
         emptyTitle={t("sadaqa.table.noSadaqat")}
         maxHeight="50vh"
-        containerClassName="mt-8"
       />
 
       <DeleteConfirmModal

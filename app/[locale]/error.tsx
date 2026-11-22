@@ -21,11 +21,11 @@ export default function ErrorPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 text-foreground">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-8 text-center shadow-xl">
+      <div className="w-full max-w-lg surface-panel p-8 text-center shadow-xl">
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 text-3xl font-bold text-destructive">
           !
         </div>
-        <h1 className="text-2xl font-bold text-foreground">{t("common.errorTitle")}</h1>
+        <h1 className="type-compact">{t("common.errorTitle")}</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {t("common.errorDescription")}
         </p>

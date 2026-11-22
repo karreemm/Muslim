@@ -702,3 +702,75 @@ input[type="number"] {
     transform: scaleY(1);
   }
 }
+
+/* ── Semantic type and spacing roles ─────────────────────────────────────── */
+
+@theme {
+  --shadow-player: 0 -8px 30px rgb(0 0 0 / 0.12);
+  --shadow-selection: 0 1px 4px rgb(0 0 0 / 0.35);
+}
+
+@layer base {
+  :where(button, [role="button"], a):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .type-display {
+    @apply text-2xl font-bold tracking-tight md:text-4xl lg:text-5xl;
+  }
+
+  .type-page {
+    @apply text-3xl font-bold text-foreground md:text-4xl;
+  }
+
+  .type-compact {
+    @apply text-2xl font-bold text-foreground md:text-3xl;
+  }
+
+  .type-section {
+    @apply text-2xl font-bold text-foreground;
+  }
+
+  .type-subsection {
+    @apply text-xl font-bold text-foreground;
+  }
+
+  .type-card {
+    @apply text-lg font-semibold text-foreground;
+  }
+
+  .type-body {
+    @apply text-base leading-relaxed;
+  }
+
+  .type-meta {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .page-stack {
+    @apply space-y-10;
+  }
+
+  .section-stack {
+    @apply space-y-6;
+  }
+
+  .grid-gap {
+    @apply gap-4 lg:gap-6;
+  }
+
+  .card-pad {
+    @apply p-5 lg:p-6;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-border bg-card/70 backdrop-blur-sm;
+  }
+
+  .surface-panel {
+    @apply rounded-2xl border border-border bg-card;
+  }
+}

@@ -93,7 +93,8 @@ const PrayerTimes: React.FC = () => {
   return (
     <PageShell
       className="overflow-x-hidden overflow-y-visible pb-20 lg:pb-0"
-      containerClassName="mt-6 max-w-5xl space-y-6 lg:mt-8"
+      width="medium"
+      containerClassName="section-stack"
       decorations={
         <>
           <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />

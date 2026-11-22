@@ -18,7 +18,7 @@ export default function DeceasedNotFound({
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div
         className={`
-          rounded-2xl border border-border bg-card p-8 text-center text-foreground shadow-2xl max-w-md w-full
+          surface-panel p-8 text-center text-foreground shadow-2xl max-w-md w-full
           transition-all duration-500
           ${mounted ? "opacity-100 scale-100" : "opacity-0 scale-95"}
         `}
@@ -26,7 +26,7 @@ export default function DeceasedNotFound({
         <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <AlertCircle className="w-8 h-8 text-destructive" />
         </div>
-        <h1 className="mb-4 text-2xl font-bold">
+        <h1 className="type-compact mb-4">
           {translate(language, "sadaqa.deceased.notFoundTitle")}
         </h1>
         <p className="text-muted-foreground mb-6">

@@ -88,21 +88,14 @@ const Counter = () => {
   }, [handleUp, handleDown, resetAll]);
 
   return (
-    <PageShell
-      className="flex flex-col items-center p-4 lg:p-8"
-      containerClassName="max-w-7xl"
-    >
+    <PageShell className="flex flex-col items-center p-4 lg:p-8">
       <GoalCelebration
         show={showCelebration}
         message={t("tasbeeh.sucess")}
         onClose={handleCelebrationClose}
       />
 
-      <PageHeader
-        title={t("tasbeeh.title")}
-        subtitle={t("tasbeeh.rememberAllah")}
-        className="mb-8 lg:mb-12"
-      />
+      <PageHeader title={t("tasbeeh.title")} subtitle={t("tasbeeh.rememberAllah")} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">

@@ -41,13 +41,80 @@ Status colors (`success`, `info`, `live`) do not shift with the palette.
 Quran text never truncates, ellipsizes, or uses `line-clamp`. No uppercase,
 tracking, or italics on Arabic. Arabic line-height ≥ 1.6.
 
+## Type and spacing scale
+
+Use the semantic roles instead of ad-hoc size classes.
+
+| Role | Classes | Use |
+|---|---|---|
+| `type-display` | `text-2xl md:text-4xl lg:text-5xl` | Home hero only |
+| `type-page` | `text-3xl md:text-4xl` | Route title via `PageHeader` |
+| `type-compact` | `text-2xl md:text-3xl` | Reader, prayer, error pages |
+| `type-section` | `text-2xl` | Section headings |
+| `type-card` | `text-lg` | Card titles |
+| `type-body` | `text-base leading-relaxed` | Prose |
+| `type-meta` | `text-sm text-muted-foreground` | Counts and captions |
+
+| Spacing role | Value | Use |
+|---|---|---|
+| `page-stack` | `space-y-10` | Page sections |
+| `section-stack` | `space-y-6` | Section content |
+| `grid-gap` | `gap-4 lg:gap-6` | Card grids |
+| `card-pad` | `p-5 lg:p-6` | Card interiors |
+| `surface-card` | 2xl radius, border, translucent card | Standard cards |
+| `surface-panel` | 2xl radius, border, solid card | Dialogs and solid panels |
+
+`PageShell` widths:
+
+| Width | Max width | Routes |
+|---|---|---|
+| `wide` (default) | 7xl | Most pages |
+| `medium` | 5xl | Prayer times |
+| `content` | 4xl | Sadaqa form |
+| `narrow` | 3xl | Prose pages |
+| `full` | none | Quran reader and reciter |
+
+`PageHeader` is `mb-10` by default; do not override the margin. Use `size="hero"`
+only for the home page and `size="compact"` for reader and utility pages.
+
+**Exceptions:** the Quran reader and players keep full-bleed layouts, and the
+Ayah image export keeps its fixed canvas typography.
+
 ## Layout
 
-- `PageShell` for the page frame (`w-[92%] max-w-7xl pt-10 pb-20`).
-- `PageHeader` for the single `<h1>` plus optional subtitle and icon.
-- `mb-10` between sections; `gap-4`/`gap-6` in grids.
+- `PageShell` for the page frame (`width`, `flush`, `pb-20`).
+- `PageHeader` for the single `<h1>`, subtitle, and icon.
+- `mb-10` after the header; use `page-stack` between sections.
 - `rounded-xl` controls, `rounded-2xl` surfaces, `rounded-full` badges.
 - Tap targets ≥ 44px; usable at 320px and 200% zoom.
+
+## Page contract
+
+Every route must:
+
+- use `PageShell` with an explicit `width` (default `wide`);
+- render exactly one `<h1>`, via `PageHeader` or a `type-*` role;
+- use `page-stack` between sections and `section-stack` inside them;
+- use `grid-gap` for card grids and `card-pad` inside cards;
+- use `surface-card` / `surface-panel` for standard surfaces;
+- use `Button` / `IconButton` for standard actions. Custom player, dropdown, and
+  segmented controls are allowed, but need `focus-visible`, an accessible name,
+  and a 44 px target;
+- document any deliberate exception in `scripts/ui-allowlist.json`.
+
+`npm run check:ui` enforces the structural rules, and
+`tests/e2e/layout.spec.ts` checks one `<h1>` and no horizontal overflow on every
+route at 1440 px, plus 320/768 px on the layout-critical routes.
+
+### Adding a page
+
+1. Create `app/[locale]/(pages)/<name>/page.tsx`.
+2. Wrap the content in `PageShell` with the right `width`.
+3. Add `PageHeader` (or a `type-*` title for custom heroes).
+4. Stack sections with `page-stack`; use `section-stack` inside a section.
+5. Build cards from `surface-card` / `surface-panel` and pad with `card-pad`.
+6. Add loading, empty, and error states.
+7. Run `npm run check:ui` and `npm run test:e2e`.
 
 ## Components
 

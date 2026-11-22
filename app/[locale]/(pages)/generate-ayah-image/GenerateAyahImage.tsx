@@ -167,10 +167,10 @@ export default function GenerateAyahImage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("generateAyahImage.title")} className="mb-8" />
+      <PageHeader title={t("generateAyahImage.title")} />
 
       <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6 items-start">
-        <aside className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50 p-4 sm:p-5 space-y-4 xl:sticky xl:top-24 order-last xl:order-first">
+        <aside className="surface-card p-4 sm:p-5 space-y-4 xl:sticky xl:top-24 order-last xl:order-first">
           <AyahSelectorSection
             language={language}
             title={t("generateAyahImage.ayahSectionTitle")}

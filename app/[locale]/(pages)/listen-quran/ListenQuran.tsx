@@ -22,14 +22,14 @@ export default function ListenQuranPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("listenQuran.title")} className="mb-12" />
+      <PageHeader title={t("listenQuran.title")} />
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {reciters.map((reciter) => (
           <Link
             key={reciter.id}
             href={`/listen-quran/reciter/${reciter.id}`}
-            className="group relative rounded-2xl border border-border bg-card/70 p-5
+            className="group relative surface-card p-5
                 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
                 hover:border-primary/30 backdrop-blur-sm"
           >
@@ -47,7 +47,7 @@ export default function ListenQuranPage() {
                 <h3 className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
                   {t("listenQuran.reciter")}
                 </h3>
-                <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                <h2 className="type-subsection group-hover:text-primary transition-colors ">
                   {isArabic ? reciter.NameAr : reciter.NameEn}
                 </h2>
               </div>

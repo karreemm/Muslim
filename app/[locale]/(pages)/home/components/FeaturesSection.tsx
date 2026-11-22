@@ -31,7 +31,7 @@ export default function FeaturesSection({
           <Link
             key={`${feature.href}-${feature.title}`}
             href={feature.href}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm"
+            className="group relative overflow-hidden surface-card p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 backdrop-blur-sm"
           >
             <div
               className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}

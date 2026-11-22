@@ -47,7 +47,6 @@ export default function BookChaptersPage() {
       <PageHeader
         title={language === "en" ? book?.name_en : book?.name_ar}
         subtitle={t("hadith.book.title")}
-        className="mb-10"
       />
 
       <div className="max-w-2xl mx-auto mb-10">
@@ -110,7 +109,7 @@ export default function BookChaptersPage() {
                 <Link
                   key={chapter.id}
                   href={`/read-hadith/book/${bookSlug}/chapter/${chapter.chapterNumber}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5
+                  className="group relative overflow-hidden surface-card p-5
                       transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10
                       hover:border-primary/30 backdrop-blur-sm"
                 >

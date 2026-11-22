@@ -643,7 +643,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                       }
                                     >
                                       <span
-                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-selection"
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
@@ -658,7 +658,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         }}
                                       />
                                       <span
-                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                        className="w-2.5 h-2.5 rounded-full border-2 shadow-selection"
                                         style={{
                                           backgroundColor:
                                             "hsl(var(--quran-surface-foreground))",
@@ -696,7 +696,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                         }
                                       >
                                         <span
-                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-selection"
                                           style={{
                                             backgroundColor:
                                               "hsl(var(--quran-surface-foreground))",
@@ -712,7 +712,7 @@ const QuranPageRenderer: React.FC<QuranPageRendererProps> = memo(
                                           }}
                                         />
                                         <span
-                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-[0_1px_4px_rgba(0,0,0,0.35)]"
+                                          className="w-2.5 h-2.5 rounded-full border-2 shadow-selection"
                                           style={{
                                             backgroundColor:
                                               "hsl(var(--quran-surface-foreground))",

@@ -84,11 +84,7 @@ export default function Radios() {
 
   return (
     <PageShell className="pb-32">
-      <PageHeader
-        title={t("radio.title")}
-        subtitle={t("radio.subtitle")}
-        className="mb-8"
-      />
+      <PageHeader title={t("radio.title")} subtitle={t("radio.subtitle")} />
 
       <div className="flex items-center gap-3 mb-6 max-w-xl mx-auto">
         <div className="relative flex-1">
@@ -231,7 +227,7 @@ export default function Radios() {
 
                           <div className="flex-1 min-w-0">
                             <h2
-                              className={`text-xl font-bold transition-colors ${
+                              className={`type-subsection transition-colors ${
                                 active
                                   ? "text-primary"
                                   : "text-foreground group-hover:text-primary"

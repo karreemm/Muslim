@@ -1,11 +1,21 @@
 import { cn } from "./cn";
 
+export type PageHeaderSize = "page" | "hero" | "compact";
+
 export type PageHeaderProps = {
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   icon?: React.ReactNode;
   align?: "left" | "center";
   className?: string;
+  /** Title scale. Defaults to the standard page title. */
+  size?: PageHeaderSize;
+};
+
+const sizeClasses: Record<PageHeaderSize, string> = {
+  page: "type-page",
+  hero: "type-display",
+  compact: "type-compact",
 };
 
 export function PageHeader({
@@ -14,6 +24,7 @@ export function PageHeader({
   icon,
   align = "center",
   className,
+  size = "page",
 }: PageHeaderProps) {
   return (
     <header
@@ -33,7 +44,7 @@ export function PageHeader({
           {icon}
         </div>
       ) : null}
-      <h1 className="text-3xl font-bold text-foreground md:text-4xl">{title}</h1>
+      <h1 className={cn("font-bold text-foreground", sizeClasses[size])}>{title}</h1>
       {subtitle ? (
         <p className="mt-3 text-sm text-muted-foreground md:text-base">{subtitle}</p>
       ) : null}

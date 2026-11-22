@@ -207,11 +207,9 @@ export default function AyahImagePreview({
       : (ayahData?.displayVerses ?? []);
 
   return (
-    <div className="bg-card/70 rounded-2xl border border-border/50 p-4 sm:p-5">
+    <div className="surface-card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-foreground">
-          {t("generateAyahImage.imagePreview")}
-        </h3>
+        <h3 className="type-subsection">{t("generateAyahImage.imagePreview")}</h3>
       </div>
 
       <div

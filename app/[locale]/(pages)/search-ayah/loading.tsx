@@ -6,7 +6,7 @@ export default function LoadingSearchAyah() {
   return (
     <PageShell containerClassName="flex flex-col items-center gap-10">
       <div className="w-full">
-        <div className="animate-pulse rounded-2xl border border-border bg-card p-3 shadow-lg sm:p-6">
+        <div className="animate-pulse surface-panel p-3 shadow-lg sm:p-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <Skeleton className="h-6 w-6" />
             <Skeleton className="h-10 flex-1" />

@@ -109,8 +109,8 @@ export default function SavedAyahsTable() {
   ];
 
   return (
-    <PageShell containerClassName="mt-8 px-4 md:px-8">
-      <PageHeader title={t("savedAyahs.title")} className="mb-8" />
+    <PageShell>
+      <PageHeader title={t("savedAyahs.title")} />
 
       <DataTable
         columns={columns}

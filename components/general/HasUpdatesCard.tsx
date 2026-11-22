@@ -1,6 +1,7 @@
 "use client";
 
 import { RefreshCw, Home } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface HasUpdatesCardProps {
   mounted: boolean;
@@ -38,7 +39,7 @@ export default function HasUpdatesCard({
           ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}
         `}
       >
-        <div className="rounded-2xl border border-border/70 bg-card/80 backdrop-blur-sm p-8 shadow-2xl relative overflow-hidden text-center">
+        <div className="surface-card p-8 shadow-2xl relative overflow-hidden text-center">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
 
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -48,7 +49,7 @@ export default function HasUpdatesCard({
             />
           </div>
 
-          <h1 className="text-3xl font-bold lg:text-4xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
+          <h1 className="type-page bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
             {title}
           </h1>
 
@@ -56,22 +57,16 @@ export default function HasUpdatesCard({
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             {onRetry && retryLabel ? (
-              <button
-                onClick={onRetry}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-primary-foreground font-semibold transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25"
-              >
+              <Button variant="primary" onClick={onRetry}>
                 <RefreshCw className="w-5 h-5" />
                 {retryLabel}
-              </button>
+              </Button>
             ) : null}
 
-            <button
-              onClick={onBackToHome}
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-foreground font-semibold transition-all duration-300 hover:border-primary/30 hover:bg-secondary/50"
-            >
+            <Button variant="secondary" onClick={onBackToHome}>
               <Home className="w-5 h-5" />
               {backToHomeLabel}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

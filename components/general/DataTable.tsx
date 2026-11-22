@@ -99,7 +99,7 @@ export default function DataTable<T>({
         ${containerClassName}
       `}
     >
-      <div className="relative rounded-2xl border border-border/70 bg-card/50 backdrop-blur-sm shadow-lg overflow-hidden">
+      <div className="surface-card relative shadow-lg overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto" style={{ maxHeight }}>
           <table className="w-full text-sm">
             <thead className="bg-primary text-primary-foreground sticky top-0 z-20">

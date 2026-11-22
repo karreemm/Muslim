@@ -32,7 +32,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
         </div>
 
         <h1
-          className="text-2xl md:text-4xl lg:text-5xl font-bold leading-[1.15] text-foreground tracking-tight max-w-4xl"
+          className="type-display leading-[1.15] text-foreground max-w-4xl"
           style={{ textWrap: "balance" }}
         >
           {t("home.hero.title")}

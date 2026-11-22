@@ -20,7 +20,7 @@ export default function InstallFlowSection({ t }: InstallFlowSectionProps) {
           <span>{t("home.installFlow.badge")}</span>
         </div>
 
-        <h2 className="text-xl font-bold text-foreground">
+        <h2 className="type-subsection">
           {t("home.installFlow.heading")}
         </h2>
         <div className="grid grid-cols-1 gap-3">

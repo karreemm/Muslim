@@ -32,7 +32,7 @@ export default function ReadHadithPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("hadith.title")} className="mb-12" />
+      <PageHeader title={t("hadith.title")} />
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,7 +51,7 @@ export default function ReadHadithPage() {
             <Link
               key={book.id}
               href={`/read-hadith/book/${book.slug}`}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-6
+              className="group relative overflow-hidden surface-card p-6
                   transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
                   hover:border-primary/30 backdrop-blur-sm"
             >
@@ -69,7 +69,7 @@ export default function ReadHadithPage() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                    <h2 className="type-subsection group-hover:text-primary transition-colors ">
                       {language === "en" ? book.name_en : book.name_ar}
                     </h2>
                   </div>
