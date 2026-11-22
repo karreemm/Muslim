@@ -124,6 +124,8 @@ route at 1440 px, plus 320/768 px on the layout-critical routes.
   subtitle, not the title.
 - Page quotes come from `constants/routeQuotes.ts`, generated from
   `data/searchQuran/quran-index.json`. Never type Quran text by hand.
+- A page quote is wrapped in Quranic ornate brackets (`﴿ … ﴾`) and carries no
+  surah/ayah caption. The home hero has no quote.
 - Any ayah rendered outside `QuranPageRenderer` uses `.quran-text`; list previews
   add `.quran-clamp` (three lines).
 - Pass numbers to `t()` as numbers so Arabic renders Arabic-Indic digits. Pass

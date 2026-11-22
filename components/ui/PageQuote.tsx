@@ -1,8 +1,4 @@
-"use client";
-
 import type { RouteQuote } from "@/constants/routeQuotes";
-import { useLanguage } from "@/context/general/LanguageContext";
-import { toArabicNumber } from "@/utils/helpers";
 import { cn } from "./cn";
 
 export type PageQuoteProps = {
@@ -11,20 +7,17 @@ export type PageQuoteProps = {
 };
 
 export function PageQuote({ quote, className }: PageQuoteProps) {
-  const { language } = useLanguage();
-  const reference =
-    language === "ar"
-      ? `${quote.surahNameAr} · ${toArabicNumber(quote.ayah)}`
-      : `${quote.surahNameEn} · ${quote.ayah}`;
-
   return (
-    <figure className={cn("mx-auto mt-6 max-w-2xl", className)} dir="rtl">
-      <blockquote className="quran-text text-lg text-foreground md:text-xl">
-        {quote.text}
+    <figure className={cn("mx-auto mt-6 w-full", className)} dir="rtl">
+      <blockquote className="quran-text flex items-center justify-center gap-2 text-center text-xl text-foreground md:text-2xl">
+        <span aria-hidden className="shrink-0 select-none text-[1.35em] text-primary/70">
+          ﴿
+        </span>
+        <span>{quote.text}</span>
+        <span aria-hidden className="shrink-0 select-none text-[1.35em] text-primary/70">
+          ﴾
+        </span>
       </blockquote>
-      <figcaption className="mt-2 text-xs text-muted-foreground md:text-sm">
-        {reference}
-      </figcaption>
     </figure>
   );
 }

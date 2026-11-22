@@ -4,8 +4,6 @@ import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 import { GeometricPattern } from "@/utils/decorations";
 import type { ArrowIcon, TranslateFn } from "../types";
 import { useLanguage } from "@/context/general/LanguageContext";
-import { PageQuote } from "@/components/ui/PageQuote";
-import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 type HeroSectionProps = {
   t: TranslateFn;
@@ -68,8 +66,6 @@ export default function HeroSection({ t }: HeroSectionProps) {
             <span>{t("home.hero.secondaryCta")}</span>
           </Link>
         </div>
-
-        <PageQuote quote={ROUTE_QUOTES.home} className="mt-8" />
       </div>
     </section>
   );

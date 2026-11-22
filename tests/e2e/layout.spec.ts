@@ -49,7 +49,6 @@ const centeredIndexRoutes = [
 ];
 
 const quoteRoutes = [
-  "",
   "/read-quran",
   "/listen-quran",
   "/read-hadith",

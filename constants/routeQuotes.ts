@@ -10,13 +10,6 @@ export type RouteQuote = {
 };
 
 export const ROUTE_QUOTES = {
-  home: {
-    text: "وَمَا خَلَقْتُ ٱلْجِنَّ وَٱلْإِنسَ إِلَّا لِيَعْبُدُونِ",
-    surah: 51,
-    ayah: 56,
-    surahNameAr: "سُورَةُ الذَّارِيَاتِ",
-    surahNameEn: "Adh-Dhaariyat",
-  },
   quran: {
     text: "كِتَٰبٌ أَنزَلْنَٰهُ إِلَيْكَ مُبَٰرَكٌۭ لِّيَدَّبَّرُوٓا۟ ءَايَٰتِهِۦ وَلِيَتَذَكَّرَ أُو۟لُوا۟ ٱلْأَلْبَٰبِ",
     surah: 38,
