@@ -8,6 +8,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { BookCardSkeleton } from "./components/BookCardSkeleton";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,7 +34,10 @@ export default function ReadHadithPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("hadith.title")} />
+      <PageHeader
+        title={t("hadith.title")}
+        quote={<PageQuote quote={ROUTE_QUOTES.hadith} />}
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

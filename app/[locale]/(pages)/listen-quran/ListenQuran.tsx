@@ -6,6 +6,8 @@ import { reciters } from "@/constants/recitersData";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeadphones,
@@ -22,7 +24,10 @@ export default function ListenQuranPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("listenQuran.title")} />
+      <PageHeader
+        title={t("listenQuran.title")}
+        quote={<PageQuote quote={ROUTE_QUOTES.listen} />}
+      />
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {reciters.map((reciter) => (

@@ -76,10 +76,7 @@ export default function SavedAyahsTable() {
       align: "center" as const,
       hiddenOnMobile: true,
       render: (item: any) => (
-        <div
-          dir="rtl"
-          className="max-w-md truncate text-muted-foreground leading-relaxed"
-        >
+        <div dir="rtl" className="max-w-md quran-text quran-clamp text-muted-foreground">
           {item.text}
         </div>
       ),

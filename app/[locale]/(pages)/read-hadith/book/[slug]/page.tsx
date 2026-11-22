@@ -18,6 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 export default function BookChaptersPage() {
   const params = useParams();
@@ -47,6 +49,7 @@ export default function BookChaptersPage() {
       <PageHeader
         title={language === "en" ? book?.name_en : book?.name_ar}
         subtitle={t("hadith.book.title")}
+        quote={<PageQuote quote={ROUTE_QUOTES.hadithBook} />}
       />
 
       <div className="max-w-2xl mx-auto mb-10">

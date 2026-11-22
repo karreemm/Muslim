@@ -10,6 +10,8 @@ export type PageHeaderProps = {
   className?: string;
   /** Title scale. Defaults to the standard page title. */
   size?: PageHeaderSize;
+  /** Optional Quran quote rendered under the subtitle. */
+  quote?: React.ReactNode;
 };
 
 const sizeClasses: Record<PageHeaderSize, string> = {
@@ -25,6 +27,7 @@ export function PageHeader({
   align = "center",
   className,
   size = "page",
+  quote,
 }: PageHeaderProps) {
   return (
     <header
@@ -48,6 +51,7 @@ export function PageHeader({
       {subtitle ? (
         <p className="mt-3 text-sm text-muted-foreground md:text-base">{subtitle}</p>
       ) : null}
+      {quote}
     </header>
   );
 }

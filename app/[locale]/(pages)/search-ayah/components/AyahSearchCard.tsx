@@ -140,7 +140,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
             <div className="mb-6">
               <p
-                className="text-2xl leading-loose text-foreground text-center  font-medium"
+                className="quran-text quran-clamp text-xl md:text-2xl text-foreground text-center font-medium"
                 dir="rtl"
               >
                 {ayah.matchIntervals && ayah.matchIntervals.length > 0

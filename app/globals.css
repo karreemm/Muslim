@@ -773,4 +773,17 @@ input[type="number"] {
   .surface-panel {
     @apply rounded-2xl border border-border bg-card;
   }
+
+  .quran-text {
+    font-family: var(--font-amiri-quran), "Amiri Quran", "Amiri", serif;
+    direction: rtl;
+    line-height: 2;
+  }
+
+  .quran-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

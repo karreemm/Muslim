@@ -10,6 +10,8 @@ import GoalCelebration from "./GoalCelebration";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 const Counter = () => {
   const { language } = useLanguage();
@@ -95,7 +97,11 @@ const Counter = () => {
         onClose={handleCelebrationClose}
       />
 
-      <PageHeader title={t("tasbeeh.title")} subtitle={t("tasbeeh.rememberAllah")} />
+      <PageHeader
+        title={t("tasbeeh.title")}
+        subtitle={t("tasbeeh.rememberAllah")}
+        quote={<PageQuote quote={ROUTE_QUOTES.tasbeeh} />}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">

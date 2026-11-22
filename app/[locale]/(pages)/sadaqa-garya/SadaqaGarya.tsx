@@ -12,6 +12,8 @@ import SadaqaSubmitSection from "./components/SadaqaSubmitSection";
 import { useSadaqaGarya } from "../../../../context/features/SadaqatContext";
 import HasUpdatesCard from "@/components/general/HasUpdatesCard";
 import { PageShell } from "@/components/ui/PageShell";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 export default function SadaqaGaryaPage() {
   const { t } = useTranslation();
@@ -97,6 +99,8 @@ export default function SadaqaGaryaPage() {
               {t("sadaqa.form.title")}
             </h1>
           </div>
+
+          <PageQuote quote={ROUTE_QUOTES.sadaqa} className="mb-6" />
 
           <form onSubmit={handleSubmit} className="space-y-8 pt-8">
             <SadaqaNameFields

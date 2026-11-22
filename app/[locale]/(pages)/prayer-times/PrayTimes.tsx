@@ -16,6 +16,8 @@ import PrayerTimesGrid from "@/app/[locale]/(pages)/prayer-times/components/Pray
 import Loading from "@/components/general/Loading";
 import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 import { PageShell } from "@/components/ui/PageShell";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 const prayerNames = {
   en: ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"],
@@ -118,6 +120,8 @@ const PrayerTimes: React.FC = () => {
                 : formattedDates.gregorian.ar
             }
           />
+
+          <PageQuote quote={ROUTE_QUOTES.prayer} />
 
           <NextPrayerCard
             language={language}

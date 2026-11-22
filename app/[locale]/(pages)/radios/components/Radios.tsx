@@ -6,6 +6,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { useRadioPlayer } from "@/hooks/radio";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import {
   radioStations,
   radioCategories,
@@ -84,7 +86,11 @@ export default function Radios() {
 
   return (
     <PageShell className="pb-32">
-      <PageHeader title={t("radio.title")} subtitle={t("radio.subtitle")} />
+      <PageHeader
+        title={t("radio.title")}
+        subtitle={t("radio.subtitle")}
+        quote={<PageQuote quote={ROUTE_QUOTES.radios} />}
+      />
 
       <div className="flex items-center gap-3 mb-6 max-w-xl mx-auto">
         <div className="relative flex-1">

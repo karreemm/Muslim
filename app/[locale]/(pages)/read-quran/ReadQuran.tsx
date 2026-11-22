@@ -6,6 +6,8 @@ import { surahNames, juzNames } from "../../../../constants/quranData";
 import QuranNavbar from "./components/general/QuranNavbar";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -36,7 +38,11 @@ export default function ReadQuran() {
       />
 
       <PageShell>
-        <PageHeader title={t("navbar.readQuran")} align="left" size="compact" />
+        <PageHeader
+          title={t("navbar.readQuran")}
+          size="compact"
+          quote={<PageQuote quote={ROUTE_QUOTES.quran} />}
+        />
         <div className="mb-6 text-sm text-muted-foreground">
           {activeTab === "Surahs"
             ? `${filteredSurahs.length} ${t("common.surahs")}`
