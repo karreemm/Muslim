@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMosque,
   faBookmark,
   faHeart,
   faBars,
@@ -23,6 +22,7 @@ import {
   faHandsPraying,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
+import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 import { useLanguage } from "../../../context/general/LanguageContext";
 import Link from "@/components/i18n/LocalizedLink";
 import { stripLocaleFromPathname } from "@/lib/i18n";
@@ -193,7 +193,7 @@ export default function Navbar() {
             className="group flex items-center gap-2.5 text-foreground transition-opacity hover:opacity-80"
           >
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-              <FontAwesomeIcon icon={faMosque} className="text-xl" />
+              <FontAwesomeIcon icon={faMosqueLegacy} className="text-xl" />
             </div>
             <span className="hidden md:inline-block text-xl sm:text-2xl font-bold tracking-tight text-foreground mt-1">
               {t("navbar.title")}

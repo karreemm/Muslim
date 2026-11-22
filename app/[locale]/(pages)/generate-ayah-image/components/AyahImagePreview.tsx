@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosque } from "@fortawesome/free-solid-svg-icons";
+import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 import { generateCSSVars } from "@/utils/paletteEngine";
 import QuranPageRenderer from "@/app/[locale]/(pages)/read-quran/components/general/QuranPageRenderer";
 import { useQuranPageFont } from "@/hooks/readQuran/useQuranPageFont";
@@ -290,7 +290,7 @@ export default function AyahImagePreview({
                 className="flex items-center justify-center gap-2 font-semibold"
               >
                 <FontAwesomeIcon
-                  icon={faMosque}
+                  icon={faMosqueLegacy}
                   className="text-[hsl(var(--primary))]/30"
                   style={{
                     fontSize: isExportMode

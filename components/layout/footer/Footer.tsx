@@ -3,8 +3,9 @@
 import { useLanguage } from "../../../context/general/LanguageContext";
 import { useTranslation } from "@/hooks/general/useTranslation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosque, faCode, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faCode, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 import { CircleDecoration, GeometricPattern } from "@/utils/decorations";
 
 export default function Footer() {
@@ -38,8 +39,8 @@ export default function Footer() {
           </div>
 
           <h2 className="flex items-center gap-2 text-3xl font-bold text-foreground mb-4 tracking-tight">
-            <FontAwesomeIcon icon={faMosque} />
-            {t("footer.title")}
+            <FontAwesomeIcon icon={faMosqueLegacy} />
+            <p className="mt-2">{t("footer.title")}</p>
           </h2>
 
           <div className="relative max-w-2xl">

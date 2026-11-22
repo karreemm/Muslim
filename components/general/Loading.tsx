@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosque } from "@fortawesome/free-solid-svg-icons";
+import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 
 interface LoadingProps {
   size?: "sm" | "md" | "lg";
@@ -44,7 +44,7 @@ export default function Loading({ size = "md" }: LoadingProps) {
           )}
 
           <FontAwesomeIcon
-            icon={faMosque}
+            icon={faMosqueLegacy}
             className={`${sizeClasses[size]} animate-pulse drop-shadow-lg`}
           />
         </div>

@@ -1,6 +1,6 @@
 import Link from "@/components/i18n/LocalizedLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosque } from "@fortawesome/free-solid-svg-icons";
+import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
 import { GeometricPattern } from "@/utils/decorations";
 import type { ArrowIcon, TranslateFn } from "../types";
 import { useLanguage } from "@/context/general/LanguageContext";
@@ -27,7 +27,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
             {t("home.brandName")}
           </span>
           <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-lg shadow-primary/10">
-            <FontAwesomeIcon icon={faMosque} className="text-3xl sm:text-4xl" />
+            <FontAwesomeIcon icon={faMosqueLegacy} className="text-3xl sm:text-4xl" />
           </div>
         </div>
 
