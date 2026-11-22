@@ -41,7 +41,6 @@ export default function ReadQuran() {
         <PageHeader
           title={t("readQuran.title")}
           subtitle={t("readQuran.subtitle")}
-          size="compact"
           quote={<PageQuote quote={ROUTE_QUOTES.quran} />}
         />
         <div className="mb-6 text-sm text-muted-foreground">

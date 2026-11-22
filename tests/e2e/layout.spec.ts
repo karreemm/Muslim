@@ -103,6 +103,29 @@ for (const locale of ["en", "ar"]) {
   });
 }
 
+for (const locale of ["en", "ar"]) {
+  test.describe(`${locale} title scale`, () => {
+    test("index pages share one title size", async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      const sizes: Record<string, string> = {};
+
+      for (const route of centeredIndexRoutes.filter((route) => route !== "")) {
+        await page.goto(`/${locale}${route}`, { waitUntil: "domcontentloaded" });
+        const heading = page.locator("h1");
+        await expect(heading).toHaveCount(1, { timeout: 20_000 });
+        sizes[route] = await heading.evaluate(
+          (element) => getComputedStyle(element).fontSize,
+        );
+      }
+
+      expect(
+        new Set(Object.values(sizes)).size,
+        `title sizes must match: ${JSON.stringify(sizes)}`,
+      ).toBe(1);
+    });
+  });
+}
+
 for (const width of [320, 768]) {
   test.describe(`${width}px route contract`, () => {
     for (const route of narrowRoutes) {

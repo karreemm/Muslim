@@ -69,6 +69,11 @@ const rules = [
     label: "PageHeader margin override (mb-8/mb-12)",
     test: (text) => /<PageHeader[\s\S]{0,320}?className="[^"]*mb-(?:8|12)\b/.test(text),
   },
+  {
+    group: "header-size",
+    label: "PageHeader size override (all page titles use type-page)",
+    test: (text) => /<PageHeader[\s\S]{0,320}?\bsize=/.test(text),
+  },
 ];
 
 const violations = [];

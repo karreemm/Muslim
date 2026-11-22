@@ -90,7 +90,7 @@ const Counter = () => {
   }, [handleUp, handleDown, resetAll]);
 
   return (
-    <PageShell className="flex flex-col items-center p-4 lg:p-8">
+    <PageShell className="flex flex-col items-center">
       <GoalCelebration
         show={showCelebration}
         message={t("tasbeeh.sucess")}
@@ -189,7 +189,7 @@ const Counter = () => {
         <div className="lg:col-span-7 order-1 lg:order-2">
           <div className="relative h-full flex flex-col items-center justify-center">
             <div
-              className={`absolute -inset-4 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-[3rem] blur-2xl opacity-20 transition-opacity duration-500 ${count > 0 ? "opacity-30" : "opacity-0"}`}
+              className={`absolute -inset-2 sm:-inset-4 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-[3rem] blur-2xl opacity-20 transition-opacity duration-500 ${count > 0 ? "opacity-30" : "opacity-0"}`}
             />
 
             <div className="relative w-full bg-card/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-8 lg:p-12 flex flex-col items-center gap-8">
