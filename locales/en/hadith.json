@@ -9,7 +9,8 @@
     "noChaptersFound": "No chapters found.",
     "chaptersFound": "Chapters: {{count}}",
     "chaptersOf": "Chapters of {{book}}",
-    "chapterNumber": "Chapter {{number}}"
+    "chapterNumber": "Chapter {{number}}",
+    "chapterWithName": "Chapter {{number}}: {{name}}"
   },
   "chapter": {
     "title": "Chapter Hadiths",

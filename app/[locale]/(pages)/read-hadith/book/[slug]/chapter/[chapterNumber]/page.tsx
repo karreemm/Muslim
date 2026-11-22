@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useLanguage } from "@/context/general/LanguageContext";
 import { hadithBooks } from "@/constants/hadithData";
 import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
+import { useChapterInfo } from "@/hooks/readHadith/useChapterInfo";
 import Pagination from "@/components/general/Pagination";
 import { HadithCardSkeleton } from "../../../../components/HadithCardSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,6 +57,9 @@ export default function ChapterHadithsPage() {
   } = useChapterHadiths(bookSlug, chapterNumber, 10);
 
   const book = hadithBooks.find((b) => b.slug === bookSlug);
+  const chapter = useChapterInfo(bookSlug, chapterNumber);
+  const chapterName =
+    (language === "en" ? chapter?.chapterEnglish : chapter?.chapterArabic)?.trim() ?? "";
 
   const getStatusIcon = (status: string) => {
     const s = status.toLowerCase();
@@ -75,7 +79,12 @@ export default function ChapterHadithsPage() {
         title={language === "en" ? book?.name_en : book?.name_ar}
         subtitle={
           <>
-            {t("hadith.book.chapterNumber", { number: Number(chapterNumber) })}
+            {chapterName
+              ? t("hadith.book.chapterWithName", {
+                  number: Number(chapterNumber),
+                  name: chapterName,
+                })
+              : t("hadith.book.chapterNumber", { number: Number(chapterNumber) })}
             {!loading && totalHadiths > 0 ? (
               <span className="mt-2 block text-sm">
                 {t("hadith.chapter.totalResults")}:{" "}

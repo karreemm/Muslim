@@ -9,7 +9,8 @@
     "noChaptersFound": "لم يتم العثور على أبواب.",
     "chaptersFound": "الأبواب: {{count}}",
     "chaptersOf": "أبواب {{book}}",
-    "chapterNumber": "الباب {{number}}"
+    "chapterNumber": "الباب {{number}}",
+    "chapterWithName": "الباب {{number}}: {{name}}"
   },
   "chapter": {
     "title": "أحاديث الباب",
