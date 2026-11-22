@@ -89,6 +89,18 @@ describe("translate", () => {
     expect(translate("en", "seo.surah.title", { name: "Al-Fatiha" })).toBe(
       "Surah Al-Fatiha",
     );
-    expect(translate("ar", "seo.juz.title", { number: 1 })).toBe("الجزء 1");
+    expect(translate("ar", "seo.juz.title", { number: 1 })).toBe("الجزء ١");
+  });
+
+  it("localizes numeric params for Arabic", () => {
+    expect(translate("ar", "readQuran.ayahWithNumber", { number: 12 })).toBe("الآية ١٢");
+    expect(translate("en", "readQuran.ayahWithNumber", { number: 12 })).toBe("Ayah 12");
+    expect(translate("ar", "searchAyah.showingPage", { current: 2, total: 9 })).toBe(
+      "عرض صفحة ٢ من ٩",
+    );
+  });
+
+  it("keeps string params unchanged (status codes)", () => {
+    expect(translate("ar", "common.searchFailed", { status: "404" })).toContain("404");
   });
 });
