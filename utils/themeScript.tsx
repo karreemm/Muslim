@@ -26,6 +26,8 @@ export const ThemeScript = () => {
       (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if (isDark) root.classList.add('dark');
     else root.classList.remove('dark');
+    // Keep the UA canvas (and form controls) in sync before the first paint.
+    root.style.colorScheme = isDark ? 'dark' : 'light';
 
     // ── Palette ───────────────────────────────────
     // Defaults come from paletteEngine; keep this aligned with PaletteContext.

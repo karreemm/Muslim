@@ -33,9 +33,13 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     if (stored === "dark" || stored === "light") {
       setThemeState(stored);
       root.classList.toggle("dark", stored === "dark");
+      root.style.colorScheme = stored;
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setThemeState("dark");
       root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.style.colorScheme = "light";
     }
 
     setMounted(true);
@@ -45,6 +49,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     const root = document.documentElement;
 
     root.classList.toggle("dark", newTheme === "dark");
+    root.style.colorScheme = newTheme;
     writeString(STORAGE_KEYS.theme, newTheme);
 
     startTransition(() => setThemeState(newTheme));

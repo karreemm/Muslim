@@ -136,6 +136,9 @@
      TEAL — LIGHT  (default)
   ═══════════════════════════════════════════════ */
   :root {
+    /* Match the UA canvas to the active theme; otherwise a dark OS paints a
+       dark canvas behind the light page until the body background arrives. */
+    color-scheme: light;
     --background: 150 30% 96%;
     --foreground: 200 60% 12%;
 
@@ -195,6 +198,7 @@
      TEAL — DARK
   ═══════════════════════════════════════════════ */
   .dark {
+    color-scheme: dark;
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
