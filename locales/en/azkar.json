@@ -1,5 +1,5 @@
 {
-  "title": "Select a category to explore and reflect on its Azkar",
+  "title": "Azkar",
   "morning": "Morning Azkar",
   "evening": "Evening Azkar",
   "afterPrayer": "After Prayer Azkar",
@@ -12,5 +12,6 @@
   "removeFromFavorites": "Remove from Favorites",
   "repeat": "Repeat",
   "times": "times",
-  "completed": "azkar completed"
+  "completed": "azkar completed",
+  "subtitle": "Choose the type of azkar you want"
 }

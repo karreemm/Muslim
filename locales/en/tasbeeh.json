@@ -1,5 +1,5 @@
 {
-  "title": "Start Tasbeeh now using the counter",
+  "title": "Tasbeeh",
   "placeholder": "Enter the number of Tasabeeh",
   "reset": "Reset Counter",
   "sucess": "Congratulations! You have reached your tasbeeh goal",
@@ -9,5 +9,6 @@
   "increment": "Increment",
   "decrement": "Decrement",
   "tap": "Tap",
-  "tapToContinue": "Tap anywhere to continue"
+  "tapToContinue": "Tap anywhere to continue",
+  "subtitle": "Use the counter to remember Allah"
 }

@@ -78,7 +78,7 @@ export default function ReciterPage() {
   const isCurrentlyPlaying = isPlaying && surahNumber === selectedSurah;
 
   return (
-    <PageShell className="pb-0" containerClassName="w-full max-w-none p-0 pt-0">
+    <PageShell className="pb-0" width="full" flush containerClassName="p-0">
       <div className="relative z-10 flex min-h-screen flex-1">
         <Sidebar
           onSurahSelect={handleSurahChange}
@@ -122,7 +122,7 @@ export default function ReciterPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 pointer-events-none" />
 
                   <div className="relative z-10">
-                    <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2 ">
+                    <h1 className="type-page mb-1 sm:mb-2 ">
                       {t("readQuran.surahWithName", {
                         name:
                           (language === "ar"

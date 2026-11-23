@@ -40,7 +40,7 @@ export default function RadioPlayer() {
   const stationName = isArabic ? currentStation.nameAr : currentStation.nameEn;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-background/90 backdrop-blur-2xl border-t border-border/50 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
+    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-background/90 backdrop-blur-2xl border-t border-border/50 shadow-player">
       <div className="px-4 pt-2 pb-1 max-w-7xl mx-auto w-full">
         <div dir="ltr" className="flex items-center gap-3">
           <div className="flex-1 h-5 flex items-center relative">

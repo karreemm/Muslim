@@ -55,7 +55,7 @@ export default function NotFound() {
 
           <h1
             className={`
-              text-2xl md:text-4xl font-bold text-foreground mb-4
+              type-page mb-4
               transition-all duration-500 delay-300
               ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
             `}

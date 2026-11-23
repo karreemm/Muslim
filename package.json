@@ -22,8 +22,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:perf": "playwright test -c playwright.performance.config.ts",
-    "check": "npm run typecheck && npm run lint && npm run test",
-    "keepalive": "node scripts/supabase-keepalive.mjs"
+    "check": "npm run typecheck && npm run lint && npm run check:ui && npm run check:copy && npm run test",
+    "keepalive": "node scripts/supabase-keepalive.mjs",
+    "check:ui": "node scripts/check-ui-consistency.mjs",
+    "check:copy": "node scripts/check-copy.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.1",

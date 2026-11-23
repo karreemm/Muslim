@@ -55,10 +55,10 @@ export default function SearchAyah() {
   };
 
   return (
-    <PageShell>
-      <PageHeader title={t("searchAyah.title")} className="mb-10" />
+    <PageShell width="content">
+      <PageHeader title={t("searchAyah.title")} subtitle={t("searchAyah.subtitle")} />
 
-      <div className="max-w-4xl mx-auto mb-10">
+      <div className="mb-10">
         <div className="bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-primary/5 border border-border/50 p-2 transition-all duration-300 hover:border-primary/30 hover:shadow-2xl">
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
@@ -158,7 +158,7 @@ export default function SearchAyah() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto min-h-[400px]">
+      <div className="min-h-[400px]">
         {isLoading ? (
           <div className="flex flex-col gap-5">
             <AyahSearchCardSkeleton />
@@ -176,7 +176,7 @@ export default function SearchAyah() {
           <>
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card/50 backdrop-blur-sm rounded-xl p-4 border border-border/30">
               <div>
-                <h2 className="text-xl font-bold text-foreground ">
+                <h2 className="type-subsection ">
                   {t("searchAyah.resultsFound", { count: totalResults })}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -229,9 +229,7 @@ export default function SearchAyah() {
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-primary/10 text-primary mb-6">
               <FontAwesomeIcon icon={faSearch} className="text-5xl" />
             </div>
-            <p className="text-2xl font-bold text-foreground mb-2 ">
-              {t("searchAyah.startSearch")}
-            </p>
+            <p className="type-section mb-2 ">{t("searchAyah.startSearch")}</p>
             <p className="text-muted-foreground max-w-md mx-auto">
               {t("searchAyah.startHint")}
             </p>

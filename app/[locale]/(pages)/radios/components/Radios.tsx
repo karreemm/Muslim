@@ -6,6 +6,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { useRadioPlayer } from "@/hooks/radio";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import {
   radioStations,
   radioCategories,
@@ -87,7 +89,7 @@ export default function Radios() {
       <PageHeader
         title={t("radio.title")}
         subtitle={t("radio.subtitle")}
-        className="mb-8"
+        quote={<PageQuote quote={ROUTE_QUOTES.radios} />}
       />
 
       <div className="flex items-center gap-3 mb-6 max-w-xl mx-auto">
@@ -231,7 +233,7 @@ export default function Radios() {
 
                           <div className="flex-1 min-w-0">
                             <h2
-                              className={`text-xl font-bold transition-colors ${
+                              className={`type-subsection transition-colors ${
                                 active
                                   ? "text-primary"
                                   : "text-foreground group-hover:text-primary"

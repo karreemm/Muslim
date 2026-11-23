@@ -20,7 +20,7 @@ export default function Header() {
   return (
     <PageShell
       className="flex justify-center pb-14"
-      containerClassName="mt-8 flex flex-col gap-10"
+      containerClassName="page-stack"
       decorations={<BackgroundDecorations />}
     >
       <HeroSection t={t} arrowIcon={arrowIcon} />

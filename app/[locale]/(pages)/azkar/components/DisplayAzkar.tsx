@@ -53,7 +53,7 @@ export default function DisplayAzkar({ startingNumber, categoryId }: AzkarPagePr
           return (
             <div
               key={index}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 
+              className="group relative overflow-hidden surface-card 
                 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 
                 hover:border-primary/30 backdrop-blur-sm"
             >

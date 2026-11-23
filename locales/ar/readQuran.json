@@ -28,5 +28,7 @@
   "listen": "استماع",
   "listenSurah": "استماع للسورة",
   "surahAlt": "سُورَةُ {{name}}",
-  "modalAyahTitle": "{{surah}} - الآية {{number}}"
+  "modalAyahTitle": "{{surah}} - الآية {{number}}",
+  "title": "القرآن الكريم",
+  "subtitle": "اقرأ القرآن الكريم وتدبّر آياته"
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Read and learn the noble Prophetic Hadiths from a collection of Sunnah books",
+  "title": "The Noble Hadith",
   "error": "An error occurred while fetching the books. Please try again.",
   "book": {
     "title": "Book Chapters",
@@ -7,7 +7,10 @@
     "chapterLabel": "Chapter",
     "error": "An error occurred while fetching the chapters. Please try again.",
     "noChaptersFound": "No chapters found.",
-    "chaptersFound": "Found {{count}} chapters"
+    "chaptersFound": "Chapters: {{count}}",
+    "chaptersOf": "Chapters of {{book}}",
+    "chapterNumber": "Chapter {{number}}",
+    "chapterWithName": "Chapter {{number}}: {{name}}"
   },
   "chapter": {
     "title": "Chapter Hadiths",
@@ -23,5 +26,6 @@
     "da`eef": "Da`eef",
     "hasan": "Hasan"
   },
-  "viewAll": "View All Hadiths"
+  "viewAll": "View All Hadiths",
+  "subtitle": "Read and learn from the Sunnah collections"
 }

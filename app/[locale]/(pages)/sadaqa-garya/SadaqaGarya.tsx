@@ -12,6 +12,8 @@ import SadaqaSubmitSection from "./components/SadaqaSubmitSection";
 import { useSadaqaGarya } from "../../../../context/features/SadaqatContext";
 import HasUpdatesCard from "@/components/general/HasUpdatesCard";
 import { PageShell } from "@/components/ui/PageShell";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 export default function SadaqaGaryaPage() {
   const { t } = useTranslation();
@@ -71,7 +73,7 @@ export default function SadaqaGaryaPage() {
   return (
     <PageShell
       className="flex items-center justify-center pb-16 pt-8 lg:pt-12"
-      containerClassName="max-w-4xl"
+      width="content"
       decorations={
         <>
           <div className="absolute -right-1/2 -top-1/2 h-full w-full rounded-full bg-primary/5 blur-3xl animate-pulse" />
@@ -93,10 +95,13 @@ export default function SadaqaGaryaPage() {
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
 
           <div className="mb-8 space-y-3 text-center">
-            <h1 className="text-3xl font-bold lg:text-4xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h1 className="type-page bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               {t("sadaqa.form.title")}
             </h1>
+            <p className="type-meta">{t("sadaqa.form.subtitle")}</p>
           </div>
+
+          <PageQuote quote={ROUTE_QUOTES.sadaqa} className="mb-6" />
 
           <form onSubmit={handleSubmit} className="space-y-8 pt-8">
             <SadaqaNameFields

@@ -289,7 +289,7 @@ export default function AyahSelectorSection({
                   </div>
 
                   <p
-                    className="text-xs text-muted-foreground mt-1 truncate"
+                    className="quran-text quran-clamp text-sm text-muted-foreground mt-1"
                     dir="rtl"
                     title={card.snippet}
                   >

@@ -237,10 +237,17 @@ export function translate(
   }
 
   if (params) {
-    return Object.keys(params).reduce(
-      (result: string, param) => result.split(`{{${param}}}`).join(String(params[param])),
-      resolved,
-    );
+    return Object.keys(params).reduce((result: string, param) => {
+      const value = params[param];
+      const replacement =
+        typeof value === "number"
+          ? new Intl.NumberFormat(language === "ar" ? "ar-EG" : "en-US", {
+              useGrouping: false,
+            }).format(value)
+          : String(value);
+
+      return result.split(`{{${param}}}`).join(replacement);
+    }, resolved);
   }
 
   return resolved;

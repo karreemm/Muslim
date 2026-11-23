@@ -8,6 +8,8 @@ import { useTranslation } from "@/hooks/general/useTranslation";
 import { BookCardSkeleton } from "./components/BookCardSkeleton";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,7 +34,11 @@ export default function ReadHadithPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("hadith.title")} className="mb-12" />
+      <PageHeader
+        title={t("hadith.title")}
+        subtitle={t("hadith.subtitle")}
+        quote={<PageQuote quote={ROUTE_QUOTES.hadith} />}
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,7 +57,7 @@ export default function ReadHadithPage() {
             <Link
               key={book.id}
               href={`/read-hadith/book/${book.slug}`}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-6
+              className="group relative overflow-hidden surface-card p-6
                   transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10
                   hover:border-primary/30 backdrop-blur-sm"
             >
@@ -69,7 +75,7 @@ export default function ReadHadithPage() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                    <h2 className="type-subsection group-hover:text-primary transition-colors ">
                       {language === "en" ? book.name_en : book.name_ar}
                     </h2>
                   </div>

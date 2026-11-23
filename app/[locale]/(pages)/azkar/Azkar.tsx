@@ -27,6 +27,8 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { CategoryCardSkeleton } from "./components/CategoryCardSkeleton";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 const categoryIcons: Record<string, IconDefinition> = {
   morning_azkar: faSun,
@@ -82,7 +84,11 @@ export default function AzkarCategoriesPage() {
 
   return (
     <PageShell>
-      <PageHeader title={t("azkar.title")} className="mb-12" />
+      <PageHeader
+        title={t("azkar.title")}
+        subtitle={t("azkar.subtitle")}
+        quote={<PageQuote quote={ROUTE_QUOTES.azkar} />}
+      />
 
       {countsLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -124,7 +130,7 @@ export default function AzkarCategoriesPage() {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                    <h3 className="type-subsection group-hover:text-primary transition-colors ">
                       {isArabic ? item.ar : item.en}
                     </h3>
                     <p className="text-sm mt-1 tabular-nums">

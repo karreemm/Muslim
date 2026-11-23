@@ -32,7 +32,7 @@ export default function PrayerTimesHeader({
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <div>
-              <h1 className="text-2xl lg:text-3xl font-bold">{title}</h1>
+              <h1 className="type-page">{title}</h1>
               <div className="flex items-center gap-4 mt-2">
                 <FontAwesomeIcon
                   icon={faLocationDot}

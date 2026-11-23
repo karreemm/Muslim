@@ -1,0 +1,53 @@
+{
+  "_note": "Files allowed to break a UI consistency rule. Every entry is a deliberate, documented variant.",
+  "h1": [
+    "components/ui/PageHeader.tsx",
+    "components/general/HasUpdatesCard.tsx",
+    "app/global-error.tsx",
+    "app/global-not-found.tsx",
+    "app/[locale]/error.tsx",
+    "app/[locale]/not-found.tsx",
+    "app/[locale]/(pages)/home/components/HeroSection.tsx",
+    "app/[locale]/(pages)/listen-quran/reciter/[id]/page.tsx",
+    "app/[locale]/(pages)/prayer-times/components/PrayerTimesHeader.tsx",
+    "app/[locale]/(pages)/read-quran/components/general/QuranReadingControls.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/SadaqaGarya.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/components/DeceasedHero.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/components/DeceasedNotFound.tsx"
+  ],
+  "container": [
+    "app/[locale]/(pages)/home/Home.tsx",
+    "app/[locale]/(pages)/listen-quran/reciter/[id]/page.tsx",
+    "app/[locale]/(pages)/prayer-times/PrayTimes.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/page.tsx",
+    "app/[locale]/(pages)/search-ayah/loading.tsx"
+  ],
+  "cardSurfaces": [
+    "app/[locale]/(pages)/generate-ayah-image/GenerateAyahImage.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/components/AyahImagePreview.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/components/AyahSelectorSection.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/components/GenerateAyahImageSkeleton.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/components/ImagePaletteSelector.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/components/SearchableDropdown.tsx",
+    "app/[locale]/(pages)/home/components/CtaSection.tsx",
+    "app/[locale]/(pages)/home/components/HeroSection.tsx",
+    "app/[locale]/(pages)/read-quran/components/general/QuranPageRenderer.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/SadaqaGarya.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/components/DeceasedHero.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/components/DuaSection.tsx",
+    "app/[locale]/(pages)/sadaqa-garya/[slug]/components/SurahSection.tsx",
+    "components/general/DataTable.tsx",
+    "components/general/HasUpdatesCard.tsx",
+    "components/layout/navbar/LanguageDropdown.tsx",
+    "components/layout/navbar/NavDropdown.tsx",
+    "components/layout/navbar/PaletteDropdown.tsx",
+    "components/layout/navbar/ThemeDropdown.tsx"
+  ],
+  "hex": [
+    "app/manifest.ts",
+    "app/global-error.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/GenerateAyahImage.tsx",
+    "app/[locale]/(pages)/generate-ayah-image/palettePresets.ts"
+  ],
+  "space": ["app/[locale]/(pages)/sadaqa-garya/SadaqaGarya.tsx"]
+}

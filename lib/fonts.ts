@@ -15,6 +15,6 @@ export const amiriQuran = Amiri_Quran({
   weight: "400",
   display: "swap",
   variable: "--font-amiri-quran",
-  preload: false,
+  preload: true,
   adjustFontFallback: true,
 });

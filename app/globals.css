@@ -136,6 +136,9 @@
      TEAL — LIGHT  (default)
   ═══════════════════════════════════════════════ */
   :root {
+    /* Match the UA canvas to the active theme; otherwise a dark OS paints a
+       dark canvas behind the light page until the body background arrives. */
+    color-scheme: light;
     --background: 150 30% 96%;
     --foreground: 200 60% 12%;
 
@@ -195,6 +198,7 @@
      TEAL — DARK
   ═══════════════════════════════════════════════ */
   .dark {
+    color-scheme: dark;
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
@@ -701,4 +705,94 @@ input[type="number"] {
   50% {
     transform: scaleY(1);
   }
+}
+
+/* ── Semantic type and spacing roles ─────────────────────────────────────── */
+
+@theme {
+  --shadow-player: 0 -8px 30px rgb(0 0 0 / 0.12);
+  --shadow-selection: 0 1px 4px rgb(0 0 0 / 0.35);
+}
+
+@layer base {
+  :where(button, [role="button"], a):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .type-display {
+    @apply text-2xl font-bold tracking-tight md:text-4xl lg:text-5xl;
+  }
+
+  .type-page {
+    @apply text-3xl font-bold text-foreground md:text-4xl;
+  }
+
+  .type-compact {
+    @apply text-2xl font-bold text-foreground md:text-3xl;
+  }
+
+  .type-section {
+    @apply text-2xl font-bold text-foreground;
+  }
+
+  .type-subsection {
+    @apply text-xl font-bold text-foreground;
+  }
+
+  .type-card {
+    @apply text-lg font-semibold text-foreground;
+  }
+
+  .type-body {
+    @apply text-base leading-relaxed;
+  }
+
+  .type-meta {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .page-stack {
+    @apply space-y-10;
+  }
+
+  .section-stack {
+    @apply space-y-6;
+  }
+
+  .grid-gap {
+    @apply gap-4 lg:gap-6;
+  }
+
+  .card-pad {
+    @apply p-5 lg:p-6;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-border bg-card/70 backdrop-blur-sm;
+  }
+
+  .surface-panel {
+    @apply rounded-2xl border border-border bg-card;
+  }
+}
+
+/*
+ * Quran type lives outside @layer components so text-size utilities
+ * (text-sm, text-xl, ...) cannot override its line-height and clip the
+ * tall Amiri Quran glyphs. Keep the generous leading.
+ */
+.quran-text {
+  font-family: var(--font-amiri-quran), "Amiri Quran", "Amiri", serif;
+  direction: rtl;
+  line-height: 2.2;
+}
+
+.quran-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

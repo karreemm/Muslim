@@ -112,7 +112,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
       <>
         <div
           dir={isArabic ? "rtl" : "ltr"}
-          className="group relative overflow-visible rounded-2xl border border-border bg-card/70 backdrop-blur-sm 
+          className="group relative overflow-visible surface-card 
             shadow-lg shadow-primary/5 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 
             hover:border-primary/30 hover:-translate-y-0.5"
         >
@@ -140,7 +140,7 @@ export const AyahSearchCard: React.FC<AyahSearchCardProps> = memo(
 
             <div className="mb-6">
               <p
-                className="text-2xl leading-loose text-foreground text-center  font-medium"
+                className="quran-text quran-clamp text-xl md:text-2xl text-foreground text-center font-medium"
                 dir="rtl"
               >
                 {ayah.matchIntervals && ayah.matchIntervals.length > 0

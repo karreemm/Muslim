@@ -56,7 +56,6 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       suppressHydrationWarning
     >
       <head>
-        <meta name="color-scheme" content="dark light" />
         <ThemeScript />
       </head>
       <body className={`font bg-background dark:bg-background`}>

@@ -53,7 +53,7 @@ export default function DeceasedPage() {
   return (
     <PageShell
       className="pb-12"
-      containerClassName="mt-8 max-w-7xl space-y-8"
+      containerClassName="page-stack"
       decorations={
         <>
           <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl animate-pulse" />

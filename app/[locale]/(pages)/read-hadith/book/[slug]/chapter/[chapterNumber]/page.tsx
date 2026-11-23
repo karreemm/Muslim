@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useLanguage } from "@/context/general/LanguageContext";
 import { hadithBooks } from "@/constants/hadithData";
 import { useChapterHadiths } from "@/hooks/readHadith/useChapterHadiths";
+import { useChapterInfo } from "@/hooks/readHadith/useChapterInfo";
 import Pagination from "@/components/general/Pagination";
 import { HadithCardSkeleton } from "../../../../components/HadithCardSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,6 +57,9 @@ export default function ChapterHadithsPage() {
   } = useChapterHadiths(bookSlug, chapterNumber, 10);
 
   const book = hadithBooks.find((b) => b.slug === bookSlug);
+  const chapter = useChapterInfo(bookSlug, chapterNumber);
+  const chapterName =
+    (language === "en" ? chapter?.chapterEnglish : chapter?.chapterArabic)?.trim() ?? "";
 
   const getStatusIcon = (status: string) => {
     const s = status.toLowerCase();
@@ -66,6 +70,7 @@ export default function ChapterHadithsPage() {
 
   return (
     <PageShell
+      width="content"
       decorations={
         <div className="absolute left-1/2 top-0 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
       }
@@ -74,7 +79,12 @@ export default function ChapterHadithsPage() {
         title={language === "en" ? book?.name_en : book?.name_ar}
         subtitle={
           <>
-            {t("hadith.book.chapterLabel")} {chapterNumber}
+            {chapterName
+              ? t("hadith.book.chapterWithName", {
+                  number: Number(chapterNumber),
+                  name: chapterName,
+                })
+              : t("hadith.book.chapterNumber", { number: Number(chapterNumber) })}
             {!loading && totalHadiths > 0 ? (
               <span className="mt-2 block text-sm">
                 {t("hadith.chapter.totalResults")}:{" "}
@@ -83,11 +93,10 @@ export default function ChapterHadithsPage() {
             ) : null}
           </>
         }
-        className="mb-8"
       />
 
       {!hadithNumber && (
-        <div className="max-w-4xl mx-auto mb-10">
+        <div className="mb-10">
           <div className="bg-card/70 backdrop-blur-sm border border-border/50 rounded-2xl p-5 shadow-lg">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex gap-2 p-1 rounded-xl bg-muted/50 w-fit">
@@ -152,7 +161,7 @@ export default function ChapterHadithsPage() {
       )}
 
       {showingSingleHadith && (
-        <div className="max-w-4xl mx-auto mb-8">
+        <div className="mb-8">
           <button
             onClick={clearHadithFilter}
             className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors w-fit mx-auto"
@@ -167,7 +176,7 @@ export default function ChapterHadithsPage() {
       )}
 
       {loading ? (
-        <div className="max-w-4xl mx-auto flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {showingSingleHadith ? (
             <HadithCardSkeleton />
           ) : (
@@ -190,11 +199,11 @@ export default function ChapterHadithsPage() {
               </p>
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto flex flex-col gap-6">
+            <div className="flex flex-col gap-6">
               {hadiths.map((hadith) => (
                 <div
                   key={hadith.id}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-6
+                  className="group relative overflow-hidden surface-card p-6
                       transition-all duration-500 hover:shadow-xl hover:shadow-primary/10
                       hover:border-primary/30 backdrop-blur-sm"
                 >
@@ -259,7 +268,7 @@ export default function ChapterHadithsPage() {
 
                   <div className="mb-6">
                     {hadith.headingArabic && (
-                      <h3 dir="rtl" className="text-xl font-bold text-primary mb-3 ">
+                      <h3 dir="rtl" className="type-subsection text-primary mb-3 ">
                         {hadith.headingArabic}
                       </h3>
                     )}

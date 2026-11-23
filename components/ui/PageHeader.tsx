@@ -6,6 +6,8 @@ export type PageHeaderProps = {
   icon?: React.ReactNode;
   align?: "left" | "center";
   className?: string;
+  /** Optional Quran quote rendered under the subtitle. */
+  quote?: React.ReactNode;
 };
 
 export function PageHeader({
@@ -14,6 +16,7 @@ export function PageHeader({
   icon,
   align = "center",
   className,
+  quote,
 }: PageHeaderProps) {
   return (
     <header
@@ -33,10 +36,11 @@ export function PageHeader({
           {icon}
         </div>
       ) : null}
-      <h1 className="text-3xl font-bold text-foreground md:text-4xl">{title}</h1>
+      <h1 className="type-page">{title}</h1>
       {subtitle ? (
         <p className="mt-3 text-sm text-muted-foreground md:text-base">{subtitle}</p>
       ) : null}
+      {quote}
     </header>
   );
 }

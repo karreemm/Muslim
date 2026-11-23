@@ -76,10 +76,7 @@ export default function SavedAyahsTable() {
       align: "center" as const,
       hiddenOnMobile: true,
       render: (item: any) => (
-        <div
-          dir="rtl"
-          className="max-w-md truncate text-muted-foreground leading-relaxed"
-        >
+        <div dir="rtl" className="max-w-md quran-text quran-clamp text-muted-foreground">
           {item.text}
         </div>
       ),
@@ -109,8 +106,11 @@ export default function SavedAyahsTable() {
   ];
 
   return (
-    <PageShell containerClassName="mt-8 px-4 md:px-8">
-      <PageHeader title={t("savedAyahs.title")} className="mb-8" />
+    <PageShell>
+      <PageHeader
+        title={t("savedAyahs.title")}
+        subtitle={t("savedAyahs.subtitle")}
+      />
 
       <DataTable
         columns={columns}

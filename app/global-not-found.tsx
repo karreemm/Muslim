@@ -54,7 +54,7 @@ export default async function GlobalNotFound() {
             >
               {translate(locale, "common.notFoundCode")}
             </div>
-            <h1 className="mb-4 text-2xl font-bold text-foreground md:text-4xl">
+            <h1 className="type-page mb-4">
               {translate(locale, "common.notFoundTitle")}
             </h1>
             <p className="mx-auto mb-8 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">

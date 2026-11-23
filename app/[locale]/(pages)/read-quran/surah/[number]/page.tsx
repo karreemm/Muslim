@@ -65,7 +65,8 @@ export default function SurahPage() {
 
       <PageShell
         className="pb-20"
-        containerClassName="w-full max-w-none pt-0"
+        width="full"
+        flush
         decorations={
           <div className="absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
         }

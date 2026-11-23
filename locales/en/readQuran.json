@@ -28,5 +28,7 @@
   "surahWithName": "Surah {{name}}",
   "listen": "Listen",
   "listenSurah": "Listen to Surah",
-  "surahAlt": "Surah {{name}}"
+  "surahAlt": "Surah {{name}}",
+  "title": "The Holy Quran",
+  "subtitle": "Read the Quran and reflect on its verses"
 }

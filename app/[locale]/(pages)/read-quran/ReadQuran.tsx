@@ -5,6 +5,9 @@ import Link from "@/components/i18n/LocalizedLink";
 import { surahNames, juzNames } from "../../../../constants/quranData";
 import QuranNavbar from "./components/general/QuranNavbar";
 import { PageShell } from "@/components/ui/PageShell";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/general/useTranslation";
 
@@ -34,7 +37,12 @@ export default function ReadQuran() {
         setSearchTerm={setSearchTerm}
       />
 
-      <PageShell containerClassName="mt-8">
+      <PageShell>
+        <PageHeader
+          title={t("readQuran.title")}
+          subtitle={t("readQuran.subtitle")}
+          quote={<PageQuote quote={ROUTE_QUOTES.quran} />}
+        />
         <div className="mb-6 text-sm text-muted-foreground">
           {activeTab === "Surahs"
             ? `${filteredSurahs.length} ${t("common.surahs")}`
@@ -47,7 +55,7 @@ export default function ReadQuran() {
                 <Link
                   key={surah.number}
                   href={`/read-quran/surah/${surah.number}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 
+                  className="group relative overflow-hidden surface-card p-5 
                     transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 
                     hover:border-primary/30 backdrop-blur-sm"
                 >
@@ -63,7 +71,7 @@ export default function ReadQuran() {
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                        <h3 className="type-subsection group-hover:text-primary transition-colors ">
                           {surah[language as keyof typeof surah]}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-0.5">{surah.en}</p>
@@ -85,7 +93,7 @@ export default function ReadQuran() {
                 <Link
                   key={juz.number}
                   href={`/read-quran/juz/${juz.number}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5 
+                  className="group relative overflow-hidden surface-card p-5 
                     transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 
                     hover:border-primary/30 backdrop-blur-sm"
                 >
@@ -101,7 +109,7 @@ export default function ReadQuran() {
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors ">
+                        <h3 className="type-subsection group-hover:text-primary transition-colors ">
                           {juz.name[language as keyof typeof juz.name]}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-0.5">

@@ -40,7 +40,7 @@ export default function DeceasedHero({
 
       <h1
         className={`
-          ${language === "ar" ? "leading-relaxed" : ""} text-2xl lg:text-4xl font-bold text-foreground mb-2
+          ${language === "ar" ? "leading-relaxed" : ""} type-page mb-2
           transition-all duration-500 delay-300
           ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
         `}

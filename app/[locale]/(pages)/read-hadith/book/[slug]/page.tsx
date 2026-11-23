@@ -18,6 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { PageShell } from "@/components/ui/PageShell";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { PageQuote } from "@/components/ui/PageQuote";
+import { ROUTE_QUOTES } from "@/constants/routeQuotes";
 
 export default function BookChaptersPage() {
   const params = useParams();
@@ -46,8 +48,10 @@ export default function BookChaptersPage() {
     >
       <PageHeader
         title={language === "en" ? book?.name_en : book?.name_ar}
-        subtitle={t("hadith.book.title")}
-        className="mb-10"
+        subtitle={t("hadith.book.chaptersOf", {
+          book: (language === "en" ? book?.name_en : book?.name_ar) ?? "",
+        })}
+        quote={<PageQuote quote={ROUTE_QUOTES.hadithBook} />}
       />
 
       <div className="max-w-2xl mx-auto mb-10">
@@ -110,7 +114,7 @@ export default function BookChaptersPage() {
                 <Link
                   key={chapter.id}
                   href={`/read-hadith/book/${bookSlug}/chapter/${chapter.chapterNumber}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card/70 p-5
+                  className="group relative overflow-hidden surface-card p-5
                       transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10
                       hover:border-primary/30 backdrop-blur-sm"
                 >
