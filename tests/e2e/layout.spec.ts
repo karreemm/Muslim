@@ -33,6 +33,8 @@ const narrowRoutes = [
   "/saved-ayahs",
   "/read-hadith/book/sahih-bukhari/chapter/1",
   "/read-quran/surah/1",
+  "/radios",
+  "/read-hadith",
 ];
 
 const pageTitleRoutes = [
@@ -124,7 +126,7 @@ for (const locale of ["en", "ar"]) {
             .locator("figure blockquote")
             .first()
             .evaluate((element) => getComputedStyle(element).fontFamily);
-          expect(quoteFont, "quote must use the Amiri font").toContain("Amiri");
+          expect(quoteFont, "quote must use a Quran font").toMatch(/Amiri|p\d+-font/);
         }
 
         const overflow = await page.evaluate(
@@ -156,6 +158,18 @@ for (const locale of ["en", "ar"]) {
         new Set(Object.values(sizes)).size,
         `title sizes must match: ${JSON.stringify(sizes)}`,
       ).toBe(1);
+    });
+
+    test("page quotes use the mushaf page font", async ({ page }) => {
+      await page.goto(`/${locale}/read-quran`, { waitUntil: "domcontentloaded" });
+      const ayah = page.locator("figure blockquote span.inline-block").first();
+      await expect(ayah).toBeVisible({ timeout: 20_000 });
+
+      await expect
+        .poll(() => ayah.evaluate((element) => getComputedStyle(element).fontFamily), {
+          timeout: 20_000,
+        })
+        .toMatch(/^"?p\d+-font/);
     });
   });
 }

@@ -126,7 +126,15 @@ route at 1440 px, plus 320/768 px on the layout-critical routes.
 - Subtitles: one short line. Dynamic values (location, book, name) belong in the
   subtitle, not the title.
 - Page quotes come from `constants/routeQuotes.ts`, generated from
-  `data/searchQuran/quran-index.json`. Never type Quran text by hand.
+  `data/searchQuran/quran-index.json` (plus the Quran.com v4 `code_v2` text).
+  Never type Quran text by hand.
+- Quotes render with the same per-page mushaf font as the reader
+  (`/quran-fonts/p{page}.woff2` + `code_v2`), preloaded with the HTML. The quote
+  stays hidden until that font is ready, so the Amiri fallback never flashes;
+  if the font cannot load, the Uthmani text is shown instead. A hidden Uthmani
+  copy is exposed to screen readers.
+- The ornate brackets stay attached to the first and last word, so wrapping
+  never leaves a bracket alone on a line.
 - A page quote is wrapped in Quranic ornate brackets (`﴿ … ﴾`) and carries no
   surah/ayah caption. The home hero has no quote.
 - Any ayah rendered outside `QuranPageRenderer` uses `.quran-text`; list previews
