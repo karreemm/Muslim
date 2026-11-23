@@ -121,6 +121,8 @@ route at 1440 px, plus 320/768 px on the layout-critical routes.
 - H1: 2–5 words, at most 60 characters, centered. Move long sentences to the
   subtitle. Use `PageHeader` (always `type-page`); do not override the title
   size, and do not add outer padding to `PageShell` that shifts the header.
+- Index pages pass a subtitle. Detail pages (surah/juz reader, reciter, azkar
+  category, 404) keep the same `type-page` title but may omit the subtitle.
 - Subtitles: one short line. Dynamic values (location, book, name) belong in the
   subtitle, not the title.
 - Page quotes come from `constants/routeQuotes.ts`, generated from

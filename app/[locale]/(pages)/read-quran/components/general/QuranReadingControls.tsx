@@ -99,7 +99,7 @@ export default function QuranReadingControls({
           </div>
 
           <div className="flex justify-center items-center gap-3">
-            <h1 className=" type-compact text-center">{title}</h1>
+            <h1 className="type-page text-center">{title}</h1>
             <button
               onClick={onPlay}
               disabled={playDisabled}

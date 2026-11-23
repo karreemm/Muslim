@@ -9,6 +9,7 @@ const routes = [
   "/listen-quran/reciter/ar.alafasy",
   "/read-hadith",
   "/read-hadith/book/sahih-bukhari",
+  "/read-hadith/book/sahih-bukhari/chapter/1",
   "/azkar",
   "/azkar/category/morning_azkar",
   "/prayer-times",
@@ -30,14 +31,39 @@ const narrowRoutes = [
   "/tasbeeh",
   "/sadaqa-garya",
   "/saved-ayahs",
+  "/read-hadith/book/sahih-bukhari/chapter/1",
+  "/read-quran/surah/1",
 ];
 
-const centeredIndexRoutes = [
+const pageTitleRoutes = [
   "",
   "/read-quran",
+  "/read-quran/surah/1",
+  "/read-quran/juz/1",
   "/read-hadith",
+  "/read-hadith/book/sahih-bukhari",
+  "/read-hadith/book/sahih-bukhari/chapter/1",
   "/azkar",
+  "/azkar/category/morning_azkar",
   "/listen-quran",
+  "/listen-quran/reciter/ar.alafasy",
+  "/tasbeeh",
+  "/saved-ayahs",
+  "/favourites",
+  "/sadaqat",
+  "/search-ayah",
+  "/generate-ayah-image",
+  "/radios",
+  "/sadaqa-garya",
+];
+
+const subtitleRoutes = [
+  "/read-quran",
+  "/listen-quran",
+  "/read-hadith",
+  "/read-hadith/book/sahih-bukhari",
+  "/read-hadith/book/sahih-bukhari/chapter/1",
+  "/azkar",
   "/tasbeeh",
   "/saved-ayahs",
   "/favourites",
@@ -78,11 +104,19 @@ for (const locale of ["en", "ar"]) {
         const headingText = (await heading.innerText()).trim();
         expect(headingText.length, "h1 must stay short").toBeLessThanOrEqual(60);
 
-        if (centeredIndexRoutes.includes(route)) {
+        if (pageTitleRoutes.includes(route)) {
           const align = await heading.evaluate(
             (element) => getComputedStyle(element).textAlign,
           );
           expect(align, "index title must be centered").toBe("center");
+        }
+
+        if (subtitleRoutes.includes(route)) {
+          const subtitle = await heading.evaluate((element) => {
+            const sibling = element.nextElementSibling;
+            return sibling?.tagName === "P" ? (sibling.textContent ?? "").trim() : "";
+          });
+          expect(subtitle.length, "page title must have a subtitle").toBeGreaterThan(0);
         }
 
         if (quoteRoutes.includes(route)) {
@@ -105,11 +139,11 @@ for (const locale of ["en", "ar"]) {
 
 for (const locale of ["en", "ar"]) {
   test.describe(`${locale} title scale`, () => {
-    test("index pages share one title size", async ({ page }) => {
+    test("page titles share one size", async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       const sizes: Record<string, string> = {};
 
-      for (const route of centeredIndexRoutes.filter((route) => route !== "")) {
+      for (const route of pageTitleRoutes.filter((route) => route !== "")) {
         await page.goto(`/${locale}${route}`, { waitUntil: "domcontentloaded" });
         const heading = page.locator("h1");
         await expect(heading).toHaveCount(1, { timeout: 20_000 });

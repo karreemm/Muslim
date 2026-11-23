@@ -56,7 +56,7 @@ export default function SearchAyah() {
 
   return (
     <PageShell width="content">
-      <PageHeader title={t("searchAyah.title")} />
+      <PageHeader title={t("searchAyah.title")} subtitle={t("searchAyah.subtitle")} />
 
       <div className="mb-10">
         <div className="bg-card/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-primary/5 border border-border/50 p-2 transition-all duration-300 hover:border-primary/30 hover:shadow-2xl">
