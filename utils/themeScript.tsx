@@ -1,6 +1,7 @@
 "use client";
 
 import { STORAGE_KEYS } from "@/lib/storage";
+import { PALETTE_COOKIE, PALETTE_HUE_COOKIE, THEME_COOKIE } from "@/lib/theme";
 import {
   DEFAULT_PALETTE,
   DEFAULT_PALETTE_HUE,
@@ -24,10 +25,14 @@ export const ThemeScript = () => {
     var stored = localStorage.getItem('${STORAGE_KEYS.theme}');
     var isDark = stored === 'dark' ||
       (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    if (isDark) root.classList.add('dark');
-    else root.classList.remove('dark');
+    // Data attributes are not part of React's <html> props, so hydration and
+    // root-layout navigation cannot strip them.
+    root.dataset.theme = isDark ? 'dark' : 'light';
     // Keep the UA canvas (and form controls) in sync before the first paint.
     root.style.colorScheme = isDark ? 'dark' : 'light';
+    // Persist for the next server render so the HTML arrives already themed.
+    document.cookie = '${THEME_COOKIE}=' + (isDark ? 'dark' : 'light') +
+      '; Path=/; Max-Age=31536000; SameSite=Lax';
 
     // ── Palette ───────────────────────────────────
     // Defaults come from paletteEngine; keep this aligned with PaletteContext.
@@ -38,11 +43,15 @@ export const ThemeScript = () => {
 
     if (validModes.indexOf(storedPalette) === -1) storedPalette = '${DEFAULT_PALETTE}';
 
-    // For named presets: apply CSS class (globals.css handles the vars)
-    root.classList.remove('teal','gold','emerald','midnight');
-    if (storedPalette !== 'custom') {
-      root.classList.add(storedPalette);
-    } else {
+    // For named presets: a data attribute selects the vars in globals.css.
+    root.dataset.palette = storedPalette;
+    document.cookie = '${PALETTE_COOKIE}=' + storedPalette +
+      '; Path=/; Max-Age=31536000; SameSite=Lax';
+    if (storedPalette === 'custom') {
+      document.cookie = '${PALETTE_HUE_COOKIE}=' + storedHue +
+        '; Path=/; Max-Age=31536000; SameSite=Lax';
+    }
+    if (storedPalette === 'custom') {
       // For custom: inline all vars so there's no flash
       var h   = storedHue;
       var ah  = (h >= 15 && h <= 75) ? 174 : 43;
@@ -124,7 +133,26 @@ export const ThemeScript = () => {
       for (var k in vars) root.style.setProperty(k, vars[k]);
     }
 
-    // Language and direction are server-rendered from the URL locale.
+    // React handles the <html> attributes now, so a cookie/localStorage
+    // mismatch during hydration could patch them back. Re-assert the stored
+    // choice in the same microtask, before the next paint.
+    function enforceTheme() {
+      var savedTheme = localStorage.getItem('${STORAGE_KEYS.theme}');
+      var dark = savedTheme === 'dark' ||
+        (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var theme = dark ? 'dark' : 'light';
+      if (root.dataset.theme !== theme) root.dataset.theme = theme;
+      root.style.colorScheme = theme;
+
+      var palette = localStorage.getItem('${STORAGE_KEYS.palette}') || '${DEFAULT_PALETTE}';
+      if (validModes.indexOf(palette) === -1) palette = '${DEFAULT_PALETTE}';
+      if (root.dataset.palette !== palette) root.dataset.palette = palette;
+    }
+
+    new MutationObserver(enforceTheme).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'data-palette']
+    });
 
   } catch(e) {}
 })();

@@ -86,16 +86,14 @@ test.describe("localized 404", () => {
 });
 
 test.describe("root locale redirect", () => {
-  test("redirects to English when Accept-Language prefers English", async ({
-    request,
-  }) => {
+  test("defaults to Arabic without a saved language", async ({ request }) => {
     const response = await request.get("/", {
       headers: { "accept-language": "en-US,en;q=0.9" },
       maxRedirects: 0,
     });
 
     expect(response.status()).toBe(307);
-    expect(response.headers()["location"]).toContain("/en");
+    expect(response.headers()["location"]).toContain("/ar");
   });
 
   test("prefers the saved language cookie over Accept-Language", async ({ request }) => {
