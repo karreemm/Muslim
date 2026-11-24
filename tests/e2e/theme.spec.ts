@@ -32,9 +32,7 @@ test.describe("theme color scheme", () => {
     await page.waitForURL(/\/ar/);
 
     await expect
-      .poll(() =>
-        page.evaluate(() => document.documentElement.classList.contains("dark")),
-      )
+      .poll(() => page.evaluate(() => document.documentElement.dataset.theme === "dark"))
       .toBe(true);
 
     const background = await page.evaluate(
@@ -44,5 +42,32 @@ test.describe("theme color scheme", () => {
     expect((r + g + b) / 3, `expected a dark background, got ${background}`).toBeLessThan(
       80,
     );
+  });
+
+  test("switching language never paints a light frame", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("theme", "dark");
+      (window as Window & { __sawLight?: boolean }).__sawLight = false;
+      let frames = 0;
+
+      const check = () => {
+        frames += 1;
+        if (document.documentElement.dataset.theme !== "dark") {
+          (window as Window & { __sawLight?: boolean }).__sawLight = true;
+        }
+        if (frames < 240) requestAnimationFrame(check);
+      };
+      requestAnimationFrame(check);
+    });
+
+    await page.goto("/en", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Language" }).click();
+    await page.getByRole("button", { name: "Arabic" }).click();
+    await page.waitForURL(/\/ar/);
+    await page.waitForTimeout(1000);
+
+    expect(
+      await page.evaluate(() => (window as Window & { __sawLight?: boolean }).__sawLight),
+    ).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
 ---
 doc_type: change
-title: "Theme survives language switches; Arabic is the default locale"
+title: "Arabic default locale and flash-free server-rendered theme"
 doc_id: "CHG-0012"
 date: "2026-11-24"
 branch: "fix/theme-language-consistency"
@@ -10,6 +10,12 @@ status: review
 scope: [theme, i18n]
 related_files:
   - proxy.ts
+  - app/[locale]/layout.tsx
+  - lib/theme.ts
+  - utils/themeScript.tsx
+  - app/globals.css
+  - app/styles/modules/Animations.module.css
+  - context/general/ThemeContext.tsx
   - context/general/PaletteContext.tsx
   - tests/e2e/theme.spec.ts
   - tests/e2e/smoke.spec.ts
@@ -21,18 +27,33 @@ related_files:
 
 - The root redirect now defaults to Arabic when no language cookie exists.
   Accept-Language no longer changes the first visit.
-- Switching language keeps the selected theme's colours: the palette is
-  re-applied when its observer registers, so a locale navigation can no longer
-  leave light inline variables behind the dark class.
+- Theme and palette are mirrored into cookies and rendered by the server on
+  `<html data-theme data-palette>`, with matching CSS selectors. The first HTML
+  response already has the saved colours, so a language switch, refresh, or
+  hydration can never paint the default light theme first.
+- The pre-paint script keeps the attributes and cookies in sync and re-asserts
+  the stored choice if hydration patches a stale value.
 
 ## Context / Problem
 
 - `/` resolved the locale from Accept-Language, so an English browser landed on
   `/en` even though Arabic is the product default.
-- Root-layout navigation resets the extra classes on `<html>`. `ThemeContext`
-  re-adds `dark`, but `PaletteContext` is a child and its effect ran first,
-  writing light CSS variables. The observer then missed the class change, so the
-  page stayed light while the theme state and icon still said dark.
+- The document was server-rendered light. The JS theme script added `dark` and
+  the palette before paint, but root-layout navigation/hydration repainted
+  `<html>` from the server value. That produced one or more light frames before
+  the providers restored the theme. A JS-only fix is always racing that paint.
+
+## Changes
+
+| Area | File(s) | What changed |
+|---|---|---|
+| Locale | `proxy.ts` | Cookie or Arabic default; Accept-Language ignored for `/` |
+| SSR theme | `app/[locale]/layout.tsx` | Reads theme/palette/hue cookies and renders them on `<html>` |
+| Cookie helpers | `lib/theme.ts` | Shared names and client cookie writer |
+| Pre-paint script | `utils/themeScript.tsx` | Writes cookies, sets data attributes, re-asserts after hydration |
+| CSS | `app/globals.css`, `Animations.module.css` | `[data-theme]` / `[data-palette]` instead of classes |
+| Providers | `ThemeContext.tsx`, `PaletteContext.tsx` | Keep storage, cookies, attributes, and inline palette in sync |
+| Tests | `theme.spec.ts`, `smoke.spec.ts` | No-light-frame probe and Arabic default redirects |
 
 ## Testing
 
@@ -41,7 +62,8 @@ related_files:
 | Typecheck | ✅ |
 | Lint | ✅ 0 errors |
 | Unit/Integration | ✅ 113 tests |
-| E2E (Chromium) | ✅ 39 theme/smoke tests |
+| E2E (Chromium) | ✅ 166 tests |
+| Theme suite | ✅ 5/5, including no light frame across `/en` → `/ar` |
 | Build | ✅ |
 
 ## Risks & follow-up
@@ -49,5 +71,5 @@ related_files:
 | Risk | Mitigation |
 |---|---|
 | English is no longer chosen from the browser language | The language switcher and the `language` cookie still select it explicitly |
-| Palette can still be re-applied twice on mount | Both applications use the same resolved hue and theme |
-| Server HTML still cannot know the theme before hydration | Next step: mirror theme/palette into cookies and render them on `<html>` |
+| Reading cookies in the root layout makes localized pages dynamic | Accepted to guarantee the first paint; SEO HTML is still server-rendered |
+| A first visit with no cookies yet uses the light default | The script writes the cookie immediately; subsequent navigations and refreshes are server-rendered |

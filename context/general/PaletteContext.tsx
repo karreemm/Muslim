@@ -23,6 +23,7 @@ import {
   writeNumber,
   writeString,
 } from "@/lib/storage";
+import { PALETTE_COOKIE, PALETTE_HUE_COOKIE, writeCookie } from "@/lib/theme";
 
 interface PaletteContextType {
   palette: PaletteMode;
@@ -41,7 +42,7 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
   useEffect(() => {
     const storedMode = readString(STORAGE_KEYS.palette, DEFAULT_PALETTE) as PaletteMode;
     const storedHue = readNumber(STORAGE_KEYS.paletteHue, DEFAULT_PALETTE_HUE);
-    const isDark = document.documentElement.classList.contains("dark");
+    const isDark = document.documentElement.dataset.theme === "dark";
 
     const resolvedHue = resolveHue(
       storedMode,
@@ -50,19 +51,30 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
 
     setPaletteState(storedMode);
     setHue(resolvedHue);
+    document.documentElement.dataset.palette = storedMode;
+    writeCookie(PALETTE_COOKIE, storedMode);
+    if (storedMode === "custom") {
+      writeCookie(PALETTE_HUE_COOKIE, String(resolvedHue));
+    }
     applyPalette(resolvedHue, isDark);
     setMounted(true);
   }, []);
 
   const setPalette = useCallback((mode: PaletteMode, customHue?: number) => {
-    const isDark = document.documentElement.classList.contains("dark");
+    const isDark = document.documentElement.dataset.theme === "dark";
     const resolvedHue = resolveHue(mode, customHue);
 
-    applyPalette(resolvedHue, isDark);
     writeString(STORAGE_KEYS.palette, mode);
     if (mode === "custom" && customHue !== undefined) {
       writeNumber(STORAGE_KEYS.paletteHue, customHue);
     }
+
+    document.documentElement.dataset.palette = mode;
+    writeCookie(PALETTE_COOKIE, mode);
+    if (mode === "custom" && customHue !== undefined) {
+      writeCookie(PALETTE_HUE_COOKIE, String(customHue));
+    }
+    applyPalette(resolvedHue, isDark);
 
     startTransition(() => {
       setPaletteState(mode);
@@ -73,15 +85,15 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
   useEffect(() => {
     if (!mounted) return;
 
-    applyPalette(hue, document.documentElement.classList.contains("dark"));
+    applyPalette(hue, document.documentElement.dataset.theme === "dark");
 
     const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains("dark");
+      const isDark = document.documentElement.dataset.theme === "dark";
       applyPalette(hue, isDark);
     });
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class"],
+      attributeFilter: ["data-theme"],
     });
     return () => observer.disconnect();
   }, [mounted, hue]);

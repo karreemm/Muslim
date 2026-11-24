@@ -10,6 +10,7 @@ import {
   startTransition,
 } from "react";
 import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
+import { THEME_COOKIE, writeCookie } from "@/lib/theme";
 
 type Theme = "light" | "dark";
 
@@ -32,14 +33,18 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
     if (stored === "dark" || stored === "light") {
       setThemeState(stored);
-      root.classList.toggle("dark", stored === "dark");
+      root.dataset.theme = stored;
       root.style.colorScheme = stored;
+      writeCookie(THEME_COOKIE, stored);
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setThemeState("dark");
-      root.classList.add("dark");
+      root.dataset.theme = "dark";
       root.style.colorScheme = "dark";
+      writeCookie(THEME_COOKIE, "dark");
     } else {
+      root.dataset.theme = "light";
       root.style.colorScheme = "light";
+      writeCookie(THEME_COOKIE, "light");
     }
 
     setMounted(true);
@@ -48,9 +53,10 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   const setTheme = useCallback((newTheme: Theme) => {
     const root = document.documentElement;
 
-    root.classList.toggle("dark", newTheme === "dark");
-    root.style.colorScheme = newTheme;
     writeString(STORAGE_KEYS.theme, newTheme);
+    writeCookie(THEME_COOKIE, newTheme);
+    root.dataset.theme = newTheme;
+    root.style.colorScheme = newTheme;
 
     startTransition(() => setThemeState(newTheme));
   }, []);

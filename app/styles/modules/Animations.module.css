@@ -92,7 +92,7 @@
   animation: wave 0.8s ease-in-out infinite;
 }
 
-:global(.dark) .waveBar {
+:global([data-theme="dark"]) .waveBar {
   background-color: hsl(var(--primary));
 }
 

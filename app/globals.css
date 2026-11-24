@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is([data-theme="dark"] *));
 
 @theme {
   --color-background: hsl(var(--background));
@@ -197,7 +197,7 @@
   /* ═══════════════════════════════════════════════
      TEAL — DARK
   ═══════════════════════════════════════════════ */
-  .dark {
+  [data-theme="dark"] {
     color-scheme: dark;
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
@@ -257,7 +257,7 @@
   /* ═══════════════════════════════════════════════
      GOLD — LIGHT
   ═══════════════════════════════════════════════ */
-  .gold {
+  [data-palette="gold"] {
     --background: 42 60% 96%;
     --foreground: 28 55% 14%;
 
@@ -316,7 +316,7 @@
   /* ═══════════════════════════════════════════════
      GOLD — DARK
   ═══════════════════════════════════════════════ */
-  .gold.dark {
+  [data-palette="gold"][data-theme="dark"] {
     --background: 28 35% 10%;
     --foreground: 42 70% 92%;
 
@@ -376,7 +376,7 @@
 /* ═══════════════════════════════════════════════
      EMERALD — LIGHT
   ═══════════════════════════════════════════════ */
-.emerald {
+[data-palette="emerald"] {
   --background: 145 45% 95%;
   --foreground: 150 60% 10%;
 
@@ -435,7 +435,7 @@
 /* ═══════════════════════════════════════════════
      EMERALD — DARK
   ═══════════════════════════════════════════════ */
-.emerald.dark {
+[data-palette="emerald"][data-theme="dark"] {
   --background: 150 40% 8%;
   --foreground: 145 50% 92%;
 
@@ -494,7 +494,7 @@
 /* ═══════════════════════════════════════════════
      BLUE — LIGHT
   ═══════════════════════════════════════════════ */
-.midnight {
+[data-palette="midnight"] {
   --background: 224 45% 96%;
   --foreground: 228 55% 12%;
 
@@ -553,7 +553,7 @@
 /* ═══════════════════════════════════════════════
      BLUE — DARK
   ═══════════════════════════════════════════════ */
-.midnight.dark {
+[data-palette="midnight"][data-theme="dark"] {
   --background: 230 45% 9%;
   --foreground: 224 55% 94%;
 
