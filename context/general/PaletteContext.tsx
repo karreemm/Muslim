@@ -72,6 +72,9 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
 
   useEffect(() => {
     if (!mounted) return;
+
+    applyPalette(hue, document.documentElement.classList.contains("dark"));
+
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains("dark");
       applyPalette(hue, isDark);

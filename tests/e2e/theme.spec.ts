@@ -22,4 +22,27 @@ test.describe("theme color scheme", () => {
     await page.goto("/en", { waitUntil: "domcontentloaded" });
     await expect.poll(() => colorScheme(page)).toBe("dark");
   });
+
+  test("switching language keeps the selected theme", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "dark"));
+    await page.goto("/en", { waitUntil: "networkidle" });
+
+    await page.getByRole("button", { name: "Language" }).click();
+    await page.getByRole("button", { name: "Arabic" }).click();
+    await page.waitForURL(/\/ar/);
+
+    await expect
+      .poll(() =>
+        page.evaluate(() => document.documentElement.classList.contains("dark")),
+      )
+      .toBe(true);
+
+    const background = await page.evaluate(
+      () => getComputedStyle(document.body).backgroundColor,
+    );
+    const [r, g, b] = (background.match(/\d+/g) ?? []).map(Number);
+    expect((r + g + b) / 3, `expected a dark background, got ${background}`).toBeLessThan(
+      80,
+    );
+  });
 });

@@ -36,11 +36,8 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  const locale =
-    resolveLocale({
-      cookieLocale: request.cookies.get(LANGUAGE_COOKIE)?.value,
-      acceptLanguage: request.headers.get("accept-language"),
-    }) || defaultLocale;
+  const cookieLocale = request.cookies.get(LANGUAGE_COOKIE)?.value;
+  const locale: Locale = isLocale(cookieLocale) ? cookieLocale : defaultLocale;
 
   // Drop an unsupported two-letter locale segment (e.g. `/fr/read-quran`)
   // and re-home the path under a supported locale.
