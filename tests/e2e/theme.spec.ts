@@ -44,6 +44,16 @@ test.describe("theme color scheme", () => {
     );
   });
 
+  test("keeps the loading cover until the first themed paint", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("theme", "dark"));
+    const started = Date.now();
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator("#app-loader")).toBeVisible();
+    await expect(page.locator("#app-loader")).toBeHidden({ timeout: 15_000 });
+    expect(Date.now() - started).toBeGreaterThanOrEqual(250);
+  });
+
   test("switching language never paints a light frame", async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("theme", "dark");

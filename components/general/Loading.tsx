@@ -1,54 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
+import { LoadingMark } from "@/components/ui/LoadingMark";
 
-interface LoadingProps {
-  size?: "sm" | "md" | "lg";
-}
-
-export default function Loading({ size = "md" }: LoadingProps) {
-  const [showSpinnerRing, setShowSpinnerRing] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSpinnerRing(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const sizeClasses = {
-    sm: "text-2xl",
-    md: "text-4xl",
-    lg: "text-6xl",
-  };
-
-  const containerSizeClasses = {
-    sm: "gap-2",
-    md: "gap-4",
-    lg: "gap-6",
-  };
-
+/** Full-screen loading overlay used by route loading files and data views. */
+export default function Loading() {
   return (
     <div
       role="status"
       aria-live="polite"
       aria-label="Loading"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-background backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
     >
-      <div
-        className={`flex flex-col items-center ${containerSizeClasses[size]} text-primary`}
-      >
-        <div className="relative">
-          {showSpinnerRing && (
-            <div className="absolute -inset-4 border-2 border-transparent border-t-primary/60 border-r-primary/40 rounded-full animate-spin" />
-          )}
-
-          <FontAwesomeIcon
-            icon={faMosqueLegacy}
-            className={`${sizeClasses[size]} animate-pulse drop-shadow-lg`}
-          />
-        </div>
-      </div>
+      <LoadingMark />
     </div>
   );
 }

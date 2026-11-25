@@ -23,7 +23,6 @@ import {
   writeNumber,
   writeString,
 } from "@/lib/storage";
-import { PALETTE_COOKIE, PALETTE_HUE_COOKIE, writeCookie } from "@/lib/theme";
 
 interface PaletteContextType {
   palette: PaletteMode;
@@ -52,10 +51,6 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
     setPaletteState(storedMode);
     setHue(resolvedHue);
     document.documentElement.dataset.palette = storedMode;
-    writeCookie(PALETTE_COOKIE, storedMode);
-    if (storedMode === "custom") {
-      writeCookie(PALETTE_HUE_COOKIE, String(resolvedHue));
-    }
     applyPalette(resolvedHue, isDark);
     setMounted(true);
   }, []);
@@ -70,10 +65,6 @@ export default function PaletteContextProvider({ children }: { children: ReactNo
     }
 
     document.documentElement.dataset.palette = mode;
-    writeCookie(PALETTE_COOKIE, mode);
-    if (mode === "custom" && customHue !== undefined) {
-      writeCookie(PALETTE_HUE_COOKIE, String(customHue));
-    }
     applyPalette(resolvedHue, isDark);
 
     startTransition(() => {

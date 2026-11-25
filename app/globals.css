@@ -132,13 +132,19 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
-  /* ═══════════════════════════════════════════════
-     TEAL — LIGHT  (default)
-  ═══════════════════════════════════════════════ */
+  /* The canvas follows the active theme before any palette is applied. */
   :root {
-    /* Match the UA canvas to the active theme; otherwise a dark OS paints a
-       dark canvas behind the light page until the body background arrives. */
     color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  /* ═══════════════════════════════════════════════
+     TEAL — LIGHT
+  ═══════════════════════════════════════════════ */
+  [data-palette="teal"] {
     --background: 150 30% 96%;
     --foreground: 200 60% 12%;
 
@@ -197,8 +203,7 @@
   /* ═══════════════════════════════════════════════
      TEAL — DARK
   ═══════════════════════════════════════════════ */
-  [data-theme="dark"] {
-    color-scheme: dark;
+  [data-palette="teal"][data-theme="dark"] {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
@@ -255,8 +260,9 @@
   }
 
   /* ═══════════════════════════════════════════════
-     GOLD — LIGHT
+     GOLD — LIGHT (default when no palette is set)
   ═══════════════════════════════════════════════ */
+  :root:not([data-palette]),
   [data-palette="gold"] {
     --background: 42 60% 96%;
     --foreground: 28 55% 14%;
@@ -316,6 +322,7 @@
   /* ═══════════════════════════════════════════════
      GOLD — DARK
   ═══════════════════════════════════════════════ */
+  [data-theme="dark"]:not([data-palette]),
   [data-palette="gold"][data-theme="dark"] {
     --background: 28 35% 10%;
     --foreground: 42 70% 92%;
@@ -795,4 +802,82 @@ input[type="number"] {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/*
+ * Themed loading cover. It is present in the static HTML and shown by the
+ * pre-paint theme script, so the first visible frame always matches the
+ * selected light/dark palette.
+ */
+#app-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsl(var(--background));
+  color: hsl(var(--primary));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease;
+}
+
+#app-loader[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  animation: app-loader-fallback 200ms ease 4s forwards;
+}
+
+.app-loader-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 9999px;
+}
+
+.app-loader-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid hsl(var(--border));
+  border-top-color: hsl(var(--primary));
+  animation: app-loader-spin 900ms linear infinite;
+}
+
+.app-loader-icon {
+  font-size: 1.6rem;
+}
+
+@keyframes app-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes app-loader-fallback {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app-loader,
+  #app-loader[data-visible="true"] {
+    transition: none;
+    animation: none;
+  }
+
+  .app-loader-mark::before {
+    animation: none;
+  }
 }

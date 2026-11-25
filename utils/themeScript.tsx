@@ -1,7 +1,6 @@
 "use client";
 
 import { STORAGE_KEYS } from "@/lib/storage";
-import { PALETTE_COOKIE, PALETTE_HUE_COOKIE, THEME_COOKIE } from "@/lib/theme";
 import {
   DEFAULT_PALETTE,
   DEFAULT_PALETTE_HUE,
@@ -30,9 +29,6 @@ export const ThemeScript = () => {
     root.dataset.theme = isDark ? 'dark' : 'light';
     // Keep the UA canvas (and form controls) in sync before the first paint.
     root.style.colorScheme = isDark ? 'dark' : 'light';
-    // Persist for the next server render so the HTML arrives already themed.
-    document.cookie = '${THEME_COOKIE}=' + (isDark ? 'dark' : 'light') +
-      '; Path=/; Max-Age=31536000; SameSite=Lax';
 
     // ── Palette ───────────────────────────────────
     // Defaults come from paletteEngine; keep this aligned with PaletteContext.
@@ -45,12 +41,6 @@ export const ThemeScript = () => {
 
     // For named presets: a data attribute selects the vars in globals.css.
     root.dataset.palette = storedPalette;
-    document.cookie = '${PALETTE_COOKIE}=' + storedPalette +
-      '; Path=/; Max-Age=31536000; SameSite=Lax';
-    if (storedPalette === 'custom') {
-      document.cookie = '${PALETTE_HUE_COOKIE}=' + storedHue +
-        '; Path=/; Max-Age=31536000; SameSite=Lax';
-    }
     if (storedPalette === 'custom') {
       // For custom: inline all vars so there's no flash
       var h   = storedHue;

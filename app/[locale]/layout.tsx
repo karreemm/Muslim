@@ -19,16 +19,7 @@ import { WebsiteJsonLd } from "@/components/seo/JsonLd";
 import { createMetadata } from "@/lib/seo";
 import { amiriQuran, kufam } from "@/lib/fonts";
 import { isLocale, localeDirection, locales, type Locale } from "@/lib/i18n";
-import { cookies } from "next/headers";
-import {
-  DEFAULT_PALETTE,
-  DEFAULT_PALETTE_HUE,
-  VALID_PALETTE_MODES,
-  generateCSSVars,
-  resolveHue,
-  type PaletteMode,
-} from "@/utils/paletteEngine";
-import { PALETTE_COOKIE, PALETTE_HUE_COOKIE, THEME_COOKIE } from "@/lib/theme";
+import ThemeLoadingOverlay from "@/components/layout/ThemeLoadingOverlay";
 import "../globals.css";
 
 type LocaleLayoutProps = {
@@ -58,26 +49,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const language: Locale = locale;
   const direction = localeDirection(language);
 
-  const cookieStore = await cookies();
-  const isDark = cookieStore.get(THEME_COOKIE)?.value === "dark";
-  const paletteValue = cookieStore.get(PALETTE_COOKIE)?.value;
-  const palette: PaletteMode = VALID_PALETTE_MODES.includes(paletteValue as PaletteMode)
-    ? (paletteValue as PaletteMode)
-    : DEFAULT_PALETTE;
-  const rawHue = Number(cookieStore.get(PALETTE_HUE_COOKIE)?.value);
-  const hue = Number.isFinite(rawHue) && rawHue > 0 ? rawHue : DEFAULT_PALETTE_HUE;
-  const customStyle =
-    palette === "custom"
-      ? (generateCSSVars(resolveHue("custom", hue), isDark) as React.CSSProperties)
-      : undefined;
-
   return (
     <html
       lang={language}
       dir={direction}
-      data-theme={isDark ? "dark" : "light"}
-      data-palette={palette}
-      style={customStyle}
       className={`${kufam.variable} ${amiriQuran.variable}`}
       suppressHydrationWarning
     >
@@ -87,6 +62,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <body className={`font bg-background dark:bg-background`}>
         <WebsiteJsonLd locale={language} />
         <LanguageContextProvider initialLocale={language}>
+          <ThemeLoadingOverlay />
           <ThemeContextProvider>
             <PaletteContextProvider>
               <QuranAudioProvider>
