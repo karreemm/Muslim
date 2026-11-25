@@ -10,6 +10,7 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { STORAGE_KEYS, writeString } from "@/lib/storage";
+import { showAppLoader } from "@/lib/loading";
 import {
   LANGUAGE_COOKIE,
   type Locale,
@@ -72,7 +73,10 @@ const LanguageContextProvider = ({ children, initialLocale = "ar" }: IProps) => 
       const hash = window.location.hash;
       const nextPath = swapLocaleInPathname(pathname || "/", nextLanguage);
 
-      router.push(`${nextPath}${search}${hash}`);
+      // Paint the themed cover before the route changes so the outgoing page
+      // never flashes and the incoming content arrives under the same cover.
+      showAppLoader();
+      requestAnimationFrame(() => router.push(`${nextPath}${search}${hash}`));
     },
     [language, pathname, router],
   );
