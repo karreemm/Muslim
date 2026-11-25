@@ -42,16 +42,7 @@ export default function ThemeLoadingOverlay() {
       }, remaining);
     };
 
-    const afterFonts = () => {
-      if (cancelled) return;
-      requestAnimationFrame(finish);
-    };
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(afterFonts).catch(afterFonts);
-    } else {
-      afterFonts();
-    }
+    requestAnimationFrame(finish);
 
     return () => {
       cancelled = true;
