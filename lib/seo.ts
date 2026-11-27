@@ -32,6 +32,7 @@ export const SITE_KEYWORDS: Record<Locale, string[]> = {
     "Tafseer",
     "Quran radio",
     "Tasbeeh",
+    "Qibla",
   ],
   ar: [
     "القرآن الكريم",
@@ -44,6 +45,7 @@ export const SITE_KEYWORDS: Record<Locale, string[]> = {
     "تفسير القرآن",
     "إذاعة القرآن",
     "تسبيح",
+    "القبلة",
   ],
 };
 

@@ -10,6 +10,7 @@ const routes = [
   "/en/read-hadith",
   "/en/azkar",
   "/en/prayer-times",
+  "/en/qibla",
   "/en/tasbeeh",
   "/en/search-ayah",
   "/en/generate-ayah-image",

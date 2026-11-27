@@ -13,6 +13,7 @@ const routes = [
   "/azkar",
   "/azkar/category/morning_azkar",
   "/prayer-times",
+  "/qibla",
   "/radios",
   "/tasbeeh",
   "/search-ayah",
@@ -29,6 +30,7 @@ const narrowRoutes = [
   "/read-quran",
   "/azkar",
   "/tasbeeh",
+  "/qibla",
   "/sadaqa-garya",
   "/saved-ayahs",
   "/read-hadith/book/sahih-bukhari/chapter/1",
@@ -50,6 +52,7 @@ const pageTitleRoutes = [
   "/listen-quran",
   "/listen-quran/reciter/ar.alafasy",
   "/tasbeeh",
+  "/qibla",
   "/saved-ayahs",
   "/favourites",
   "/sadaqat",
@@ -67,6 +70,7 @@ const subtitleRoutes = [
   "/read-hadith/book/sahih-bukhari/chapter/1",
   "/azkar",
   "/tasbeeh",
+  "/qibla",
   "/saved-ayahs",
   "/favourites",
   "/sadaqat",
@@ -83,6 +87,7 @@ const quoteRoutes = [
   "/azkar",
   "/tasbeeh",
   "/prayer-times",
+  "/qibla",
   "/radios",
   "/sadaqa-garya",
 ];
@@ -166,9 +171,23 @@ for (const locale of ["en", "ar"]) {
 
         const heading = page.locator("h1");
         await expect(heading).toHaveCount(1, { timeout: 20_000 });
-        sizes[route] = await heading
-          .first()
-          .evaluate((element) => getComputedStyle(element).fontSize);
+        let fontSize = "";
+        await expect
+          .poll(
+            async () => {
+              try {
+                fontSize = await heading
+                  .first()
+                  .evaluate((element) => getComputedStyle(element).fontSize);
+              } catch {
+                fontSize = "";
+              }
+              return fontSize;
+            },
+            { timeout: 5_000 },
+          )
+          .not.toBe("");
+        sizes[route] = fontSize;
       }
 
       expect(

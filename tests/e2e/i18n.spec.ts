@@ -13,6 +13,7 @@ const paths = [
   "/azkar",
   "/azkar/category/morning_azkar",
   "/prayer-times",
+  "/qibla",
   "/tasbeeh",
   "/search-ayah",
   "/generate-ayah-image",

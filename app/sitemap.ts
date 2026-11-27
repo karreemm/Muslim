@@ -21,6 +21,7 @@ const staticRoutes: RouteEntry[] = [
   { path: "/radios", priority: 0.8, changeFrequency: "weekly" },
   { path: "/azkar", priority: 0.9, changeFrequency: "weekly" },
   { path: "/prayer-times", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/qibla", priority: 0.8, changeFrequency: "monthly" },
   { path: "/tasbeeh", priority: 0.7, changeFrequency: "monthly" },
   { path: "/search-ayah", priority: 0.8, changeFrequency: "monthly" },
   { path: "/generate-ayah-image", priority: 0.7, changeFrequency: "monthly" },

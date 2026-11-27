@@ -105,6 +105,18 @@ const cases = [
     dir: "rtl",
   },
   {
+    path: "/en/qibla",
+    title: /Qibla Direction \| Muslim/,
+    lang: "en",
+    dir: "ltr",
+  },
+  {
+    path: "/ar/qibla",
+    title: /اتجاه القبلة \| مسلم/,
+    lang: "ar",
+    dir: "rtl",
+  },
+  {
     path: "/en/sadaqa-garya",
     title: /Sadaqa Jariyah \| Muslim/,
     lang: "en",

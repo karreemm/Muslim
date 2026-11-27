@@ -7,6 +7,7 @@ import {
   faBookmark,
   faImage,
   faClock,
+  faCompass,
   faHandsPraying,
   faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
@@ -51,6 +52,13 @@ export const featuredFeatures: HomeFeature[] = [
     gradient: "from-primary/20 to-primary/5",
   },
   {
+    href: "/prayer-times",
+    icon: faClock,
+    title: "features.prayerTimes.title",
+    desc: "features.prayerTimes.desc",
+    gradient: "from-primary/20 to-primary/5",
+  },
+  {
     href: "/generate-ayah-image",
     icon: faImage,
     title: "features.ayahToImage.title",
@@ -89,10 +97,10 @@ export const featuredFeatures: HomeFeature[] = [
 
 export const secondaryTools: HomeTool[] = [
   {
-    href: "/prayer-times",
-    icon: faClock,
-    title: "tools.prayerTimes.title",
-    desc: "tools.prayerTimes.desc",
+    href: "/qibla",
+    icon: faCompass,
+    title: "tools.qibla.title",
+    desc: "tools.qibla.desc",
   },
   {
     href: "/tasbeeh",

@@ -10,7 +10,7 @@
 <br />
 <br />
 
-**An open-source Islamic platform for Quran, Hadith, Azkar, prayer times, and more — built as a Sadaqah Jariyah.**
+**An open-source Islamic platform for Quran, Hadith, Azkar, Qibla, prayer times, and more — built as a Sadaqah Jariyah.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-CF9D40?style=for-the-badge&logo=google-chrome&logoColor=white)](https://muslim-one.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-CF9D40?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -41,6 +41,7 @@ aggregate analytics.
   languages.
 - **Azkar & duas** — 127 supplications across 8 categories, with per-zikr counters,
   daily progress, and favourites.
+- **Qibla** — a live, screen-relative compass with a Kaaba destination marker.
 - **Prayer times** — location-based times, a live countdown to the next prayer, and
   Hijri and Gregorian dates.
 - **Live radio** — 126 stations across four categories, with favourites.

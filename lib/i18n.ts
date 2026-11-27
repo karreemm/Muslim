@@ -6,6 +6,7 @@ import enListenQuran from "@/locales/en/listenQuran.json";
 import enReadQuran from "@/locales/en/readQuran.json";
 import enHadith from "@/locales/en/hadith.json";
 import enPrayerTimes from "@/locales/en/prayerTimes.json";
+import enQibla from "@/locales/en/qibla.json";
 import enTasbeeh from "@/locales/en/tasbeeh.json";
 import enSadaqa from "@/locales/en/sadaqa.json";
 import enFavourites from "@/locales/en/favourites.json";
@@ -25,6 +26,7 @@ import arListenQuran from "@/locales/ar/listenQuran.json";
 import arReadQuran from "@/locales/ar/readQuran.json";
 import arHadith from "@/locales/ar/hadith.json";
 import arPrayerTimes from "@/locales/ar/prayerTimes.json";
+import arQibla from "@/locales/ar/qibla.json";
 import arTasbeeh from "@/locales/ar/tasbeeh.json";
 import arSadaqa from "@/locales/ar/sadaqa.json";
 import arFavourites from "@/locales/ar/favourites.json";
@@ -59,6 +61,7 @@ const translations: Record<Locale, Record<string, Record<string, unknown>>> = {
     readQuran: enReadQuran,
     hadith: enHadith,
     prayerTimes: enPrayerTimes,
+    qibla: enQibla,
     tasbeeh: enTasbeeh,
     sadaqa: enSadaqa,
     favourites: enFavourites,
@@ -79,6 +82,7 @@ const translations: Record<Locale, Record<string, Record<string, unknown>>> = {
     readQuran: arReadQuran,
     hadith: arHadith,
     prayerTimes: arPrayerTimes,
+    qibla: arQibla,
     tasbeeh: arTasbeeh,
     sadaqa: arSadaqa,
     favourites: arFavourites,

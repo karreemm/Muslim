@@ -32,6 +32,10 @@
     "title": "Prayer Times",
     "description": "Accurate prayer times, next-prayer countdown, and Hijri and Gregorian dates for Egyptian governorates."
   },
+  "qibla": {
+    "title": "Qibla Direction",
+    "description": "Find the Qibla direction from your location with a live compass when supported, or a calculated true-north bearing."
+  },
   "tasbeeh": {
     "title": "Tasbeeh Counter",
     "description": "A simple digital tasbeeh counter with goals, keyboard shortcuts, and locally saved progress."

@@ -46,6 +46,8 @@ page is [`../README.md`](../README.md).
 | 2026-11-20 | accessibility, journeys, cross-browser | `review` | [Phase 4](./changes/2026-11-20-phase-4-quality.md) |
 | 2026-11-21 | minimal docs, contributor files, license, visual suite removal | `review` | [Phase 5](./changes/2026-11-21-phase-5-docs.md) |
 | 2026-11-21 | read-only memorial verses, saved-ayah landing, save feedback | `review` | [Reader fixes](./changes/2026-11-21-reader-fixes.md) |
+| 2026-11-25 | cross-device Qibla finder, true-north compass | `review` | [Qibla finder](./changes/2026-11-25-qibla-finder.md) |
+| 2026-11-26 | Qibla redesign, one compass, governorate fallback | `review` | [Qibla redesign](./changes/2026-11-26-qibla-redesign.md) |
 
 ## Workflow
 

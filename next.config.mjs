@@ -19,6 +19,7 @@ const contentSecurityPolicy = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
   compiler: {
     removeConsole: isProduction ? { exclude: ["error", "warn"] } : false,
   },
@@ -56,7 +57,7 @@ const nextConfig = {
           {
             key: "Permissions-Policy",
             value:
-              "camera=(), microphone=(), geolocation=(), payment=(), usb=(), clipboard-write=(self)",
+              "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), clipboard-write=(self)",
           },
           {
             key: "Cross-Origin-Opener-Policy",
