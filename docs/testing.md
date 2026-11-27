@@ -1,7 +1,7 @@
 ---
 doc_type: guide
 title: "Testing Guide"
-last_updated: "2026-11-21"
+last_updated: "2026-11-25"
 status: active
 ---
 
@@ -30,15 +30,17 @@ Install browsers once: `npx playwright install chromium firefox webkit`.
 ## Coverage
 
 - **Unit** — helpers, palette engine, storage, HTTP, env, SEO, dates, security,
-  cookies, translation keys.
+  cookies, translation keys, Qibla bearing/distance, and WMM declination.
 - **Integration** — every `app/api` route handler with mocked upstreams.
+- **Component** — shared primitives, saved-ayah storage, and Qibla compass
+  fallback/permission/sensor paths.
 - **E2E** — route smoke, locale routing and metadata, internal links, security
   headers and CSP reports, i18n runtime scan, Sadaqa UX, 16-route axe matrix,
   keyboard flows (language switch, mobile menu Escape, modal focus trap), six user
   journeys, and Firefox/WebKit smoke checks.
 - **Performance** — LCP < 4s, CLS < 0.15, transfer < 4 MB on four routes.
 
-Current totals: **109 unit/integration/component tests** and **105 E2E tests**.
+Current totals: **136 unit/integration/component tests** and **189 E2E tests**.
 
 ## CI
 
@@ -63,4 +65,6 @@ for timing budgets, so run it before a release.
 - 107 lint warnings remain (React Compiler hook rules and exhaustive deps); they do
   not block CI.
 - No automated visual regression or manual screen-reader pass.
+- Compass hardware behavior (magnetic heading, calibration, and iOS/Android sensor
+  quirks) still needs physical-device testing.
 - `npm audit` is clean; re-run it after dependency changes.

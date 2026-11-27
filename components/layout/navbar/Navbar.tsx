@@ -20,6 +20,7 @@ import {
   faRadio,
   faGears,
   faHandsPraying,
+  faCompass,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUssunnah } from "@fortawesome/free-brands-svg-icons";
 import { faMosqueLegacy } from "@/components/icons/faMosqueLegacy";
@@ -45,6 +46,7 @@ const listenLinks = (t: (key: string) => string) => [
 
 const toolsLinks = (t: (key: string) => string) => [
   { href: "/prayer-times", label: t("navbar.prayerTimes"), icon: faClock },
+  { href: "/qibla", label: t("navbar.qibla"), icon: faCompass },
   { href: "/search-ayah", label: t("navbar.searchAyah"), icon: faSearch },
   { href: "/generate-ayah-image", label: t("navbar.generateAyahImage"), icon: faImage },
   { href: "/tasbeeh", label: t("navbar.tasbeeh"), icon: faListOl },

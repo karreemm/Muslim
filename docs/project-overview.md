@@ -1,16 +1,16 @@
 ---
 doc_type: guide
 title: "Project Overview"
-last_updated: "2026-11-21"
+last_updated: "2026-11-26"
 status: active
 ---
 
 # Project Overview
 
 **Muslim** is a bilingual (Arabic-first, RTL) Islamic web app: Quran with audio and
-tafseer, hadith, azkar, prayer times, radio, Tasbeeh, ayah images, and Sadaqa
-Jariyah memorials. There are no accounts: everything except memorials lives in the
-browser, and memorials live in Supabase.
+tafseer, hadith, azkar, prayer times, Qibla direction, radio, Tasbeeh, ayah images,
+and Sadaqa Jariyah memorials. There are no accounts: everything except memorials
+lives in the browser, and memorials live in Supabase.
 
 ## Routes
 
@@ -25,6 +25,7 @@ All pages live under `/{ar|en}/...`; `/` redirects using the saved cookie, then
 | `/read-hadith`, `/read-hadith/book/[slug]`, `.../chapter/[n]` | Hadith |
 | `/azkar`, `/azkar/category/[id]` | Azkar |
 | `/prayer-times` | Prayer times |
+| `/qibla` | Qibla direction, live compass, governorate fallback |
 | `/radios` | Live radio |
 | `/tasbeeh` | Counter |
 | `/search-ayah` | Quran search |
@@ -52,6 +53,8 @@ data/, constants/      content data and lookup tables
 ```
 
 - Server components by default; `"use client"` only at interactive leaves.
+- Compass and geolocation APIs stay in `hooks/useQibla.ts`; Qibla math and WMM
+  declination stay in pure `lib/qibla.ts`.
 - External calls go through `lib/http.ts` (15s timeout, normalized errors).
 - `lib/services/*` wraps each external API; `lib/sadaqaGarya/*` owns the Supabase
   store and delete-token cookies.

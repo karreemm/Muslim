@@ -178,3 +178,24 @@ test("a saved ayah opens the surah at that ayah", async ({ page }) => {
   // saved ayah must still end up in view, not just load the surah at the top.
   await expect(page.locator("#ayah-255-2")).toBeInViewport({ timeout: 20_000 });
 });
+
+test("qibla calculates a bearing from a governorate", async ({ page }) => {
+  await page.goto("/en/qibla", { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.getByRole("heading", { name: "Qibla Direction" })).toBeVisible();
+
+  const selector = page.getByRole("button", {
+    name: /Choose a governorate|My current location/,
+  });
+  await expect(async () => {
+    await selector.click();
+    await expect(page.getByRole("option", { name: "Cairo" })).toBeVisible({
+      timeout: 1_000,
+    });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("option", { name: "Cairo" }).click();
+
+  await expect(page.getByText("136.1°")).toBeVisible();
+  await expect(page.getByText(/1,287/)).toBeVisible();
+});

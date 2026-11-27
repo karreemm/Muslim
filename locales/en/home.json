@@ -42,6 +42,10 @@
       "title": "Repeat (Hifz) Mode",
       "desc": "Repeat ayahs to help memorize the Quran verse by verse."
     },
+    "prayerTimes": {
+      "title": "Prayer Times",
+      "desc": "Stay aware of your prayers with accurate timings based on your location."
+    },
     "ayahToImage": {
       "title": "Ayah to Image",
       "desc": "Turn any Ayah into a beautiful image."
@@ -50,9 +54,9 @@
   "tools": {
     "heading": "Small tools that make a big difference",
     "subheading": "To help you stay consistent, even on busy days.",
-    "prayerTimes": {
-      "title": "Prayer Times",
-      "desc": "Stay aware of your prayers with accurate timings based on your location."
+    "qibla": {
+      "title": "Qibla Direction",
+      "desc": "Find the Qibla from your location with a live, screen-relative compass."
     },
     "tasbeeh": {
       "title": "Tasbeeh Counter",

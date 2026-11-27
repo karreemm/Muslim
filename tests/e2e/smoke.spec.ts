@@ -13,6 +13,7 @@ const englishRoutes = [
   "/en/azkar",
   "/en/azkar/category/morning_azkar",
   "/en/prayer-times",
+  "/en/qibla",
   "/en/tasbeeh",
   "/en/search-ayah",
   "/en/generate-ayah-image",
@@ -30,6 +31,7 @@ const arabicRoutes = [
   "/ar/listen-quran/reciter/ar.alafasy",
   "/ar/azkar/category/morning_azkar",
   "/ar/prayer-times",
+  "/ar/qibla",
   "/ar/sadaqa-garya",
 ];
 

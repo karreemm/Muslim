@@ -28,6 +28,26 @@ test("Tasbeeh interactive control renders", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Increment" })).toBeVisible();
 });
 
+test("Qibla calculates a bearing from a governorate", async ({ page }) => {
+  await page.goto("/en/qibla", { waitUntil: "domcontentloaded" });
+
+  await expect(page.getByRole("heading", { name: "Qibla Direction" })).toBeVisible();
+
+  const selector = page.getByRole("button", {
+    name: /Choose a governorate|My current location/,
+  });
+  await expect(async () => {
+    await selector.click();
+    await expect(page.getByRole("option", { name: "Cairo" })).toBeVisible({
+      timeout: 1_000,
+    });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("option", { name: "Cairo" }).click();
+
+  await expect(page.getByText("136.1°")).toBeVisible();
+});
+
 test("unknown route returns a localized 404", async ({ page }) => {
   const response = await page.goto("/en/this-page-does-not-exist", {
     waitUntil: "domcontentloaded",

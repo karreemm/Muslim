@@ -11,6 +11,7 @@ test("security headers are applied to pages and APIs", async ({ request }) => {
     expect(headers["cross-origin-opener-policy"]).toBe("same-origin");
     expect(headers["strict-transport-security"]).toContain("max-age=63072000");
     expect(headers["permissions-policy"]).toContain("camera=()");
+    expect(headers["permissions-policy"]).toContain("geolocation=(self)");
     expect(headers["permissions-policy"]).toContain("clipboard-write=(self)");
 
     const csp = headers["content-security-policy-report-only"];

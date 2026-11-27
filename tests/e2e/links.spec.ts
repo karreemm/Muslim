@@ -21,6 +21,7 @@ const pagesWithLinks = [
   "/en/azkar/category/morning_azkar",
   "/ar/azkar/category/morning_azkar",
   "/en/prayer-times",
+  "/en/qibla",
   "/en/tasbeeh",
   "/en/search-ayah",
   "/en/generate-ayah-image",
